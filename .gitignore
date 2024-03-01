@@ -1,0 +1,11 @@
+*.DS_Store
+*.idea
+*__pycache__
+*.vscode
+tests*
+cmake-build-*
+runner/cache/* 
+basic/config.cpp
+build*
+executor/run_incre_label.cpp
+.clion.source.upload.marker

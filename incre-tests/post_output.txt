@@ -1,0 +1,20 @@
+
+solverConfig :: GrisetteSMTConfig 16
+solverConfig = approx Proxy z3
+ 
+ioPair :: [(List, Integer)] -> IO ()
+ioPair pairs = do
+    res <- solve solverConfig (constraint pairs)
+    case res of
+        Left _ -> do
+            print "fail!"
+        Right model -> do
+            print "success!"
+    where
+        constraint :: [(List, Integer)] -> SymBool
+        constraint [] = con True
+        constraint ((x, y) : xs) = main' x ==~ (toSym y) &&~ constraint xs
+
+main :: IO ()
+main = do
+    let pairs = [

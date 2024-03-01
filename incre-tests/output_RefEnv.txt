@@ -1,0 +1,26 @@
+-- store all var from context
+newtype RefEnv = RefEnv {unRefEnv :: [(Ident, EnvValue)]}
+    deriving (Show, Generic)
+    deriving (EvaluateSym) via (Default RefEnv)
+
+instance Mergeable RefEnv where
+    rootStrategy = SimpleStrategy $ \cond (RefEnv l) (RefEnv r) -> RefEnv $ go cond l r
+        where
+            go _ [] [] = []
+            go cond ((li, lv) : l) ((ri, rv) : r)
+                | li == ri = (ri, mrgIte cond lv rv) : go cond l r
+            go _ _ _ = error "Should not happen"
+
+instance SimpleMergeable RefEnv where
+    mrgIte cond (RefEnv l) (RefEnv r) = RefEnv $ go cond l r
+        where
+            go _ [] [] = []
+            go cond ((li, lv) : l) ((ri, rv) : r)
+                | li == ri = (ri, mrgIte cond lv rv) : go cond l r
+            go _ _ _ = error "Should not happen"
+
+evalFunc :: RefEnv -> Ident -> EnvValue
+evalFunc (RefEnv env) x = case lookup x env of
+  Just v -> v
+  Nothing -> error "Bad program: variable not in scope"
+

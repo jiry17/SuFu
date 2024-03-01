@@ -1,0 +1,61 @@
+Inductive List = nil Unit | cons {Int, List};
+
+Inductive LList = lnil Unit | lcons {{Bool, Int, Int}, LList};
+
+max = \x: Int. \y: Int. 
+    if (> x y) then x
+    else y;
+
+length = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) 1
+    | nil _ -> 0
+    end
+);
+
+step = \item: Int. 
+    fix (
+    \f: LList -> LList. \l: LList. 
+    match l with
+      lnil _ -> l
+    | lcons {h, t} -> 
+        let res = (f t) in 
+            lcons {{or (and (< item h.3) h.1) (== h.2 0), + 1 h.2, item}, lcons {h, res}}
+    end
+);
+
+gen = fix (
+    \f: List -> LList. \items: List. 
+    match items with
+      nil _ -> lcons {{true, 0, 0}, lnil unit}
+    | cons {i, t} -> 
+        let res = (f t) in 
+            step i res
+    end
+);
+
+cal_constraint = fix (
+    \f: List -> Int -> Bool. \pos: List. \pre: Int. 
+    match pos with
+      nil _ -> true
+    | cons {h, t} -> and (f t h) (< pre h)
+    end
+);
+
+get_best = fix (
+    \f: LList -> Int. \l: LList. 
+    match l with
+      lnil _ -> 0
+    | lcons {h, t} -> 
+        let res = (f t) in 
+            if (h.1) then max res (h.2)
+            else res
+    end
+);
+
+spec = \xs: List. 
+    get_best (gen xs);
+
+main = \xs: List. 
+    spec xs;

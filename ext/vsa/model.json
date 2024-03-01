@@ -1,0 +1,467 @@
+{
+   "default" : 6.9077552789821368,
+   "depth" : 1,
+   "weight" : [
+      {
+         "name" : "@str.++@1@str.at",
+         "weight" : 2.9311937524164198
+      },
+      {
+         "name" : "@str.++@1@str.++",
+         "weight" : 1.8325814637483102
+      },
+      {
+         "name" : "@str.++@1@Const",
+         "weight" : 0.64118744162923436
+      },
+      {
+         "name" : "@str.++@0@str.at",
+         "weight" : 3.2188758248682006
+      },
+      {
+         "name" : "@str.++@0@str.substr",
+         "weight" : 3.6243409329763652
+      },
+      {
+         "name" : "@str.++@0@str.++",
+         "weight" : 0.83624802420061861
+      },
+      {
+         "name" : "@str.++@0@int.to.str",
+         "weight" : 5.0106352940962555
+      },
+      {
+         "name" : "@=@1@Const",
+         "weight" : -0
+      },
+      {
+         "name" : "@str.replace@2@str.++",
+         "weight" : 1.8325814637483102
+      },
+      {
+         "name" : "@-@1@Param",
+         "weight" : 2.3025850929940455
+      },
+      {
+         "name" : "@@0@str.suffixof",
+         "weight" : 4.8121843553724171
+      },
+      {
+         "name" : "@@0@str.substr",
+         "weight" : 1.0986122886681098
+      },
+      {
+         "name" : "@@0@str.at",
+         "weight" : 4.8121843553724171
+      },
+      {
+         "name" : "@str.contains@0@str.replace",
+         "weight" : 2.3025850929940455
+      },
+      {
+         "name" : "@str.substr@1@-",
+         "weight" : 2.5839975524322312
+      },
+      {
+         "name" : "@str.at@1@Param",
+         "weight" : 2.7725887222397811
+      },
+      {
+         "name" : "@@0@int.to.str",
+         "weight" : 4.8121843553724171
+      },
+      {
+         "name" : "@+@0@+",
+         "weight" : 1.488077055429833
+      },
+      {
+         "name" : "@str.substr@0@Param",
+         "weight" : 0.099090902644230885
+      },
+      {
+         "name" : "@str.replace@1@str.replace",
+         "weight" : 3.2188758248682006
+      },
+      {
+         "name" : "@+@0@str.len",
+         "weight" : 2.7408400239252009
+      },
+      {
+         "name" : "@ite@2@ite",
+         "weight" : 2.1972245773362196
+      },
+      {
+         "name" : "@+@1@Param",
+         "weight" : 2.7408400239252009
+      },
+      {
+         "name" : "@ite@2@str.indexof",
+         "weight" : 2.890371757896165
+      },
+      {
+         "name" : "@ite@2@+",
+         "weight" : 2.1972245773362196
+      },
+      {
+         "name" : "@str.contains@0@str.++",
+         "weight" : 2.3025850929940455
+      },
+      {
+         "name" : "@@0@ite",
+         "weight" : 2.7327428136925813
+      },
+      {
+         "name" : "@ite@0@str.suffixof",
+         "weight" : 0.58778666490211895
+      },
+      {
+         "name" : "@ite@2@Param",
+         "weight" : 1.791759469228055
+      },
+      {
+         "name" : "@ite@2@str.++",
+         "weight" : 0.69314718055994529
+      },
+      {
+         "name" : "@str.++@1@int.to.str",
+         "weight" : 5.0106352940962555
+      },
+      {
+         "name" : "@ite@2@Const",
+         "weight" : 2.890371757896165
+      },
+      {
+         "name" : "@str.indexof@2@str.len",
+         "weight" : 3.2958368660043291
+      },
+      {
+         "name" : "@int.to.str@0@str.len",
+         "weight" : 1.3862943611198906
+      },
+      {
+         "name" : "@str.replace@1@str.++",
+         "weight" : 3.2188758248682006
+      },
+      {
+         "name" : "@str.suffixof@0@Const",
+         "weight" : 0.20067069546215111
+      },
+      {
+         "name" : "@str.at@1@Const",
+         "weight" : 0.064538521137571178
+      },
+      {
+         "name" : "@str.to.int@0@str.substr",
+         "weight" : 0.69314718055994529
+      },
+      {
+         "name" : "@int.to.str@0@Param",
+         "weight" : 1.3862943611198906
+      },
+      {
+         "name" : "@+@0@ite",
+         "weight" : 3.4339872044851463
+      },
+      {
+         "name" : "@+@0@-",
+         "weight" : 3.4339872044851463
+      },
+      {
+         "name" : "@str.suffixof@0@Param",
+         "weight" : 1.7047480922384253
+      },
+      {
+         "name" : "@str.prefixof@1@Param",
+         "weight" : -0
+      },
+      {
+         "name" : "@@0@str.prefixof",
+         "weight" : 4.1190371748124717
+      },
+      {
+         "name" : "@str.contains@1@int.to.str",
+         "weight" : 2.3025850929940455
+      },
+      {
+         "name" : "@str.substr@1@Param",
+         "weight" : 3.2771447329921766
+      },
+      {
+         "name" : "@str.substr@2@str.len",
+         "weight" : 2.0243817644968085
+      },
+      {
+         "name" : "@@0@str.to.int",
+         "weight" : 4.1190371748124717
+      },
+      {
+         "name" : "@-@1@Const",
+         "weight" : 0.22314355131420971
+      },
+      {
+         "name" : "@str.substr@1@str.indexof",
+         "weight" : 3.970291913552122
+      },
+      {
+         "name" : "@str.indexof@0@Param",
+         "weight" : 0.037740327982847086
+      },
+      {
+         "name" : "@@0@=",
+         "weight" : 4.8121843553724171
+      },
+      {
+         "name" : "@str.len@0@str.substr",
+         "weight" : 2.4849066497880004
+      },
+      {
+         "name" : "@str.to.int@0@Param",
+         "weight" : 0.69314718055994529
+      },
+      {
+         "name" : "@ite@1@+",
+         "weight" : 1.791759469228055
+      },
+      {
+         "name" : "@+@0@str.indexof",
+         "weight" : 1.488077055429833
+      },
+      {
+         "name" : "@str.contains@1@Param",
+         "weight" : 0.51082562376599072
+      },
+      {
+         "name" : "@+@0@Const",
+         "weight" : 0.86903784702360942
+      },
+      {
+         "name" : "@@0@str.len",
+         "weight" : 3.713572066704308
+      },
+      {
+         "name" : "@+@1@Const",
+         "weight" : 0.066691374498672282
+      },
+      {
+         "name" : "@str.at@0@str.++",
+         "weight" : 2.7725887222397811
+      },
+      {
+         "name" : "@str.substr@2@str.indexof",
+         "weight" : 1.1977031913123406
+      },
+      {
+         "name" : "@-@1@str.len",
+         "weight" : 2.3025850929940455
+      },
+      {
+         "name" : "@=@0@+",
+         "weight" : 0.69314718055994529
+      },
+      {
+         "name" : "@str.at@0@Param",
+         "weight" : 0.064538521137571178
+      },
+      {
+         "name" : "@str.++@1@ite",
+         "weight" : 3.4011973816621555
+      },
+      {
+         "name" : "@str.substr@1@+",
+         "weight" : 1.5723966407537513
+      },
+      {
+         "name" : "@@0@-",
+         "weight" : 4.8121843553724171
+      },
+      {
+         "name" : "@str.prefixof@0@Const",
+         "weight" : 1.0986122886681098
+      },
+      {
+         "name" : "@str.++@1@Param",
+         "weight" : 1.791759469228055
+      },
+      {
+         "name" : "@str.replace@2@Const",
+         "weight" : 0.1743533871447778
+      },
+      {
+         "name" : "@str.substr@1@Const",
+         "weight" : 0.41494385206270823
+      },
+      {
+         "name" : "@str.prefixof@0@Param",
+         "weight" : 0.40546510810816444
+      },
+      {
+         "name" : "@str.substr@0@str.++",
+         "weight" : 3.970291913552122
+      },
+      {
+         "name" : "@ite@1@Const",
+         "weight" : 2.890371757896165
+      },
+      {
+         "name" : "@ite@1@Param",
+         "weight" : 0.40546510810816444
+      },
+      {
+         "name" : "@ite@0@=",
+         "weight" : 2.890371757896165
+      },
+      {
+         "name" : "@str.indexof@0@str.++",
+         "weight" : 3.2958368660043291
+      },
+      {
+         "name" : "@str.substr@2@Param",
+         "weight" : 3.970291913552122
+      },
+      {
+         "name" : "@ite@0@str.prefixof",
+         "weight" : 1.5040773967762742
+      },
+      {
+         "name" : "@ite@0@str.contains",
+         "weight" : 1.791759469228055
+      },
+      {
+         "name" : "@=@0@str.indexof",
+         "weight" : 0.69314718055994529
+      },
+      {
+         "name" : "@str.replace@0@str.replace",
+         "weight" : 1.1394342831883648
+      },
+      {
+         "name" : "@int.to.str@0@str.indexof",
+         "weight" : 1.3862943611198906
+      },
+      {
+         "name" : "@str.replace@1@Param",
+         "weight" : 2.120263536200091
+      },
+      {
+         "name" : "@@0@str.replace",
+         "weight" : 2.4142890825740468
+      },
+      {
+         "name" : "@str.replace@1@str.substr",
+         "weight" : 3.2188758248682006
+      },
+      {
+         "name" : "@str.substr@0@Const",
+         "weight" : 2.5839975524322312
+      },
+      {
+         "name" : "@str.replace@1@Const",
+         "weight" : 0.2744368457017603
+      },
+      {
+         "name" : "@@0@+",
+         "weight" : 3.713572066704308
+      },
+      {
+         "name" : "@str.len@0@Param",
+         "weight" : 0.23361485118150521
+      },
+      {
+         "name" : "@-@0@Const",
+         "weight" : 2.3025850929940455
+      },
+      {
+         "name" : "@str.++@0@Const",
+         "weight" : 1.3997173814520312
+      },
+      {
+         "name" : "@-@0@str.len",
+         "weight" : 0.10536051565782628
+      },
+      {
+         "name" : "@str.replace@0@Const",
+         "weight" : 3.2188758248682006
+      },
+      {
+         "name" : "@str.len@0@str.++",
+         "weight" : 2.4849066497880004
+      },
+      {
+         "name" : "@str.contains@1@Const",
+         "weight" : 1.2039728043259361
+      },
+      {
+         "name" : "@@0@str.contains",
+         "weight" : 2.8662742063171041
+      },
+      {
+         "name" : "@str.indexof@1@Param",
+         "weight" : 3.2958368660043291
+      },
+      {
+         "name" : "@str.indexof@1@Const",
+         "weight" : 0.076961041136128325
+      },
+      {
+         "name" : "@str.indexof@1@str.at",
+         "weight" : 3.2958368660043291
+      },
+      {
+         "name" : "@str.indexof@2@Const",
+         "weight" : 0.037740327982847086
+      },
+      {
+         "name" : "@str.len@0@Const",
+         "weight" : 3.1780538303479458
+      },
+      {
+         "name" : "@ite@1@ite",
+         "weight" : 2.1972245773362196
+      },
+      {
+         "name" : "@int.to.str@0@Const",
+         "weight" : 1.3862943611198906
+      },
+      {
+         "name" : "@str.++@0@Param",
+         "weight" : 1.3997173814520312
+      },
+      {
+         "name" : "@str.substr@2@Const",
+         "weight" : 0.92576947582869873
+      },
+      {
+         "name" : "@str.++@1@str.substr",
+         "weight" : 3.6243409329763652
+      },
+      {
+         "name" : "@str.substr@2@+",
+         "weight" : 2.5839975524322312
+      },
+      {
+         "name" : "@@0@str.++",
+         "weight" : 1.0986122886681098
+      },
+      {
+         "name" : "@str.substr@2@-",
+         "weight" : 2.5839975524322312
+      },
+      {
+         "name" : "@str.++@1@str.replace",
+         "weight" : 3.6243409329763652
+      },
+      {
+         "name" : "@str.suffixof@1@Param",
+         "weight" : -0
+      },
+      {
+         "name" : "@str.contains@0@Param",
+         "weight" : 0.22314355131420971
+      },
+      {
+         "name" : "@str.replace@0@Param",
+         "weight" : 0.44628710262841947
+      }
+   ]
+}
+
