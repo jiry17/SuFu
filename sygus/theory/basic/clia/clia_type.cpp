@@ -10,9 +10,6 @@ std::string TInt::getName() {
 PType TInt::clone(const TypeList &params) {
     return std::make_shared<TInt>();
 }
-std::string TInt::getHaskellName() {
-    return "SymInteger";
-}
 
 PType theory::clia::getTInt() {
     static PType int_type = nullptr;
