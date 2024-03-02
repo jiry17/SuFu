@@ -92,7 +92,7 @@ int main(int argv, char** argc) {
 
     // label
     global::recorder.start("label");
-    auto* label_solver = new autolabel::AutoLabelZ3Solver(init_program);
+    auto* label_solver = new autolabel::AutoLabelZ3Solver(init_program, true);
     auto res = label_solver->label();
     global::recorder.end("label");
     incre::applyConfig(res.get(), env.get());

@@ -14,14 +14,8 @@
 
 enum class SolverToken {
     OBSERVATIONAL_EQUIVALENCE,
-    COMPONENT_BASED_SYNTHESIS,
-    EUSOLVER,
-    EXTERNAL_EUSOLVER,
-    MAXFLASH,
-    VANILLA_VSA,
     POLYGEN,
     POLYGEN_CONDITION,
-    EXTERNAL_CVC5,
     MULTI_THREAD
 };
 
@@ -63,60 +57,12 @@ public:
 namespace invoker {
     namespace single {
         /**
-         * @config "encoder"
-         *  Type: std::string
-         *  Set the grammar encoder for the target programs. ("Linear" or "Tree")
-         *  Default: "Linear"
-         */
-        Solver* buildCBS(Specification* spec, Verifier* v, const InvokeConfig& config);
-
-        /**
          * @config "runnable"
          *   Type: std::function<bool(Program*)>
          *   Check whether a program is runnable.
          *   Default: Always true
          */
         Solver* buildOBE(Specification* spec, Verifier* v, const InvokeConfig& config);
-        Solver* buildEuSolver(Specification* spec, Verifier* v, const InvokeConfig& config);
-
-        /**
-         * @config "prepare"
-         *   Type: std::function<void(Grammar*, Env* env, const IOExample&)> (VSAEnvSetter);
-         *   Set constants that are used for building VSAs.
-         *   Default: For String, defined in executor/invoker/vsa_invoker.cpp
-         *
-         * @config "pruner"
-         *   Type: VSAPruner* (defined in istool/ext/vsa/vsa_builder.h)
-         *   An object that prunes off useless VSA nodes.
-         *   Default: For String, keeps the first 1e5 VSA nodes and skip those nodes that use stings longer than the input/output.
-         *
-         * @config "builder"
-         *   Type: std::shared_ptr<VSABuilder>
-         *   An object used to construct VSA from examples.
-         *   Default: std::make_shared<BFSVSABuilder>(info->grammar, pruner, spec->env.get(), prepare))
-         *
-         * @config "selector"
-         *   Type: VSAProgramSelector*
-         *   An object used to select a program from the VSA.
-         *   Default: VSARandomProgramSelector*
-         *
-         * @config "height"
-         *   Type: int
-         *   The largest height of programs considered by the solver.
-         *   Default: 7
-         */
-        Solver* buildVanillaVSA(Specification* spec, Verifier* v, const InvokeConfig& config);
-
-        /**
-         * @config "prepare"
-         *   The same as config "prepare" of function invokeVanillaVSA.
-         *
-         * @config "model"
-         *   Type: TopDownModel*
-         *   A cost model for programs in the program space. MaxFlash always returns the solution with the minimum cost.
-         *   Default: ext::vsa::getSizeModel()
-         */
-        Solver* buildMaxFlash(Specification* spec, Verifier* v, const InvokeConfig& config);
 
         /**
          * @config "is_staged"
@@ -125,15 +71,6 @@ namespace invoker {
         Solver* buildPolyGen(Specification* spec, Verifier* v, const InvokeConfig& config);
         Solver* buildCondSolver(Specification* spec, Verifier* v, const InvokeConfig& config);
         Solver* buildLIASolver(Specification* spec, Verifier* v, const InvokeConfig& config);
-
-        /**
-         * @config "memory"
-         * Type: int
-         * The memory limit (GB) for external solvers
-         * Default: 4
-         */
-        Solver* buildExternalEuSolver(Specification* spec, Verifier* v, const InvokeConfig& config);
-        Solver* buildExternalCVC5(Specification* spec, Verifier* v, const InvokeConfig& config);
     }
 
     namespace multi {
@@ -148,8 +85,6 @@ namespace invoker {
 
     Solver* builderSolver(Specification* spec, Verifier* v, SolverToken token, const InvokeConfig& config);
     FunctionContext synthesis(Specification* spec, Verifier* v, SolverToken solver_token, TimeGuard* guard, const InvokeConfig& config={});
-    std::pair<int, FunctionContext> getExampleNum(Specification* spec, Verifier* v, SolverToken solver_token, TimeGuard* guard, const InvokeConfig& config={});
-    SolverToken string2TheoryToken(const std::string& name);
 }
 
 #endif //ISTOOL_INVOKER_H
