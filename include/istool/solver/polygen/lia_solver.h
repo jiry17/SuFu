@@ -6,7 +6,6 @@
 #define ISTOOL_LIA_SOLVER_H
 
 #include "istool/solver/solver.h"
-#include "istool/ext/z3/z3_extension.h"
 #include "gurobi_c++.h"
 
 struct LIAResult {

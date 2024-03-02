@@ -37,8 +37,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     #z3
     set(Z3_PATH /Users/pro/Desktop/work/2023S/z3)
-    link_directories(/usr/local/lib)
-    set(Z3_FILE libz3.dylib)
+    set(Z3_FILE /usr/local/lib/libz3.dylib)
     include_directories(${Z3_PATH}/src/api/c++)
     include_directories(${Z3_PATH}/src/api)
 
