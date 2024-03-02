@@ -70,9 +70,8 @@ add_subdirectory(basic)
 add_subdirectory(ext)
 add_subdirectory(sygus)
 add_subdirectory(solver)
-add_subdirectory(dsl)
 add_subdirectory(incre)
  
-set(SRC_LIBS solver_lib  ${SyGuS_LIBS} ext_lib basic_lib dsl_lib incre_lib)
+set(SRC_LIBS solver_lib  ${SyGuS_LIBS} ext_lib basic_lib incre_lib)
 
 add_subdirectory(executor)
