@@ -8,8 +8,5 @@ set(BASIC_SRC ${BASIC_CLIA_SRC} ${BASIC_STRING_SRC} ${BASIC_BV_SRC} basic/theory
 aux_source_directory(z3/clia Z3_CLIA_SRC)
 aux_source_directory(z3/bv Z3_BV_SRC)
 set(Z3_SRC ${Z3_CLIA_SRC} ${Z3_BV_SRC} z3/theory_z3_semantics.cpp)
-aux_source_directory(witness/clia WITNESS_CLIA_SRC)
-aux_source_directory(witness/string WITNESS_STR_SRC)
-set(WITNESS_SRC ${WITNESS_CLIA_SRC} ${WITNESS_STR_SRC} witness/theory_witness.cpp)
 
-add_library(sygus_theory_lib STATIC ${BASIC_SRC} ${Z3_SRC} ${WITNESS_SRC} theory.cpp)
+add_library(sygus_theory_lib STATIC ${BASIC_SRC} ${Z3_SRC} theory.cpp)

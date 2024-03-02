@@ -16,8 +16,6 @@ public:
     virtual std::string getBaseName();
     virtual TypeList getParams();
     virtual PType clone(const TypeList& type_list);
-    virtual std::string getHaskellName();
-    virtual int getTupleLen();
     ~TSum() = default;
 };
 
@@ -30,8 +28,6 @@ public:
     virtual std::string getBaseName();
     virtual TypeList getParams();
     virtual PType clone(const TypeList& type_list);
-    virtual std::string getHaskellName();
-    virtual int getTupleLen();
     ~TProduct() = default;
 };
 
@@ -45,8 +41,6 @@ public:
     virtual std::string getBaseName();
     virtual TypeList getParams();
     virtual PType clone(const TypeList& type_list);
-    virtual std::string getHaskellName();
-    virtual int getTupleLen();
     ~TArrow() = default;
 };
 
@@ -59,8 +53,6 @@ public:
     virtual std::string getBaseName();
     virtual TypeList getParams();
     virtual PType clone(const TypeList& type_list);
-    virtual std::string getHaskellName();
-    virtual int getTupleLen();
     ~TList() = default;
 };
 
@@ -73,8 +65,6 @@ public:
     virtual std::string getBaseName();
     virtual TypeList getParams();
     virtual PType clone(const TypeList& type_list);
-    virtual std::string getHaskellName();
-    virtual int getTupleLen();
     ~TBTree() = default;
 };
 
