@@ -1,4 +1,4 @@
-# Polygen
+# SuFu
 
 Artifact for PLDI'24: Superfusion: Eliminating Intermediate Data Structures via Inductive Synthesis.
 
@@ -11,13 +11,17 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 1. Install dependencies
 
    ```bash
-   $ apt-get install cmake git wget libgoogle-glog-dev python3.5-tk python3-pip libboost-all-dev libjsoncpp-dev libboost-all-dev libgoogle-perftools-dev
-   $ pip install --upgrade 9.0.1
-   $ pip3 install pyparsing z3-solver matplotlib==2
+   $ apt-get update
+   $ apt-get install cmake git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev libboost-all-dev libgoogle-perftools-dev
+   $ pip install --upgrade pip==9.0.1
+   $ pip3 install pyparsing z3-solver
+    
+    以下没有运行成功
+   $ pip3 install matplotlib==2
    ```
 
 
-2. Clone *Polygen* 
+2. Clone *SuFu* 
 
    ```bash
    $ git clone https://github.com/jiry17/SuFu
@@ -27,10 +31,11 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 3. Build the whole project under the root directory of the project.
 
    ```bash
+   $ cd SuFu
    $ ./install
    ```
 
-4. *Polygen* takes *gurobi* as the underlying ILP solver. Therefore, a license of *gurobi* is required. You can get an academic license of gurobi via the following steps.
+4. *SuFu* takes *gurobi* as the underlying ILP solver. Therefore, a license of *gurobi* is required. You can get an academic license of gurobi via the following steps.
 
    1. Register or login at the [webside](https://www.gurobi.com/) of gurobi.
    2. Visit the [Free Academic License page](https://www.gurobi.com/downloads/end-user-license-agreement-academic/).
