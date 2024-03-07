@@ -1,0 +1,48 @@
+
+Inductive List;
+
+Inductive CList;
+
+min = \x: Int. \y: Int. 
+    if (< x y) then x
+    else y;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      elt a -> {a, 1}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let new_min = (min result.1 hd) in 
+                let new_cnt = (if (< hd result.1) then 1
+                else + result.2 (if (== hd result.1) then 1
+                else 0)) in 
+                    {new_min, new_cnt}
+    end
+) xs).2;
+
+cat = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      elt a -> cons {a, ys}
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> Compress List. \xs: CList. 
+    match xs with
+      single a -> 
+        let tmp1 = (elt a) in 
+            align (label tmp1 ) 
+    | concat {a, b} -> 
+        let tmp2 = (f a) in 
+            let tmp3 = (f b) in 
+                align (label (cat (unlabel tmp2 ) (unlabel tmp3 )) ) 
+    end
+);
+
+main = \x: CList. 
+    let tmp4 = (repr x) in 
+        align (spec (unlabel tmp4 )) ;

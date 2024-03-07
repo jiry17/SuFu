@@ -1,0 +1,32 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            align (v (unlabel tmp2 )) ;
+
+inf = 100;
+
+cnt1s = fix (
+    \f: Int -> Int -> List -> Int. \pre: Int. \cnt: Int. \xs: List. 
+    match xs with
+      nil _ -> cnt
+    | cons {h, t} -> 
+        let cnt = (if (and (== pre 0) (== h 1)) then + cnt 1
+        else cnt) in 
+            f h pre t
+    end
+) 0 0;
+
+main = single_pass cnt1s;

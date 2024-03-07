@@ -1,0 +1,30 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            if (< (+ h tmp1) 0) then + h tmp1
+            else 0
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2;
+
+mps = fix (
+    \f: List -> Int. \l: List. 
+    match l with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let res = (f t) in 
+            if (< 0 (+ res h)) then 0
+            else + res h
+    end
+);
+
+main = single_pass mps;

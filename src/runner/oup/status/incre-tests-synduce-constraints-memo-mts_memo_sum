@@ -1,0 +1,21 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ MList :: MList. <ielt Int | icons {Int,Int,MList}>
+ielt : Int -> MList'. <ielt Int | icons {Int,Int,MList'}>
+icons : {Int,Int,MList} ->
+        MList'. <ielt Int | icons {Int,Int,MList'}>
+repr : MList -> List'. <elt Int | cons {Int,List'}>
+sum : List -> Int
+is_memo : MList -> Bool
+max : Int -> Int -> Int
+spec : List -> Int
+target : MList -> MList
+main : MList -> Int
+
+size: 136
+compress-num: 1
+label-num: 7
+rewrite-size: 16
+0.015896

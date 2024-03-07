@@ -1,0 +1,60 @@
+
+Inductive Tree;
+
+Inductive List;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+cat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+repr = let dec = (fix (
+    \f: List -> Tree -> List. \res: List. \t: Tree. 
+    match t with
+      empty _ -> res
+    | node {w, l, r} -> cons {w, f (f res l) r}
+    end
+)) in 
+        fix (
+        \f: Tree -> List. \t: Tree. 
+        match t with
+          empty _ -> nil Unit
+        | node {w, l, r} -> cons {w, dec (f l) r}
+        end
+    );
+
+target = fix (
+    \f: Tree -> {Int, Int}. \t: Tree. 
+    match t with
+      empty _ -> {0, 0}
+    | node {w, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                {+ (+ tmp3.1 tmp2.1) w, if (and (< tmp2.2 (+ tmp3.2 tmp2.1)) (< (+ (+ tmp3.1 tmp2.1) w) (+ tmp3.2 tmp2.1))) then + tmp3.2 tmp2.1
+                else if (< (+ (+ tmp3.1 tmp2.1) w) tmp2.2) then tmp2.2
+                else + (+ tmp3.1 tmp2.1) w}
+    end
+);
+
+@Input x = Int;
+
+spec = fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {h, t} -> 
+        let result = (f t) in 
+            {+ h result.1, max result.2 (+ h result.1)}
+    end
+);
+
+main = \xs: Tree. 
+    let tmp4 = (target xs) in 
+        {tmp4.1, tmp4.2};

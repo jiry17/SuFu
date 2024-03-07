@@ -1,0 +1,34 @@
+
+Inductive Tree;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \t: Tree. 
+    (fix (
+    \f: ({Int, Int}) -> Tree -> {Int, Int}. \s: {Int, Int}. \t: Tree. 
+    match t with
+      nil _ -> s
+    | node {a, l, r} -> 
+        let result = (f s l) in 
+            f {+ a result.1, max 0 (+ a result.2)} r
+    end
+) {0, 0} t).2;
+
+repr = fix (
+    \f: Tree -> Compress Tree. \t: Tree. 
+    match t with
+      nil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | node {a, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (node {a, unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+main = \t: Tree. 
+    let tmp4 = (repr t) in 
+        align (spec (unlabel tmp4 )) ;

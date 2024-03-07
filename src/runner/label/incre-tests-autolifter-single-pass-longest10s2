@@ -1,0 +1,43 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            align (v (unlabel tmp2 )) ;
+
+inf = 100;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+longest10s2 = fix (
+    \f: Bool -> Int -> List -> Int. \s0: Bool. \len: Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let s1 = (and s0 (== h 2)) in 
+            let s0 = (or (== h 1) (and (== h 0) s0)) in 
+                let len = (if (or s0 s1) then + len 1
+                else 0) in 
+                    let upd = (if (s1) then len
+                    else 0) in 
+                        let len = (if (== h 1) then 1
+                        else if (s1) then 0
+                        else len) in 
+                            max upd (f s0 len t)
+    end
+) false 0;
+
+main = single_pass longest10s2;

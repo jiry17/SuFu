@@ -1,0 +1,42 @@
+
+Inductive List;
+
+div = \a: Int. \b: Int. 
+    if (== b 0) then 0
+    else / a b;
+
+length = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            align (v (unlabel tmp2 )) ;
+
+average = \xs: List. 
+    let len = (length xs) in 
+        let sum = (fix (
+        \f: List -> Int. \ys: List. 
+        match ys with
+          nil _ -> 0
+        | cons {h, t} -> + h (f t)
+        end
+    ) xs) in 
+            div sum len;
+
+main = single_pass average;

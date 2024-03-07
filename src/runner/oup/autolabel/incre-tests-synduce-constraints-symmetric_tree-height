@@ -1,0 +1,349 @@
+
+Tree :: Tree. <leaf Int | node {Int,Tree,Tree}>
+ leaf : Int -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ is_sym_pair : Tree -> Tree -> Bool
+is_sym : Tree -> Bool
+max : Int -> Int -> Int
+spec : Tree -> Int
+target : Tree -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+List :: List. <elt Int | cons {Int,List}>
+elt : Int -> List'. <elt Int | cons {Int,List'}>
+cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+depth_lim : Int
+gen : List -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+main : List -> Int
+
+
+Inductive Tree;
+
+is_sym_pair = fix (
+    \f: Tree -> Tree -> Bool. \l: Tree. \r: Tree. 
+    match {l, r} with
+      {leaf x1, leaf x2} -> == x1 x2
+    | {node {x1, l1, r1}, node {x2, l2, r2}} -> and (== x1 x2) (and (f r1 l2) (f l1 r1))
+    | _ -> false
+    end
+);
+
+is_sym = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      leaf _ -> true
+    | node {_, l, r} -> and (is_sym_pair l r) (and (f l) (f r))
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> 0
+    | node {w, l, r} -> + 1 (+ (f l) (f r))
+    end
+);
+
+target = fix (
+    \f: Tree -> Compress Tree. \t: Tree. 
+    match t with
+      leaf w -> 
+        let tmp1 = (leaf w) in 
+            align (label tmp1 ) 
+    | node {w, l, r} -> 
+        let tmp2 = (f l) in 
+            align (label (node {w, unlabel tmp2 , r}) ) 
+    end
+);
+
+Inductive List;
+
+depth_lim = 4;
+
+gen = fix (
+    \f: Int -> List -> Tree. \depth: Int. \xs: List. 
+    match xs with
+      elt w -> leaf w
+    | cons {h, t} -> if (== 0 depth) then leaf h
+        else let rem = (- depth 1) in 
+            node {h, f rem t, f rem t}
+    end
+) depth_lim;
+
+main = \xs: List. 
+    let t = (gen xs) in 
+        if (is_sym t) then let tmp3 = (target t) in 
+            align (spec (unlabel tmp3 )) 
+        else 0;
+align term #0: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  w: Int
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp1: Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@1 create@0 node ({w,unlabel tmp2,r})
+  r: Tree. <leaf Int | node {Int,Tree,Tree}>
+  w: Int
+  l: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp2: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #2: Int
+align@2 spec (unlabel tmp3)
+  tmp3: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  xs: List. <elt Int | cons {Int,List}>
+Components for compress:
+  elt [Int] -> List. <elt Int | cons {Int,List}> 6
+  depth_lim [] -> Int 7
+  max [Int,Int] -> Int 3
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 6
+
+Components for align:
+  is_sym [Tree. <leaf Int | node {Int,Tree,Tree}>] -> Bool 2
+  elt [Int] -> List. <elt Int | cons {Int,List}> 6
+  depth_lim [] -> Int 7
+  max [Int,Int] -> Int 3
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  is_sym_pair [Tree. <leaf Int | node {Int,Tree,Tree}>,Tree. <leaf Int | node {Int,Tree,Tree}>] -> Bool 1
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  spec [Tree. <leaf Int | node {Int,Tree,Tree}>] -> Int 4
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 6
+  gen [List. <elt Int | cons {Int,List}>] -> Tree. <leaf Int | node {Int,Tree,Tree}> 8
+
+Components for comb:
+  elt [Int] -> List. <elt Int | cons {Int,List}> 6
+  depth_lim [] -> Int 7
+  max [Int,Int] -> Int 3
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 6
+
+align term #0: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  w: Int
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp1: Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@1 create@0 node ({w,unlabel tmp2,r})
+  r: Tree. <leaf Int | node {Int,Tree,Tree}>
+  w: Int
+  l: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp2: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #2: Int
+align@2 spec (unlabel tmp3)
+  tmp3: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  xs: List. <elt Int | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param0
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+  Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param1
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  Param3
+num = 2
+start: start
+node: start
+  Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>([Param0,Param1,Param2]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  depth_lim
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  ite([Int@0]@Bool [Int@0]@Int [Int@0]@Int)
+  depth_lim
+  max([Int@0]@Int [Int@0]@Int)
+  spec([Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  ite([Int@0,Int@1,Int@2]@Bool [Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  depth_lim
+  max([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  spec([Int@0,Int@1,Int@2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Bool@0,Bool@1,Int@0]@Int
+  Int@0
+  +([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  -([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  ite([Bool@0,Bool@1,Int@0]@Bool [Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  depth_lim
+  max([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  spec([Bool@0,Bool@1,Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Bool@0,Bool@1,Int@0]@Bool
+  Bool@0
+  Bool@1
+  is_sym([Bool@0,Bool@1,Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  is_sym_pair([Bool@0,Bool@1,Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}> [Bool@0,Bool@1,Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[Tree. <leaf Int | node {Int,Tree,Tree}>->Int]([Int@0]@Int [Int@0,Int@1,Int@2]@Int [Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  depth_lim
+  max([Param0]@Int [Param0]@Int)
+  spec([Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0]@Bool
+  fold[Tree. <leaf Int | node {Int,Tree,Tree}>->Bool]([Int@0]@Bool [Bool@0,Bool@1,Int@0]@Bool [Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  is_sym([Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  is_sym_pair([Param0]@Tree. <leaf Int | node {Int,Tree,Tree}> [Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0]@Bool
+  is_sym([Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  is_sym_pair([Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}> [Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Int@2]@Bool
+  is_sym([Int@0,Int@1,Int@2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  is_sym_pair([Int@0,Int@1,Int@2]@Tree. <leaf Int | node {Int,Tree,Tree}> [Int@0,Int@1,Int@2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  elt([Param0]@Int)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0]@Int)
+node: [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1,Int@2]@Int)
+node: [Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Bool@0,Bool@1,Int@0]@Int)
+node: [Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Int@0]@Int)
+  gen([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1,Int@2]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Int@0,Int@1,Int@2]@Int)
+  gen([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+node: [Bool@0,Bool@1,Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Bool@0,Bool@1,Int@0]@Int)
+  gen([Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  Param0
+  leaf([Param0]@Int)
+  gen([Param0]@List. <elt Int | cons {Int,List}>)
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [] spec(Param0)
+  [0] Param3 -> spec(Param0)
+  [] null
+  [0] Param0 -> spec(Param0)
+compress #0: Int
+pass #0: 
+0
+pass #1: 
++ tmp2 (max (+ 1 tmp2) tmp2)
+pass #2: 
+tmp3
+
+Inductive Tree;
+
+is_sym_pair = fix (
+    \f: Tree -> Tree -> Bool. \l: Tree. \r: Tree. 
+    match {l, r} with
+      {leaf x1, leaf x2} -> == x1 x2
+    | {node {x1, l1, r1}, node {x2, l2, r2}} -> and (== x1 x2) (and (f r1 l2) (f l1 r1))
+    | _ -> false
+    end
+);
+
+is_sym = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      leaf _ -> true
+    | node {_, l, r} -> and (is_sym_pair l r) (and (f l) (f r))
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> 0
+    | node {w, l, r} -> + 1 (+ (f l) (f r))
+    end
+);
+
+target = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> 0
+    | node {w, l, r} -> 
+        let tmp2 = (f l) in 
+            + tmp2 (max (+ 1 tmp2) tmp2)
+    end
+);
+
+Inductive List;
+
+depth_lim = 4;
+
+gen = fix (
+    \f: Int -> List -> Tree. \depth: Int. \xs: List. 
+    match xs with
+      elt w -> leaf w
+    | cons {h, t} -> if (== 0 depth) then leaf h
+        else let rem = (- depth 1) in 
+            node {h, f rem t, f rem t}
+    end
+) depth_lim;
+
+main = \xs: List. 
+    let t = (gen xs) in 
+        if (is_sym t) then let tmp3 = (target t) in 
+            tmp3
+        else 0;
+syn-comb: 0.05231
+collect: 0.825047
+label: 0.015722
+extend-component: 2.5e-05
+execute: 0.638132
+syn-align: 1.49455
+comb-size: 15
+align-size: 3
+extract-size: 2
+1.57143
+Success

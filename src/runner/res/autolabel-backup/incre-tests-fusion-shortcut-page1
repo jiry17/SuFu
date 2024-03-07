@@ -1,0 +1,31 @@
+
+Inductive List;
+
+Inductive BoolList;
+
+map = \f: Int -> Bool. 
+    fix (
+    \g: List -> Bool. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> 
+        let tmp2 = (f h) in 
+            let tmp3 = (g t) in 
+                and tmp3 tmp2
+    end
+);
+
+p = \x: Int. 
+    >= 0 x;
+
+all = fix (
+    \f: BoolList -> Bool. \xs: BoolList. 
+    match xs with
+      bnil _ -> true
+    | bcons {h, t} -> and h (f t)
+    end
+);
+
+main = \xs: List. 
+    let tmp4 = (map p xs) in 
+        tmp4;

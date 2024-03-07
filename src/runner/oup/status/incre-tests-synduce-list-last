@@ -1,0 +1,18 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ CList :: CList. <single Int | concat {CList,CList}>
+single : Int -> CList'. <single Int | concat {CList',CList'}>
+concat : {CList,CList} ->
+         CList'. <single Int | concat {CList',CList'}>
+spec : List -> Int
+cat : List -> List -> List'. <elt Int | cons {Int,List'}>
+repr : CList -> List'. <elt Int | cons {Int,List'}>
+main : CList -> Int
+
+size: 79
+compress-num: 1
+label-num: 8
+rewrite-size: 14
+0.010355

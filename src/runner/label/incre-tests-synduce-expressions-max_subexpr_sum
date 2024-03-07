@@ -1,0 +1,49 @@
+
+Inductive ArithExpr;
+
+Inductive PsumExpr;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+repr = fix (
+    \f: PsumExpr -> Compress ArithExpr. \e: PsumExpr. 
+    match e with
+      nint i -> 
+        let tmp1 = (int i) in 
+            align (label tmp1 ) 
+    | nplus {e1, e2} -> 
+        let tmp2 = (f e1) in 
+            let tmp3 = (f e2) in 
+                align (label (plus {unlabel tmp2 , unlabel tmp3 }) ) 
+    | nminus {e1, e2} -> 
+        let tmp4 = (f e1) in 
+            let tmp5 = (f e2) in 
+                align (label (minus {unlabel tmp4 , unlabel tmp5 }) ) 
+    end
+);
+
+spec = \e: ArithExpr. 
+    (fix (
+    \f: ArithExpr -> {Int, Int}. \e: ArithExpr. 
+    match e with
+      int i -> {i, i}
+    | plus {e1, e2} -> 
+        let r1 = (f e1) in 
+            let r2 = (f e2) in 
+                let sum = (+ r1.1 r2.1) in 
+                    let m = (max sum (max r1.2 r2.2)) in 
+                        {sum, m}
+    | minus {e1, e2} -> 
+        let r1 = (f e1) in 
+            let r2 = (f e2) in 
+                let sum = (- r1.1 r2.1) in 
+                    let m = (max sum (max r1.2 r2.2)) in 
+                        {sum, m}
+    end
+) e).2;
+
+main = \e: PsumExpr. 
+    let tmp6 = (repr e) in 
+        align (spec (unlabel tmp6 )) ;

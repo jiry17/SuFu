@@ -1,0 +1,30 @@
+
+Inductive List;
+
+single_pass = \v: List -> Bool. 
+    let run = (fix (
+    \f: List -> {Bool, Int}. \xs: List. 
+    match xs with
+      nil _ -> {true, al_inf}
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            {and tmp1.1 (< h tmp1.2), if (< tmp1.2 h) then tmp1.2
+            else h}
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2.1;
+
+inf = 100;
+
+is_sorted = fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> if (>= pre h) then false
+        else f h t
+    end
+) (- 0 inf);
+
+main = single_pass is_sorted;

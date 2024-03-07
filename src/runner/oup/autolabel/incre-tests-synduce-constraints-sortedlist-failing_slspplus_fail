@@ -1,0 +1,275 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ NList :: NList. <line List | ncons {List,NList}>
+line : List -> NList'. <line List | ncons {List,NList'}>
+ncons : {List,NList} -> NList'. <line List | ncons {List,NList'}>
+CList :: CList. <sglt List | cat {CList,Int,CList}>
+sglt : List -> CList'. <sglt List | cat {CList',Int,CList'}>
+cat : {CList,Int,CList} ->
+      CList'. <sglt List | cat {CList',Int,CList'}>
+c2n : CList -> NList'. <line List | ncons {List,NList'}>
+lsum : List -> Int
+min : Int -> Int -> Int
+max : Int -> Int -> Int
+lmin : CList -> Int
+lmax : CList -> Int
+sorted : CList -> Bool
+spec : NList -> {Int, Bool}
+target : CList -> CList'. <sglt List | cat {CList',Int,CList'}>
+main : CList -> {Int, Bool}
+
+
+Inductive List;
+
+Inductive NList;
+
+Inductive CList;
+
+c2n = let aux = (fix (
+    \f: NList -> CList -> NList. \pre: NList. \c: CList. 
+    match c with
+      sglt a -> ncons {a, pre}
+    | cat {l, _, r} -> f (f pre r) l
+    end
+)) in 
+        fix (
+        \f: CList -> NList. \c: CList. 
+        match c with
+          sglt a -> line a
+        | cat {l, _, r} -> aux (f r) l
+        end
+    );
+
+lsum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> x
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+lmin = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      sglt a -> lsum a
+    | cat {l, _, r} -> min (f l) (f r)
+    end
+);
+
+lmax = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      sglt a -> lsum a
+    | cat {l, _, r} -> max (f l) (f r)
+    end
+);
+
+sorted = fix (
+    \f: CList -> Bool. \c: CList. 
+    match c with
+      sglt a -> true
+    | cat {l, piv, r} -> and (and (< (lmax l) piv) (< piv (lmin r))) (and (f l) (f r))
+    end
+);
+
+spec = fix (
+    \f: NList -> {Int, Bool}. \xs: NList. 
+    match xs with
+      line a -> {max 0 (lsum a), >= (lsum a) 0}
+    | ncons {h, t} -> 
+        let res = (f t) in 
+            let line_sum = (lsum h) in 
+                {if (and res.2 (>= line_sum 0)) then + res.1 line_sum
+                else res.1, and res.2 (>= line_sum 0)}
+    end
+);
+
+target = let list_repr = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      elt a -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+)) in 
+        fix (
+        \f: CList -> Compress CList. \c: CList. 
+        match c with
+          sglt x -> 
+            let tmp2 = (list_repr x) in 
+                align (label (sglt (unlabel tmp2 )) ) 
+        | cat {l, piv, r} -> if (<= piv 0) then let tmp3 = (f r) in 
+                align (label (cat {l, piv, unlabel tmp3 }) ) 
+            else let tmp4 = (f l) in 
+                let tmp5 = (f r) in 
+                    align (label (cat {unlabel tmp4 , piv, unlabel tmp5 }) ) 
+        end
+    );
+
+main = \c: CList. 
+    if (sorted c) then let tmp6 = (target c) in 
+        align (spec (c2n (unlabel tmp6 ))) 
+    else {0, false};
+align term #0: compress[0] List
+align@0 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  a: Int
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 cons ({h,unlabel tmp1})
+  h: Int
+  xs: List. <elt Int | cons {Int,List}>
+  tmp1: compress[0] List. <elt Int | cons {Int,List}>
+  t: List. <elt Int | cons {Int,List}>
+align term #2: compress[1] CList. <sglt List | cat {CList,Int,CList}>
+align@2 create@1 sglt (unlabel tmp2)
+  c: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  tmp2: compress[0] List. <elt Int | cons {Int,List}>
+  x: List. <elt Int | cons {Int,List}>
+align term #3: compress[1] CList. <sglt List | cat {CList,Int,CList}>
+align@3 create@1 cat ({l,piv,unlabel tmp3})
+  r: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  l: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  tmp3: compress[1] CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  c: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  piv: Int
+align term #4: compress[1] CList. <sglt List | cat {CList,Int,CList}>
+align@4 create@1 cat ({unlabel tmp4,piv,unlabel tmp5})
+  tmp4: compress[1] CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  tmp5: compress[1] CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  r: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  c: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  piv: Int
+  l: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+align term #5: {Int,Bool}
+align@5 spec (c2n (unlabel tmp6))
+  c: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  tmp6: compress[1] CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+Components for compress:
+  sglt [List. <elt Int | cons {Int,List}>] -> CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}> 2
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int*List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  cat [(CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>*Int*CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>)] -> CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}> 2
+  ncons [(List. <elt Int | cons {Int,List}>*NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>)] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  min [Int,Int] -> Int 5
+  line [List. <elt Int | cons {Int,List}>] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  max [Int,Int] -> Int 6
+
+Components for align:
+  spec [NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>] -> (Int*Bool) 10
+  sorted [CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>] -> Bool 9
+  lmax [CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>] -> Int 8
+  sglt [List. <elt Int | cons {Int,List}>] -> CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}> 2
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int*List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  cat [(CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>*Int*CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>)] -> CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}> 2
+  ncons [(List. <elt Int | cons {Int,List}>*NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>)] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  c2n [CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 3
+  lmin [CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>] -> Int 7
+  lsum [List. <elt Int | cons {Int,List}>] -> Int 4
+  min [Int,Int] -> Int 5
+  line [List. <elt Int | cons {Int,List}>] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  max [Int,Int] -> Int 6
+
+Components for comb:
+  sglt [List. <elt Int | cons {Int,List}>] -> CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}> 2
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int*List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  cat [(CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>*Int*CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>)] -> CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}> 2
+  ncons [(List. <elt Int | cons {Int,List}>*NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>)] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  min [Int,Int] -> Int 5
+  line [List. <elt Int | cons {Int,List}>] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  max [Int,Int] -> Int 6
+
+align term #0: compress[0] List
+align@0 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  a: Int
+  (0) {xs: elt 4,a: 4} @ {} -> compress elt 4
+  (0) {xs: elt -4,a: -4} @ {} -> compress elt -4
+  (0) {xs: elt -5,a: -5} @ {} -> compress elt -5
+  (0) {xs: elt 3,a: 3} @ {} -> compress elt 3
+  (0) {xs: elt 5,a: 5} @ {} -> compress elt 5
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 cons ({h,unlabel tmp1})
+  h: Int
+  xs: List. <elt Int | cons {Int,List}>
+  tmp1: compress[0] List. <elt Int | cons {Int,List}>
+  t: List. <elt Int | cons {Int,List}>
+  (1) {h: 5,xs: cons (5,elt -4),tmp1: compress elt -4,t: elt -4} @ {} -> compress cons (5,elt -4)
+  (1) {h: -1,xs: cons (-1,cons (5,elt -4)),tmp1: compress cons (5,elt -4),t: cons (5,elt -4)} @ {} -> compress cons (-1,cons (5,elt -4))
+  (1) {h: -2,xs: cons (-2,cons (-1,cons (5,elt -4))),tmp1: compress cons (-1,cons (5,elt -4)),t: cons (-1,cons (5,elt -4))} @ {} -> compress cons (-2,cons (-1,cons (5,elt -4)))
+  (1) {h: 1,xs: cons (1,cons (-2,cons (-1,cons (5,elt -4)))),tmp1: compress cons (-2,cons (-1,cons (5,elt -4))),t: cons (-2,cons (-1,cons (5,elt -4)))} @ {} -> compress cons (1,cons (-2,cons (-1,cons (5,elt -4))))
+  (1) {h: -4,xs: cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4))))),tmp1: compress cons (1,cons (-2,cons (-1,cons (5,elt -4)))),t: cons (1,cons (-2,cons (-1,cons (5,elt -4))))} @ {} -> compress cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4)))))
+  (1) {h: 3,xs: cons (3,cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4)))))),tmp1: compress cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4))))),t: cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4)))))} @ {} -> compress cons (3,cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4))))))
+  (1) {h: -4,xs: cons (-4,elt -5),tmp1: compress elt -5,t: elt -5} @ {} -> compress cons (-4,elt -5)
+  (1) {h: -4,xs: cons (-4,elt 3),tmp1: compress elt 3,t: elt 3} @ {} -> compress cons (-4,elt 3)
+  (1) {h: 2,xs: cons (2,cons (-4,elt 3)),tmp1: compress cons (-4,elt 3),t: cons (-4,elt 3)} @ {} -> compress cons (2,cons (-4,elt 3))
+  (1) {h: 2,xs: cons (2,cons (2,cons (-4,elt 3))),tmp1: compress cons (2,cons (-4,elt 3)),t: cons (2,cons (-4,elt 3))} @ {} -> compress cons (2,cons (2,cons (-4,elt 3)))
+align term #2: compress[1] CList. <sglt List | cat {CList,Int,CList}>
+align@2 create@1 sglt (unlabel tmp2)
+  c: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  tmp2: compress[0] List. <elt Int | cons {Int,List}>
+  x: List. <elt Int | cons {Int,List}>
+  (2) {c: sglt elt 4,tmp2: compress elt 4,x: elt 4} @ {} -> compress sglt elt 4
+  (2) {c: sglt cons (3,cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4)))))),tmp2: compress cons (3,cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4)))))),x: cons (3,cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4))))))} @ {} -> compress sglt cons (3,cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4))))))
+  (2) {c: sglt cons (-4,elt -5),tmp2: compress cons (-4,elt -5),x: cons (-4,elt -5)} @ {} -> compress sglt cons (-4,elt -5)
+  (2) {c: sglt cons (3,cons (0,cons (-3,cons (1,cons (1,cons (2,cons (2,cons (-4,elt 3)))))))),tmp2: compress cons (3,cons (0,cons (-3,cons (1,cons (1,cons (2,cons (2,cons (-4,elt 3)))))))),x: cons (3,cons (0,cons (-3,cons (1,cons (1,cons (2,cons (2,cons (-4,elt 3))))))))} @ {} -> compress sglt cons (3,cons (0,cons (-3,cons (1,cons (1,cons (2,cons (2,cons (-4,elt 3))))))))
+  (2) {c: sglt cons (1,cons (0,cons (-2,elt 5))),tmp2: compress cons (1,cons (0,cons (-2,elt 5))),x: cons (1,cons (0,cons (-2,elt 5)))} @ {} -> compress sglt cons (1,cons (0,cons (-2,elt 5)))
+align term #3: compress[1] CList. <sglt List | cat {CList,Int,CList}>
+align@3 create@1 cat ({l,piv,unlabel tmp3})
+  r: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  l: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  tmp3: compress[1] CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  c: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  piv: Int
+  (3) {r: sglt elt 4,l: sglt elt -2,tmp3: compress sglt elt 4,c: cat (sglt elt -2,-1,sglt elt 4),piv: -1} @ {} -> compress cat (sglt elt -2,-1,sglt elt 4)
+align term #4: compress[1] CList. <sglt List | cat {CList,Int,CList}>
+align@4 create@1 cat ({unlabel tmp4,piv,unlabel tmp5})
+  tmp4: compress[1] CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  tmp5: compress[1] CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  r: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  c: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  piv: Int
+  l: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+align term #5: {Int,Bool}
+align@5 spec (c2n (unlabel tmp6))
+  c: CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  tmp6: compress[1] CList. <sglt List. <elt Int | cons {Int,List}> | cat {CList,Int,CList}>
+  (5) {c: cat (sglt elt -2,-1,sglt elt 4),tmp6: compress cat (sglt elt -2,-1,sglt elt 4)} @ {} -> (4,false)
+  (5) {c: sglt cons (3,cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4)))))),tmp6: compress sglt cons (3,cons (-4,cons (1,cons (-2,cons (-1,cons (5,elt -4))))))} @ {} -> (0,false)
+  (5) {c: sglt cons (-4,elt -5),tmp6: compress sglt cons (-4,elt -5)} @ {} -> (0,false)
+  (5) {c: sglt cons (3,cons (0,cons (-3,cons (1,cons (1,cons (2,cons (2,cons (-4,elt 3)))))))),tmp6: compress sglt cons (3,cons (0,cons (-3,cons (1,cons (1,cons (2,cons (2,cons (-4,elt 3))))))))} @ {} -> (5,true)
+  (5) {c: sglt cons (1,cons (0,cons (-2,elt 5))),tmp6: compress sglt cons (1,cons (0,cons (-2,elt 5)))} @ {} -> (4,true)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

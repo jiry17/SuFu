@@ -1,0 +1,44 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> {Int, Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {al_inf, al_inf, al_inf}
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            {if (< tmp1.1 h) then tmp1.1
+            else if (< tmp1.2 h) then h
+            else tmp1.2, if (< h tmp1.3) then tmp1.3
+            else if (< h tmp1.2) then h
+            else tmp1.2, if (< tmp1.3 h) then tmp1.3
+            else h}
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2.1;
+
+inf = 100;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+max = \a: Int. \b: Int. 
+    if (> a b) then a
+    else b;
+
+trdmin = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {inf, inf, inf}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            {min res.1 (max res.2 h), min res.2 (max res.3 h), min res.3 h}
+    end
+) xs).1;
+
+main = single_pass trdmin;

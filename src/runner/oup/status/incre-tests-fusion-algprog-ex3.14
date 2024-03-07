@@ -1,0 +1,18 @@
+
+Tree :: Tree. <tip Int | bin {Tree,Tree}>
+ tip : Int -> Tree'. <tip Int | bin {Tree',Tree'}>
+ bin : {Tree,Tree} -> Tree'. <tip Int | bin {Tree',Tree'}>
+ PTree :: PTree. <ptip {Int,Int} | pbin {PTree,PTree}>
+ptip : {Int,Int} ->
+       PTree'. <ptip {Int,Int} | pbin {PTree',PTree'}>
+pbin : {PTree,PTree} ->
+       PTree'. <ptip {Int,Int} | pbin {PTree',PTree'}>
+tri : Tree -> PTree'. <ptip {Int,Int} | pbin {PTree',PTree'}>
+tsum : PTree -> Int
+main : Tree -> Int
+
+size: 98
+compress-num: 1
+label-num: 8
+rewrite-size: 18
+0.014345

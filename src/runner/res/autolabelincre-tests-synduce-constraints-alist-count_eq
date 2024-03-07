@@ -1,0 +1,46 @@
+
+Inductive List;
+
+Inductive Nat;
+
+is_unique = let key_differ = (\key: Int. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> and (not (== h key)) (f t)
+    end
+)) in 
+        fix (
+        \f: List -> Bool. \xs: List. 
+        match xs with
+          nil _ -> true
+        | cons {h, t} -> and (key_differ h t) (f t)
+        end
+    );
+
+@Input w = Int;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> if (== h w) then + 1 (f t)
+        else f t
+    end
+);
+
+target = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> if (== h w) then 1
+        else let tmp3 = (f t) in 
+            tmp3
+    end
+);
+
+main = \xs: List. 
+    if (is_unique xs) then let tmp4 = (target xs) in 
+        tmp4
+    else 0;

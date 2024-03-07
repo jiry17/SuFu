@@ -1,0 +1,63 @@
+
+Inductive List;
+
+Inductive List2D;
+
+Inductive List3D;
+
+tails = fix (
+    \f: List -> List2D. \xs: List. 
+    match xs with
+      nil _ -> cons2D {xs, nil2D unit}
+    | cons {h, t} -> cons2D {xs, f t}
+    end
+);
+
+append = \w: Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> cons {w, nil unit}
+    | cons {h, t} -> cons {h, f t}
+    end
+);
+
+scanl = \f: Int -> List -> List. \init: List. 
+    fix (
+    \g: List -> List -> List2D. \now: List. \xs: List. 
+    match xs with
+      nil _ -> cons2D {now, nil2D unit}
+    | cons {h, t} -> cons2D {now, g (f h now) t}
+    end
+) init;
+
+inits = scanl append (nil unit);
+
+map = \g: List -> List2D. 
+    fix (
+    \f: List2D -> List3D. \xs: List2D. 
+    match xs with
+      nil2D _ -> nil3D unit
+    | cons2D {h, t} -> cons3D {g h, f t}
+    end
+);
+
+concat = fix (
+    \f: List3D -> Compress List2D. \xs: List3D. 
+    match xs with
+      nil3D _ -> 
+        let tmp1 = (nil2D unit) in 
+            align (label tmp1 ) 
+    | cons3D {h, t} -> 
+        align (label (fix (
+        \g: List2D -> List2D. \ys: List2D. 
+        match ys with
+          nil2D _ -> unlabel (f t) 
+        | cons2D {h1, t1} -> cons2D {h1, g t1}
+        end
+    ) h) ) 
+    end
+);
+
+segs = \xs: List. 
+    concat (map tails (inits xs));

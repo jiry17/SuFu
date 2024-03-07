@@ -1,0 +1,72 @@
+
+Inductive Tree;
+
+Inductive PTree;
+
+Inductive List;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+repr = fix (
+    \f: Tree -> PTree. \x: Tree. 
+    match x with
+      telt a -> pelt a
+    | tnode {a, l, r} -> 
+        let repr_list = (fix (
+        \g: Tree -> List. \y: Tree. 
+        match y with
+          telt a -> 
+            let z = (pelt a) in 
+                elt z
+        | tnode {a, l, r} -> cons {pelt a, cons {f l, g r}}
+        end
+    )) in 
+            pnode {a, cons {f l, repr_list r}}
+    end
+);
+
+spec = fix (
+    \f: PTree -> Int. \x: PTree. 
+    match x with
+      pelt a -> a
+    | pnode {a, l} -> 
+        let maxh_aux = (fix (
+        \g: List -> Int. \y: List. 
+        match y with
+          elt a -> f a
+        | cons {hd, tl} -> + (f hd) (g tl)
+        end
+    )) in 
+            let res = (maxh_aux l) in 
+                max a res
+    end
+);
+
+target = fix (
+    \f: Tree -> Compress Tree. \t: Tree. 
+    let aux = (fix (
+    \g: Tree -> Compress Tree. \t: Tree. 
+    match t with
+      telt w -> 
+        align (label t ) 
+    | tnode {w, l, r} -> 
+        let tmp1 = (f l) in 
+            let tmp2 = (g r) in 
+                align (label (tnode {w, unlabel tmp1 , unlabel tmp2 }) ) 
+    end
+)) in 
+        match t with
+          telt w -> 
+            align (label t ) 
+        | tnode {w, l, r} -> 
+            let tmp3 = (f l) in 
+                let tmp4 = (aux r) in 
+                    align (label (tnode {w, unlabel tmp3 , unlabel tmp4 }) ) 
+        end
+);
+
+main = \t: Tree. 
+    let tmp5 = (target t) in 
+        align (spec (repr (unlabel tmp5 ))) ;

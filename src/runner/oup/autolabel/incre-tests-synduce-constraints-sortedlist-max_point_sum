@@ -1,0 +1,305 @@
+
+List :: List. <elt {Int,Int} | cons {Int,Int,List}>
+ elt : {Int,Int} -> List'. <elt {Int,Int} | cons {Int,Int,List'}>
+ cons : {Int,Int,List} ->
+        List'. <elt {Int,Int} | cons {Int,Int,List'}>
+ CList :: CList. <single {Int,Int} | concat {CList,CList}>
+single : {Int,Int} ->
+         CList'. <single {Int,Int} | concat {CList',CList'}>
+concat : {CList,CList} ->
+         CList'. <single {Int,Int} | concat {CList',CList'}>
+cat : List ->
+      List -> List'. <elt {Int,Int} | cons {Int,Int,List'}>
+repr : CList -> List'. <elt {Int,Int} | cons {Int,Int,List'}>
+is_sorted : List -> Bool
+c_sorted : CList -> Bool
+max : Int -> Int -> Int
+spec : List -> Int
+target : CList -> CList
+main : CList -> Int
+
+
+Inductive List;
+
+Inductive CList;
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      elt {x, y} -> cons {x, y, b}
+    | cons {x, y, t} -> cons {x, y, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> List. \xs: CList. 
+    match xs with
+      single {a, b} -> elt {a, b}
+    | concat {a, b} -> cat (f a) (f b)
+    end
+);
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt {a, b} -> <= pre (+ a b)
+    | cons {a, b, t} -> and (<= pre (+ a b)) (f (+ a b) t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt _ -> true
+        | cons {a, b, t} -> aux (+ a b) t
+        end
+;
+
+c_sorted = \xs: CList. 
+    is_sorted (repr xs);
+
+max = \x: Int. \y: Int. 
+    if (< x y) then y
+    else x;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt {a, b} -> + a b
+    | cons {a, b, t} -> max (f t) (+ a b)
+    end
+);
+
+target = fix (
+    \f: CList -> Compress CList. \xs: CList. 
+    match xs with
+      single {a, b} -> 
+        align (label xs ) 
+    | concat {l, r} -> 
+        let tmp1 = (f r) in 
+            align (label (concat {l, unlabel tmp1 }) ) 
+    end
+);
+
+main = \xs: CList. 
+    if (c_sorted xs) then let tmp2 = (target xs) in 
+        align (spec (repr (unlabel tmp2 ))) 
+    else 0;
+align term #0: compress[0] CList. <single {Int,Int} | concat {CList,CList}>
+align@0 create@0 xs
+  b: Int
+  a: Int
+  xs: CList. <single {Int,Int} | concat {CList,CList}>
+align term #1: compress[0] CList. <single {Int,Int} | concat {CList,CList}>
+align@1 create@0 concat ({l,unlabel tmp1})
+  l: CList. <single {Int,Int} | concat {CList,CList}>
+  xs: CList. <single {Int,Int} | concat {CList,CList}>
+  tmp1: compress[0] CList. <single {Int,Int} | concat {CList,CList}>
+  r: CList. <single {Int,Int} | concat {CList,CList}>
+align term #2: Int
+align@2 spec (repr (unlabel tmp2))
+  xs: CList. <single {Int,Int} | concat {CList,CList}>
+  tmp2: compress[0] CList. <single {Int,Int} | concat {CList,CList}>
+Components for compress:
+  concat [(CList. <single {Int,Int} | concat {CList,CList}> * CList. <single {Int,Int} | concat {CList,CList}>)] -> CList. <single {Int,Int} | concat {CList,CList}> 1
+  single [(Int * Int)] -> CList. <single {Int,Int} | concat {CList,CList}> 1
+  elt [(Int * Int)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  cons [(Int * Int * List. <elt {Int,Int} | cons {Int,Int,List}>)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  max [Int,Int] -> Int 6
+
+Components for align:
+  concat [(CList. <single {Int,Int} | concat {CList,CList}> * CList. <single {Int,Int} | concat {CList,CList}>)] -> CList. <single {Int,Int} | concat {CList,CList}> 1
+  single [(Int * Int)] -> CList. <single {Int,Int} | concat {CList,CList}> 1
+  elt [(Int * Int)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  cons [(Int * Int * List. <elt {Int,Int} | cons {Int,Int,List}>)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  spec [List. <elt {Int,Int} | cons {Int,Int,List}>] -> Int 7
+  is_sorted [List. <elt {Int,Int} | cons {Int,Int,List}>] -> Bool 4
+  cat [List. <elt {Int,Int} | cons {Int,Int,List}>,List. <elt {Int,Int} | cons {Int,Int,List}>] -> List. <elt {Int,Int} | cons {Int,Int,List}> 2
+  c_sorted [CList. <single {Int,Int} | concat {CList,CList}>] -> Bool 5
+  max [Int,Int] -> Int 6
+  repr [CList. <single {Int,Int} | concat {CList,CList}>] -> List. <elt {Int,Int} | cons {Int,Int,List}> 3
+
+Components for comb:
+  concat [(CList. <single {Int,Int} | concat {CList,CList}> * CList. <single {Int,Int} | concat {CList,CList}>)] -> CList. <single {Int,Int} | concat {CList,CList}> 1
+  single [(Int * Int)] -> CList. <single {Int,Int} | concat {CList,CList}> 1
+  elt [(Int * Int)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  cons [(Int * Int * List. <elt {Int,Int} | cons {Int,Int,List}>)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  max [Int,Int] -> Int 6
+
+align term #0: compress[0] CList. <single {Int,Int} | concat {CList,CList}>
+align@0 create@0 xs
+  b: Int
+  a: Int
+  xs: CList. <single {Int,Int} | concat {CList,CList}>
+align term #1: compress[0] CList. <single {Int,Int} | concat {CList,CList}>
+align@1 create@0 concat ({l,unlabel tmp1})
+  l: CList. <single {Int,Int} | concat {CList,CList}>
+  xs: CList. <single {Int,Int} | concat {CList,CList}>
+  tmp1: compress[0] CList. <single {Int,Int} | concat {CList,CList}>
+  r: CList. <single {Int,Int} | concat {CList,CList}>
+align term #2: Int
+align@2 spec (repr (unlabel tmp2))
+  xs: CList. <single {Int,Int} | concat {CList,CList}>
+  tmp2: compress[0] CList. <single {Int,Int} | concat {CList,CList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param0
+  Param1
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Compress[0] CList. <single {Int,Int} | concat {CList,CList}>([Param0,Param1,Param2,Param3]@Compress[0] CList. <single {Int,Int} | concat {CList,CList}>)
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Compress[0] CList. <single {Int,Int} | concat {CList,CList}>
+  Param2
+node: [Param0,Param1,Param2,Param3]@Int
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] CList. <single {Int,Int} | concat {CList,CList}>([Param0,Param1]@Compress[0] CList. <single {Int,Int} | concat {CList,CList}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] CList. <single {Int,Int} | concat {CList,CList}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[CList. <single {Int,Int} | concat {CList,CList}>->Int]([Int@0,Int@1]@Int [Int@0,Int@1]@Int [Param0]@CList. <single {Int,Int} | concat {CList,CList}>)
+  spec([Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  max([Param0]@Int [Param0]@Int)
+node: [Param0]@Bool
+  is_sorted([Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  c_sorted([Param0]@CList. <single {Int,Int} | concat {CList,CList}>)
+node: [Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>
+  cat([Param0]@List. <elt {Int,Int} | cons {Int,Int,List}> [Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  repr([Param0]@CList. <single {Int,Int} | concat {CList,CList}>)
+node: [Param0]@CList. <single {Int,Int} | concat {CList,CList}>
+  Param0
+
+
+
+
+
+
+
+
+
+  [] spec(repr(Param0))
+  [0] +(Param0,Param1)
+  [] spec(repr(Param0))
+  [0] Param2 -> spec(repr(Param0))
+  [] null
+  [0] Param1 -> spec(repr(Param0))
+compress #0: Int
+pass #0: 
+let c0 = (+ b a) in 
+    c0
+pass #1: 
+tmp1
+pass #2: 
+tmp2
+
+Inductive List;
+
+Inductive CList;
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      elt {x, y} -> cons {x, y, b}
+    | cons {x, y, t} -> cons {x, y, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> List. \xs: CList. 
+    match xs with
+      single {a, b} -> elt {a, b}
+    | concat {a, b} -> cat (f a) (f b)
+    end
+);
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt {a, b} -> <= pre (+ a b)
+    | cons {a, b, t} -> and (<= pre (+ a b)) (f (+ a b) t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt _ -> true
+        | cons {a, b, t} -> aux (+ a b) t
+        end
+;
+
+c_sorted = \xs: CList. 
+    is_sorted (repr xs);
+
+max = \x: Int. \y: Int. 
+    if (< x y) then y
+    else x;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt {a, b} -> + a b
+    | cons {a, b, t} -> max (f t) (+ a b)
+    end
+);
+
+target = fix (
+    \f: CList -> Int. \xs: CList. 
+    match xs with
+      single {a, b} -> 
+        let c0 = (+ b a) in 
+            c0
+    | concat {l, r} -> 
+        let tmp1 = (f r) in 
+            tmp1
+    end
+);
+
+main = \xs: CList. 
+    if (c_sorted xs) then let tmp2 = (target xs) in 
+        tmp2
+    else 0;
+syn-comb: 0.032497
+collect: 1.3138
+label: 0.015396
+extend-component: 6e-06
+execute: 0.353225
+syn-align: 1.71313
+comb-size: 9
+align-size: 5
+extract-size: 7
+1.7695
+Success

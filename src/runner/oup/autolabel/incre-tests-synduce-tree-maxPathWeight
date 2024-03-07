@@ -1,0 +1,201 @@
+
+Tree :: Tree. <nil Unit | node {Int,Tree,Tree}>
+ nil : Unit -> Tree'. <nil Unit | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <nil Unit | node {Int,Tree',Tree'}>
+ max : Int -> Int -> Int
+spec : Tree -> Int
+repr : Tree -> Tree'. <nil Unit | node {Int,Tree',Tree'}>
+main : Tree -> Int
+
+
+Inductive Tree;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: Int -> Tree -> Int. \w: Int. \t: Tree. 
+    match t with
+      nil _ -> w
+    | node {a, l, r} -> max (f (+ w a) l) (f (+ w a) r)
+    end
+) 0;
+
+repr = fix (
+    \f: Tree -> Compress Tree. \t: Tree. 
+    match t with
+      nil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | node {a, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (node {a, unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+main = \t: Tree. 
+    let tmp4 = (repr t) in 
+        align (spec (unlabel tmp4 )) ;
+align term #0: compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  t: Tree. <nil Unit | node {Int,Tree,Tree}>
+  tmp1: Tree. <nil Unit | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+align@1 create@0 node ({a,unlabel tmp2,unlabel tmp3})
+  tmp2: compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+  t: Tree. <nil Unit | node {Int,Tree,Tree}>
+  l: Tree. <nil Unit | node {Int,Tree,Tree}>
+  tmp3: compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+  a: Int
+  r: Tree. <nil Unit | node {Int,Tree,Tree}>
+align term #2: Int
+align@2 spec (unlabel tmp4)
+  t: Tree. <nil Unit | node {Int,Tree,Tree}>
+  tmp4: compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+Components for compress:
+  max [Int,Int] -> Int 1
+  node [(Int * Tree. <nil Unit | node {Int,Tree,Tree}> * Tree. <nil Unit | node {Int,Tree,Tree}>)] -> Tree. <nil Unit | node {Int,Tree,Tree}> 0
+  nil [Bot] -> Tree. <nil Unit | node {Int,Tree,Tree}> 0
+
+Components for align:
+  max [Int,Int] -> Int 1
+  node [(Int * Tree. <nil Unit | node {Int,Tree,Tree}> * Tree. <nil Unit | node {Int,Tree,Tree}>)] -> Tree. <nil Unit | node {Int,Tree,Tree}> 0
+  nil [Bot] -> Tree. <nil Unit | node {Int,Tree,Tree}> 0
+  spec [Tree. <nil Unit | node {Int,Tree,Tree}>] -> Int 2
+
+Components for comb:
+  max [Int,Int] -> Int 1
+  node [(Int * Tree. <nil Unit | node {Int,Tree,Tree}> * Tree. <nil Unit | node {Int,Tree,Tree}>)] -> Tree. <nil Unit | node {Int,Tree,Tree}> 0
+  nil [Bot] -> Tree. <nil Unit | node {Int,Tree,Tree}> 0
+
+align term #0: compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  t: Tree. <nil Unit | node {Int,Tree,Tree}>
+  tmp1: Tree. <nil Unit | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+align@1 create@0 node ({a,unlabel tmp2,unlabel tmp3})
+  tmp2: compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+  t: Tree. <nil Unit | node {Int,Tree,Tree}>
+  l: Tree. <nil Unit | node {Int,Tree,Tree}>
+  tmp3: compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+  a: Int
+  r: Tree. <nil Unit | node {Int,Tree,Tree}>
+align term #2: Int
+align@2 spec (unlabel tmp4)
+  t: Tree. <nil Unit | node {Int,Tree,Tree}>
+  tmp4: compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 1
+start: start
+node: start
+  Compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+  Param0
+  Param3
+num = 2
+start: start
+node: start
+  Compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>([Param0,Param1]@Compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] Tree. <nil Unit | node {Int,Tree,Tree}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  max([Param0]@Int [Param0]@Int)
+  spec([Param0]@Tree. <nil Unit | node {Int,Tree,Tree}>)
+node: [Param0]@Tree. <nil Unit | node {Int,Tree,Tree}>
+  Param0
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [] spec(Param0)
+  [0] Param0 -> spec(Param0)
+  [1] Param3 -> spec(Param0)
+  [2] Param4
+  [] null
+  [0] Param1 -> spec(Param0)
+compress #0: Int
+pass #0: 
+0
+pass #1: 
++ a (max tmp2 tmp3)
+pass #2: 
+tmp4
+
+Inductive Tree;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: Int -> Tree -> Int. \w: Int. \t: Tree. 
+    match t with
+      nil _ -> w
+    | node {a, l, r} -> max (f (+ w a) l) (f (+ w a) r)
+    end
+) 0;
+
+repr = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      nil _ -> 0
+    | node {a, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                + a (max tmp2 tmp3)
+    end
+);
+
+main = \t: Tree. 
+    let tmp4 = (repr t) in 
+        tmp4;
+syn-comb: 0.113544
+collect: 1.46172
+label: 0.009885
+extend-component: 3.8e-05
+execute: 0.634312
+syn-align: 2.1652
+comb-size: 11
+align-size: 3
+extract-size: 5
+2.29464
+Success

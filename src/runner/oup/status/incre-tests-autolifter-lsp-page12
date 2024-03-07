@@ -1,0 +1,22 @@
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ head : List -> Int -> Int
+fold : (Int->Int->Int) -> List -> Int -> Int
+length : List -> Int
+sum : List -> Int
+lim : Int
+minimum : List -> Int
+pushback : List -> Int -> List'. <cons {Int,List'} | nil Unit>
+max : Int -> Int -> Int
+tail : List -> List'. <cons {Int,List'} | nil Unit>
+lsp : (List->Bool) -> List -> Int
+isvalid : List -> Bool
+run : List -> Int
+
+size: 259
+compress-num: 2
+label-num: 12
+rewrite-size: 22
+0.02581

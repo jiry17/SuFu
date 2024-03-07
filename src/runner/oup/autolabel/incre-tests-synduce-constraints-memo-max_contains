@@ -1,0 +1,430 @@
+
+Tree :: Tree. <leaf Int | node {Int,Tree,Tree}>
+ leaf : Int -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ TreeMemo :: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,
+                                                TreeMemo}>
+mleaf : {Int,Int} ->
+        TreeMemo'. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo',
+                                             TreeMemo'}>
+mnode : {Int,Int,TreeMemo,TreeMemo} ->
+        TreeMemo'. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo',
+                                             TreeMemo'}>
+memo : TreeMemo -> Int
+max : Int -> Int -> Int
+tmax : TreeMemo -> Int
+is_memo : TreeMemo -> Bool
+repr : TreeMemo -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+key : Int
+spec : Tree -> Bool
+target : TreeMemo -> TreeMemo
+main : TreeMemo -> Bool
+
+
+Inductive Tree;
+
+Inductive TreeMemo;
+
+memo = \t: TreeMemo. 
+    match t with
+      mleaf {x, _} -> x
+    | mnode {x, _, _, _} -> x
+    end
+;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+tmax = fix (
+    \f: TreeMemo -> Int. \t: TreeMemo. 
+    match t with
+      mleaf {_, x} -> x
+    | mnode {_, x, l, r} -> max x (max (f l) (f r))
+    end
+);
+
+is_memo = fix (
+    \f: TreeMemo -> Bool. \t: TreeMemo. 
+    match t with
+      mleaf {n, x} -> true
+    | mnode {n, a, l, r} -> and (and (and (>= n (tmax l)) (>= n (tmax r))) (>= n a)) (and (f l) (f r))
+    end
+);
+
+repr = fix (
+    \f: TreeMemo -> Tree. \t: TreeMemo. 
+    match t with
+      mleaf {n, a} -> leaf a
+    | mnode {n, a, l, r} -> node {a, f l, f r}
+    end
+);
+
+@Input key = Int;
+
+spec = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      leaf a -> == a key
+    | node {a, l, r} -> or (== a key) (or (f l) (f r))
+    end
+);
+
+target = fix (
+    \f: TreeMemo -> Compress TreeMemo. \t: TreeMemo. 
+    match t with
+      mleaf {n, a} -> 
+        align (label t ) 
+    | mnode {n, a, l, r} -> if (> key n) then align (label t ) 
+        else let tmp1 = (f l) in 
+            let tmp2 = (f r) in 
+                align (label (mnode {n, a, unlabel tmp1 , unlabel tmp2 }) ) 
+    end
+);
+
+main = \mt: TreeMemo. 
+    if (is_memo mt) then let tmp3 = (target mt) in 
+        align (spec (repr (unlabel tmp3 ))) 
+    else false;
+align term #0: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+align@0 create@0 t
+  t: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  n: Int
+  a: Int
+align term #1: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+align@1 create@0 t
+  r: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  t: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  a: Int
+  l: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  n: Int
+align term #2: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+align@2 create@0 mnode ({n,a,unlabel tmp1,unlabel tmp2})
+  r: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  l: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  a: Int
+  tmp2: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  tmp1: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  t: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  n: Int
+align term #3: Bool
+align@3 spec (repr (unlabel tmp3))
+  tmp3: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  mt: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+Components for compress:
+  memo [TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>] -> Int 2
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  mnode [(Int * Int * TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}> * TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)] -> TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}> 1
+  max [Int,Int] -> Int 3
+  mleaf [(Int * Int)] -> TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}> 1
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+
+Components for align:
+  memo [TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>] -> Int 2
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  mnode [(Int * Int * TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}> * TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)] -> TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}> 1
+  max [Int,Int] -> Int 3
+  mleaf [(Int * Int)] -> TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}> 1
+  is_memo [TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>] -> Bool 5
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  repr [TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>] -> Tree. <leaf Int | node {Int,Tree,Tree}> 6
+  tmax [TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>] -> Int 4
+  spec [Tree. <leaf Int | node {Int,Tree,Tree}>] -> Bool 8
+
+Components for comb:
+  memo [TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>] -> Int 2
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  mnode [(Int * Int * TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}> * TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)] -> TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}> 1
+  max [Int,Int] -> Int 3
+  mleaf [(Int * Int)] -> TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}> 1
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+
+align term #0: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+align@0 create@0 t
+  t: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  n: Int
+  a: Int
+align term #1: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+align@1 create@0 t
+  r: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  t: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  a: Int
+  l: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  n: Int
+align term #2: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+align@2 create@0 mnode ({n,a,unlabel tmp1,unlabel tmp2})
+  r: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  l: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  a: Int
+  tmp2: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  tmp1: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  t: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  n: Int
+align term #3: Bool
+align@3 spec (repr (unlabel tmp3))
+  tmp3: compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  mt: TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param1
+  Param2
+  Param3
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  memo([Param0,Param1,Param2,Param3]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+  max([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  Param0
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param2
+  Param4
+  Param5
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  memo([Param0,Param1,Param2,Param3,Param4,Param5]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  Param0
+  Param1
+  Param3
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  Compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int
+  Param2
+  Param6
+  Param7
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  0
+  1
+  memo([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+  max([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  Param3
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  Param0
+  Param1
+  Param5
+num = 3
+start: start
+node: start
+  Compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>([Param0,Param1,Param2]@Compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  Param1
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  memo([Param0,Param1,Param2]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+  Bool([Param0,Param1]@Bool)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  ite([Param0,Param1]@Bool [Param0,Param1]@Int [Param0,Param1]@Int)
+  fold[TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>->Int]([Int@0,Int@1,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int [Param0,Param1]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+  memo([Param0,Param1]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+  tmax([Param0,Param1]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+node: [Int@0,Int@1,Param1]@Int
+  Param1
+  Int@0
+  Int@1
+  +([Int@0,Int@1,Param1]@Int [Int@0,Int@1,Param1]@Int)
+  -([Int@0,Int@1,Param1]@Int [Int@0,Int@1,Param1]@Int)
+  ite([Int@0,Int@1,Param1]@Bool [Int@0,Int@1,Param1]@Int [Int@0,Int@1,Param1]@Int)
+  max([Int@0,Int@1,Param1]@Int [Int@0,Int@1,Param1]@Int)
+node: [Int@0,Int@1,Int@2,Int@3,Param1]@Int
+  Param1
+  Int@0
+  Int@1
+  Int@2
+  Int@3
+  +([Int@0,Int@1,Int@2,Int@3,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+  -([Int@0,Int@1,Int@2,Int@3,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+  ite([Int@0,Int@1,Int@2,Int@3,Param1]@Bool [Int@0,Int@1,Int@2,Int@3,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+  max([Int@0,Int@1,Int@2,Int@3,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+node: [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int
+  Param1
+  Int@0
+  Int@1
+  +([Bool@0,Bool@1,Int@0,Int@1,Param1]@Int [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+  -([Bool@0,Bool@1,Int@0,Int@1,Param1]@Int [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+  ite([Bool@0,Bool@1,Int@0,Int@1,Param1]@Bool [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+  max([Bool@0,Bool@1,Int@0,Int@1,Param1]@Int [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+node: [Bool@0,Bool@1,Int@0,Int@1,Param1]@Bool
+  Bool@0
+  Bool@1
+  spec([Bool@0,Bool@1,Int@0,Int@1,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0,Param1]@Bool
+  fold[TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>->Bool]([Int@0,Int@1,Param1]@Bool [Bool@0,Bool@1,Int@0,Int@1,Param1]@Bool [Param0,Param1]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+  is_memo([Param0,Param1]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+  spec([Param0,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Param1]@Bool
+  spec([Int@0,Int@1,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Int@2,Int@3,Param1]@Bool
+  spec([Int@0,Int@1,Int@2,Int@3,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Param0,Param1]@Int)
+  repr([Param0,Param1]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>)
+node: [Int@0,Int@1,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Int@0,Int@1,Param1]@Int)
+node: [Int@0,Int@1,Int@2,Int@3,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+node: [Bool@0,Bool@1,Int@0,Int@1,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+node: [Param0,Param1]@TreeMemo. <mleaf {Int,Int} | mnode {Int,Int,TreeMemo,TreeMemo}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(repr(Param0))
+  [1] Param1
+  [0] -(Param2,Param3)
+  [1] Param3
+  [0] spec(repr(Param0))
+  [1] Param1
+  [0] Param5
+  [0] spec(repr(Param0))
+  [1] Param1
+  [0] Param2
+  [1] Param3 -> spec(repr(Param0))
+  [2] Param3 -> Param1
+  [3] Param4 -> spec(repr(Param0))
+  [4] Param4 -> Param1
+  [5] Param7
+  [] null
+  [0] Param0 -> spec(repr(Param0))
+  [1] Param0 -> Param1
+compress #0: {Bool,Int}
+pass #0: 
+let c0 = (- a key) in 
+    {== c0 0, key}
+pass #1: 
+{false, key}
+pass #2: 
+{or (or (== a tmp1.2) tmp2.1) tmp1.1, key}
+pass #3: 
+tmp3.1
+
+Inductive Tree;
+
+Inductive TreeMemo;
+
+memo = \t: TreeMemo. 
+    match t with
+      mleaf {x, _} -> x
+    | mnode {x, _, _, _} -> x
+    end
+;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+tmax = fix (
+    \f: TreeMemo -> Int. \t: TreeMemo. 
+    match t with
+      mleaf {_, x} -> x
+    | mnode {_, x, l, r} -> max x (max (f l) (f r))
+    end
+);
+
+is_memo = fix (
+    \f: TreeMemo -> Bool. \t: TreeMemo. 
+    match t with
+      mleaf {n, x} -> true
+    | mnode {n, a, l, r} -> and (and (and (>= n (tmax l)) (>= n (tmax r))) (>= n a)) (and (f l) (f r))
+    end
+);
+
+repr = fix (
+    \f: TreeMemo -> Tree. \t: TreeMemo. 
+    match t with
+      mleaf {n, a} -> leaf a
+    | mnode {n, a, l, r} -> node {a, f l, f r}
+    end
+);
+
+@Input key = Int;
+
+spec = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      leaf a -> == a key
+    | node {a, l, r} -> or (== a key) (or (f l) (f r))
+    end
+);
+
+target = fix (
+    \f: TreeMemo -> {Bool, Int}. \t: TreeMemo. 
+    match t with
+      mleaf {n, a} -> 
+        let c0 = (- a key) in 
+            {== c0 0, key}
+    | mnode {n, a, l, r} -> if (> key n) then {false, key}
+        else let tmp1 = (f l) in 
+            let tmp2 = (f r) in 
+                {or (or (== a tmp1.2) tmp2.1) tmp1.1, key}
+    end
+);
+
+main = \mt: TreeMemo. 
+    if (is_memo mt) then let tmp3 = (target mt) in 
+        tmp3.1
+    else false;
+syn-comb: 0.386214
+collect: 5.48205
+label: 0.014937
+extend-component: 0.004096
+execute: 0.970214
+syn-align: 6.63462
+comb-size: 36
+align-size: 7
+extract-size: 14
+7.0459
+Success

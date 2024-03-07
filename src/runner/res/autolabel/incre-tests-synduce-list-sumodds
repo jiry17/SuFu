@@ -1,0 +1,41 @@
+
+Inductive List;
+
+Inductive CList;
+
+mod2 = \x: Int. 
+    - x (* (/ x 2) 2);
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {hd, tl} -> + (if (== (mod2 hd) 1) then hd
+        else 0) (f tl)
+    end
+);
+
+cat = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      nil _ -> ys
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> Int. \xs: CList. 
+    match xs with
+      cnil _ -> 0
+    | single a -> if (< (mod2 a) 1) then 0
+        else a
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                + tmp4 tmp3
+    end
+);
+
+main = \x: CList. 
+    let tmp5 = (repr x) in 
+        tmp5;

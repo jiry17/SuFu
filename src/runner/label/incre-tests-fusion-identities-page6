@@ -1,0 +1,109 @@
+
+Inductive List;
+
+Inductive List2D;
+
+Inductive List3D;
+
+head = \xs: List2D. 
+    match xs with
+      nil2D _ -> nil Unit
+    | cons2D {h, t} -> h
+    end
+;
+
+tails = fix (
+    \f: List -> Compress List2D. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (cons2D {xs, nil2D Unit}) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            align (label (cons2D {xs, unlabel tmp2 }) ) 
+    end
+);
+
+append = \w: Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> cons {w, nil Unit}
+    | cons {h, t} -> cons {h, f t}
+    end
+);
+
+scanl = \f: Int -> List -> List. \init: List. 
+    fix (
+    \g: List -> List -> List2D. \now: List. \xs: List. 
+    match xs with
+      nil _ -> cons2D {now, nil2D Unit}
+    | cons {h, t} -> cons2D {now, g (f h now) t}
+    end
+) init;
+
+inits = scanl append (nil Unit);
+
+map = \g: List -> List2D. 
+    fix (
+    \f: List2D -> List3D. \xs: List2D. 
+    match xs with
+      nil2D _ -> nil3D Unit
+    | cons2D {h, t} -> cons3D {g h, f t}
+    end
+);
+
+concat = fix (
+    \f: List3D -> List2D. \xs: List3D. 
+    match xs with
+      nil3D _ -> nil2D Unit
+    | cons3D {h, t} -> fix (
+        \g: List2D -> List2D. \ys: List2D. 
+        match ys with
+          nil2D _ -> f t
+        | cons2D {h1, t1} -> cons2D {h1, g t1}
+        end
+    ) h
+    end
+);
+
+segs = \xs: List. 
+    let tmp3 = (map inits) in 
+        let tmp4 = (tails xs) in 
+            align (label (concat (tmp3 (unlabel tmp4 ))) ) ;
+
+mapL = \g: List -> Int. 
+    fix (
+    \f: List2D -> List. \xs: List2D. 
+    match xs with
+      nil2D _ -> nil Unit
+    | cons2D {h, t} -> cons {g h, f t}
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+maximum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> max h (f t)
+    end
+);
+
+maxsum = \xs: List2D. 
+    maximum (mapL sum xs);
+
+mss = \xs: List. 
+    let tmp5 = (segs xs) in 
+        align (maxsum (unlabel tmp5 )) ;

@@ -1,0 +1,1009 @@
+{
+    "incre-tests-fusion-deforestation-page7-2": {
+        "status": "success",
+        "time": 0.550290451
+    },
+    "incre-tests-fusion-deforestation-page7-1": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-identities-page6": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-identities-page3": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-identities-page5": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-algprog-ex3.13": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-algprog-page62": {
+        "status": "success",
+        "time": 346.966086887
+    },
+    "incre-tests-fusion-algprog-page60": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-algprog-page58": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-algprog-ex3.14": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-tupling-page8": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-tupling-page1": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-shortcut-page7": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-shortcut-page3": {
+        "status": "success",
+        "time": 1.357241824
+    },
+    "incre-tests-fusion-shortcut-page8": {
+        "status": "failed"
+    },
+    "incre-tests-fusion-shortcut-page1": {
+        "status": "success",
+        "time": 0.07271832
+    },
+    "incre-tests-dp-cut": {
+        "status": "failed"
+    },
+    "incre-tests-dp-optimalbst": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-4": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-6": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-12": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-11": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-10": {
+        "status": "failed"
+    },
+    "incre-tests-dp-lcs": {
+        "status": "failed"
+    },
+    "incre-tests-dp-01knapsack": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-3": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-9": {
+        "status": "failed"
+    },
+    "incre-tests-dp-mulmatrix": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-2": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-1": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-8": {
+        "status": "success",
+        "time": 1.911399806
+    },
+    "incre-tests-dp-15-7": {
+        "status": "failed"
+    },
+    "incre-tests-dp-15-5": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list_to_tree-search_v2": {
+        "status": "success",
+        "time": 62.756305583
+    },
+    "incre-tests-synduce-list_to_tree-mls": {
+        "status": "success",
+        "time": 17.499600826
+    },
+    "incre-tests-synduce-list_to_tree-search_v3": {
+        "status": "success",
+        "time": 60.927252583
+    },
+    "incre-tests-synduce-list_to_tree-search": {
+        "status": "success",
+        "time": 62.814773937
+    },
+    "incre-tests-synduce-treepaths-mips": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-treepaths-height": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-treepaths-leftmostodd": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-treepaths-maxPathWeight": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-treepaths-maxPathWeight2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-treepaths-sum": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-unimodal_lists-sum": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-unimodal_lists-search_no_optim": {
+        "status": "success",
+        "time": 1.583814647
+    },
+    "incre-tests-synduce-combine-mts": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-combine-mts_and_mps": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-combine-mss_with_sum": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-terms-height": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tailopt-mts": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tailopt-sum": {
+        "status": "success",
+        "time": 0.37378225
+    },
+    "incre-tests-synduce-tailopt-mps": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-ensures-mtss_full_noe": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-ensures-maxsegstrip_full_noe": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-ensures-mss_no_ensures": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-ensures-mpss_full_noe": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-ensures-mts_no_ensures": {
+        "status": "success",
+        "time": 61.849203258
+    },
+    "incre-tests-synduce-constraints-ensures-mpss_noe": {
+        "status": "success",
+        "time": 16.712664412
+    },
+    "incre-tests-synduce-constraints-ensures-nested_minmax_noe": {
+        "status": "success",
+        "time": 5.480514526
+    },
+    "incre-tests-synduce-constraints-ensures-mtss_noe": {
+        "status": "success",
+        "time": 139.379223397
+    },
+    "incre-tests-synduce-constraints-ensures-maxsegstrip_noe": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-ensures-mps_no_ensures": {
+        "status": "success",
+        "time": 11.831372381
+    },
+    "incre-tests-synduce-constraints-ensures-bal_2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-check_included_comb": {
+        "status": "success",
+        "time": 0.277786961
+    },
+    "incre-tests-synduce-constraints-bst-minimax_separate": {
+        "status": "success",
+        "time": 0.036960131
+    },
+    "incre-tests-synduce-constraints-bst-from_list_contains": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-minimax_sim": {
+        "status": "success",
+        "time": 0.028708607
+    },
+    "incre-tests-synduce-constraints-bst-most_frequent_v1": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-contains_v3": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-from_list_max": {
+        "status": "success",
+        "time": 0.243359234
+    },
+    "incre-tests-synduce-constraints-bst-contains_no_ensure": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-sum_gt_by_key": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-contains": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-count_lt": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-check_mem_included": {
+        "status": "success",
+        "time": 0.280650709
+    },
+    "incre-tests-synduce-constraints-bst-count_between": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-sum_between": {
+        "status": "success",
+        "time": 0.023318669
+    },
+    "incre-tests-synduce-constraints-bst-contains_v2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-contains_bool_2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-bst-check_no_subtree_sum_gt2": {
+        "status": "success",
+        "time": 0.050397822
+    },
+    "incre-tests-synduce-constraints-memo-tree_size": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-memo-minmax": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-memo-mts_memo_sum": {
+        "status": "success",
+        "time": 0.391305487
+    },
+    "incre-tests-synduce-constraints-memo-count_lt": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-memo-max_contains": {
+        "status": "success",
+        "time": 118.771408216
+    },
+    "incre-tests-synduce-constraints-memo-max_sum_gt": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-memo-proper_indexation_sum_lt_pos": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-memo-constant": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-memo-proper_indexation_sum_lt_pos_v2": {
+        "status": "success",
+        "time": 207.755698579
+    },
+    "incre-tests-synduce-constraints-unimodal_lists-max_logn_v2": {
+        "status": "success",
+        "time": 0.340597717
+    },
+    "incre-tests-synduce-constraints-unimodal_lists-max_in_um_pos": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-unimodal_lists-max_logn": {
+        "status": "success",
+        "time": 0.182258604
+    },
+    "incre-tests-synduce-constraints-sortedlist-largest_even_pos_v2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-failing_slspplus": {
+        "status": "success",
+        "time": 1.675522142
+    },
+    "incre-tests-synduce-constraints-sortedlist-sndmind": {
+        "status": "success",
+        "time": 0.110919446
+    },
+    "incre-tests-synduce-constraints-sortedlist-max_point_sum": {
+        "status": "success",
+        "time": 0.173277199
+    },
+    "incre-tests-synduce-constraints-sortedlist-nestedl_pyramid": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-slsp": {
+        "status": "success",
+        "time": 0.224952458
+    },
+    "incre-tests-synduce-constraints-sortedlist-largest_even_pos": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-exists_equal_elements_v2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-sndmax_empty_base_case": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-min": {
+        "status": "success",
+        "time": 0.03572431
+    },
+    "incre-tests-synduce-constraints-sortedlist-parallel_max": {
+        "status": "success",
+        "time": 0.093577044
+    },
+    "incre-tests-synduce-constraints-sortedlist-smallest_diff": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-max": {
+        "status": "success",
+        "time": 0.037246721
+    },
+    "incre-tests-synduce-constraints-sortedlist-index_of": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-exists_equal_elements": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-largest_diff_poslist": {
+        "status": "success",
+        "time": 0.054313497
+    },
+    "incre-tests-synduce-constraints-sortedlist-sndmax_len2_base_case": {
+        "status": "success",
+        "time": 0.04867816
+    },
+    "incre-tests-synduce-constraints-sortedlist-is_intersection_empty": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-largest_diff": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-count_lt": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-largest_even": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-parallel_max2": {
+        "status": "success",
+        "time": 0.080560562
+    },
+    "incre-tests-synduce-constraints-sortedlist-mss": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sortedlist-interval_intersection": {
+        "status": "success",
+        "time": 0.024129799
+    },
+    "incre-tests-synduce-constraints-sortedlist-parallel_min": {
+        "status": "success",
+        "time": 0.068718462
+    },
+    "incre-tests-synduce-constraints-even_tree-parity_of_max": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-even_tree-sum_of_parities": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-program-memo_psum": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-symmetric_tree-height": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-symmetric_tree-min": {
+        "status": "success",
+        "time": 0.24981902
+    },
+    "incre-tests-synduce-constraints-symmetric_tree-sum": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-empty_right_subtree-sum": {
+        "status": "success",
+        "time": 0.256781994
+    },
+    "incre-tests-synduce-constraints-empty_right_subtree-contains": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-all_positive-sndmax": {
+        "status": "success",
+        "time": 279.596823512
+    },
+    "incre-tests-synduce-constraints-all_positive-list_mps": {
+        "status": "success",
+        "time": 0.139383403
+    },
+    "incre-tests-synduce-constraints-all_positive-sndmin": {
+        "status": "success",
+        "time": 0.018068585
+    },
+    "incre-tests-synduce-constraints-alist-count_eq": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-alist-most_frequent": {
+        "status": "success",
+        "time": 123.067681241
+    },
+    "incre-tests-synduce-constraints-alist-sums": {
+        "status": "success",
+        "time": 0.338007486
+    },
+    "incre-tests-synduce-constraints-alist-most_frequent_v2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-alist-count_eq2": {
+        "status": "success",
+        "time": 0.159809288
+    },
+    "incre-tests-synduce-constraints-balanced_tree-height_v2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-balanced_tree-height": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-balanced_tree-node_count": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sorted_and_indexed-count_lt": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-sorted_and_indexed-count_lt0": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-size-obfuscated_length": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-size-obfuscated_length_3": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-evenlist-parity_of_sum": {
+        "status": "success",
+        "time": 0.019735077
+    },
+    "incre-tests-synduce-constraints-evenlist-parity_of_first": {
+        "status": "success",
+        "time": 0.018195896
+    },
+    "incre-tests-synduce-constraints-evenlist-first_odd": {
+        "status": "success",
+        "time": 0.018150657
+    },
+    "incre-tests-synduce-constraints-evenlist-parity_of_last": {
+        "status": "success",
+        "time": 0.018147582
+    },
+    "incre-tests-synduce-constraints-constantlist-index_of": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-constraints-constantlist-contains": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-mips": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-minmax": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-poly2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-sorted": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-maxPathWeight": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-sumtree": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-maxtree2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-mits": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-min": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-poly": {
+        "status": "success",
+        "time": 75.946433565
+    },
+    "incre-tests-synduce-tree-maxtree": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-mpps": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-tree-sorted_2": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-misc-simple_nnf": {
+        "status": "success",
+        "time": 0.0450625
+    },
+    "incre-tests-synduce-misc-composed_unkwns": {
+        "status": "success",
+        "time": 0.094068902
+    },
+    "incre-tests-synduce-misc-count_between": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-misc-unknowns_are_ids": {
+        "status": "success",
+        "time": 0.096270756
+    },
+    "incre-tests-synduce-zipper-list_sum_basic": {
+        "status": "success",
+        "time": 0.051738408
+    },
+    "incre-tests-synduce-zipper-list_sum": {
+        "status": "success",
+        "time": 0.285595867
+    },
+    "incre-tests-synduce-list-minhom": {
+        "status": "success",
+        "time": 0.266674284
+    },
+    "incre-tests-synduce-list-zero_after_one": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-hamming": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-sumgt": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-issorted": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-mtshom": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-mpshom": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-sumevens": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-polyhom": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-maxhom": {
+        "status": "success",
+        "time": 0.266027237
+    },
+    "incre-tests-synduce-list-slsp": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-alist_sum": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-mincount": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-sndmax": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-sumhom": {
+        "status": "success",
+        "time": 0.094434624
+    },
+    "incre-tests-synduce-list-bal": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-prodhom": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-line_of_sight": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-last": {
+        "status": "success",
+        "time": 0.190045471
+    },
+    "incre-tests-synduce-list-atoi": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-msshom": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-search": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-maxcount": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-mts_and_mps_hom": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-lenhom": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-sndmin": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-sumodds": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-list-zeros_ones": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-indexed_list-sum_elts_lt_pos": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-indexed_list-search": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-indexed_list-position_polynomial": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-sorted_list-sumgtz": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-sorted_list-min": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-sorted_list-max": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-compressed_list-sum": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-nested_list-mtss": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-nested_list-pyramid_intervals": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-expressions-max_subexpr_sum": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-expressions-norm_arith": {
+        "status": "success",
+        "time": 0.193861866
+    },
+    "incre-tests-synduce-ptree-maxheads": {
+        "status": "success",
+        "time": 0.430561492
+    },
+    "incre-tests-synduce-ptree-maxlast": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-ptree-maxsum": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-ptree-sum": {
+        "status": "success",
+        "time": 0.219720093
+    },
+    "incre-tests-synduce-ptree-mul": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-numbers-int_nat_twosum": {
+        "status": "failed"
+    },
+    "incre-tests-synduce-numbers-int_nat_toint": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-min-neg": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-2nd-min-neg": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-mss-neg": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-sqrsum-cover": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-max-1s-p-cover": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-sum-plus": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-mss-cover": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-sqrsum-plus": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-3rd-min-neg": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-mts-neg": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-mts-cover": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-max-1s-cover": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-segment-tree-sum-cover": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-lsp-page22-2": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-lsp-page22-1": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-lsp-page9-2": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-lsp-page9-1": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-lsp-page21": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-lsp-page20": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-lsp-page10": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-lsp-page12": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-max_len_1s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-atoi": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-mts": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-longest_odd10s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-mtp": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-balanced": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-0s1s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-2nd-min": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-dropwhile": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-longest00s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-count1s2s3s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-lis": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-cnt1s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-is_sorted": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-average": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-count10s2": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-longest10s2": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-min": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-sum": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-mps_p": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-max": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-largest_peak": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-length": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-line_sight": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-count10p": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-msp": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-longest1s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-max_sum_between_ones": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-mps": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-mts_p": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-3rd-min": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-mpp": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-max_1s_p": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-0after1": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-mss": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-dac-max_dist_between_zeros": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-mts": {
+        "status": "success",
+        "time": 7.555716083
+    },
+    "incre-tests-autolifter-single-pass-longest_odd10s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-mmm": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-mtp": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-balanced": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-0s1s": {
+        "status": "success",
+        "time": 0.616556316
+    },
+    "incre-tests-autolifter-single-pass-2nd-min": {
+        "status": "success",
+        "time": 4.342890158
+    },
+    "incre-tests-autolifter-single-pass-dropwhile": {
+        "status": "success",
+        "time": 2.046529724
+    },
+    "incre-tests-autolifter-single-pass-longest00s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-count1s2s3s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-lis": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-cnt1s": {
+        "status": "success",
+        "time": 8.193452697
+    },
+    "incre-tests-autolifter-single-pass-is_sorted": {
+        "status": "success",
+        "time": 0.056968807
+    },
+    "incre-tests-autolifter-single-pass-average": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-count10s2": {
+        "status": "success",
+        "time": 24.012988602
+    },
+    "incre-tests-autolifter-single-pass-longest10s2": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-min": {
+        "status": "success",
+        "time": 6.029046493
+    },
+    "incre-tests-autolifter-single-pass-sum": {
+        "status": "success",
+        "time": 0.379462361
+    },
+    "incre-tests-autolifter-single-pass-mps_p": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-max": {
+        "status": "success",
+        "time": 4.694231552
+    },
+    "incre-tests-autolifter-single-pass-largest_peak": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-length": {
+        "status": "success",
+        "time": 6.087612445
+    },
+    "incre-tests-autolifter-single-pass-atoi": {
+        "status": "success",
+        "time": 6.571011383
+    },
+    "incre-tests-autolifter-single-pass-max_len_1s": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-line_sight": {
+        "status": "success",
+        "time": 54.85409241
+    },
+    "incre-tests-autolifter-single-pass-count10p": {
+        "status": "success",
+        "time": 147.866116827
+    },
+    "incre-tests-autolifter-single-pass-msp": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-longest1s": {
+        "status": "success",
+        "time": 528.855034165
+    },
+    "incre-tests-autolifter-single-pass-max_sum_between_ones": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-mis": {
+        "status": "success",
+        "time": 6.609157829
+    },
+    "incre-tests-autolifter-single-pass-mps": {
+        "status": "success",
+        "time": 2.845856168
+    },
+    "incre-tests-autolifter-single-pass-mts_p": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-3rd-min": {
+        "status": "success",
+        "time": 109.884116984
+    },
+    "incre-tests-autolifter-single-pass-mpp": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-max_1s_p": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-0after1": {
+        "status": "success",
+        "time": 0.09140252
+    },
+    "incre-tests-autolifter-single-pass-mss": {
+        "status": "success",
+        "time": 12.278439537
+    },
+    "incre-tests-autolifter-single-pass-mas": {
+        "status": "failed"
+    },
+    "incre-tests-autolifter-single-pass-max_dist_between_zeros": {
+        "status": "success",
+        "time": 285.624213082
+    }
+}

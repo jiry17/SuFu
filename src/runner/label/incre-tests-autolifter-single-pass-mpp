@@ -1,0 +1,31 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            align (v (unlabel tmp2 )) ;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+mpp = fix (
+    \f: Int -> List -> Int. \pre: Int. \l: List. 
+    match l with
+      nil _ -> pre
+    | cons {h, t} -> max pre (f (* h pre) t)
+    end
+) 1;
+
+main = single_pass mpp;

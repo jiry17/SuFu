@@ -1,0 +1,65 @@
+
+Inductive List;
+
+length = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) 1
+    | nil _ -> 0
+    end
+);
+
+head = \l: List. \default: Int. 
+    match l with
+      cons {h, t} -> h
+    | nil _ -> default
+    end
+;
+
+sum = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) h
+    | nil _ -> 0
+    end
+);
+
+concat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+dac = fix (
+    \f: List -> Int -> {List, Compress List}. \x: List. \len: Int. 
+    if (== len 1) then match x with
+      cons {h, t} -> {t, let tmp1 = (cons {h, nil unit}) in 
+            align (label tmp1 ) }
+    end
+
+    else let llen = (/ len 2) in 
+        let lres = (f x llen) in 
+            let rres = (f lres.1 (- len llen)) in 
+                {rres.1, let tmp2 = lres.2 in 
+                    let tmp3 = rres.2 in 
+                        align (label (concat (unlabel tmp2 ) (unlabel tmp3 )) ) });
+
+max = \x: Int. \y: Int. 
+    if (> x y) then x
+    else y;
+
+mps = fix (
+    \f: List -> Int. \l: List. 
+    match l with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let res = (f t) in 
+            max 0 (+ res h)
+    end
+);
+
+compress_mps = \x: List. 
+    let tmp4 = (dac x (length x)).2 in 
+        align (mps (unlabel tmp4 )) ;

@@ -1,0 +1,58 @@
+
+Inductive List;
+
+length = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) 1
+    | nil _ -> 0
+    end
+);
+
+concat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+split = \xs: List. 
+    fix (
+    \f: List -> Int -> {List, List}. \x: List. \n: Int. 
+    if (< n 1) then {nil unit, x}
+    else match x with
+      cons {h, t} -> 
+        let res = (f t (- n 1)) in 
+            {cons {h, res.1}, res.2}
+    | _ -> {nil unit, nil unit}
+    end
+) xs (/ (length xs) 2);
+
+dac = \v: List -> Int. \xs: List. 
+    let run = (fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {_, nil _} -> 
+        let c0 = (al_head xs) in 
+            c0
+    | _ -> 
+        let sp = (split xs) in 
+            let tmp1 = (f sp.1) in 
+                let tmp2 = (f sp.2) in 
+                    + tmp2 tmp1
+    end
+)) in 
+        let tmp3 = (run xs) in 
+            tmp3;
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+main = dac sum;

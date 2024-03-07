@@ -1,0 +1,63 @@
+
+Inductive List;
+
+length = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) 1
+    | nil _ -> 0
+    end
+);
+
+concat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+split = \xs: List. 
+    fix (
+    \f: List -> Int -> {List, List}. \x: List. \n: Int. 
+    if (< n 1) then {nil Unit, x}
+    else match x with
+      cons {h, t} -> 
+        let res = (f t (- n 1)) in 
+            {cons {h, res.1}, res.2}
+    | _ -> {nil Unit, nil Unit}
+    end
+) xs (/ (length xs) 2);
+
+dac = \v: List -> Bool. \xs: List. 
+    let run = (fix (
+    \f: List -> {Bool, Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {true, -100, al_inf}
+    | cons {_, nil _} -> 
+        let c0 = (al_head xs) in 
+            {true, c0, c0}
+    | _ -> 
+        let sp = (split xs) in 
+            let tmp1 = (f sp.1) in 
+                let tmp2 = (f sp.2) in 
+                    {and (and tmp2.1 tmp1.1) (< tmp1.2 tmp2.3), if (< tmp1.2 tmp2.2) then tmp2.2
+                    else tmp1.2, if (< tmp2.3 tmp1.3) then tmp2.3
+                    else tmp1.3}
+    end
+)) in 
+        let tmp3 = (run xs) in 
+            tmp3.1;
+
+inf = 100;
+
+is_sorted = fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> if (>= pre h) then false
+        else f h t
+    end
+) (- 0 inf);
+
+main = dac is_sorted;

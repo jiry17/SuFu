@@ -1,0 +1,35 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ Graph :: Graph. <gnil Unit | gcons {List,Graph}>
+gnil : Unit -> Graph'. <gnil Unit | gcons {List,Graph'}>
+gcons : {List,Graph} -> Graph'. <gnil Unit | gcons {List,Graph'}>
+Plan :: {List, List}
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+head : Int -> List -> Int
+graph_size : Graph -> Int
+size : List -> Int
+is_valid_graph : Graph -> Bool
+merge : PlanList -> PlanList -> PlanList
+one : Int
+extend : Int ->
+         Int ->
+         PlanList ->
+         PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+generate_paths : Graph ->
+                 PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+sum : List -> Int
+is_val : List -> Bool
+min : Int -> Int -> Int
+get_best : PlanList -> Int
+main : Graph -> Int
+
+size: 338
+compress-num: 1
+label-num: 10
+rewrite-size: 28
+0.031788

@@ -1,0 +1,42 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/ptree/mul.pmrs[0m with [36mpmrs[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (join, j2) := ∀ x : [33mint ptree[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): int tree -> int  =  
+[44m INFO :[0m  target⟨join, j2⟩(): int ptree -> int  =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(): int ptree -> int tree  =  
+
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0086s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m ... finished in 0.0110s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0086s
+[44m INFO :[0m ... finished in 0.0091s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0109s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  16 instances] 0.167s 
+        CVC-SyGuS  [  12 instances] 0.185s 
+        > TOTAL    [  28 instances]: 0.352s 
+[44m INFO :[0m Solution found in 0.1263s (38.2% verifying):
+
+[31mlet[0m [36mj2[0m [34ma[0m [34mb[0m [31m=[0m [34ma[0m × [34mb[0m
+
+[31mlet[0m [36mjoin[0m [34mc[0m [34mx[0m [31m=[0m [34mc[0m × [34mx[0m
+
+ target⟨join, j2⟩(): int ptree -> int  = 
+{‣ main  PNil  ⟹  [36m1[0m ‣ main  [3mPNode[0m(a, l)  ⟹  [34mjoin[0m [34ma[0m ([34msum[0m [34ml[0m)   sum  LNil  ⟹  [36m1[0m
+   sum  [3mCons[0m(hd, tl)  ⟹  [34mj2[0m ([34mmain[0m [34mhd[0m) ([34msum[0m [34mtl[0m) }
+

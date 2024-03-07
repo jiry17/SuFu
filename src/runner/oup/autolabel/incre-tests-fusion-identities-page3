@@ -1,0 +1,271 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ NList :: NList. <nnil Unit | ncons {List,NList}>
+nnil : Unit -> NList'. <nnil Unit | ncons {List,NList'}>
+ncons : {List,NList} -> NList'. <nnil Unit | ncons {List,NList'}>
+inf : Int
+map : (List->Int) -> NList -> List'. <nil Unit | cons {Int,List'}>
+max : Int -> Int -> Int
+min : Int -> Int -> Int
+minimum : List -> Int
+maximum : List -> Int
+main : NList -> Int
+
+
+Inductive List;
+
+Inductive NList;
+
+inf = 100;
+
+map = \f: List -> Int. 
+    fix (
+    \g: NList -> Compress List. \xs: NList. 
+    match xs with
+      nnil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | ncons {h, t} -> 
+        let tmp2 = (f h) in 
+            let tmp3 = (g t) in 
+                align (label (cons {tmp2, unlabel tmp3 }) ) 
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+minimum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> inf
+    | cons {h, t} -> min h (f t)
+    end
+);
+
+maximum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> - 0 inf
+    | cons {h, t} -> max h (f t)
+    end
+);
+
+main = \xs: NList. 
+    let tmp4 = (map maximum xs) in 
+        align (minimum (unlabel tmp4 )) ;
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  tmp1: List. <nil Unit | cons {Int,List}>
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 cons ({tmp2,unlabel tmp3})
+  h: List. <nil Unit | cons {Int,List}>
+  tmp3: compress[0] List. <nil Unit | cons {Int,List}>
+  xs: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  tmp2: Int
+  t: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+align term #2: Int
+align@2 minimum (unlabel tmp4)
+  tmp4: compress[0] List. <nil Unit | cons {Int,List}>
+  xs: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+Components for compress:
+  max [Int,Int] -> Int 4
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  min [Int,Int] -> Int 5
+  nnil [Bot] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  inf [] -> Int 2
+  ncons [(List. <nil Unit | cons {Int,List}> * NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>)] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+
+Components for align:
+  maximum [List. <nil Unit | cons {Int,List}>] -> Int 7
+  minimum [List. <nil Unit | cons {Int,List}>] -> Int 6
+  max [Int,Int] -> Int 4
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  min [Int,Int] -> Int 5
+  nnil [Bot] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  inf [] -> Int 2
+  ncons [(List. <nil Unit | cons {Int,List}> * NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>)] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+
+Components for comb:
+  max [Int,Int] -> Int 4
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  min [Int,Int] -> Int 5
+  nnil [Bot] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  inf [] -> Int 2
+  ncons [(List. <nil Unit | cons {Int,List}> * NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>)] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  tmp1: List. <nil Unit | cons {Int,List}>
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 cons ({tmp2,unlabel tmp3})
+  h: List. <nil Unit | cons {Int,List}>
+  tmp3: compress[0] List. <nil Unit | cons {Int,List}>
+  xs: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  tmp2: Int
+  t: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+align term #2: Int
+align@2 minimum (unlabel tmp4)
+  tmp4: compress[0] List. <nil Unit | cons {Int,List}>
+  xs: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  inf
+num = 1
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param1
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param3
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  inf
+num = 2
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+  inf
+node: [Param0,Param1]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  min([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  inf
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  fold[List. <nil Unit | cons {Int,List}>->Int]([]@Int [Int@0,Int@1]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  maximum([Param0]@List. <nil Unit | cons {Int,List}>)
+  minimum([Param0]@List. <nil Unit | cons {Int,List}>)
+  max([Param0]@Int [Param0]@Int)
+  min([Param0]@Int [Param0]@Int)
+  inf
+node: []@Int
+  +([]@Int []@Int)
+  -([]@Int []@Int)
+  max([]@Int []@Int)
+  min([]@Int []@Int)
+  inf
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  Param0
+
+
+
+
+
+
+
+
+
+  [] minimum(Param0)
+  [] minimum(Param0)
+  [0] Param1 -> minimum(Param0)
+  [1] Param3
+  [] null
+  [0] Param0 -> minimum(Param0)
+compress #0: Int
+pass #0: 
+inf
+pass #1: 
+if (< tmp2 tmp3) then tmp2
+else tmp3
+pass #2: 
+tmp4
+
+Inductive List;
+
+Inductive NList;
+
+inf = 100;
+
+map = \f: List -> Int. 
+    fix (
+    \g: NList -> Int. \xs: NList. 
+    match xs with
+      nnil _ -> inf
+    | ncons {h, t} -> 
+        let tmp2 = (f h) in 
+            let tmp3 = (g t) in 
+                if (< tmp2 tmp3) then tmp2
+                else tmp3
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+minimum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> inf
+    | cons {h, t} -> min h (f t)
+    end
+);
+
+maximum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> - 0 inf
+    | cons {h, t} -> max h (f t)
+    end
+);
+
+main = \xs: NList. 
+    let tmp4 = (map maximum xs) in 
+        tmp4;
+syn-comb: 0.479873
+collect: 0.51878
+label: 0.010328
+extend-component: 7.3e-05
+execute: 0.104852
+syn-align: 0.663328
+comb-size: 10
+align-size: 3
+extract-size: 4
+1.16074
+Success

@@ -1,0 +1,287 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+PList :: PList. <pnil Unit | pcons {Int,Int,PList}>
+pnil : Unit -> PList'. <pnil Unit | pcons {Int,Int,PList'}>
+pcons : {Int,Int,PList} ->
+        PList'. <pnil Unit | pcons {Int,Int,PList'}>
+tri : List -> PList'. <pnil Unit | pcons {Int,Int,PList'}>
+tsum : PList -> Int
+main : List -> Int
+
+
+Inductive List;
+
+Inductive PList;
+
+tri = fix (
+    \f: List -> Compress PList. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (pnil Unit) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tail = (let tmp2 = (fix (
+        \g: PList -> PList. \ys: PList. 
+        match ys with
+          pnil _ -> pnil Unit
+        | pcons {n, h, t} -> pcons {+ n 1, h, g t}
+        end
+    )) in 
+            let tmp3 = (f t) in 
+                align (label (tmp2 (unlabel tmp3 )) ) ) in 
+            let tmp4 = 0 in 
+                align (label (pcons {tmp4, h, unlabel tail }) ) 
+    end
+);
+
+tsum = fix (
+    \f: PList -> Int. \xs: PList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {n, h, t} -> + (* n h) (f t)
+    end
+);
+
+main = \xs: List. 
+    let tmp5 = (tri xs) in 
+        align (tsum (unlabel tmp5 )) ;
+align term #0: compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>
+align@0 create@1 tmp1
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp1: PList. <pnil Unit | pcons {Int,Int,PList}>
+align term #1: compress[0] PList. <pnil Unit | pcons {Int,Int,PList}>
+align@1 create@0 tmp2 (unlabel tmp3)
+  h: Int
+  tmp3: compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>
+  t: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+align term #2: compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>
+align@2 create@1 pcons ({tmp4,h,unlabel tail})
+  h: Int
+  tail: compress[0] PList. <pnil Unit | pcons {Int,Int,PList}>
+  t: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp4: Int
+align term #3: Int
+align@3 tsum (unlabel tmp5)
+  tmp5: compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>
+  xs: List. <nil Unit | cons {Int,List}>
+Components for compress:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  pcons [(Int * Int * PList. <pnil Unit | pcons {Int,Int,PList}>)] -> PList. <pnil Unit | pcons {Int,Int,PList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  pnil [Bot] -> PList. <pnil Unit | pcons {Int,Int,PList}> 1
+
+Components for align:
+  tsum [PList. <pnil Unit | pcons {Int,Int,PList}>] -> Int 3
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  pcons [(Int * Int * PList. <pnil Unit | pcons {Int,Int,PList}>)] -> PList. <pnil Unit | pcons {Int,Int,PList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  pnil [Bot] -> PList. <pnil Unit | pcons {Int,Int,PList}> 1
+
+Components for comb:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  pcons [(Int * Int * PList. <pnil Unit | pcons {Int,Int,PList}>)] -> PList. <pnil Unit | pcons {Int,Int,PList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  pnil [Bot] -> PList. <pnil Unit | pcons {Int,Int,PList}> 1
+
+align term #0: compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>
+align@0 create@1 tmp1
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp1: PList. <pnil Unit | pcons {Int,Int,PList}>
+align term #1: compress[0] PList. <pnil Unit | pcons {Int,Int,PList}>
+align@1 create@0 tmp2 (unlabel tmp3)
+  h: Int
+  tmp3: compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>
+  t: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+align term #2: compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>
+align@2 create@1 pcons ({tmp4,h,unlabel tail})
+  h: Int
+  tail: compress[0] PList. <pnil Unit | pcons {Int,Int,PList}>
+  t: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp4: Int
+align term #3: Int
+align@3 tsum (unlabel tmp5)
+  tmp5: compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>
+  xs: List. <nil Unit | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+  Compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>([Param0,Param1,Param2,Param3]@Compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>)
+node: [Param0,Param1,Param2,Param3]@Compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>
+  Param1
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+  Compress[0] PList. <pnil Unit | pcons {Int,Int,PList}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] PList. <pnil Unit | pcons {Int,Int,PList}>)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] PList. <pnil Unit | pcons {Int,Int,PList}>
+  Param1
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param0
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 3
+start: start
+node: start
+  Compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>([Param0,Param1]@Compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+node: [Param0,Param1]@Compress[1] PList. <pnil Unit | pcons {Int,Int,PList}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  0
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  fold[PList. <pnil Unit | pcons {Int,Int,PList}>->Int]([]@Int [Int@0,Int@1,Int@2]@Int [Param0]@PList. <pnil Unit | pcons {Int,Int,PList}>)
+  tsum([Param0]@PList. <pnil Unit | pcons {Int,Int,PList}>)
+node: []@Int
+  +([]@Int []@Int)
+  -([]@Int []@Int)
+  0
+node: [Param0]@PList. <pnil Unit | pcons {Int,Int,PList}>
+  Param0
+num = 1
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  0
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  fold[PList. <pnil Unit | pcons {Int,Int,PList}>->Int]([]@Int [Int@0,Int@1,Int@2]@Int [Param0]@PList. <pnil Unit | pcons {Int,Int,PList}>)
+  tsum([Param0]@PList. <pnil Unit | pcons {Int,Int,PList}>)
+node: []@Int
+  +([]@Int []@Int)
+  -([]@Int []@Int)
+  0
+node: [Param0]@PList. <pnil Unit | pcons {Int,Int,PList}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] tsum(Param0)
+  [1] fold[PList. <pnil Unit | pcons {Int,Int,PList}>->Int](0,+(Int@1(),Int@2()),Param0)
+  [0] tsum(Param0)
+  [1] fold[PList. <pnil Unit | pcons {Int,Int,PList}>->Int](0,+(Int@1(),Int@2()),Param0)
+  [0] Param1 -> tsum(Param0)
+  [1] Param1 -> fold[PList. <pnil Unit | pcons {Int,Int,PList}>->Int](0,+(Int@1(),Int@2()),Param0)
+  [0] tsum(Param0)
+  [1] fold[PList. <pnil Unit | pcons {Int,Int,PList}>->Int](0,+(Int@1(),Int@2()),Param0)
+  [0] Param1 -> tsum(Param0)
+  [1] Param1 -> fold[PList. <pnil Unit | pcons {Int,Int,PList}>->Int](0,+(Int@1(),Int@2()),Param0)
+  [2] Param0
+  [] null
+  [0] Param0 -> tsum(Param0)
+  [1] Param0 -> fold[PList. <pnil Unit | pcons {Int,Int,PList}>->Int](0,+(Int@1(),Int@2()),Param0)
+compress #0: {Int,Int}
+compress #1: {Int,Int}
+pass #0: 
+{0, 0}
+pass #1: 
+{+ tmp3.1 tmp3.2, tmp3.2}
+pass #2: 
+{tail.1, + tail.2 h}
+pass #3: 
+tmp5.1
+
+Inductive List;
+
+Inductive PList;
+
+tri = fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {h, t} -> 
+        let tail = (let tmp3 = (f t) in 
+            {+ tmp3.1 tmp3.2, tmp3.2}) in 
+            {tail.1, + tail.2 h}
+    end
+);
+
+tsum = fix (
+    \f: PList -> Int. \xs: PList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {n, h, t} -> + (* n h) (f t)
+    end
+);
+
+main = \xs: List. 
+    let tmp5 = (tri xs) in 
+        tmp5.1;
+syn-comb: 0.900129
+collect: 0.981683
+label: 0.011227
+extend-component: 0.021113
+execute: 1.85084
+syn-align: 2.62327
+comb-size: 24
+align-size: 30
+extract-size: 5
+3.54735
+Success

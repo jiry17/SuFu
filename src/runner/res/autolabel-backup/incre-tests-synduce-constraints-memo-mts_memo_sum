@@ -1,0 +1,55 @@
+
+Inductive List;
+
+Inductive MList;
+
+repr = fix (
+    \f: MList -> List. \m: MList. 
+    match m with
+      ielt a -> elt a
+    | icons {h, _, t} -> cons {h, f t}
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt a -> a
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+is_memo = fix (
+    \f: MList -> Bool. \m: MList. 
+    match m with
+      ielt _ -> true
+    | icons {h, s, t} -> and (== s (sum (repr m))) (f t)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> x
+    | cons {h, t} -> max (f t) (sum xs)
+    end
+);
+
+target = fix (
+    \f: MList -> Int. \m: MList. 
+    match m with
+      ielt x -> x
+    | icons {h, s, t} -> 
+        let tmp1 = (f t) in 
+            max tmp1 s
+    end
+);
+
+main = \m: MList. 
+    if (is_memo m) then let tmp2 = (target m) in 
+        tmp2
+    else 0;

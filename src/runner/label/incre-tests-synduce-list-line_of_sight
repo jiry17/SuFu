@@ -1,0 +1,44 @@
+
+Inductive List;
+
+Inductive CList;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int, Bool}. \xs: List. 
+    match xs with
+      single a -> {a, a, true}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            {hd, max result.2 hd, > hd result.2}
+    end
+) xs).3;
+
+cat_list = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      single a -> cons {a, ys}
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> Compress List. \xs: CList. 
+    match xs with
+      elt a -> 
+        let tmp1 = (single a) in 
+            align (label tmp1 ) 
+    | cat {a, b} -> 
+        let tmp2 = (f a) in 
+            let tmp3 = (f b) in 
+                align (label (cat_list (unlabel tmp2 ) (unlabel tmp3 )) ) 
+    end
+);
+
+main = \x: CList. 
+    let tmp4 = (repr x) in 
+        align (spec (unlabel tmp4 )) ;

@@ -1,0 +1,14 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+div2 : Int -> Int
+from : Int -> Int -> List'. <nil Unit | cons {Int,List'}>
+sum : List -> Int
+main : Int -> Int -> Int
+
+size: 89
+compress-num: 1
+label-num: 7
+rewrite-size: 13
+0.012181

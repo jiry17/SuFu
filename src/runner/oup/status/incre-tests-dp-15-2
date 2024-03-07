@@ -1,0 +1,25 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+Plan :: List
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+take_back : List -> {Int, List'. <nil Unit | cons {Int,List'}>}
+snoc : Int -> List -> List'. <nil Unit | cons {Int,List'}>
+rev : List -> List
+merge : PlanList -> PlanList -> PlanList
+extend : (Plan->Plan) -> PlanList -> PlanList
+generate : List -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+max : Int -> Int -> Int
+one : Int
+get_best : PlanList -> Int
+main : List -> Int
+
+size: 282
+compress-num: 1
+label-num: 11
+rewrite-size: 19
+0.026238

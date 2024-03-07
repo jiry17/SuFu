@@ -1,0 +1,23 @@
+
+CList :: CList. <ctwo {Int,Int} | concat {CList,CList}>
+ ctwo : {Int,Int} ->
+        CList'. <ctwo {Int,Int} | concat {CList',CList'}>
+ concat : {CList,CList} ->
+          CList'. <ctwo {Int,Int} | concat {CList',CList'}>
+ List :: List. <two {Int,Int} | cons {Int,List}>
+two : {Int,Int} -> List'. <two {Int,Int} | cons {Int,List'}>
+cons : {Int,List} -> List'. <two {Int,Int} | cons {Int,List'}>
+cat : List -> List -> List'. <two {Int,Int} | cons {Int,List'}>
+repr : CList -> List'. <two {Int,Int} | cons {Int,List'}>
+min : Int -> Int -> Int
+max : Int -> Int -> Int
+spec : List -> Int
+is_sorted : List -> Bool
+target : CList -> CList
+main : CList -> Int
+
+size: 229
+compress-num: 1
+label-num: 7
+rewrite-size: 15
+0.021206

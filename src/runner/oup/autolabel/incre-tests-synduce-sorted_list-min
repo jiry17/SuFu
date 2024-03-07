@@ -1,0 +1,261 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ insert : Int -> List -> List'. <elt Int | cons {Int,List'}>
+sort : List -> List'. <elt Int | cons {Int,List'}>
+spec : List -> Int
+target : List -> List'. <elt Int | cons {Int,List'}>
+main : List -> Int
+
+
+Inductive List;
+
+insert = \y: Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      elt x -> if (< y x) then cons {y, elt x}
+        else cons {x, elt y}
+    | cons {h, t} -> if (< y h) then cons {y, xs}
+        else cons {h, f t}
+    end
+);
+
+sort = fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      elt x -> elt x
+    | cons {h, t} -> insert h (f t)
+    end
+);
+
+spec = \xs: List. 
+    match xs with
+      elt x -> x
+    | cons {h, t} -> h
+    end
+;
+
+target = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      elt x -> 
+        let tmp1 = (elt x) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            align (label (cons {h, unlabel tmp2 }) ) 
+    end
+);
+
+main = \xs: List. 
+    let tmp3 = (target xs) in 
+        align (spec (sort (unlabel tmp3 ))) ;
+align term #0: compress[0] List. <elt Int | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: List. <elt Int | cons {Int,List}>
+  x: Int
+  tmp1: List. <elt Int | cons {Int,List}>
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 cons ({h,unlabel tmp2})
+  h: Int
+  tmp2: compress[0] List. <elt Int | cons {Int,List}>
+  xs: List. <elt Int | cons {Int,List}>
+  t: List. <elt Int | cons {Int,List}>
+align term #2: Int
+align@2 spec (sort (unlabel tmp3))
+  tmp3: compress[0] List. <elt Int | cons {Int,List}>
+  xs: List. <elt Int | cons {Int,List}>
+Components for compress:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  spec [List. <elt Int | cons {Int,List}>] -> Int 3
+
+Components for align:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  spec [List. <elt Int | cons {Int,List}>] -> Int 3
+  insert [Int,List. <elt Int | cons {Int,List}>] -> List. <elt Int | cons {Int,List}> 1
+  sort [List. <elt Int | cons {Int,List}>] -> List. <elt Int | cons {Int,List}> 2
+
+Components for comb:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  spec [List. <elt Int | cons {Int,List}>] -> Int 3
+
+align term #0: compress[0] List. <elt Int | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: List. <elt Int | cons {Int,List}>
+  x: Int
+  tmp1: List. <elt Int | cons {Int,List}>
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 cons ({h,unlabel tmp2})
+  h: Int
+  tmp2: compress[0] List. <elt Int | cons {Int,List}>
+  xs: List. <elt Int | cons {Int,List}>
+  t: List. <elt Int | cons {Int,List}>
+align term #2: Int
+align@2 spec (sort (unlabel tmp3))
+  tmp3: compress[0] List. <elt Int | cons {Int,List}>
+  xs: List. <elt Int | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param1
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  spec([Param0,Param1,Param2]@List. <elt Int | cons {Int,List}>)
+node: [Param0,Param1,Param2]@List. <elt Int | cons {Int,List}>
+  Param0
+  Param2
+  elt([Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+  Compress[0] List. <elt Int | cons {Int,List}>([Param0,Param1,Param2,Param3]@Compress[0] List. <elt Int | cons {Int,List}>)
+node: [Param0,Param1,Param2,Param3]@Compress[0] List. <elt Int | cons {Int,List}>
+  Param1
+node: [Param0,Param1,Param2,Param3]@List. <elt Int | cons {Int,List}>
+  Param2
+  Param3
+  elt([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  spec([Param0,Param1,Param2,Param3]@List. <elt Int | cons {Int,List}>)
+num = 2
+start: start
+node: start
+  Compress[0] List. <elt Int | cons {Int,List}>([Param0,Param1]@Compress[0] List. <elt Int | cons {Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@List. <elt Int | cons {Int,List}>
+  Param1
+  elt([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  spec([Param0,Param1]@List. <elt Int | cons {Int,List}>)
+node: [Param0,Param1]@Compress[0] List. <elt Int | cons {Int,List}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  spec([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  spec([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  fold[List. <elt Int | cons {Int,List}>->Int]([Int@0]@Int [Int@0,Int@1]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+  spec([Param0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0]@Int)
+  insert([Int@0]@Int [Int@0]@List. <elt Int | cons {Int,List}>)
+  sort([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1]@Int)
+  insert([Int@0,Int@1]@Int [Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  sort([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  Param0
+  elt([Param0]@Int)
+  insert([Param0]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+  sort([Param0]@List. <elt Int | cons {Int,List}>)
+
+
+
+
+
+
+
+
+
+  [] spec(sort(Param0))
+  [0] Param1
+  [] spec(sort(Param0))
+  [0] Param0
+  [1] Param1 -> spec(sort(Param0))
+  [] null
+  [0] Param0 -> spec(sort(Param0))
+compress #0: Int
+pass #0: 
+x
+pass #1: 
+if (< tmp2 h) then tmp2
+else h
+pass #2: 
+tmp3
+
+Inductive List;
+
+insert = \y: Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      elt x -> if (< y x) then cons {y, elt x}
+        else cons {x, elt y}
+    | cons {h, t} -> if (< y h) then cons {y, xs}
+        else cons {h, f t}
+    end
+);
+
+sort = fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      elt x -> elt x
+    | cons {h, t} -> insert h (f t)
+    end
+);
+
+spec = \xs: List. 
+    match xs with
+      elt x -> x
+    | cons {h, t} -> h
+    end
+;
+
+target = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> x
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            if (< tmp2 h) then tmp2
+            else h
+    end
+);
+
+main = \xs: List. 
+    let tmp3 = (target xs) in 
+        tmp3;
+syn-comb: 0.043211
+collect: 0.623466
+label: 0.010602
+extend-component: 0.000392
+execute: 1.24641
+syn-align: 1.9312
+comb-size: 10
+align-size: 5
+extract-size: 5
+1.99167
+Success

@@ -1,0 +1,37 @@
+
+Inductive List;
+
+Inductive CList;
+
+spec = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      elt a -> a
+    | cons {h, t} -> f t
+    end
+);
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      elt a -> cons {a, b}
+    | cons {h, t} -> cons {h, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> Compress List. \xs: CList. 
+    match xs with
+      single a -> 
+        let tmp1 = (elt a) in 
+            align (label tmp1 ) 
+    | concat {a, b} -> 
+        let tmp2 = (f a) in 
+            let tmp3 = (f b) in 
+                align (label (cat (unlabel tmp2 ) (unlabel tmp3 )) ) 
+    end
+);
+
+main = \x: CList. 
+    let tmp4 = (repr x) in 
+        align (spec (unlabel tmp4 )) ;

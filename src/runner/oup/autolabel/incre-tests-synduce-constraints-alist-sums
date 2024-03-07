@@ -1,0 +1,281 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ Nat :: Nat. <z Unit | s Nat>
+z : Unit -> Nat'. <z Unit | s Nat'>
+s : Nat -> Nat'. <z Unit | s Nat'>
+is_unique : List -> Bool
+w : Int
+spec : List -> Int
+target : List -> List'. <nil Unit | cons {Int,List'}>
+main : List -> Int
+
+
+Inductive List;
+
+Inductive Nat;
+
+is_unique = let key_differ = (\key: Int. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> and (not (== h key)) (f t)
+    end
+)) in 
+        fix (
+        \f: List -> Bool. \xs: List. 
+        match xs with
+          nil _ -> true
+        | cons {h, t} -> and (key_differ h t) (f t)
+        end
+    );
+
+@Input w = Int;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> if (== h w) then + h (f t)
+        else f t
+    end
+);
+
+target = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> if (== h w) then let tmp2 = (cons {h, t}) in 
+            align (label tmp2 ) 
+        else let tmp3 = (f t) in 
+            align (label (cons {h, unlabel tmp3 }) ) 
+    end
+);
+
+main = \xs: List. 
+    if (is_unique xs) then let tmp4 = (target xs) in 
+        align (spec (unlabel tmp4 )) 
+    else 0;
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 tmp1
+  tmp1: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 tmp2
+  h: Int
+  tmp2: List. <nil Unit | cons {Int,List}>
+  t: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+align term #2: compress[0] List. <nil Unit | cons {Int,List}>
+align@2 create@0 cons ({h,unlabel tmp3})
+  tmp3: compress[0] List. <nil Unit | cons {Int,List}>
+  h: Int
+  t: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+align term #3: Int
+align@3 spec (unlabel tmp4)
+  tmp4: compress[0] List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+Components for compress:
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  z [Bot] -> Nat. <z Unit | s Nat> 1
+
+Components for align:
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 1
+  spec [List. <nil Unit | cons {Int,List}>] -> Int 4
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  z [Bot] -> Nat. <z Unit | s Nat> 1
+  is_unique [List. <nil Unit | cons {Int,List}>] -> Bool 2
+
+Components for comb:
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  z [Bot] -> Nat. <z Unit | s Nat> 1
+
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 tmp1
+  tmp1: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 tmp2
+  h: Int
+  tmp2: List. <nil Unit | cons {Int,List}>
+  t: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+align term #2: compress[0] List. <nil Unit | cons {Int,List}>
+align@2 create@0 cons ({h,unlabel tmp3})
+  tmp3: compress[0] List. <nil Unit | cons {Int,List}>
+  h: Int
+  t: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+align term #3: Int
+align@3 spec (unlabel tmp4)
+  tmp4: compress[0] List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param0
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param1
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param0
+num = 3
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+node: [Param0,Param1,Param2]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+  Bool([Param0,Param1]@Bool)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  ite([Param0,Param1]@Bool [Param0,Param1]@Int [Param0,Param1]@Int)
+  fold[List. <nil Unit | cons {Int,List}>->Int]([Param1]@Int [Int@0,Int@1,Param1]@Int [Param0,Param1]@List. <nil Unit | cons {Int,List}>)
+  spec([Param0,Param1]@List. <nil Unit | cons {Int,List}>)
+node: [Param1]@Int
+  Param1
+  +([Param1]@Int [Param1]@Int)
+  -([Param1]@Int [Param1]@Int)
+node: [Int@0,Int@1,Param1]@Int
+  Param1
+  Int@0
+  Int@1
+  +([Int@0,Int@1,Param1]@Int [Int@0,Int@1,Param1]@Int)
+  -([Int@0,Int@1,Param1]@Int [Int@0,Int@1,Param1]@Int)
+node: [Param0,Param1]@Bool
+  is_unique([Param0,Param1]@List. <nil Unit | cons {Int,List}>)
+node: [Param0,Param1]@List. <nil Unit | cons {Int,List}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [] spec(Param0)
+  [0] Param0
+  [] spec(Param0)
+  [0] Param0 -> spec(Param0)
+  [] null
+  [0] Param0 -> spec(Param0)
+compress #0: Int
+pass #0: 
+0
+pass #1: 
+h
+pass #2: 
+tmp3
+pass #3: 
+tmp4
+
+Inductive List;
+
+Inductive Nat;
+
+is_unique = let key_differ = (\key: Int. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> and (not (== h key)) (f t)
+    end
+)) in 
+        fix (
+        \f: List -> Bool. \xs: List. 
+        match xs with
+          nil _ -> true
+        | cons {h, t} -> and (key_differ h t) (f t)
+        end
+    );
+
+@Input w = Int;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> if (== h w) then + h (f t)
+        else f t
+    end
+);
+
+target = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> if (== h w) then h
+        else let tmp3 = (f t) in 
+            tmp3
+    end
+);
+
+main = \xs: List. 
+    if (is_unique xs) then let tmp4 = (target xs) in 
+        tmp4
+    else 0;
+syn-comb: 0.666732
+collect: 3.06048
+label: 0.014781
+extend-component: 3e-06
+execute: 0.192864
+syn-align: 3.30611
+comb-size: 4
+align-size: 3
+extract-size: 3
+3.99465
+Success

@@ -1,0 +1,20 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ NList :: NList. <nnil Unit | ncons {List,NList}>
+nnil : Unit -> NList'. <nnil Unit | ncons {List,NList'}>
+ncons : {List,NList} -> NList'. <nnil Unit | ncons {List,NList'}>
+inf : Int
+map : (List->Int) -> NList -> List'. <nil Unit | cons {Int,List'}>
+max : Int -> Int -> Int
+min : Int -> Int -> Int
+minimum : List -> Int
+maximum : List -> Int
+main : NList -> Int
+
+size: 108
+compress-num: 1
+label-num: 7
+rewrite-size: 13
+0.012089

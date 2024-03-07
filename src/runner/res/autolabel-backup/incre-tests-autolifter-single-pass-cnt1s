@@ -1,0 +1,29 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            {if (or (and (== tmp1.1 0) (< h tmp1.2)) (== tmp1.1 tmp1.2)) then 0
+            else 1, + 1 tmp1.2}
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2.1;
+
+inf = 100;
+
+cnt1s = fix (
+    \f: Int -> Int -> List -> Int. \pre: Int. \cnt: Int. \xs: List. 
+    match xs with
+      nil _ -> cnt
+    | cons {h, t} -> f h pre t
+    end
+) 0 0;
+
+main = single_pass cnt1s;

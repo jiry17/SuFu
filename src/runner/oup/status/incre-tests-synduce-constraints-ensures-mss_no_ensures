@@ -1,0 +1,22 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+CList :: CList. <cnil Unit | single Int | concat {CList,CList}>
+cnil : Unit ->
+       CList'. <cnil Unit | single Int | concat {CList',CList'}>
+single : Int ->
+         CList'. <cnil Unit | single Int | concat {CList',CList'}>
+concat : {CList,CList} ->
+         CList'. <cnil Unit | single Int | concat {CList',CList'}>
+max : Int -> Int -> Int
+spec : List -> Int
+cat : List -> List -> List
+repr : CList -> List'. <nil Unit | cons {Int,List'}>
+main : CList -> Int
+
+size: 160
+compress-num: 1
+label-num: 10
+rewrite-size: 16
+0.018837

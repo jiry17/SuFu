@@ -1,0 +1,42 @@
+
+Inductive List;
+
+head = \xs: List. 
+    match xs with
+      elt w -> w
+    | cons {h, t} -> h
+    end
+;
+
+is_const = fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt x -> true
+    | cons {h, t} -> and (== h (head t)) (f t)
+    end
+);
+
+spec = \global0: Int. 
+    fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> if (== global0 x) then 1
+        else 0
+    | cons {h, t} -> if (== global0 h) then 1
+        else f t
+    end
+);
+
+target = fix (
+    \f: List -> Unit. \xs: List. 
+    match xs with
+      elt a -> unit
+    | cons {h, t} -> unit
+    end
+);
+
+main = \global0: Int. \xs: List. 
+    if (is_const xs) then let c0 = (head xs) in 
+        if (== global0 c0) then 1
+        else 0
+    else 0;

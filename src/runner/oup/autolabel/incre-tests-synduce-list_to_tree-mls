@@ -1,0 +1,323 @@
+
+Tree :: Tree. <empty Unit | node {Int,Tree,Tree}>
+ empty : Unit -> Tree'. <empty Unit | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <empty Unit | node {Int,Tree',Tree'}>
+ List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+max : Int -> Int -> Int
+cat : List -> List -> List'. <nil Unit | cons {Int,List'}>
+repr : Tree -> List'. <nil Unit | cons {Int,List'}>
+target : Tree -> Tree'. <empty Unit | node {Int,Tree',Tree'}>
+x : Int
+spec : List -> {Int, Int}
+main : Tree -> {Int, Int}
+
+
+Inductive Tree;
+
+Inductive List;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+cat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+repr = let dec = (fix (
+    \f: List -> Tree -> List. \res: List. \t: Tree. 
+    match t with
+      empty _ -> res
+    | node {w, l, r} -> cons {w, f (f res l) r}
+    end
+)) in 
+        fix (
+        \f: Tree -> List. \t: Tree. 
+        match t with
+          empty _ -> nil Unit
+        | node {w, l, r} -> cons {w, dec (f l) r}
+        end
+    );
+
+target = fix (
+    \f: Tree -> Compress Tree. \t: Tree. 
+    match t with
+      empty _ -> 
+        let tmp1 = (empty Unit) in 
+            align (label tmp1 ) 
+    | node {w, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (node {w, unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+@Input x = Int;
+
+spec = fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {h, t} -> 
+        let result = (f t) in 
+            {+ h result.1, max result.2 (+ h result.1)}
+    end
+);
+
+main = \xs: Tree. 
+    let tmp4 = (target xs) in 
+        align (spec (repr (unlabel tmp4 ))) ;
+align term #0: compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  t: Tree. <empty Unit | node {Int,Tree,Tree}>
+  tmp1: Tree. <empty Unit | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+align@1 create@0 node ({w,unlabel tmp2,unlabel tmp3})
+  tmp3: compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+  l: Tree. <empty Unit | node {Int,Tree,Tree}>
+  tmp2: compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+  w: Int
+  t: Tree. <empty Unit | node {Int,Tree,Tree}>
+  r: Tree. <empty Unit | node {Int,Tree,Tree}>
+align term #2: {Int,Int}
+align@2 spec (repr (unlabel tmp4))
+  tmp4: compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+  xs: Tree. <empty Unit | node {Int,Tree,Tree}>
+Components for compress:
+  empty [Bot] -> Tree. <empty Unit | node {Int,Tree,Tree}> 0
+  node [(Int * Tree. <empty Unit | node {Int,Tree,Tree}> * Tree. <empty Unit | node {Int,Tree,Tree}>)] -> Tree. <empty Unit | node {Int,Tree,Tree}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 1
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 1
+  max [Int,Int] -> Int 2
+
+Components for align:
+  cat [List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>] -> List. <nil Unit | cons {Int,List}> 3
+  empty [Bot] -> Tree. <empty Unit | node {Int,Tree,Tree}> 0
+  spec [List. <nil Unit | cons {Int,List}>] -> (Int * Int) 7
+  repr [Tree. <empty Unit | node {Int,Tree,Tree}>] -> List. <nil Unit | cons {Int,List}> 4
+  node [(Int * Tree. <empty Unit | node {Int,Tree,Tree}> * Tree. <empty Unit | node {Int,Tree,Tree}>)] -> Tree. <empty Unit | node {Int,Tree,Tree}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 1
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 1
+  max [Int,Int] -> Int 2
+
+Components for comb:
+  empty [Bot] -> Tree. <empty Unit | node {Int,Tree,Tree}> 0
+  node [(Int * Tree. <empty Unit | node {Int,Tree,Tree}> * Tree. <empty Unit | node {Int,Tree,Tree}>)] -> Tree. <empty Unit | node {Int,Tree,Tree}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 1
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 1
+  max [Int,Int] -> Int 2
+
+align term #0: compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  t: Tree. <empty Unit | node {Int,Tree,Tree}>
+  tmp1: Tree. <empty Unit | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+align@1 create@0 node ({w,unlabel tmp2,unlabel tmp3})
+  tmp3: compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+  l: Tree. <empty Unit | node {Int,Tree,Tree}>
+  tmp2: compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+  w: Int
+  t: Tree. <empty Unit | node {Int,Tree,Tree}>
+  r: Tree. <empty Unit | node {Int,Tree,Tree}>
+align term #2: {Int,Int}
+align@2 spec (repr (unlabel tmp4))
+  tmp4: compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+  xs: Tree. <empty Unit | node {Int,Tree,Tree}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param3
+  Param6
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+  Param0
+  Param2
+num = 2
+start: start
+node: start
+  Compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2]@Compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] Tree. <empty Unit | node {Int,Tree,Tree}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  access0([Param0,Param1]@(Int * Int))
+  access1([Param0,Param1]@(Int * Int))
+  fold[Tree. <empty Unit | node {Int,Tree,Tree}>->Int]([Param1]@Int [Int@0,Int@1,Int@2,Param1]@Int [Param0,Param1]@Tree. <empty Unit | node {Int,Tree,Tree}>)
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+node: [Param1]@Int
+  Param1
+  +([Param1]@Int [Param1]@Int)
+  -([Param1]@Int [Param1]@Int)
+  access0([Param1]@(Int * Int))
+  access1([Param1]@(Int * Int))
+  max([Param1]@Int [Param1]@Int)
+node: [Int@0,Int@1,Int@2,Param1]@Int
+  Param1
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2,Param1]@Int [Int@0,Int@1,Int@2,Param1]@Int)
+  -([Int@0,Int@1,Int@2,Param1]@Int [Int@0,Int@1,Int@2,Param1]@Int)
+  access0([Int@0,Int@1,Int@2,Param1]@(Int * Int))
+  access1([Int@0,Int@1,Int@2,Param1]@(Int * Int))
+  max([Int@0,Int@1,Int@2,Param1]@Int [Int@0,Int@1,Int@2,Param1]@Int)
+node: [Param0,Param1]@List. <nil Unit | cons {Int,List}>
+  cat([Param0,Param1]@List. <nil Unit | cons {Int,List}> [Param0,Param1]@List. <nil Unit | cons {Int,List}>)
+  repr([Param0,Param1]@Tree. <empty Unit | node {Int,Tree,Tree}>)
+node: [Param0,Param1]@(Int * Int)
+  prod([Param0,Param1]@Int [Param0,Param1]@Int)
+  spec([Param0,Param1]@List. <nil Unit | cons {Int,List}>)
+node: [Param1]@(Int * Int)
+  prod([Param1]@Int [Param1]@Int)
+node: [Int@0,Int@1,Int@2,Param1]@(Int * Int)
+  prod([Int@0,Int@1,Int@2,Param1]@Int [Int@0,Int@1,Int@2,Param1]@Int)
+node: [Param0,Param1]@Tree. <empty Unit | node {Int,Tree,Tree}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(repr(Param0)).0
+  [1] spec(repr(Param0)).1
+  [0] spec(repr(Param0)).0
+  [1] spec(repr(Param0)).1
+  [0] Param0 -> spec(repr(Param0)).0
+  [1] Param0 -> spec(repr(Param0)).1
+  [2] Param2 -> spec(repr(Param0)).0
+  [3] Param2 -> spec(repr(Param0)).1
+  [4] Param3
+  [0] null
+  [1] null
+  [0] Param0 -> spec(repr(Param0)).0
+  [1] Param0 -> spec(repr(Param0)).1
+compress #0: {Int,Int}
+pass #0: 
+{0, 0}
+pass #1: 
+{+ (+ tmp3.1 tmp2.1) w, if (< (max (+ tmp3.2 tmp2.1) tmp2.2) (+ tmp3.1 (max (+ tmp2.1 w) tmp2.1))) then + tmp3.1 (max (+ tmp2.1 w) tmp2.1)
+else max (+ tmp3.2 tmp2.1) tmp2.2}
+pass #2: 
+{tmp4.1, tmp4.2}
+
+Inductive Tree;
+
+Inductive List;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+cat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+repr = let dec = (fix (
+    \f: List -> Tree -> List. \res: List. \t: Tree. 
+    match t with
+      empty _ -> res
+    | node {w, l, r} -> cons {w, f (f res l) r}
+    end
+)) in 
+        fix (
+        \f: Tree -> List. \t: Tree. 
+        match t with
+          empty _ -> nil Unit
+        | node {w, l, r} -> cons {w, dec (f l) r}
+        end
+    );
+
+target = fix (
+    \f: Tree -> {Int, Int}. \t: Tree. 
+    match t with
+      empty _ -> {0, 0}
+    | node {w, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                {+ (+ tmp3.1 tmp2.1) w, if (< (max (+ tmp3.2 tmp2.1) tmp2.2) (+ tmp3.1 (max (+ tmp2.1 w) tmp2.1))) then + tmp3.1 (max (+ tmp2.1 w) tmp2.1)
+                else max (+ tmp3.2 tmp2.1) tmp2.2}
+    end
+);
+
+@Input x = Int;
+
+spec = fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {h, t} -> 
+        let result = (f t) in 
+            {+ h result.1, max result.2 (+ h result.1)}
+    end
+);
+
+main = \xs: Tree. 
+    let tmp4 = (target xs) in 
+        {tmp4.1, tmp4.2};
+syn-comb: 1.82355
+collect: 2.18838
+label: 0.014382
+extend-component: 0.000339
+execute: 4.88362
+syn-align: 7.1643
+comb-size: 80
+align-size: 13
+extract-size: 5
+9.01049
+Success

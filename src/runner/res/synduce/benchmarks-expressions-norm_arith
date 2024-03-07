@@ -1,0 +1,35 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/expressions/norm_arith.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (f0, f1) := ∀ x : [33mnorm_expr[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): arith_expr -> int  =  
+[44m INFO :[0m  target⟨f0, f1⟩(): norm_expr -> int  =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(): norm_expr -> arith_expr  =  
+
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0086s
+[44m INFO :[0m ... finished in 0.0085s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0131s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [   4 instances] 0.031s 
+        CVC-SyGuS  [   2 instances] 0.007s 
+        > TOTAL    [   6 instances]: 0.039s 
+[44m INFO :[0m Solution found in 0.0267s (113.3% verifying):
+
+[31mlet[0m [36mf0[0m [34mx4[0m [31m=[0m [34mx4[0m
+
+[31mlet[0m [36mf1[0m [34mx5[0m [34mx6[0m [31m=[0m [34mx5[0m + [34mx6[0m
+
+[31mlet rec[0m [36mtarget[0m [31m=[0m [33mfunction[0m [3mNInt[0m(i) -> [34mf0[0m [34mi[0m [33m| [0m[3mNPlus[0m(a, b) -> [34mf1[0m ([34mtarget[0m [34ma[0m) ([34mtarget[0m [34mb[0m)
+
+

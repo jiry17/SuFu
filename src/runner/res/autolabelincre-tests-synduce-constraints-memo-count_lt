@@ -1,0 +1,68 @@
+
+Inductive Tree;
+
+Inductive TreeMemo;
+
+memo = \t: TreeMemo. 
+    match t with
+      mleaf {x, _} -> x
+    | mnode {x, _, _, _} -> x
+    end
+;
+
+is_memo = fix (
+    \f: TreeMemo -> Bool. \t: TreeMemo. 
+    match t with
+      mleaf {n, x} -> and (>= n 0) (if (< x 2) then == n 1
+        else == n 0)
+    | mnode {n, a, l, r} -> 
+        let exp = (+ (if (< a 2) then 1
+        else 0) (+ (memo l) (memo r))) in 
+            and (and (>= n 0) (== n exp)) (and (f l) (f r))
+    end
+);
+
+repr = fix (
+    \f: TreeMemo -> Tree. \t: TreeMemo. 
+    match t with
+      mleaf {n, a} -> leaf a
+    | mnode {n, a, l, r} -> node {a, f l, f r}
+    end
+);
+
+spec = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf a -> if (< a 2) then 1
+        else 0
+    | node {a, l, r} -> if (< a 2) then + 1 (+ (f l) (f r))
+        else + (f l) (f r)
+    end
+);
+
+target = fix (
+    \f: TreeMemo -> Unit. \t: TreeMemo. 
+    match t with
+      mleaf {n, a} -> if (< a 2) then unit
+        else unit
+    | mnode {n, a, l, r} -> if (< a 2) then unit
+        else unit
+    end
+);
+
+gen = fix (
+    \f: Tree -> TreeMemo. \t: Tree. 
+    match t with
+      leaf a -> mleaf {if (< a 2) then 1
+        else 0, a}
+    | node {a, l, r} -> 
+        let res = {f l, f r} in 
+            mnode {+ (if (< a 2) then 1
+            else 0) (+ (memo res.1) (memo res.2)), a, res.1, res.2}
+    end
+);
+
+main = \mt: TreeMemo. 
+    if (is_memo mt) then let c0 = (memo mt) in 
+        c0
+    else 0;

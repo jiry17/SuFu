@@ -1,0 +1,35 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/tree/sorted_2.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (f0, join) := ∀ x : [33mint tree[0m. ([34mreference[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  reference⟨⟩(x): int tree -> bool  =  
+[44m INFO :[0m  target⟨f0, join⟩(x): int tree -> bool  =  
+[44m INFO :[0m repr(x) = [34mx[0m
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0132s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0977s
+[44m INFO :[0m ... finished in 0.6813s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [   6 instances] 0.813s 
+        CVC-SyGuS  [   2 instances] 0.009s 
+        > TOTAL    [   8 instances]: 0.822s 
+[44m INFO :[0m Solution found in 0.6846s (115.7% verifying):
+
+[31mlet[0m [36mf0[0m [34ma[0m [34mb[0m [31m=[0m [34mb[0m > [34ma[0m
+
+[31mlet[0m [36mjoin[0m [34mc[0m [34mx[0m [34my[0m [34mz[0m [31m=[0m ([34my[0m && [34mz[0m) && ([34mx[0m > [34mc[0m)
+
+[31mlet rec[0m [36mh0[0m t [31m=[0m [34mh[0m [34mx[0m [34mt[0m
+[31mand[0m [36mh[0m y[31m=[0m [33mfunction[0m [3mLeaf[0m(a) -> [34mf0[0m [34ma[0m [34my[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mjoin[0m [34ma[0m [34my[0m ([34mh[0m [34ma[0m [34ml[0m) ([34mh[0m [34ma[0m [34mr[0m)
+
+

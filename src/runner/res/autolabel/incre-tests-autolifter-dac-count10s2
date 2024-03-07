@@ -1,0 +1,70 @@
+
+Inductive List;
+
+length = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) 1
+    | nil _ -> 0
+    end
+);
+
+concat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+split = \xs: List. 
+    fix (
+    \f: List -> Int -> {List, List}. \x: List. \n: Int. 
+    if (< n 1) then {nil unit, x}
+    else match x with
+      cons {h, t} -> 
+        let res = (f t (- n 1)) in 
+            {cons {h, res.1}, res.2}
+    | _ -> {nil unit, nil unit}
+    end
+) xs (/ (length xs) 2);
+
+dac = \v: List -> Int. \xs: List. 
+    let run = (fix (
+    \f: List -> {Int, Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, al_inf, al_inf}
+    | cons {_, nil _} -> 
+        let c0 = (al_head xs) in 
+            {0, if (== c0 0) then al_inf
+            else c0, if (== c0 0) then al_inf
+            else c0}
+    | _ -> 
+        let sp = (split xs) in 
+            let tmp1 = (f sp.1) in 
+                let tmp2 = (f sp.2) in 
+                    {if (and (== tmp1.2 (+ tmp2.1 tmp1.1)) (== tmp2.3 2)) then 2
+                    else if (and (< tmp1.2 tmp2.3) (== tmp2.3 2)) then + 1 (* 2 tmp2.1)
+                    else + tmp2.1 tmp1.1, if (al_error tmp2.2) then tmp1.2
+                    else tmp2.2, if (< tmp1.3 al_inf) then tmp1.3
+                    else tmp2.3}
+    end
+)) in 
+        let tmp3 = (run xs) in 
+            tmp3.1;
+
+inf = 100;
+
+count10s2 = fix (
+    \f: Bool -> List -> Int. \s0: Bool. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let upd = (if (and s0 (== h 2)) then 1
+        else 0) in 
+            let s0 = (or (== h 1) (and s0 (== h 0))) in 
+                + upd (f s0 t)
+    end
+) false;
+
+main = dac count10s2;

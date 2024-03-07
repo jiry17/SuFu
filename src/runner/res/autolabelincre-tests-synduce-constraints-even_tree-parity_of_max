@@ -1,0 +1,38 @@
+
+Inductive Tree;
+
+mod2 = \x: Int. 
+    - x (* (/ x 2) 2);
+
+is_even = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      elt a -> == (mod2 a) 0
+    | node {a, l, r} -> and (and (== (mod2 a) 0) (f l)) (f r)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \t: Tree. 
+    mod2 (fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      elt a -> a
+    | node {a, l, r} -> max a (max (f l) (f r))
+    end
+) t);
+
+target = fix (
+    \f: Tree -> Unit. \t: Tree. 
+    match t with
+      elt a -> unit
+    | node {a, l, r} -> unit
+    end
+);
+
+main = \t: Tree. 
+    if (is_even t) then 0
+    else 0;

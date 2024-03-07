@@ -1,0 +1,335 @@
+
+Formula :: Formula. <flit Bool | fand {Formula,Formula} | forr {
+ Formula,Formula} | fnot Formula>
+ flit : Bool ->
+        Formula'. <flit Bool | fand {Formula',Formula'} | forr {
+        Formula',Formula'} | fnot Formula'>
+ fand : {Formula,Formula} ->
+        Formula'. <flit Bool | fand {Formula',Formula'} | forr {
+        Formula',Formula'} | fnot Formula'>
+ forr : {Formula,Formula} ->
+        Formula'. <flit Bool | fand {Formula',Formula'} | forr {
+        Formula',Formula'} | fnot Formula'>
+ fnot : Formula ->
+        Formula'. <flit Bool | fand {Formula',Formula'} | forr {
+        Formula',Formula'} | fnot Formula'>
+ NnfFormula :: NnfFormula. <nfneglit Bool | nflit Bool | nfand {
+NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+nfneglit : Bool ->
+           NnfFormula'. <nfneglit Bool | nflit Bool | nfand {
+           NnfFormula',NnfFormula'} | nfor {NnfFormula',
+                                            NnfFormula'}>
+nflit : Bool ->
+        NnfFormula'. <nfneglit Bool | nflit Bool | nfand {
+        NnfFormula',NnfFormula'} | nfor {NnfFormula',NnfFormula'}>
+nfand : {NnfFormula,NnfFormula} ->
+        NnfFormula'. <nfneglit Bool | nflit Bool | nfand {
+        NnfFormula',NnfFormula'} | nfor {NnfFormula',NnfFormula'}>
+nfor : {NnfFormula,NnfFormula} ->
+       NnfFormula'. <nfneglit Bool | nflit Bool | nfand {NnfFormula',
+                                                         NnfFormula'} | nfor {
+       NnfFormula',NnfFormula'}>
+spec : Formula -> Bool
+repr : NnfFormula ->
+       Formula'. <flit Bool | fand {Formula',Formula'} | forr {
+       Formula',Formula'} | fnot Formula'>
+main : NnfFormula -> Bool
+
+
+Inductive Formula;
+
+Inductive NnfFormula;
+
+spec = fix (
+    \f: Formula -> Bool. \x: Formula. 
+    match x with
+      flit b -> b
+    | fand {b1, b2} -> and (f b1) (f b2)
+    | forr {b1, b2} -> or (f b1) (f b2)
+    | fnot b -> if (f b) then false
+        else true
+    end
+);
+
+repr = fix (
+    \f: NnfFormula -> Compress Formula. \x: NnfFormula. 
+    match x with
+      nflit b -> 
+        let tmp1 = (flit b) in 
+            align (label tmp1 ) 
+    | nfneglit b -> 
+        let tmp2 = (fnot (flit b)) in 
+            align (label tmp2 ) 
+    | nfand {b1, b2} -> 
+        let tmp3 = (f b1) in 
+            let tmp4 = (f b2) in 
+                align (label (fand {unlabel tmp3 , unlabel tmp4 }) ) 
+    | nfor {b1, b2} -> 
+        let tmp5 = (f b1) in 
+            let tmp6 = (f b2) in 
+                align (label (forr {unlabel tmp5 , unlabel tmp6 }) ) 
+    end
+);
+
+main = \xs: NnfFormula. 
+    let tmp7 = (repr xs) in 
+        align (spec (unlabel tmp7 )) ;
+align term #0: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+align@0 create@0 tmp1
+  b: Bool
+  tmp1: Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  x: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+align term #1: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+align@1 create@0 tmp2
+  x: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  tmp2: Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  b: Bool
+align term #2: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+align@2 create@0 fand ({unlabel tmp3,unlabel tmp4})
+  tmp3: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  b1: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  x: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  tmp4: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  b2: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+align term #3: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+align@3 create@0 forr ({unlabel tmp5,unlabel tmp6})
+  tmp5: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  b1: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  x: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  tmp6: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  b2: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+align term #4: Bool
+align@4 spec (unlabel tmp7)
+  xs: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  tmp7: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+Components for compress:
+  nfor [(NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> * NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>)] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+  fand [(Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> * Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  nflit [Bool] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+  flit [Bool] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  forr [(Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> * Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  nfand [(NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> * NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>)] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+  fnot [Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  nfneglit [Bool] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+
+Components for align:
+  spec [Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>] -> Bool 2
+  nfor [(NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> * NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>)] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+  fand [(Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> * Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  nflit [Bool] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+  flit [Bool] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  forr [(Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> * Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  nfand [(NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> * NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>)] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+  fnot [Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  nfneglit [Bool] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+
+Components for comb:
+  nfor [(NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> * NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>)] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+  fand [(Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> * Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  nflit [Bool] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+  flit [Bool] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  forr [(Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> * Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  nfand [(NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> * NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>)] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+  fnot [Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>] -> Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula> 0
+  nfneglit [Bool] -> NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}> 1
+
+align term #0: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+align@0 create@0 tmp1
+  b: Bool
+  tmp1: Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  x: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+align term #1: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+align@1 create@0 tmp2
+  x: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  tmp2: Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  b: Bool
+align term #2: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+align@2 create@0 fand ({unlabel tmp3,unlabel tmp4})
+  tmp3: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  b1: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  x: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  tmp4: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  b2: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+align term #3: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+align@3 create@0 forr ({unlabel tmp5,unlabel tmp6})
+  tmp5: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  b1: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  x: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  tmp6: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  b2: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+align term #4: Bool
+align@4 spec (unlabel tmp7)
+  xs: NnfFormula. <nfneglit Bool | nflit Bool | nfand {NnfFormula,NnfFormula} | nfor {NnfFormula,NnfFormula}>
+  tmp7: compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+num = 0
+start: start
+node: start
+  Bool([Param0,Param1,Param2]@Bool)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  ite([Param0,Param1,Param2]@Bool [Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Bool
+  Param0
+num = 1
+start: start
+node: start
+  Bool([Param0,Param1,Param2]@Bool)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Bool
+  Param2
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  ite([Param0,Param1,Param2]@Bool [Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>([Param0,Param1,Param2,Param3,Param4]@Compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  Param0
+  Param3
+num = 3
+start: start
+node: start
+  Compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>([Param0,Param1,Param2,Param3,Param4]@Compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  Param0
+  Param3
+num = 4
+start: start
+node: start
+  Compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>([Param0,Param1]@Compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Bool([Param0]@Bool)
+node: [Bool@0]@Bool
+  Bool@0
+  spec([Bool@0]@Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)
+node: [Bool@0,Bool@1]@Bool
+  Bool@0
+  Bool@1
+  spec([Bool@0,Bool@1]@Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)
+node: [Param0]@Bool
+  fold[Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>->Bool]([Bool@0]@Bool [Bool@0,Bool@1]@Bool [Bool@0,Bool@1]@Bool [Bool@0]@Bool [Param0]@Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)
+  spec([Param0]@Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)
+node: [Bool@0]@Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  flit([Bool@0]@Bool)
+  fnot([Bool@0]@Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)
+node: [Bool@0,Bool@1]@Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  flit([Bool@0,Bool@1]@Bool)
+  fnot([Bool@0,Bool@1]@Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)
+node: [Param0]@Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>
+  Param0
+  flit([Param0]@Bool)
+  fnot([Param0]@Formula. <flit Bool | fand {Formula,Formula} | forr {Formula,Formula} | fnot Formula>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [0] Param0
+  [] spec(Param0)
+  [0] Param2
+  [] spec(Param0)
+  [0] Param0 -> spec(Param0)
+  [1] Param3 -> spec(Param0)
+  [] spec(Param0)
+  [0] Param0 -> spec(Param0)
+  [1] Param3 -> spec(Param0)
+  [] null
+  [0] Param1 -> spec(Param0)
+compress #0: Bool
+pass #0: 
+b
+pass #1: 
+not b
+pass #2: 
+and tmp3 tmp4
+pass #3: 
+or tmp5 tmp6
+pass #4: 
+tmp7
+
+Inductive Formula;
+
+Inductive NnfFormula;
+
+spec = fix (
+    \f: Formula -> Bool. \x: Formula. 
+    match x with
+      flit b -> b
+    | fand {b1, b2} -> and (f b1) (f b2)
+    | forr {b1, b2} -> or (f b1) (f b2)
+    | fnot b -> if (f b) then false
+        else true
+    end
+);
+
+repr = fix (
+    \f: NnfFormula -> Bool. \x: NnfFormula. 
+    match x with
+      nflit b -> b
+    | nfneglit b -> not b
+    | nfand {b1, b2} -> 
+        let tmp3 = (f b1) in 
+            let tmp4 = (f b2) in 
+                and tmp3 tmp4
+    | nfor {b1, b2} -> 
+        let tmp5 = (f b1) in 
+            let tmp6 = (f b2) in 
+                or tmp5 tmp6
+    end
+);
+
+main = \xs: NnfFormula. 
+    let tmp7 = (repr xs) in 
+        tmp7;
+syn-comb: 0.056025
+collect: 3.64566
+label: 0.012889
+extend-component: 1e-06
+execute: 0.623448
+syn-align: 4.35055
+comb-size: 15
+align-size: 3
+extract-size: 9
+4.43059
+Success

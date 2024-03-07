@@ -1,0 +1,18 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ TwoList :: {List, List}
+is_sorted : List -> Bool
+is_sorted_pair : TwoList -> Bool
+find : Int -> List -> Bool
+SearchUnit :: {Int, List}
+spec : TwoList -> Bool
+target : TwoList -> {List'. <elt Int | cons {Int,List'}>, List}
+main : TwoList -> Bool
+
+size: 227
+compress-num: 2
+label-num: 16
+rewrite-size: 36
+0.032794

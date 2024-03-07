@@ -1,0 +1,23 @@
+
+Inductive List;
+
+div2 = \x: Int. 
+    / x 2;
+
+from = \a: Int. \b: Int. 
+    fix (
+    \f: Int -> Int -> Unit. \now: Int. \r: Int. 
+    if (> now r) then unit
+    else unit) a b;
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+main = \a: Int. \b: Int. 
+    if (<= a b) then + (+ (+ (* -1 (* a a)) (div2 (- a b))) (div2 (+ b (* b b)))) (div2 (+ b (* a a)))
+    else 0;

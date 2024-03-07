@@ -1,0 +1,347 @@
+
+List :: List. <elt {Int,Int} | cons {Int,Int,List}>
+ elt : {Int,Int} -> List'. <elt {Int,Int} | cons {Int,Int,List'}>
+ cons : {Int,Int,List} ->
+        List'. <elt {Int,Int} | cons {Int,Int,List'}>
+ head : List -> {Int, Int}
+sorted : List -> Bool
+inter : Int -> Int -> List -> Bool
+spec : List -> Bool
+target : List -> List
+main : List -> Bool
+
+
+Inductive List;
+
+head = \xs: List. 
+    match xs with
+      elt {a, b} -> {a, b}
+    | cons {a, b, t} -> {a, b}
+    end
+;
+
+sorted = fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt {a, b} -> < a b
+    | cons {a, b, t} -> and (< a b) (and (< a (head t).1) (f t))
+    end
+);
+
+inter = \a: Int. \b: Int. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt {c, d} -> and (not (< b c)) (not (> a d))
+    | cons {c, d, t} -> or (f t) (and (not (< b c)) (not (> a d)))
+    end
+);
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Bool, Int, Int}. \xs: List. 
+    match xs with
+      elt {a, b} -> {false, a, b}
+    | cons {a, b, t} -> 
+        let res = (f t) in 
+            {or res.1 (inter a b t), a, b}
+    end
+) xs).1;
+
+target = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      elt _ -> 
+        align (label xs ) 
+    | cons {a, b, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {a, b, unlabel tmp1 }) ) 
+    end
+);
+
+main = \xs: List. 
+    if (sorted xs) then let tmp2 = (target xs) in 
+        align (spec (unlabel tmp2 )) 
+    else false;
+align term #0: compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>
+align@0 create@0 xs
+  xs: List. <elt {Int,Int} | cons {Int,Int,List}>
+align term #1: compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>
+align@1 create@0 cons ({a,b,unlabel tmp1})
+  b: Int
+  xs: List. <elt {Int,Int} | cons {Int,Int,List}>
+  t: List. <elt {Int,Int} | cons {Int,Int,List}>
+  tmp1: compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>
+  a: Int
+align term #2: Bool
+align@2 spec (unlabel tmp2)
+  xs: List. <elt {Int,Int} | cons {Int,Int,List}>
+  tmp2: compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>
+Components for compress:
+  cons [(Int * Int * List. <elt {Int,Int} | cons {Int,Int,List}>)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  elt [(Int * Int)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  head [List. <elt {Int,Int} | cons {Int,Int,List}>] -> (Int * Int) 1
+
+Components for align:
+  spec [List. <elt {Int,Int} | cons {Int,Int,List}>] -> Bool 4
+  cons [(Int * Int * List. <elt {Int,Int} | cons {Int,Int,List}>)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  sorted [List. <elt {Int,Int} | cons {Int,Int,List}>] -> Bool 2
+  inter [Int,Int,List. <elt {Int,Int} | cons {Int,Int,List}>] -> Bool 3
+  elt [(Int * Int)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  head [List. <elt {Int,Int} | cons {Int,Int,List}>] -> (Int * Int) 1
+
+Components for comb:
+  cons [(Int * Int * List. <elt {Int,Int} | cons {Int,Int,List}>)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  elt [(Int * Int)] -> List. <elt {Int,Int} | cons {Int,Int,List}> 0
+  head [List. <elt {Int,Int} | cons {Int,Int,List}>] -> (Int * Int) 1
+
+align term #0: compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>
+align@0 create@0 xs
+  xs: List. <elt {Int,Int} | cons {Int,Int,List}>
+align term #1: compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>
+align@1 create@0 cons ({a,b,unlabel tmp1})
+  b: Int
+  xs: List. <elt {Int,Int} | cons {Int,Int,List}>
+  t: List. <elt {Int,Int} | cons {Int,Int,List}>
+  tmp1: compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>
+  a: Int
+align term #2: Bool
+align@2 spec (unlabel tmp2)
+  xs: List. <elt {Int,Int} | cons {Int,Int,List}>
+  tmp2: compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  1
+  access0([Param0]@(Int * Int))
+  access1([Param0]@(Int * Int))
+node: [Param0]@(Int * Int)
+  prod([Param0]@Int [Param0]@Int)
+  head([Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>
+  Param0
+  elt([Param0]@(Int * Int))
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+  Compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Param0,Param1,Param2,Param3,Param4]@List. <elt {Int,Int} | cons {Int,Int,List}>
+  Param1
+  Param2
+  elt([Param0,Param1,Param2,Param3,Param4]@(Int * Int))
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>
+  Param3
+node: [Param0,Param1,Param2,Param3,Param4]@(Int * Int)
+  prod([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  head([Param0,Param1,Param2,Param3,Param4]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param0
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  access0([Param0,Param1,Param2,Param3,Param4]@(Int * Int))
+  access1([Param0,Param1,Param2,Param3,Param4]@(Int * Int))
+num = 2
+start: start
+node: start
+  Compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>([Param0,Param1]@Compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] List. <elt {Int,Int} | cons {Int,Int,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  access0([Param0,Param1]@(Int * Int))
+  access1([Param0,Param1]@(Int * Int))
+node: [Param0,Param1]@(Int * Int)
+  prod([Param0,Param1]@Int [Param0,Param1]@Int)
+  head([Param0,Param1]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Param0,Param1]@List. <elt {Int,Int} | cons {Int,Int,List}>
+  Param0
+  elt([Param0,Param1]@(Int * Int))
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  ite([Int@0,Int@1]@Bool [Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  access0([Int@0,Int@1]@(Int * Int))
+  access1([Int@0,Int@1]@(Int * Int))
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  ite([Int@0,Int@1,Int@2]@Bool [Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  access0([Int@0,Int@1,Int@2]@(Int * Int))
+  access1([Int@0,Int@1,Int@2]@(Int * Int))
+node: [Bool@0,Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Bool@0,Int@0,Int@1]@Int [Bool@0,Int@0,Int@1]@Int)
+  -([Bool@0,Int@0,Int@1]@Int [Bool@0,Int@0,Int@1]@Int)
+  ite([Bool@0,Int@0,Int@1]@Bool [Bool@0,Int@0,Int@1]@Int [Bool@0,Int@0,Int@1]@Int)
+  access0([Bool@0,Int@0,Int@1]@(Int * Int))
+  access1([Bool@0,Int@0,Int@1]@(Int * Int))
+node: [Bool@0,Int@0,Int@1]@Bool
+  Bool@0
+  spec([Bool@0,Int@0,Int@1]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  sorted([Bool@0,Int@0,Int@1]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  inter([Bool@0,Int@0,Int@1]@Int [Bool@0,Int@0,Int@1]@Int [Bool@0,Int@0,Int@1]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  access0([Param0]@(Int * Int))
+  access1([Param0]@(Int * Int))
+  fold[List. <elt {Int,Int} | cons {Int,Int,List}>->Int]([Int@0,Int@1]@Int [Int@0,Int@1,Int@2]@Int [Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Param0]@Bool
+  fold[List. <elt {Int,Int} | cons {Int,Int,List}>->Bool]([Int@0,Int@1]@Bool [Bool@0,Int@0,Int@1]@Bool [Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  spec([Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  sorted([Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  inter([Param0]@Int [Param0]@Int [Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Int@0,Int@1]@Bool
+  spec([Int@0,Int@1]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  sorted([Int@0,Int@1]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  inter([Int@0,Int@1]@Int [Int@0,Int@1]@Int [Int@0,Int@1]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Int@0,Int@1,Int@2]@Bool
+  spec([Int@0,Int@1,Int@2]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  sorted([Int@0,Int@1,Int@2]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+  inter([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Int@0,Int@1]@List. <elt {Int,Int} | cons {Int,Int,List}>
+  elt([Int@0,Int@1]@(Int * Int))
+node: [Int@0,Int@1,Int@2]@List. <elt {Int,Int} | cons {Int,Int,List}>
+  elt([Int@0,Int@1,Int@2]@(Int * Int))
+node: [Bool@0,Int@0,Int@1]@List. <elt {Int,Int} | cons {Int,Int,List}>
+  elt([Bool@0,Int@0,Int@1]@(Int * Int))
+node: [Param0]@(Int * Int)
+  prod([Param0]@Int [Param0]@Int)
+  head([Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Int@0,Int@1]@(Int * Int)
+  prod([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  head([Int@0,Int@1]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Int@0,Int@1,Int@2]@(Int * Int)
+  prod([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  head([Int@0,Int@1,Int@2]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Bool@0,Int@0,Int@1]@(Int * Int)
+  prod([Bool@0,Int@0,Int@1]@Int [Bool@0,Int@0,Int@1]@Int)
+  head([Bool@0,Int@0,Int@1]@List. <elt {Int,Int} | cons {Int,Int,List}>)
+node: [Param0]@List. <elt {Int,Int} | cons {Int,Int,List}>
+  Param0
+  elt([Param0]@(Int * Int))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(Param0)
+  [1] head(Param0).0
+  [0] head(Param0).0
+  [0] spec(Param0)
+  [1] head(Param0).0
+  [0] Param0
+  [1] Param3 -> spec(Param0)
+  [2] Param3 -> head(Param0).0
+  [3] Param4
+  [] null
+  [0] Param1 -> spec(Param0)
+  [1] Param1 -> head(Param0).0
+compress #0: {Bool,Int}
+pass #0: 
+let c0 = (head xs).1 in 
+    {false, c0}
+pass #1: 
+{or (<= tmp1.2 b) tmp1.1, a}
+pass #2: 
+tmp2.1
+
+Inductive List;
+
+head = \xs: List. 
+    match xs with
+      elt {a, b} -> {a, b}
+    | cons {a, b, t} -> {a, b}
+    end
+;
+
+sorted = fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt {a, b} -> < a b
+    | cons {a, b, t} -> and (< a b) (and (< a (head t).1) (f t))
+    end
+);
+
+inter = \a: Int. \b: Int. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt {c, d} -> and (not (< b c)) (not (> a d))
+    | cons {c, d, t} -> or (f t) (and (not (< b c)) (not (> a d)))
+    end
+);
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Bool, Int, Int}. \xs: List. 
+    match xs with
+      elt {a, b} -> {false, a, b}
+    | cons {a, b, t} -> 
+        let res = (f t) in 
+            {or res.1 (inter a b t), a, b}
+    end
+) xs).1;
+
+target = fix (
+    \f: List -> {Bool, Int}. \xs: List. 
+    match xs with
+      elt _ -> 
+        let c0 = (head xs).1 in 
+            {false, c0}
+    | cons {a, b, t} -> 
+        let tmp1 = (f t) in 
+            {or (<= tmp1.2 b) tmp1.1, a}
+    end
+);
+
+main = \xs: List. 
+    if (sorted xs) then let tmp2 = (target xs) in 
+        tmp2.1
+    else false;
+syn-comb: 0.301028
+collect: 26.5812
+label: 0.016992
+extend-component: 0.006567
+execute: 0.128286
+syn-align: 26.7342
+comb-size: 23
+align-size: 8
+extract-size: 9
+27.0595
+Success

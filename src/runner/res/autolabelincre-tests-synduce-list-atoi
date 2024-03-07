@@ -1,0 +1,43 @@
+
+Inductive List;
+
+Inductive CList;
+
+base = 10;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \x: List. 
+    match x with
+      nil _ -> {0, 1}
+    | cons {h, t} -> 
+        let result = (f t) in 
+            {+ h (* 10 result.1), * 10 result.2}
+    end
+) xs).1;
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      nil _ -> b
+    | cons {h, t} -> cons {h, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> {Int, Int}. \xs: CList. 
+    match xs with
+      cnil _ -> {0, 0}
+    | single x -> {x, 1}
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                {if (== tmp3.2 0) then - (+ (+ tmp4.1 (* tmp4.1 tmp3.1)) (* 2 (* tmp4.1 tmp3.2))) (* tmp3.1 tmp3.1)
+                else if (< tmp3.2 (* tmp3.2 tmp3.2)) then + tmp3.1 (* tmp4.1 al_inf)
+                else + tmp3.1 (* tmp4.1 base), + tmp4.2 tmp3.2}
+    end
+);
+
+main = \x: CList. 
+    let tmp5 = (repr x) in 
+        tmp5.1;

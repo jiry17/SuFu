@@ -1,0 +1,46 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+Schedule :: Schedule. <fin Unit | month {Int,Int,Schedule}>
+fin : Unit -> Schedule'. <fin Unit | month {Int,Int,Schedule'}>
+month : {Int,Int,Schedule} ->
+        Schedule'. <fin Unit | month {Int,Int,Schedule'}>
+Plan :: Schedule
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+cost : List
+lim : Int
+m : Int
+c : Int
+inf : Int
+get_cost : Int -> Int
+snoc : Int ->
+       Int ->
+       Schedule ->
+       Schedule'. <fin Unit | month {Int,Int,Schedule'}>
+length : List -> Int
+pop_back : List -> {List, Int}
+merge : PlanList -> PlanList -> PlanList
+extra_cost : Int -> Int
+remain : Schedule -> Int
+eval : Schedule -> Int
+extend : Int ->
+         Int ->
+         PlanList ->
+         PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+generate : List -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+extra_cost : Int -> Int
+remain : Schedule -> Int
+eval : Schedule -> Int
+min : Int -> Int -> Int
+get_best : PlanList -> Int
+main : List -> Int
+
+size: 450
+compress-num: 1
+label-num: 7
+rewrite-size: 11
+0.031454

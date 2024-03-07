@@ -1,0 +1,58 @@
+
+Inductive List;
+
+Inductive Zipper;
+
+concat = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      nil _ -> ys
+    | cons {h, t} -> cons {h, f t ys}
+    end
+);
+
+rev = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            let tmp3 = (cons {h, nil Unit}) in 
+                align (label (concat (unlabel tmp2 ) tmp3) ) 
+    end
+);
+
+list_repr = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp4 = (nil Unit) in 
+            align (label tmp4 ) 
+    | cons {h, t} -> 
+        let tmp5 = (f t) in 
+            align (label (cons {h, unlabel tmp5 }) ) 
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+repr = \z: Zipper. 
+    match z with
+      zip {l, r} -> 
+        let tmp6 = (rev l) in 
+            let tmp7 = (list_repr r) in 
+                align (label (concat (unlabel tmp6 ) (unlabel tmp7 )) ) 
+    end
+;
+
+main = \z: Zipper. 
+    let tmp8 = (repr z) in 
+        align (sum (unlabel tmp8 )) ;

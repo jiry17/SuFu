@@ -1,0 +1,45 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/list_to_tree/search.pmrs[0m with [36mpmrs[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (odot, s0) := ∀ x : [33mparam1 tree[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(x): param2 list -> bool  =  
+[44m INFO :[0m  target⟨odot, s0⟩(x): param1 tree -> bool  =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(): param2 tree -> param2 list  =  
+
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0111s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0165s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m ... finished in 0.0114s
+[44m INFO :[0m Refinement step 3.
+[44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0111s
+[44m INFO :[0m Refinement step 4.
+[44m INFO :[0m [30m[102m		 segis Refinement step 4:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0481s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  17 instances] 0.269s 
+        CVC-SyGuS  [   8 instances] 18.157s 
+        > TOTAL    [  25 instances]: 18.426s 
+[44m INFO :[0m Solution found in 5.1161s (1.9% verifying):
+
+[31mlet[0m [36modot[0m [34ma[0m [34mb[0m [34mc[0m [34mx[0m [31m=[0m [34mc[0m ? [34mc[0m : [34mx[0m || ([34ma[0m = [34mb[0m)
+
+[31mlet[0m [36ms0[0m [34my[0m [31m=[0m [36mfalse[0m
+
+ target⟨odot, s0⟩(x): param1 tree -> bool  = 
+{‣ search_tree  Empty  ⟹  [34ms0[0m [34mx[0m
+ ‣ search_tree  [3mNode[0m(a, l, r)  ⟹  [34modot[0m [34mx[0m [34ma[0m ([34msearch_tree[0m [34ml[0m) ([34msearch_tree[0m [34mr[0m) }
+

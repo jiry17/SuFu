@@ -1,0 +1,49 @@
+
+Inductive List;
+
+Inductive CList;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int, Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0, 0, 0}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let new_sum = (+ hd result.1) in 
+                let new_mts = (max result.2 new_sum) in 
+                    let new_mps = (max 0 (+ hd result.3)) in 
+                        let new_mss = (max result.4 new_mps) in 
+                            {new_sum, new_mts, new_mps, new_mss}
+    end
+) xs).4;
+
+cat = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      nil _ -> ys
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> {Int, Int, Int, Int}. \xs: CList. 
+    match xs with
+      cnil _ -> {0, - 0 al_inf, - 0 al_inf, 0}
+    | single a -> {max a 0, a, a, a}
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                {if (and (< tmp3.1 tmp4.1) (< (+ tmp4.2 tmp3.3) tmp4.1)) then tmp4.1
+                else if (< (+ tmp4.2 tmp3.3) tmp3.1) then tmp3.1
+                else + tmp4.2 tmp3.3, max tmp3.2 (+ tmp4.2 tmp3.4), max tmp4.3 (+ tmp4.4 tmp3.3), + tmp4.4 tmp3.4}
+    end
+);
+
+main = \x: CList. 
+    let tmp5 = (repr x) in 
+        tmp5.1;

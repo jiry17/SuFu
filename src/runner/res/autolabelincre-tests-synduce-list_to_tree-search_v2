@@ -1,0 +1,53 @@
+
+Inductive Tree;
+
+Inductive List;
+
+cat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+repr = let dec = (fix (
+    \f: List -> Tree -> List. \res: List. \t: Tree. 
+    match t with
+      empty _ -> res
+    | node {w, l, r} -> f (cons {w, f res r}) l
+    end
+)) in 
+        fix (
+        \f: Tree -> List. \t: Tree. 
+        match t with
+          empty _ -> nil unit
+        | node {w, l, r} -> dec (cons {w, f r}) l
+        end
+    );
+
+target = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      empty _ -> false
+    | node {w, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                or (or (== w x) tmp3) tmp2
+    end
+);
+
+@Input x = Int;
+
+spec = fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      nil _ -> false
+    | cons {h, t} -> if (== h x) then true
+        else f t
+    end
+);
+
+main = \xs: Tree. 
+    let tmp4 = (target xs) in 
+        tmp4;

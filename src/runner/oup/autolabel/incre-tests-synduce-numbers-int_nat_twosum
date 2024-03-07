@@ -1,0 +1,430 @@
+
+Nat :: Nat. <z Unit | s Nat>
+ z : Unit -> Nat'. <z Unit | s Nat'>
+ s : Nat -> Nat'. <z Unit | s Nat'>
+ INat :: INat. <positive Nat | negative Nat>
+positive : Nat -> INat'. <positive Nat | negative Nat>
+negative : Nat -> INat'. <positive Nat | negative Nat>
+TwoInats :: TwoInats. <twoinats {INat,INat}>
+twoinats : {INat,INat} -> TwoInats'. <twoinats {INat,INat}>
+EInt :: EInt. <zero Unit | sub1 EInt | add1 EInt>
+zero : Unit -> EInt'. <zero Unit | sub1 EInt' | add1 EInt'>
+sub1 : EInt -> EInt'. <zero Unit | sub1 EInt' | add1 EInt'>
+add1 : EInt -> EInt'. <zero Unit | sub1 EInt' | add1 EInt'>
+TwoInts :: TwoInts. <twoints {EInt,EInt}>
+twoints : {EInt,EInt} -> TwoInts'. <twoints {EInt,EInt}>
+nsum : Nat -> Int
+itoint : INat -> Int
+two_isum : TwoInats -> Int
+target_eint : EInt -> EInt'. <zero Unit | sub1 EInt' | add1 EInt'>
+target_twoints : TwoInts -> TwoInts'. <twoints {EInt,EInt}>
+irepr : EInt -> INat'. <positive Nat | negative Nat>
+repr : TwoInts -> TwoInats'. <twoinats {INat,INat}>
+main : TwoInts -> Int
+
+
+Inductive Nat;
+
+Inductive INat;
+
+Inductive TwoInats;
+
+Inductive EInt;
+
+Inductive TwoInts;
+
+nsum = fix (
+    \f: Nat -> Int. \n: Nat. 
+    match n with
+      z _ -> 0
+    | s m -> + 1 (f m)
+    end
+);
+
+itoint = \n: INat. 
+    match n with
+      negative m -> - 0 (+ 1 (nsum m))
+    | positive m -> nsum m
+    end
+;
+
+two_isum = \n: TwoInats. 
+    match n with
+      twoinats {n1, n2} -> + (itoint n1) (itoint n2)
+    end
+;
+
+target_eint = fix (
+    \f: EInt -> Compress EInt. \e: EInt. 
+    match e with
+      zero _ -> 
+        let tmp1 = (zero Unit) in 
+            align (label tmp1 ) 
+    | add1 e' -> 
+        let tmp2 = (f e') in 
+            align (label (add1 (unlabel tmp2 )) ) 
+    | sub1 e' -> 
+        let tmp3 = (f e') in 
+            align (label (sub1 (unlabel tmp3 )) ) 
+    end
+);
+
+target_twoints = \x: TwoInts. 
+    match x with
+      twoints {x1, x2} -> 
+        let tmp4 = (target_eint x1) in 
+            let tmp5 = (target_eint x2) in 
+                align (label (twoints {unlabel tmp4 , unlabel tmp5 }) ) 
+    end
+;
+
+irepr = fix (
+    \f: EInt -> INat. \e: EInt. 
+    match e with
+      zero _ -> positive (z Unit)
+    | sub1 e' -> 
+        let res = (f e') in 
+            match res with
+              positive z _ -> negative (z Unit)
+            | positive s n -> positive n
+            | negative n -> negative (s n)
+            end
+
+    | add1 e' -> 
+        let res = (f e') in 
+            match res with
+              positive n -> positive (s n)
+            | negative z _ -> positive (z Unit)
+            | negative s n -> negative n
+            end
+
+    end
+);
+
+repr = \x: TwoInts. 
+    match x with
+      twoints {x1, x2} -> twoinats {irepr x1, irepr x2}
+    end
+;
+
+main = \x: TwoInts. 
+    let tmp6 = (target_twoints x) in 
+        align (two_isum (repr (unlabel tmp6 ))) ;
+align term #0: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align@0 create@0 tmp1
+  tmp1: EInt. <zero Unit | sub1 EInt | add1 EInt>
+  e: EInt. <zero Unit | sub1 EInt | add1 EInt>
+align term #1: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align@1 create@0 add1 (unlabel tmp2)
+  e': EInt. <zero Unit | sub1 EInt | add1 EInt>
+  e: EInt. <zero Unit | sub1 EInt | add1 EInt>
+  tmp2: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align term #2: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align@2 create@0 sub1 (unlabel tmp3)
+  e: EInt. <zero Unit | sub1 EInt | add1 EInt>
+  e': EInt. <zero Unit | sub1 EInt | add1 EInt>
+  tmp3: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align term #3: compress[1] TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>
+align@3 create@1 twoints ({unlabel tmp4,unlabel tmp5})
+  x2: EInt. <zero Unit | sub1 EInt | add1 EInt>
+  x1: EInt. <zero Unit | sub1 EInt | add1 EInt>
+  tmp5: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+  x: TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>
+  tmp4: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align term #4: Int
+align@4 two_isum (repr (unlabel tmp6))
+  x: TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>
+  tmp6: compress[1] TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>
+Components for compress:
+  sub1 [EInt. <zero Unit | sub1 EInt | add1 EInt>] -> EInt. <zero Unit | sub1 EInt | add1 EInt> 3
+  negative [Nat. <z Unit | s Nat>] -> INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>> 1
+  positive [Nat. <z Unit | s Nat>] -> INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>> 1
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 0
+  z [Bot] -> Nat. <z Unit | s Nat> 0
+  twoinats [(INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>> * INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>)] -> TwoInats. <twoinats {INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>,INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>}> 2
+  zero [Bot] -> EInt. <zero Unit | sub1 EInt | add1 EInt> 3
+  add1 [EInt. <zero Unit | sub1 EInt | add1 EInt>] -> EInt. <zero Unit | sub1 EInt | add1 EInt> 3
+  twoints [(EInt. <zero Unit | sub1 EInt | add1 EInt> * EInt. <zero Unit | sub1 EInt | add1 EInt>)] -> TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}> 4
+
+Components for align:
+  irepr [EInt. <zero Unit | sub1 EInt | add1 EInt>] -> INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>> 10
+  two_isum [TwoInats. <twoinats {INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>,INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>}>] -> Int 7
+  sub1 [EInt. <zero Unit | sub1 EInt | add1 EInt>] -> EInt. <zero Unit | sub1 EInt | add1 EInt> 3
+  negative [Nat. <z Unit | s Nat>] -> INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>> 1
+  positive [Nat. <z Unit | s Nat>] -> INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>> 1
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 0
+  repr [TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>] -> TwoInats. <twoinats {INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>,INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>}> 11
+  z [Bot] -> Nat. <z Unit | s Nat> 0
+  twoinats [(INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>> * INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>)] -> TwoInats. <twoinats {INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>,INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>}> 2
+  zero [Bot] -> EInt. <zero Unit | sub1 EInt | add1 EInt> 3
+  nsum [Nat. <z Unit | s Nat>] -> Int 5
+  add1 [EInt. <zero Unit | sub1 EInt | add1 EInt>] -> EInt. <zero Unit | sub1 EInt | add1 EInt> 3
+  twoints [(EInt. <zero Unit | sub1 EInt | add1 EInt> * EInt. <zero Unit | sub1 EInt | add1 EInt>)] -> TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}> 4
+  itoint [INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>] -> Int 6
+
+Components for comb:
+  sub1 [EInt. <zero Unit | sub1 EInt | add1 EInt>] -> EInt. <zero Unit | sub1 EInt | add1 EInt> 3
+  negative [Nat. <z Unit | s Nat>] -> INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>> 1
+  positive [Nat. <z Unit | s Nat>] -> INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>> 1
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 0
+  z [Bot] -> Nat. <z Unit | s Nat> 0
+  twoinats [(INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>> * INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>)] -> TwoInats. <twoinats {INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>,INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>}> 2
+  zero [Bot] -> EInt. <zero Unit | sub1 EInt | add1 EInt> 3
+  add1 [EInt. <zero Unit | sub1 EInt | add1 EInt>] -> EInt. <zero Unit | sub1 EInt | add1 EInt> 3
+  twoints [(EInt. <zero Unit | sub1 EInt | add1 EInt> * EInt. <zero Unit | sub1 EInt | add1 EInt>)] -> TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}> 4
+
+align term #0: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align@0 create@0 tmp1
+  tmp1: EInt. <zero Unit | sub1 EInt | add1 EInt>
+  e: EInt. <zero Unit | sub1 EInt | add1 EInt>
+align term #1: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align@1 create@0 add1 (unlabel tmp2)
+  e': EInt. <zero Unit | sub1 EInt | add1 EInt>
+  e: EInt. <zero Unit | sub1 EInt | add1 EInt>
+  tmp2: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align term #2: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align@2 create@0 sub1 (unlabel tmp3)
+  e: EInt. <zero Unit | sub1 EInt | add1 EInt>
+  e': EInt. <zero Unit | sub1 EInt | add1 EInt>
+  tmp3: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align term #3: compress[1] TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>
+align@3 create@1 twoints ({unlabel tmp4,unlabel tmp5})
+  x2: EInt. <zero Unit | sub1 EInt | add1 EInt>
+  x1: EInt. <zero Unit | sub1 EInt | add1 EInt>
+  tmp5: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+  x: TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>
+  tmp4: compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+align term #4: Int
+align@4 two_isum (repr (unlabel tmp6))
+  x: TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>
+  tmp6: compress[1] TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>([Param0,Param1,Param2]@Compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+  Param2
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>([Param0,Param1,Param2]@Compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+  Param2
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+num = 3
+start: start
+node: start
+  Compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>([Param0,Param1,Param2,Param3,Param4]@Compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] EInt. <zero Unit | sub1 EInt | add1 EInt>
+  Param2
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 4
+start: start
+node: start
+  Compress[1] TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>([Param0,Param1]@Compress[1] TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[1] TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  itoint([Param0]@INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>)
+node: [Param0]@INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>
+  irepr([Param0]@EInt. <zero Unit | sub1 EInt | add1 EInt>)
+node: [Param0]@EInt. <zero Unit | sub1 EInt | add1 EInt>
+  Param0
+  sub1([Param0]@EInt. <zero Unit | sub1 EInt | add1 EInt>)
+  add1([Param0]@EInt. <zero Unit | sub1 EInt | add1 EInt>)
+num = 1
+start: start
+node: start
+  Int([Param0]@Int)
+node: [EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@EInt. <zero Unit | sub1 EInt | add1 EInt>
+  EInt. <zero Unit | sub1 EInt | add1 EInt>@0
+  EInt. <zero Unit | sub1 EInt | add1 EInt>@1
+  sub1([EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@EInt. <zero Unit | sub1 EInt | add1 EInt>)
+  add1([EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@EInt. <zero Unit | sub1 EInt | add1 EInt>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  fold[TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>->Int]([EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@Int [Param0]@TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>)
+  two_isum([Param0]@TwoInats. <twoinats {INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>,INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>}>)
+node: [EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@Int
+  +([EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@Int [EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@Int)
+  -([EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@Int [EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@Int)
+  itoint([EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>)
+node: [EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>
+  irepr([EInt. <zero Unit | sub1 EInt | add1 EInt>@0,EInt. <zero Unit | sub1 EInt | add1 EInt>@1]@EInt. <zero Unit | sub1 EInt | add1 EInt>)
+node: [Param0]@TwoInats. <twoinats {INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>,INat. <positive Nat. <z Unit | s Nat> | negative Nat. <z Unit | s Nat>>}>
+  repr([Param0]@TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>)
+node: [Param0]@TwoInts. <twoints {EInt. <zero Unit | sub1 EInt | add1 EInt>,EInt. <zero Unit | sub1 EInt | add1 EInt>}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [] itoint(irepr(Param0))
+  [] itoint(irepr(Param0))
+  [0] Param2 -> itoint(irepr(Param0))
+  [] itoint(irepr(Param0))
+  [0] Param2 -> itoint(irepr(Param0))
+  [] two_isum(repr(Param0))
+  [0] Param2 -> itoint(irepr(Param0))
+  [1] Param4 -> itoint(irepr(Param0))
+  [] null
+  [0] Param1 -> two_isum(repr(Param0))
+compress #0: Int
+compress #1: Int
+pass #0: 
+0
+pass #1: 
++ tmp2 1
+pass #2: 
+- tmp3 1
+pass #3: 
++ tmp5 tmp4
+pass #4: 
+tmp6
+
+Inductive Nat;
+
+Inductive INat;
+
+Inductive TwoInats;
+
+Inductive EInt;
+
+Inductive TwoInts;
+
+nsum = fix (
+    \f: Nat -> Int. \n: Nat. 
+    match n with
+      z _ -> 0
+    | s m -> + 1 (f m)
+    end
+);
+
+itoint = \n: INat. 
+    match n with
+      negative m -> - 0 (+ 1 (nsum m))
+    | positive m -> nsum m
+    end
+;
+
+two_isum = \n: TwoInats. 
+    match n with
+      twoinats {n1, n2} -> + (itoint n1) (itoint n2)
+    end
+;
+
+target_eint = fix (
+    \f: EInt -> Int. \e: EInt. 
+    match e with
+      zero _ -> 0
+    | add1 e' -> 
+        let tmp2 = (f e') in 
+            + tmp2 1
+    | sub1 e' -> 
+        let tmp3 = (f e') in 
+            - tmp3 1
+    end
+);
+
+target_twoints = \x: TwoInts. 
+    match x with
+      twoints {x1, x2} -> 
+        let tmp4 = (target_eint x1) in 
+            let tmp5 = (target_eint x2) in 
+                + tmp5 tmp4
+    end
+;
+
+irepr = fix (
+    \f: EInt -> INat. \e: EInt. 
+    match e with
+      zero _ -> positive (z Unit)
+    | sub1 e' -> 
+        let res = (f e') in 
+            match res with
+              positive z _ -> negative (z Unit)
+            | positive s n -> positive n
+            | negative n -> negative (s n)
+            end
+
+    | add1 e' -> 
+        let res = (f e') in 
+            match res with
+              positive n -> positive (s n)
+            | negative z _ -> positive (z Unit)
+            | negative s n -> negative n
+            end
+
+    end
+);
+
+repr = \x: TwoInts. 
+    match x with
+      twoints {x1, x2} -> twoinats {irepr x1, irepr x2}
+    end
+;
+
+main = \x: TwoInts. 
+    let tmp6 = (target_twoints x) in 
+        tmp6;
+syn-comb: 0.720129
+collect: 1.00076
+label: 0.020956
+extend-component: 0
+execute: 0.102502
+syn-align: 1.11296
+comb-size: 17
+align-size: 10
+extract-size: 6
+1.87268
+Success

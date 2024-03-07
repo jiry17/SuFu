@@ -1,0 +1,14 @@
+
+Tree :: Tree. <leaf Int | branch {Tree,Tree}>
+leaf : Int -> Tree'. <leaf Int | branch {Tree',Tree'}>
+branch : {Tree,Tree} -> Tree'. <leaf Int | branch {Tree',Tree'}>
+square : Int -> Int
+squaretr : Tree -> Tree'. <leaf Int | branch {Tree',Tree'}>
+sumtr : Tree -> Int
+main : Tree -> Int
+
+size: 62
+compress-num: 1
+label-num: 8
+rewrite-size: 14
+0.010004

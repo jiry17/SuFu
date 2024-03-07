@@ -1,0 +1,24 @@
+
+Tree :: Tree. <leaf {Int,Int} | node {Int,Int,Tree,Tree}>
+ leaf : {Int,Int} ->
+        Tree'. <leaf {Int,Int} | node {Int,Int,Tree',Tree'}>
+ node : {Int,Int,Tree,Tree} ->
+        Tree'. <leaf {Int,Int} | node {Int,Int,Tree',Tree'}>
+ min : Int -> Int -> Int
+max : Int -> Int -> Int
+tmin : Tree -> Int
+tmax : Tree -> Int
+is_bst : Tree -> Bool
+lo : Int
+hi : Int
+inside : Int -> Int -> Bool
+spec : Tree -> Bool
+target : Tree ->
+         Tree'. <leaf {Int,Int} | node {Int,Int,Tree',Tree'}>
+main : Tree -> Bool
+
+size: 239
+compress-num: 1
+label-num: 11
+rewrite-size: 25
+0.024246

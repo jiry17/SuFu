@@ -1,0 +1,250 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ div : Int -> Int -> Int
+sum : List -> Int
+length : List -> Int
+res : List -> List'. <nil Unit | cons {Int,List'}>
+main : List -> Int
+
+
+Inductive List;
+
+div = \x: Int. \y: Int. 
+    if (== y 0) then 0
+    else / x y;
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+length = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+res = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            align (label (cons {h, unlabel tmp2 }) ) 
+    end
+);
+
+main = \xs: List. 
+    let oup = (res xs) in 
+        div (align (sum (unlabel oup )) ) (align (length (unlabel oup )) );
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp1: List. <nil Unit | cons {Int,List}>
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 cons ({h,unlabel tmp2})
+  h: Int
+  tmp2: compress[0] List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+  t: List. <nil Unit | cons {Int,List}>
+align term #2: Int
+align@2 sum (unlabel oup)
+  xs: List. <nil Unit | cons {Int,List}>
+  oup: compress[0] List. <nil Unit | cons {Int,List}>
+align term #3: Int
+align@3 length (unlabel oup)
+  xs: List. <nil Unit | cons {Int,List}>
+  oup: compress[0] List. <nil Unit | cons {Int,List}>
+Components for compress:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  div [Int,Int] -> Int 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+
+Components for align:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  length [List. <nil Unit | cons {Int,List}>] -> Int 3
+  div [Int,Int] -> Int 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  sum [List. <nil Unit | cons {Int,List}>] -> Int 2
+
+Components for comb:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  div [Int,Int] -> Int 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp1: List. <nil Unit | cons {Int,List}>
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 cons ({h,unlabel tmp2})
+  h: Int
+  tmp2: compress[0] List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+  t: List. <nil Unit | cons {Int,List}>
+align term #2: Int
+align@2 sum (unlabel oup)
+  xs: List. <nil Unit | cons {Int,List}>
+  oup: compress[0] List. <nil Unit | cons {Int,List}>
+align term #3: Int
+align@3 length (unlabel oup)
+  xs: List. <nil Unit | cons {Int,List}>
+  oup: compress[0] List. <nil Unit | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  div([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2,Param3]@Compress[0] List. <nil Unit | cons {Int,List}>)
+node: [Param0,Param1,Param2,Param3]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param1
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  div([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  div([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 3
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  div([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  length([Param0]@List. <nil Unit | cons {Int,List}>)
+  div([Param0]@Int [Param0]@Int)
+  sum([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] sum(Param0)
+  [1] length(Param0)
+  [0] sum(Param0)
+  [1] length(Param0)
+  [0] Param0
+  [1] Param1 -> sum(Param0)
+  [2] Param1 -> length(Param0)
+  [] null
+  [0] Param1 -> sum(Param0)
+  [1] Param1 -> length(Param0)
+  [] null
+  [0] Param1 -> sum(Param0)
+  [1] Param1 -> length(Param0)
+compress #0: {Int,Int}
+pass #0: 
+{0, 0}
+pass #1: 
+{+ h tmp2.1, + tmp2.2 1}
+pass #2: 
+oup.1
+pass #3: 
+oup.2
+
+Inductive List;
+
+div = \x: Int. \y: Int. 
+    if (== y 0) then 0
+    else / x y;
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+length = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+res = fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            {+ h tmp2.1, + tmp2.2 1}
+    end
+);
+
+main = \xs: List. 
+    let oup = (res xs) in 
+        div oup.1 oup.2;
+syn-comb: 0.283733
+collect: 1.26893
+label: 0.013216
+extend-component: 0.000181
+execute: 0.787395
+syn-align: 1.94631
+comb-size: 20
+align-size: 7
+extract-size: 5
+2.2495
+Success

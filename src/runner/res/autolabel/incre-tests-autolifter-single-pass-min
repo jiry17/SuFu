@@ -1,0 +1,32 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> al_inf
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            if (< tmp1 h) then tmp1
+            else h
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2;
+
+inf = 100;
+
+min = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> inf
+    | cons {h, t} -> 
+        let res = (f t) in 
+            if (< res h) then res
+            else h
+    end
+);
+
+main = single_pass min;

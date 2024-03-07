@@ -1,0 +1,66 @@
+
+Inductive CList;
+
+Inductive List;
+
+allpos = fix (
+    \f: CList -> Bool. \c: CList. 
+    match c with
+      cnil _ -> true
+    | single w -> > w 0
+    | concat {l, r} -> and (f l) (f r)
+    end
+);
+
+cat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+repr = fix (
+    \f: CList -> List. \cl: CList. 
+    match cl with
+      cnil _ -> nil Unit
+    | single h -> cons {h, nil Unit}
+    | concat {l, r} -> cat (f l) (f r)
+    end
+);
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            {max h res.1, max res.2 (min res.1 h)}
+    end
+) xs).2;
+
+target = fix (
+    \f: CList -> {Int, Int}. \xs: CList. 
+    match xs with
+      cnil _ -> {0, 0}
+    | single h -> {0, h}
+    | concat {l, r} -> 
+        let tmp3 = (f l) in 
+            let tmp4 = (f r) in 
+                {+ (- (- (+ tmp4.1 tmp3.1) (min tmp4.1 tmp3.2)) (min tmp4.2 tmp3.1)) (min tmp4.2 tmp3.2), - (+ tmp4.2 tmp3.2) (min tmp4.2 tmp3.2)}
+    end
+);
+
+main = \xs: CList. 
+    if (allpos xs) then let tmp5 = (target xs) in 
+        tmp5.1
+    else 0;

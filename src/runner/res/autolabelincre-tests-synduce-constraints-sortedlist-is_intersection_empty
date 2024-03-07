@@ -1,0 +1,68 @@
+
+Inductive List;
+
+TwoList = {List, List};
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt x -> >= pre x
+    | cons {h, t} -> and (>= pre h) (f h t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt x -> true
+        | cons {h, t} -> aux h t
+        end
+;
+
+is_sorted_pair = \p: TwoList. 
+    and (is_sorted p.1) (is_sorted p.2);
+
+find = \w: Int. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt x -> == x w
+    | cons {h, t} -> or (== w h) (f t)
+    end
+);
+
+SearchUnit = {Int, List};
+
+spec = \p: TwoList. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt a -> find a p.1
+    | cons {h, t} -> or (find h p.1) (f t)
+    end
+) p.2;
+
+target = let aux = (fix (
+    \f: Int -> List -> Bool. \w: Int. \xs: List. 
+    match xs with
+      elt b -> == w b
+    | cons {h, t} -> if (> w h) then false
+        else let res = (f w t) in 
+            or (== w h) res
+    end
+)) in 
+        fix (
+        \f: TwoList -> Bool. \p: TwoList. 
+        match p.1 with
+          elt a -> 
+            let res = (aux a p.2) in 
+                res
+        | cons {h, t} -> 
+            let res1 = (f {t, p.2}) in 
+                let res2 = (aux h p.2) in 
+                    or res2 res1
+        end
+    );
+
+main = \p: TwoList. 
+    if (is_sorted_pair p) then let tmp4 = (target p) in 
+        tmp4
+    else false;

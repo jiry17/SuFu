@@ -1,0 +1,649 @@
+
+ArithOp :: ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>
+ aPlus : Unit -> ArithOp'. <aPlus Unit | aMinus Unit | aGt Unit>
+ aMinus : Unit -> ArithOp'. <aPlus Unit | aMinus Unit | aGt Unit>
+ aGt : Unit -> ArithOp'. <aPlus Unit | aMinus Unit | aGt Unit>
+ BoolOp :: BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>
+bNot : Unit ->
+       BoolOp'. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>
+bAnd : Unit ->
+       BoolOp'. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>
+bOr : Unit ->
+      BoolOp'. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>
+bEq : Unit ->
+      BoolOp'. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>
+Term :: Term. <tArithBin {ArithOp,Term,Term} | tBoolBin {BoolOp,
+                                                         Term,
+                                                         Term} | tArithUn {
+ArithOp,Term} | tBoolUn {BoolOp,Term} | tVar Int | tCInt Int | tCBool Bool>
+tArithBin : {ArithOp,Term,Term} ->
+            Term'. <tArithBin {ArithOp,Term',Term'} | tBoolBin {
+            BoolOp,Term',Term'} | tArithUn {ArithOp,Term'} | tBoolUn {
+            BoolOp,Term'} | tVar Int | tCInt Int | tCBool Bool>
+tBoolBin : {BoolOp,Term,Term} ->
+           Term'. <tArithBin {ArithOp,Term',Term'} | tBoolBin {
+           BoolOp,Term',Term'} | tArithUn {ArithOp,Term'} | tBoolUn {
+           BoolOp,Term'} | tVar Int | tCInt Int | tCBool Bool>
+tArithUn : {ArithOp,Term} ->
+           Term'. <tArithBin {ArithOp,Term',Term'} | tBoolBin {
+           BoolOp,Term',Term'} | tArithUn {ArithOp,Term'} | tBoolUn {
+           BoolOp,Term'} | tVar Int | tCInt Int | tCBool Bool>
+tBoolUn : {BoolOp,Term} ->
+          Term'. <tArithBin {ArithOp,Term',Term'} | tBoolBin {
+          BoolOp,Term',Term'} | tArithUn {ArithOp,Term'} | tBoolUn {
+          BoolOp,Term'} | tVar Int | tCInt Int | tCBool Bool>
+tVar : Int ->
+       Term'. <tArithBin {ArithOp,Term',Term'} | tBoolBin {
+       BoolOp,Term',Term'} | tArithUn {ArithOp,Term'} | tBoolUn {
+       BoolOp,Term'} | tVar Int | tCInt Int | tCBool Bool>
+tCInt : Int ->
+        Term'. <tArithBin {ArithOp,Term',Term'} | tBoolBin {
+        BoolOp,Term',Term'} | tArithUn {ArithOp,Term'} | tBoolUn {
+        BoolOp,Term'} | tVar Int | tCInt Int | tCBool Bool>
+tCBool : Bool ->
+         Term'. <tArithBin {ArithOp,Term',Term'} | tBoolBin {
+         BoolOp,Term',Term'} | tArithUn {ArithOp,Term'} | tBoolUn {
+         BoolOp,Term'} | tVar Int | tCInt Int | tCBool Bool>
+Op :: Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+opPlus : Unit ->
+         Op'. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+opMinus : Unit ->
+          Op'. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+opNot : Unit ->
+        Op'. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+opAnd : Unit ->
+        Op'. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+opOr : Unit ->
+       Op'. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+opGt : Unit ->
+       Op'. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+opEq : Unit ->
+       Op'. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+Term2 :: Term2. <bin {Op,Term2,Term2} | un {Op,Term2} | var Int | cInt Int | cBool Bool>
+bin : {Op,Term2,Term2} ->
+      Term2'. <bin {Op,Term2',Term2'} | un {Op,Term2'} | var Int | cInt Int | cBool Bool>
+un : {Op,Term2} ->
+     Term2'. <bin {Op,Term2',Term2'} | un {Op,Term2'} | var Int | cInt Int | cBool Bool>
+var : Int ->
+      Term2'. <bin {Op,Term2',Term2'} | un {Op,Term2'} | var Int | cInt Int | cBool Bool>
+cInt : Int ->
+       Term2'. <bin {Op,Term2',Term2'} | un {Op,Term2'} | var Int | cInt Int | cBool Bool>
+cBool : Bool ->
+        Term2'. <bin {Op,Term2',Term2'} | un {Op,Term2'} | var Int | cInt Int | cBool Bool>
+mk_bin : Term ->
+         Term ->
+         Op ->
+         Term'. <tArithBin {ArithOp,Term',Term'} | tBoolBin {
+         BoolOp,Term',Term'} | tArithUn {ArithOp,Term'} | tBoolUn {
+         BoolOp,Term'} | tVar Int | tCInt Int | tCBool Bool>
+mk_un : Term ->
+        Op ->
+        Term'. <tArithBin {ArithOp,Term',Term'} | tBoolBin {
+        BoolOp,Term',Term'} | tArithUn {ArithOp,Term'} | tBoolUn {
+        BoolOp,Term'} | tVar Int | tCInt Int | tCBool Bool>
+repr : Term2 ->
+       Term'. <tArithBin {ArithOp,Term',Term'} | tBoolBin {
+       BoolOp,Term',Term'} | tArithUn {ArithOp,Term'} | tBoolUn {
+       BoolOp,Term'} | tVar Int | tCInt Int | tCBool Bool>
+max : Int -> Int -> Int
+spec : Term -> Int
+target : Term2 ->
+         Term2'. <bin {Op,Term2',Term2'} | un {Op,Term2'} | var Int | cInt Int | cBool Bool>
+main : Term2 -> Int
+
+
+Inductive ArithOp;
+
+Inductive BoolOp;
+
+Inductive Term;
+
+Inductive Op;
+
+Inductive Term2;
+
+mk_bin = \t1: Term. \t2: Term. \op: Op. 
+    match op with
+      opPlus _ -> tArithBin {aPlus Unit, t1, t2}
+    | opMinus _ -> tArithBin {aMinus Unit, t1, t2}
+    | opNot _ -> tBoolBin {bNot Unit, t1, t2}
+    | opAnd _ -> tBoolBin {bAnd Unit, t1, t2}
+    | opOr _ -> tBoolBin {bOr Unit, t1, t2}
+    | opGt _ -> tArithBin {aGt Unit, t1, t2}
+    | opEq _ -> tBoolBin {bEq Unit, t1, t2}
+    end
+;
+
+mk_un = \t: Term. \op: Op. 
+    match op with
+      opPlus _ -> tArithUn {aPlus Unit, t}
+    | opMinus _ -> tArithUn {aMinus Unit, t}
+    | opNot _ -> tBoolUn {bNot Unit, t}
+    | opAnd _ -> tBoolUn {bAnd Unit, t}
+    | opOr _ -> tBoolUn {bOr Unit, t}
+    | opGt _ -> tArithUn {aGt Unit, t}
+    | opEq _ -> tBoolUn {bEq Unit, t}
+    end
+;
+
+repr = fix (
+    \f: Term2 -> Term. \t: Term2. 
+    match t with
+      bin {op, t1, t2} -> mk_bin (f t1) (f t2) op
+    | un {o, x} -> mk_un (f x) o
+    | var i -> tVar i
+    | cInt i -> tCInt i
+    | cBool b -> tCBool b
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: Term -> Int. \t: Term. 
+    match t with
+      tArithBin {op, t1, t2} -> + 1 (max (f t1) (f t2))
+    | tBoolBin {op, t1, t2} -> + 1 (max (f t1) (f t2))
+    | tArithUn {op, t} -> + 1 (f t)
+    | tBoolUn {op, t} -> + 1 (f t)
+    | tVar _ -> 1
+    | tCInt _ -> 1
+    | tCBool _ -> 1
+    end
+);
+
+target = fix (
+    \f: Term2 -> Compress Term2. \t: Term2. 
+    match t with
+      bin {op, t1, t2} -> 
+        let tmp1 = (f t1) in 
+            let tmp2 = (f t2) in 
+                align (label (bin {op, unlabel tmp1 , unlabel tmp2 }) ) 
+    | un {op, t} -> 
+        let tmp3 = (f t) in 
+            align (label (un {op, unlabel tmp3 }) ) 
+    | var i -> 
+        let tmp4 = (var i) in 
+            align (label tmp4 ) 
+    | cInt i -> 
+        let tmp5 = (cInt i) in 
+            align (label tmp5 ) 
+    | cBool i -> 
+        let tmp6 = (cBool i) in 
+            align (label tmp6 ) 
+    end
+);
+
+main = \xs: Term2. 
+    let tmp7 = (target xs) in 
+        align (spec (repr (unlabel tmp7 ))) ;
+align term #0: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align@0 create@0 bin ({op,unlabel tmp1,unlabel tmp2})
+  op: Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+  tmp2: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  t1: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  t2: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  tmp1: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  t: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align term #1: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align@1 create@0 un ({op,unlabel tmp3})
+  tmp3: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  t: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  op: Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+align term #2: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align@2 create@0 tmp4
+  t: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  tmp4: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  i: Int
+align term #3: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align@3 create@0 tmp5
+  t: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  tmp5: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  i: Int
+align term #4: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align@4 create@0 tmp6
+  t: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  tmp6: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  i: Bool
+align term #5: Int
+align@5 spec (repr (unlabel tmp7))
+  tmp7: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  xs: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+Components for compress:
+  mk_un [Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 6
+  cBool [Bool] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  var [Int] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  mk_bin [Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>,Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 5
+  bEq [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  tBoolUn [(BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  tArithBin [(ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  bOr [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  cInt [Int] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  tBoolBin [(BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  aGt [Bot] -> ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> 0
+  aPlus [Bot] -> ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> 0
+  bin [(Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> * Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> * Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  bNot [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  opAnd [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  un [(Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> * Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  tArithUn [(ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  tCBool [Bool] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  opOr [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  bAnd [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  opEq [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  max [Int,Int] -> Int 8
+  tVar [Int] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  aMinus [Bot] -> ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> 0
+  tCInt [Int] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  opPlus [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  opMinus [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  opNot [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  opGt [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+
+Components for align:
+  spec [Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>] -> Int 9
+  mk_un [Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 6
+  cBool [Bool] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  repr [Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 7
+  var [Int] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  mk_bin [Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>,Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 5
+  bEq [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  tBoolUn [(BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  tArithBin [(ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  bOr [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  cInt [Int] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  tBoolBin [(BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  aGt [Bot] -> ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> 0
+  aPlus [Bot] -> ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> 0
+  bin [(Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> * Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> * Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  bNot [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  opAnd [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  un [(Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> * Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  tArithUn [(ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  tCBool [Bool] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  opOr [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  bAnd [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  opEq [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  max [Int,Int] -> Int 8
+  tVar [Int] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  aMinus [Bot] -> ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> 0
+  tCInt [Int] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  opPlus [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  opMinus [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  opNot [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  opGt [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+
+Components for comb:
+  mk_un [Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 6
+  cBool [Bool] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  var [Int] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  mk_bin [Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>,Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 5
+  bEq [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  tBoolUn [(BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  tArithBin [(ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  bOr [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  cInt [Int] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  tBoolBin [(BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  aGt [Bot] -> ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> 0
+  aPlus [Bot] -> ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> 0
+  bin [(Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> * Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> * Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  bNot [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  opAnd [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  un [(Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> * Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)] -> Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool> 4
+  tArithUn [(ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> * Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  tCBool [Bool] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  opOr [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  bAnd [Bot] -> BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit> 1
+  opEq [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  max [Int,Int] -> Int 8
+  tVar [Int] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  aMinus [Bot] -> ArithOp. <aPlus Unit | aMinus Unit | aGt Unit> 0
+  tCInt [Int] -> Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> 2
+  opPlus [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  opMinus [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  opNot [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+  opGt [Bot] -> Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit> 3
+
+align term #0: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align@0 create@0 bin ({op,unlabel tmp1,unlabel tmp2})
+  op: Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+  tmp2: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  t1: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  t2: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  tmp1: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  t: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align term #1: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align@1 create@0 un ({op,unlabel tmp3})
+  tmp3: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  t: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  op: Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+align term #2: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align@2 create@0 tmp4
+  t: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  tmp4: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  i: Int
+align term #3: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align@3 create@0 tmp5
+  t: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  tmp5: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  i: Int
+align term #4: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+align@4 create@0 tmp6
+  t: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  tmp6: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  i: Bool
+align term #5: Int
+align@5 spec (repr (unlabel tmp7))
+  tmp7: compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  xs: Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+num = 0
+start: start
+node: start
+  Compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  Param1
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+num = 1
+start: start
+node: start
+  Compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>([Param0,Param1,Param2]@Compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  Param0
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 3
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 4
+start: start
+node: start
+  Bool([Param0,Param1,Param2]@Bool)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Bool
+  Param2
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  ite([Param0,Param1,Param2]@Bool [Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 5
+start: start
+node: start
+  Compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>([Param0,Param1]@Compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+  Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0
+node: [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+  -([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+  fold[Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>->Int]([Int@0,Int@1]@Int [Int@0,Int@1]@Int [Int@0,Int@1]@Int [Int@0,Int@1]@Int [Int@0,Int@1]@Int [Int@0,Int@1]@Int [Int@0,Int@1]@Int [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>)
+  spec([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)
+  max([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+node: [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>
+  Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0
+node: [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int
+  Int@0
+  +([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+  -([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+  fold[Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>->Int]([Int@0]@Int [Int@0]@Int [Int@0]@Int [Int@0]@Int [Int@0]@Int [Int@0]@Int [Int@0]@Int [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>)
+  spec([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)
+  max([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  spec([Int@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)
+  max([Int@0]@Int [Int@0]@Int)
+node: [Bool@0]@Bool
+  Bool@0
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  spec([Int@0,Int@1]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  fold[Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>->Int]([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int [Int@0]@Int [Int@0]@Int [Bool@0]@Int [Param0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)
+  spec([Param0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)
+  max([Param0]@Int [Param0]@Int)
+node: [Bool@0]@Int
+  +([Bool@0]@Int [Bool@0]@Int)
+  -([Bool@0]@Int [Bool@0]@Int)
+  ite([Bool@0]@Bool [Bool@0]@Int [Bool@0]@Int)
+  spec([Bool@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>)
+  max([Bool@0]@Int [Bool@0]@Int)
+node: [Param0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>
+  repr([Param0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)
+  tVar([Param0]@Int)
+  tCInt([Param0]@Int)
+node: [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>
+  mk_un([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>)
+  repr([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)
+  mk_bin([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>)
+  tVar([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+  tCInt([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+node: [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>
+  mk_un([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>)
+  repr([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)
+  mk_bin([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool> [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>)
+  tVar([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+  tCInt([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+node: [Int@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>
+  repr([Int@0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)
+  tVar([Int@0]@Int)
+  tCInt([Int@0]@Int)
+node: [Bool@0]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>
+  repr([Bool@0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)
+  tCBool([Bool@0]@Bool)
+  tVar([Bool@0]@Int)
+  tCInt([Bool@0]@Int)
+node: [Int@0,Int@1]@Term. <tArithBin {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term,Term} | tBoolBin {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term,Term} | tArithUn {ArithOp. <aPlus Unit | aMinus Unit | aGt Unit>,Term} | tBoolUn {BoolOp. <bNot Unit | bAnd Unit | bOr Unit | bEq Unit>,Term} | tVar Int | tCInt Int | tCBool Bool>
+  repr([Int@0,Int@1]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>)
+  tVar([Int@0,Int@1]@Int)
+  tCInt([Int@0,Int@1]@Int)
+node: [Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  var([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+  cInt([Int@0,Int@1,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+node: [Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  var([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+  cInt([Int@0,Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>@0]@Int)
+node: [Int@0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  var([Int@0]@Int)
+  cInt([Int@0]@Int)
+node: [Bool@0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  cBool([Bool@0]@Bool)
+  var([Bool@0]@Int)
+  cInt([Bool@0]@Int)
+node: [Int@0,Int@1]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  var([Int@0,Int@1]@Int)
+  cInt([Int@0,Int@1]@Int)
+node: [Param0]@Term2. <bin {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2,Term2} | un {Op. <opPlus Unit | opMinus Unit | opNot Unit | opAnd Unit | opOr Unit | opGt Unit | opEq Unit>,Term2} | var Int | cInt Int | cBool Bool>
+  Param0
+  var([Param0]@Int)
+  cInt([Param0]@Int)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [] spec(repr(Param0))
+  [0] Param1 -> spec(repr(Param0))
+  [1] Param4 -> spec(repr(Param0))
+  [] spec(repr(Param0))
+  [0] Param0 -> spec(repr(Param0))
+  [] spec(repr(Param0))
+  [] spec(repr(Param0))
+  [] spec(repr(Param0))
+  [] null
+  [0] Param0 -> spec(repr(Param0))
+compress #0: Int
+pass #0: 
++ 1 (max tmp2 tmp1)
+pass #1: 
++ tmp3 (max 0 1)
+pass #2: 
+1
+pass #3: 
+1
+pass #4: 
+1
+pass #5: 
+tmp7
+
+Inductive ArithOp;
+
+Inductive BoolOp;
+
+Inductive Term;
+
+Inductive Op;
+
+Inductive Term2;
+
+mk_bin = \t1: Term. \t2: Term. \op: Op. 
+    match op with
+      opPlus _ -> tArithBin {aPlus Unit, t1, t2}
+    | opMinus _ -> tArithBin {aMinus Unit, t1, t2}
+    | opNot _ -> tBoolBin {bNot Unit, t1, t2}
+    | opAnd _ -> tBoolBin {bAnd Unit, t1, t2}
+    | opOr _ -> tBoolBin {bOr Unit, t1, t2}
+    | opGt _ -> tArithBin {aGt Unit, t1, t2}
+    | opEq _ -> tBoolBin {bEq Unit, t1, t2}
+    end
+;
+
+mk_un = \t: Term. \op: Op. 
+    match op with
+      opPlus _ -> tArithUn {aPlus Unit, t}
+    | opMinus _ -> tArithUn {aMinus Unit, t}
+    | opNot _ -> tBoolUn {bNot Unit, t}
+    | opAnd _ -> tBoolUn {bAnd Unit, t}
+    | opOr _ -> tBoolUn {bOr Unit, t}
+    | opGt _ -> tArithUn {aGt Unit, t}
+    | opEq _ -> tBoolUn {bEq Unit, t}
+    end
+;
+
+repr = fix (
+    \f: Term2 -> Term. \t: Term2. 
+    match t with
+      bin {op, t1, t2} -> mk_bin (f t1) (f t2) op
+    | un {o, x} -> mk_un (f x) o
+    | var i -> tVar i
+    | cInt i -> tCInt i
+    | cBool b -> tCBool b
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: Term -> Int. \t: Term. 
+    match t with
+      tArithBin {op, t1, t2} -> + 1 (max (f t1) (f t2))
+    | tBoolBin {op, t1, t2} -> + 1 (max (f t1) (f t2))
+    | tArithUn {op, t} -> + 1 (f t)
+    | tBoolUn {op, t} -> + 1 (f t)
+    | tVar _ -> 1
+    | tCInt _ -> 1
+    | tCBool _ -> 1
+    end
+);
+
+target = fix (
+    \f: Term2 -> Int. \t: Term2. 
+    match t with
+      bin {op, t1, t2} -> 
+        let tmp1 = (f t1) in 
+            let tmp2 = (f t2) in 
+                + 1 (max tmp2 tmp1)
+    | un {op, t} -> 
+        let tmp3 = (f t) in 
+            + tmp3 (max 0 1)
+    | var i -> 1
+    | cInt i -> 1
+    | cBool i -> 1
+    end
+);
+
+main = \xs: Term2. 
+    let tmp7 = (target xs) in 
+        tmp7;
+syn-comb: 0.507819
+collect: 1.50203
+label: 0.02081
+extend-component: 0
+execute: 1.26008
+syn-align: 2.89686
+comb-size: 22
+align-size: 5
+extract-size: 5
+3.56955
+Success

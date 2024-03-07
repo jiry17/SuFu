@@ -1,0 +1,212 @@
+
+Nat :: Nat. <z Unit | s Nat>
+ z : Unit -> Nat'. <z Unit | s Nat'>
+ s : Nat -> Nat'. <z Unit | s Nat'>
+ List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+CList :: CList. <cnil Unit | ccons {Nat,Int,CList}>
+cnil : Unit -> CList'. <cnil Unit | ccons {Nat,Int,CList'}>
+ccons : {Nat,Int,CList} ->
+        CList'. <cnil Unit | ccons {Nat,Int,CList'}>
+repeat : Int -> List -> Nat -> List
+value : Nat -> Int
+spec : List -> Int
+nat_repr : Nat -> Nat'. <z Unit | s Nat'>
+repr : CList -> List'. <nil Unit | cons {Int,List'}>
+main : CList -> Int
+
+
+Inductive Nat;
+
+Inductive List;
+
+Inductive CList;
+
+repeat = \w: Int. \xs: List. 
+    fix (
+    \f: Nat -> List. \n: Nat. 
+    match n with
+      z _ -> xs
+    | s m -> cons {w, f m}
+    end
+);
+
+value = fix (
+    \f: Nat -> Int. \n: Nat. 
+    match n with
+      z _ -> 0
+    | s m -> + 1 (f m)
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+nat_repr = fix (
+    \f: Nat -> Compress Nat. \n: Nat. 
+    match n with
+      z _ -> 
+        let tmp1 = (z unit) in 
+            align (label tmp1 ) 
+    | s m -> 
+        let tmp2 = (f m) in 
+            align (label (s (unlabel tmp2 )) ) 
+    end
+);
+
+repr = fix (
+    \f: CList -> Compress List. \xs: CList. 
+    match xs with
+      cnil _ -> 
+        let tmp3 = (nil unit) in 
+            align (label tmp3 ) 
+    | ccons {n, h, t} -> 
+        let tmp4 = (repeat h) in 
+            let tmp5 = (f t) in 
+                let tmp6 = (nat_repr n) in 
+                    align (label (tmp4 (unlabel tmp5 ) (unlabel tmp6 )) ) 
+    end
+);
+
+main = \xs: CList. 
+    let tmp7 = (repr xs) in 
+        align (spec (unlabel tmp7 )) ;
+align term #0: compress[0] Nat. <z Unit | s Nat>
+align@0 create@0 tmp1
+  n: Nat. <z Unit | s Nat>
+  tmp1: Nat. <z Unit | s Nat>
+align term #1: compress[0] Nat. <z Unit | s Nat>
+align@1 create@0 s (unlabel tmp2)
+  tmp2: compress[0] Nat. <z Unit | s Nat>
+  m: Nat. <z Unit | s Nat>
+  n: Nat. <z Unit | s Nat>
+align term #2: compress[1] List. <nil Unit | cons {Int,List}>
+align@2 create@1 tmp3
+  tmp3: List. <nil Unit | cons {Int,List}>
+  xs: CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>
+align term #3: compress[1] List
+align@3 create@1 tmp4 (unlabel tmp5) (unlabel tmp6)
+  tmp5: compress[1] List. <nil Unit | cons {Int,List}>
+  n: Nat. <z Unit | s Nat>
+  t: CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>
+  tmp6: compress[0] Nat. <z Unit | s Nat>
+  xs: CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>
+  h: Int
+align term #4: Int
+align@4 spec (unlabel tmp7)
+  xs: CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>
+  tmp7: compress[1] List. <nil Unit | cons {Int,List}>
+Components for compress:
+  z [Bot] -> Nat. <z Unit | s Nat> 0
+  cons [(Int*List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 1
+  cnil [Bot] -> CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}> 2
+  ccons [(Nat. <z Unit | s Nat>*Int*CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>)] -> CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}> 2
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 0
+
+Components for align:
+  spec [List. <nil Unit | cons {Int,List}>] -> Int 5
+  z [Bot] -> Nat. <z Unit | s Nat> 0
+  cons [(Int*List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 1
+  value [Nat. <z Unit | s Nat>] -> Int 4
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 1
+  cnil [Bot] -> CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}> 2
+  ccons [(Nat. <z Unit | s Nat>*Int*CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>)] -> CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}> 2
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 0
+  repeat [Int,List. <nil Unit | cons {Int,List}>,Nat. <z Unit | s Nat>] -> List. <nil Unit | cons {Int,List}> 3
+
+Components for comb:
+  z [Bot] -> Nat. <z Unit | s Nat> 0
+  cons [(Int*List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 1
+  cnil [Bot] -> CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}> 2
+  ccons [(Nat. <z Unit | s Nat>*Int*CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>)] -> CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}> 2
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 0
+
+align term #0: compress[0] Nat. <z Unit | s Nat>
+align@0 create@0 tmp1
+  n: Nat. <z Unit | s Nat>
+  tmp1: Nat. <z Unit | s Nat>
+  (0) {n: z unit,tmp1: z unit} @ {} -> compress z unit
+align term #1: compress[0] Nat. <z Unit | s Nat>
+align@1 create@0 s (unlabel tmp2)
+  tmp2: compress[0] Nat. <z Unit | s Nat>
+  m: Nat. <z Unit | s Nat>
+  n: Nat. <z Unit | s Nat>
+  (1) {m: z unit,n: s z unit,tmp2: compress z unit} @ {} -> compress s z unit
+  (1) {m: s z unit,n: s s z unit,tmp2: compress s z unit} @ {} -> compress s s z unit
+  (1) {m: s s z unit,n: s s s z unit,tmp2: compress s s z unit} @ {} -> compress s s s z unit
+  (1) {m: s s s z unit,n: s s s s z unit,tmp2: compress s s s z unit} @ {} -> compress s s s s z unit
+align term #2: compress[1] List. <nil Unit | cons {Int,List}>
+align@2 create@1 tmp3
+  tmp3: List. <nil Unit | cons {Int,List}>
+  xs: CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>
+  (2) {tmp3: nil unit,xs: cnil unit} @ {} -> compress nil unit
+align term #3: compress[1] List
+align@3 create@1 tmp4 (unlabel tmp5) (unlabel tmp6)
+  tmp5: compress[1] List. <nil Unit | cons {Int,List}>
+  n: Nat. <z Unit | s Nat>
+  t: CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>
+  tmp6: compress[0] Nat. <z Unit | s Nat>
+  xs: CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>
+  h: Int
+  (3) {n: s s s z unit,tmp5: compress nil unit,h: 3,xs: ccons (s s s z unit,3,cnil unit),t: cnil unit,tmp6: compress s s s z unit} @ {} -> compress cons (3,cons (3,cons (3,nil unit)))
+  (3) {n: z unit,tmp5: compress nil unit,h: -2,xs: ccons (z unit,-2,cnil unit),t: cnil unit,tmp6: compress z unit} @ {} -> compress nil unit
+  (3) {n: s z unit,tmp5: compress nil unit,h: 5,xs: ccons (s z unit,5,ccons (z unit,-2,cnil unit)),t: ccons (z unit,-2,cnil unit),tmp6: compress s z unit} @ {} -> compress cons (5,nil unit)
+  (3) {n: s s s s z unit,tmp5: compress nil unit,h: -1,xs: ccons (s s s s z unit,-1,cnil unit),t: cnil unit,tmp6: compress s s s s z unit} @ {} -> compress cons (-1,cons (-1,cons (-1,cons (-1,nil unit))))
+  (3) {n: s z unit,tmp5: compress nil unit,h: -4,xs: ccons (s z unit,-4,cnil unit),t: cnil unit,tmp6: compress s z unit} @ {} -> compress cons (-4,nil unit)
+  (3) {n: z unit,tmp5: compress nil unit,h: -5,xs: ccons (z unit,-5,cnil unit),t: cnil unit,tmp6: compress z unit} @ {} -> compress nil unit
+  (3) {n: s z unit,tmp5: compress nil unit,h: -3,xs: ccons (s z unit,-3,ccons (z unit,-5,cnil unit)),t: ccons (z unit,-5,cnil unit),tmp6: compress s z unit} @ {} -> compress cons (-3,nil unit)
+  (3) {n: z unit,tmp5: compress cons (-4,nil unit),h: -1,xs: ccons (z unit,-1,ccons (s z unit,-4,cnil unit)),t: ccons (s z unit,-4,cnil unit),tmp6: compress z unit} @ {} -> compress cons (-4,nil unit)
+  (3) {n: z unit,tmp5: compress nil unit,h: 0,xs: ccons (z unit,0,cnil unit),t: cnil unit,tmp6: compress z unit} @ {} -> compress nil unit
+  (3) {n: z unit,tmp5: compress nil unit,h: -1,xs: ccons (z unit,-1,ccons (z unit,0,cnil unit)),t: ccons (z unit,0,cnil unit),tmp6: compress z unit} @ {} -> compress nil unit
+align term #4: Int
+align@4 spec (unlabel tmp7)
+  xs: CList. <cnil Unit | ccons {Nat. <z Unit | s Nat>,Int,CList}>
+  tmp7: compress[1] List. <nil Unit | cons {Int,List}>
+  (4) {xs: ccons (s s s z unit,3,cnil unit),tmp7: compress cons (3,cons (3,cons (3,nil unit)))} @ {} -> 9
+  (4) {xs: ccons (s z unit,5,ccons (z unit,-2,cnil unit)),tmp7: compress cons (5,nil unit)} @ {} -> 5
+  (4) {xs: ccons (s s s s z unit,-1,cnil unit),tmp7: compress cons (-1,cons (-1,cons (-1,cons (-1,nil unit))))} @ {} -> -4
+  (4) {xs: ccons (s z unit,-4,cnil unit),tmp7: compress cons (-4,nil unit)} @ {} -> -4
+  (4) {xs: ccons (s z unit,-3,ccons (z unit,-5,cnil unit)),tmp7: compress cons (-3,nil unit)} @ {} -> -3
+  (4) {xs: ccons (z unit,-1,ccons (s z unit,-4,cnil unit)),tmp7: compress cons (-4,nil unit)} @ {} -> -4
+  (4) {xs: ccons (z unit,-1,ccons (z unit,0,cnil unit)),tmp7: compress nil unit} @ {} -> 0
+  (4) {xs: cnil unit,tmp7: compress nil unit} @ {} -> 0
+  (4) {xs: ccons (s s s s z unit,1,ccons (z unit,-3,cnil unit)),tmp7: compress cons (1,cons (1,cons (1,cons (1,nil unit))))} @ {} -> 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [] value(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [] value(Param0)
+  [0] Param0 -> value(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [] spec(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [] spec(Param0)
+  [0] Param0 -> spec(Param0)
+  [1] Param5
+  [2] Param3 -> value(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17

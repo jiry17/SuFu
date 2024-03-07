@@ -1,0 +1,36 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+List2D :: List2D. <nil2D Unit | cons2D {List,List2D}>
+nil2D : Unit -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+cons2D : {List,List2D} ->
+         List2D'. <nil2D Unit | cons2D {List,List2D'}>
+List3D :: List3D. <nil3D Unit | cons3D {List2D,List3D}>
+nil3D : Unit -> List3D'. <nil3D Unit | cons3D {List2D,List3D'}>
+cons3D : {List2D,List3D} ->
+         List3D'. <nil3D Unit | cons3D {List2D,List3D'}>
+head : List2D -> List'. <nil Unit | cons {Int,List'}>
+tails : List -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+append : Int -> List -> List'. <nil Unit | cons {Int,List'}>
+scanl : (Int->List->List) ->
+        List ->
+        List -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+inits : List -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+map : (List->List2D) ->
+      List2D -> List3D'. <nil3D Unit | cons3D {List2D,List3D'}>
+concat : List3D -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+segs : List -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+mapL : (List->Int) ->
+       List2D -> List'. <nil Unit | cons {Int,List'}>
+sum : List -> Int
+max : Int -> Int -> Int
+maximum : List -> Int
+maxsum : List2D -> Int
+mss : List -> Int
+
+size: 278
+compress-num: 1
+label-num: 10
+rewrite-size: 20
+0.025813

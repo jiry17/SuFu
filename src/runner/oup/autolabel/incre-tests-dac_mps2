@@ -1,0 +1,123 @@
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ length : List -> Int
+head : List -> Int -> Int
+sum : List -> Int
+concat : List -> List -> List'. <cons {Int,List'} | nil Unit>
+dac : List ->
+      Int ->
+      {List'. <cons {Int,List'} | nil Unit>,
+       List'. <cons {Int,List'} | nil Unit>}
+max : Int -> Int -> Int
+mps : List -> Int
+compress_mps : List -> Int
+
+
+Inductive List;
+
+length = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) 1
+    | nil _ -> 0
+    end
+);
+
+head = \l: List. \default: Int. 
+    match l with
+      cons {h, t} -> h
+    | nil _ -> default
+    end
+;
+
+sum = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) h
+    | nil _ -> 0
+    end
+);
+
+concat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+dac = fix (
+    \f: List -> Int -> {List, Compress List}. \x: List. \len: Int. 
+    if (== len 1) then match x with
+      cons {h, t} -> {t, let tmp1 = (cons {h, nil unit}) in 
+            align (label tmp1 ) }
+    end
+
+    else let llen = (/ len 2) in 
+        let lres = (f x llen) in 
+            let rres = (f lres.1 (- len llen)) in 
+                {rres.1, let tmp2 = lres.2 in 
+                    let tmp3 = rres.2 in 
+                        align (label (concat (unlabel tmp2 ) (unlabel tmp3 )) ) });
+
+max = \x: Int. \y: Int. 
+    if (> x y) then x
+    else y;
+
+mps = fix (
+    \f: List -> Int. \l: List. 
+    match l with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let res = (f t) in 
+            max 0 (+ res h)
+    end
+);
+
+compress_mps = \x: List. 
+    let tmp4 = (dac x (length x)).2 in 
+        align (mps (unlabel tmp4 )) ;
+align term #0: compress[0] List. <cons {Int,List} | nil Unit>
+align@0 create@0 tmp1
+  h: Int
+  len: Int
+  t: List. <cons {Int,List} | nil Unit>
+  tmp1: List. <cons {Int,List} | nil Unit>
+  x: List. <cons {Int,List} | nil Unit>
+align term #1: compress[0] List
+align@1 create@0 concat (unlabel tmp2) (unlabel tmp3)
+  len: Int
+  x: List. <cons {Int,List} | nil Unit>
+  llen: Int
+  rres: {List. <cons {Int,List} | nil Unit>,compress[0] List. <cons {Int,List} | nil Unit>}
+  tmp2: compress[0] List. <cons {Int,List} | nil Unit>
+  lres: {List. <cons {Int,List} | nil Unit>,compress[0] List. <cons {Int,List} | nil Unit>}
+  tmp3: compress[0] List. <cons {Int,List} | nil Unit>
+align term #2: Int
+align@2 mps (unlabel tmp4)
+  x: List. <cons {Int,List} | nil Unit>
+  tmp4: compress[0] List. <cons {Int,List} | nil Unit>
+Components for compress:
+  cons [(Int*List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  max [Int,Int] -> Int 6
+  head [List. <cons {Int,List} | nil Unit>,Int] -> Int 2
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+
+Components for align:
+  cons [(Int*List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  max [Int,Int] -> Int 6
+  length [List. <cons {Int,List} | nil Unit>] -> Int 1
+  concat [List. <cons {Int,List} | nil Unit>,List. <cons {Int,List} | nil Unit>] -> List. <cons {Int,List} | nil Unit> 4
+  head [List. <cons {Int,List} | nil Unit>,Int] -> Int 2
+  mps [List. <cons {Int,List} | nil Unit>] -> Int 7
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  sum [List. <cons {Int,List} | nil Unit>] -> Int 3
+
+Components for comb:
+  cons [(Int*List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  max [Int,Int] -> Int 6
+  head [List. <cons {Int,List} | nil Unit>,Int] -> Int 2
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+

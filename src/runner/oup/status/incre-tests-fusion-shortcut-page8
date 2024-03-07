@@ -1,0 +1,21 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ NList :: NList. <nnil Unit | ncons {List,NList}>
+nnil : Unit -> NList'. <nnil Unit | ncons {List,NList'}>
+ncons : {List,NList} -> NList'. <nnil Unit | ncons {List,NList'}>
+length : List -> Int
+sum : List -> Int
+append : Int -> List -> List'. <nil Unit | cons {Int,List'}>
+cat : List -> List -> List
+concat : NList -> List'. <nil Unit | cons {Int,List'}>
+safe : List -> List -> Int -> Bool
+queens : Int -> NList'. <nnil Unit | ncons {List,NList'}>
+main : Int -> NList'. <nnil Unit | ncons {List,NList'}>
+
+size: 305
+compress-num: 5
+label-num: 9
+rewrite-size: 15
+0.029241

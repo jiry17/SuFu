@@ -1,0 +1,30 @@
+
+Inductive List;
+
+single_pass = \v: List -> Bool. 
+    let run = (fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      nil _ -> false
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            let c0 = (al_head t) in 
+                or (< c0 h) tmp1
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2;
+
+inf = 100;
+
+zafter1 = fix (
+    \f: Bool -> List -> Bool. \seen1: Bool. \xs: List. 
+    match xs with
+      nil _ -> false
+    | cons {h, t} -> if (and seen1 (== h 0)) then true
+        else f (or seen1 (== h 1)) t
+    end
+) false;
+
+main = single_pass zafter1;

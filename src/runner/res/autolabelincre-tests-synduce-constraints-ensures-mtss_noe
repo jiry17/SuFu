@@ -1,0 +1,66 @@
+
+Inductive List;
+
+Inductive NList;
+
+Inductive CNList;
+
+cton = fix (
+    \f: CNList -> NList. 
+    let dec = (fix (
+    \g: CNList -> CNList -> NList. \l: CNList. \c: CNList. 
+    match c with
+      sglt x -> ncons {x, f l}
+    | cat {x, y} -> g (cat {y, l}) x
+    end
+)) in 
+        \c: CNList. 
+        match c with
+          sglt x -> line x
+        | cat {x, y} -> dec y x
+        end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> x
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \xs: NList. 
+    (fix (
+    \f: NList -> {Int, Int}. \xs: NList. 
+    match xs with
+      line a -> {max 0 (sum a), sum a}
+    | ncons {h, t} -> 
+        let hsum = (sum h) in 
+            let tres = (f t) in 
+                {max (+ tres.1 hsum) 0, + tres.2 hsum}
+    end
+) xs).1;
+
+target = fix (
+    \f: CNList -> {Int, Int, Int, Int}. \c: CNList. 
+    match c with
+      sglt x -> 
+        let info = (sum x) in 
+            {if (< info 0) then 0
+            else info, info, info, info}
+    | cat {l, r} -> 
+        let tmp1 = (f l) in 
+            let tmp2 = (f r) in 
+                {if (and (< tmp1.3 tmp1.2) (< (+ (+ (- tmp2.1 tmp1.2) tmp1.3) tmp1.4) tmp1.2)) then 0
+                else if (< (+ (+ (- tmp2.1 tmp1.2) tmp1.3) tmp1.4) (+ (* -1 tmp1.2) tmp1.3)) then + (* -1 tmp1.2) tmp1.3
+                else + (+ (- tmp2.1 tmp1.2) tmp1.3) tmp1.4, 0, tmp1.3, tmp2.4}
+    end
+);
+
+main = \c: CNList. 
+    let tmp3 = (target c) in 
+        tmp3.1;

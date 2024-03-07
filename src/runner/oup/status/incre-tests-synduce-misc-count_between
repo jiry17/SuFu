@@ -1,0 +1,20 @@
+
+Tree :: Tree. <leaf Int | node {Int,Tree,Tree}>
+ leaf : Int -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ max : Int -> Int -> Int
+min : Int -> Int -> Int
+tmin : Tree -> Int
+tmax : Tree -> Int
+lo : Int
+hi : Int
+repr : Tree -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+spec : Tree -> Bool
+main : Tree -> Bool
+
+size: 176
+compress-num: 1
+label-num: 12
+rewrite-size: 24
+0.019683

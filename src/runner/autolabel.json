@@ -1,0 +1,1213 @@
+{
+    "incre-tests-fusion-deforestation-page7-1": {
+        "status": "fail"
+    },
+    "incre-tests-fusion-deforestation-page7-2": {
+        "status": "success",
+        "time": 1.05927
+    },
+    "incre-tests-fusion-identities-page5": {
+        "status": "success",
+        "time": 21.497
+    },
+    "incre-tests-fusion-identities-page3": {
+        "status": "success",
+        "time": 1.16074
+    },
+    "incre-tests-fusion-identities-page6": {
+        "status": "success",
+        "time": 14.2444
+    },
+    "incre-tests-fusion-algprog-page60": {
+        "status": "success",
+        "time": 1.60609
+    },
+    "incre-tests-fusion-algprog-page58": {
+        "status": "success",
+        "time": 3.75613
+    },
+    "incre-tests-fusion-algprog-ex3.14": {
+        "status": "success",
+        "time": 7.01024
+    },
+    "incre-tests-fusion-algprog-page62": {
+        "status": "fail"
+    },
+    "incre-tests-fusion-tupling-page8": {
+        "status": "success",
+        "time": 0.889349
+    },
+    "incre-tests-fusion-tupling-page1": {
+        "status": "success",
+        "time": 6.52466
+    },
+    "incre-tests-fusion-shortcut-page7": {
+        "status": "success",
+        "time": 2.2495
+    },
+    "incre-tests-fusion-shortcut-page8": {
+        "status": "success",
+        "time": 21.8789
+    },
+    "incre-tests-fusion-shortcut-page1": {
+        "status": "success",
+        "time": 1.28152
+    },
+    "incre-tests-fusion-shortcut-page3": {
+        "status": "success",
+        "time": 3.54811
+    },
+    "incre-tests-dp-mulmatrix": {
+        "status": "success",
+        "time": 21.5232
+    },
+    "incre-tests-dp-15-9": {
+        "status": "success",
+        "time": 17.3092
+    },
+    "incre-tests-dp-15-1": {
+        "status": "success",
+        "time": 4.64887
+    },
+    "incre-tests-dp-15-5": {
+        "status": "success",
+        "time": 65.1293
+    },
+    "incre-tests-dp-15-7": {
+        "status": "success",
+        "time": 69.2823
+    },
+    "incre-tests-dp-15-2": {
+        "status": "success",
+        "time": 65.8365
+    },
+    "incre-tests-dp-15-8": {
+        "status": "success",
+        "time": 7.53566
+    },
+    "incre-tests-dp-15-11": {
+        "status": "fail"
+    },
+    "incre-tests-dp-15-4": {
+        "status": "fail"
+    },
+    "incre-tests-dp-lcs": {
+        "status": "success",
+        "time": 43.0578
+    },
+    "incre-tests-dp-15-3": {
+        "status": "fail"
+    },
+    "incre-tests-dp-15-12": {
+        "status": "success",
+        "time": 10.6154
+    },
+    "incre-tests-dp-15-10": {
+        "status": "success",
+        "time": 5.50261
+    },
+    "incre-tests-synduce-list_to_tree-search_v3": {
+        "status": "success",
+        "time": 3.60634
+    },
+    "incre-tests-synduce-list_to_tree-search": {
+        "status": "success",
+        "time": 5.41021
+    },
+    "incre-tests-synduce-list_to_tree-search_v2": {
+        "status": "success",
+        "time": 4.99129
+    },
+    "incre-tests-synduce-list_to_tree-mls": {
+        "status": "success",
+        "time": 9.01049
+    },
+    "incre-tests-synduce-nested_list-pyramid_intervals": {
+        "status": "success",
+        "time": 15.4146
+    },
+    "incre-tests-synduce-nested_list-mtss": {
+        "status": "success",
+        "time": 6.95538
+    },
+    "incre-tests-synduce-treepaths-mips": {
+        "status": "fail"
+    },
+    "incre-tests-synduce-treepaths-sum": {
+        "status": "success",
+        "time": 2.70498
+    },
+    "incre-tests-synduce-treepaths-height": {
+        "status": "success",
+        "time": 1.67626
+    },
+    "incre-tests-synduce-treepaths-maxPathWeight": {
+        "status": "success",
+        "time": 3.16096
+    },
+    "incre-tests-synduce-treepaths-leftmostodd": {
+        "status": "fail"
+    },
+    "incre-tests-synduce-treepaths-maxPathWeight2": {
+        "status": "success",
+        "time": 18.87
+    },
+    "incre-tests-synduce-unimodal_lists-sum": {
+        "status": "success",
+        "time": 9.26786
+    },
+    "incre-tests-synduce-unimodal_lists-search_no_optim": {
+        "status": "success",
+        "time": 7.76868
+    },
+    "incre-tests-synduce-combine-mts": {
+        "status": "success",
+        "time": 2.46712
+    },
+    "incre-tests-synduce-combine-mss_with_sum": {
+        "status": "success",
+        "time": 133.586
+    },
+    "incre-tests-synduce-terms-height": {
+        "status": "success",
+        "time": 3.56955
+    },
+    "incre-tests-synduce-tailopt-sum": {
+        "status": "success",
+        "time": 17.3454
+    },
+    "incre-tests-synduce-tailopt-mts": {
+        "status": "success",
+        "time": 17.0943
+    },
+    "incre-tests-synduce-tailopt-mps": {
+        "status": "success",
+        "time": 17.5389
+    },
+    "incre-tests-synduce-constraints-ensures-mpss_noe": {
+        "status": "success",
+        "time": 6.95569
+    },
+    "incre-tests-synduce-constraints-ensures-mps_no_ensures": {
+        "status": "success",
+        "time": 5.59097
+    },
+    "incre-tests-synduce-constraints-ensures-mss_no_ensures": {
+        "status": "success",
+        "time": 44.0933
+    },
+    "incre-tests-synduce-constraints-ensures-maxsegstrip_noe": {
+        "status": "success",
+        "time": 21.1185
+    },
+    "incre-tests-synduce-constraints-ensures-mpss_full_noe": {
+        "status": "success",
+        "time": 11.5967
+    },
+    "incre-tests-synduce-constraints-ensures-maxsegstrip_full_noe": {
+        "status": "success",
+        "time": 24.2274
+    },
+    "incre-tests-synduce-constraints-ensures-bal_2": {
+        "status": "fail"
+    },
+    "incre-tests-synduce-constraints-ensures-nested_minmax_noe": {
+        "status": "success",
+        "time": 7.16478
+    },
+    "incre-tests-synduce-constraints-ensures-mts_no_ensures": {
+        "status": "success",
+        "time": 4.07738
+    },
+    "incre-tests-synduce-constraints-ensures-mtss_full_noe": {
+        "status": "success",
+        "time": 11.7169
+    },
+    "incre-tests-synduce-constraints-ensures-mtss_noe": {
+        "status": "success",
+        "time": 7.03464
+    },
+    "incre-tests-synduce-constraints-bst-sum_between": {
+        "status": "success",
+        "time": 26.4949
+    },
+    "incre-tests-synduce-constraints-bst-sum_gt_by_key": {
+        "status": "success",
+        "time": 16.8651
+    },
+    "incre-tests-synduce-constraints-bst-contains": {
+        "status": "success",
+        "time": 47.035
+    },
+    "incre-tests-synduce-constraints-bst-contains_v3": {
+        "status": "success",
+        "time": 31.7977
+    },
+    "incre-tests-synduce-constraints-bst-check_included_comb": {
+        "status": "success",
+        "time": 44.0099
+    },
+    "incre-tests-synduce-constraints-bst-from_list_max": {
+        "status": "success",
+        "time": 15.2704
+    },
+    "incre-tests-synduce-constraints-bst-from_list_contains": {
+        "status": "success",
+        "time": 32.9407
+    },
+    "incre-tests-synduce-constraints-bst-check_mem_included": {
+        "status": "success",
+        "time": 57.5115
+    },
+    "incre-tests-synduce-constraints-bst-contains_v2": {
+        "status": "success",
+        "time": 33.3172
+    },
+    "incre-tests-synduce-constraints-bst-minimax_sim": {
+        "status": "success",
+        "time": 16.6196
+    },
+    "incre-tests-synduce-constraints-bst-contains_no_ensure": {
+        "status": "success",
+        "time": 46.7725
+    },
+    "incre-tests-synduce-constraints-bst-check_no_subtree_sum_gt2": {
+        "status": "success",
+        "time": 28.6197
+    },
+    "incre-tests-synduce-constraints-bst-count_between": {
+        "status": "success",
+        "time": 24.0156
+    },
+    "incre-tests-synduce-constraints-bst-minimax_separate": {
+        "status": "success",
+        "time": 16.7347
+    },
+    "incre-tests-synduce-constraints-bst-count_lt": {
+        "status": "success",
+        "time": 32.4649
+    },
+    "incre-tests-synduce-constraints-bst-most_frequent_v1": {
+        "status": "success",
+        "time": 18.0347
+    },
+    "incre-tests-synduce-constraints-bst-contains_bool_2": {
+        "status": "success",
+        "time": 46.7019
+    },
+    "incre-tests-synduce-constraints-memo-max_contains": {
+        "status": "success",
+        "time": 7.0459
+    },
+    "incre-tests-synduce-constraints-memo-proper_indexation_sum_lt_pos_v2": {
+        "status": "success",
+        "time": 13.0531
+    },
+    "incre-tests-synduce-constraints-memo-constant": {
+        "status": "success",
+        "time": 2.28505
+    },
+    "incre-tests-synduce-constraints-memo-proper_indexation_sum_lt_pos": {
+        "status": "success",
+        "time": 13.777
+    },
+    "incre-tests-synduce-constraints-memo-minmax": {
+        "status": "success",
+        "time": 2.80394
+    },
+    "incre-tests-synduce-constraints-memo-max_sum_gt": {
+        "status": "success",
+        "time": 7.89889
+    },
+    "incre-tests-synduce-constraints-memo-tree_size": {
+        "status": "success",
+        "time": 2.17987
+    },
+    "incre-tests-synduce-constraints-memo-mts_memo_sum": {
+        "status": "success",
+        "time": 15.5807
+    },
+    "incre-tests-synduce-constraints-memo-count_lt": {
+        "status": "success",
+        "time": 2.46779
+    },
+    "incre-tests-synduce-constraints-unimodal_lists-max_logn_v2": {
+        "status": "success",
+        "time": 20.9815
+    },
+    "incre-tests-synduce-constraints-unimodal_lists-max_logn": {
+        "status": "success",
+        "time": 26.0611
+    },
+    "incre-tests-synduce-constraints-unimodal_lists-max_in_um_pos": {
+        "status": "success",
+        "time": 22.7768
+    },
+    "incre-tests-synduce-constraints-sortedlist-mss": {
+        "status": "success",
+        "time": 9.93371
+    },
+    "incre-tests-synduce-constraints-sortedlist-min": {
+        "status": "success",
+        "time": 16.5481
+    },
+    "incre-tests-synduce-constraints-sortedlist-is_intersection_empty": {
+        "status": "success",
+        "time": 43.6201
+    },
+    "incre-tests-synduce-constraints-sortedlist-parallel_min": {
+        "status": "success",
+        "time": 6.69952
+    },
+    "incre-tests-synduce-constraints-sortedlist-parallel_max2": {
+        "status": "success",
+        "time": 6.32466
+    },
+    "incre-tests-synduce-constraints-sortedlist-index_of": {
+        "status": "success",
+        "time": 29.8444
+    },
+    "incre-tests-synduce-constraints-sortedlist-sndmax_empty_base_case": {
+        "status": "success",
+        "time": 32.7482
+    },
+    "incre-tests-synduce-constraints-sortedlist-sndmax_len2_base_case": {
+        "status": "success",
+        "time": 2.6638
+    },
+    "incre-tests-synduce-constraints-sortedlist-max_point_sum": {
+        "status": "success",
+        "time": 1.7695
+    },
+    "incre-tests-synduce-constraints-sortedlist-exists_equal_elements": {
+        "status": "success",
+        "time": 50.6376
+    },
+    "incre-tests-synduce-constraints-sortedlist-largest_diff": {
+        "status": "success",
+        "time": 18.3812
+    },
+    "incre-tests-synduce-constraints-sortedlist-largest_even_pos": {
+        "status": "success",
+        "time": 22.1051
+    },
+    "incre-tests-synduce-constraints-sortedlist-interval_intersection": {
+        "status": "success",
+        "time": 27.0595
+    },
+    "incre-tests-synduce-constraints-sortedlist-smallest_diff": {
+        "status": "success",
+        "time": 7.52092
+    },
+    "incre-tests-synduce-constraints-sortedlist-slsp": {
+        "status": "success",
+        "time": 23.4106
+    },
+    "incre-tests-synduce-constraints-sortedlist-largest_even": {
+        "status": "success",
+        "time": 17.8405
+    },
+    "incre-tests-synduce-constraints-sortedlist-nestedl_pyramid": {
+        "status": "success",
+        "time": 3.73352
+    },
+    "incre-tests-synduce-constraints-sortedlist-largest_diff_poslist": {
+        "status": "success",
+        "time": 4.07214
+    },
+    "incre-tests-synduce-constraints-sortedlist-sndmind": {
+        "status": "success",
+        "time": 14.9036
+    },
+    "incre-tests-synduce-constraints-sortedlist-largest_even_pos_v2": {
+        "status": "success",
+        "time": 18.3324
+    },
+    "incre-tests-synduce-constraints-sortedlist-parallel_max": {
+        "status": "success",
+        "time": 6.6639
+    },
+    "incre-tests-synduce-constraints-sortedlist-count_lt": {
+        "status": "success",
+        "time": 10.4981
+    },
+    "incre-tests-synduce-constraints-sortedlist-failing_slspplus": {
+        "status": "success",
+        "time": 18.8823
+    },
+    "incre-tests-synduce-constraints-sortedlist-max": {
+        "status": "success",
+        "time": 16.0783
+    },
+    "incre-tests-synduce-constraints-sortedlist-exists_equal_elements_v2": {
+        "status": "success",
+        "time": 50.6131
+    },
+    "incre-tests-synduce-constraints-even_tree-sum_of_parities": {
+        "status": "success",
+        "time": 5.27086
+    },
+    "incre-tests-synduce-constraints-even_tree-parity_of_max": {
+        "status": "success",
+        "time": 5.25591
+    },
+    "incre-tests-synduce-constraints-program-memo_psum": {
+        "status": "success",
+        "time": 0.255869
+    },
+    "incre-tests-synduce-constraints-symmetric_tree-min": {
+        "status": "success",
+        "time": 0.568998
+    },
+    "incre-tests-synduce-constraints-symmetric_tree-sum": {
+        "status": "success",
+        "time": 0.568921
+    },
+    "incre-tests-synduce-constraints-symmetric_tree-height": {
+        "status": "success",
+        "time": 1.57143
+    },
+    "incre-tests-synduce-constraints-empty_right_subtree-sum": {
+        "status": "success",
+        "time": 15.5234
+    },
+    "incre-tests-synduce-constraints-empty_right_subtree-contains": {
+        "status": "success",
+        "time": 9.34131
+    },
+    "incre-tests-synduce-constraints-all_positive-list_mps": {
+        "status": "success",
+        "time": 19.4035
+    },
+    "incre-tests-synduce-constraints-all_positive-sndmin": {
+        "status": "success",
+        "time": 0.473676
+    },
+    "incre-tests-synduce-constraints-all_positive-sndmax": {
+        "status": "success",
+        "time": 17.135
+    },
+    "incre-tests-synduce-constraints-alist-most_frequent": {
+        "status": "success",
+        "time": 32.8619
+    },
+    "incre-tests-synduce-constraints-alist-sums": {
+        "status": "success",
+        "time": 3.99465
+    },
+    "incre-tests-synduce-constraints-alist-count_eq2": {
+        "status": "success",
+        "time": 5.78143
+    },
+    "incre-tests-synduce-constraints-alist-count_eq": {
+        "status": "success",
+        "time": 2.24812
+    },
+    "incre-tests-synduce-constraints-alist-most_frequent_v2": {
+        "status": "success",
+        "time": 33.7205
+    },
+    "incre-tests-synduce-constraints-balanced_tree-height_v2": {
+        "status": "success",
+        "time": 1.01219
+    },
+    "incre-tests-synduce-constraints-balanced_tree-height": {
+        "status": "success",
+        "time": 1.04042
+    },
+    "incre-tests-synduce-constraints-balanced_tree-node_count": {
+        "status": "success",
+        "time": 1.00659
+    },
+    "incre-tests-synduce-constraints-sorted_and_indexed-count_lt0": {
+        "status": "success",
+        "time": 25.3914
+    },
+    "incre-tests-synduce-constraints-sorted_and_indexed-count_lt": {
+        "status": "success",
+        "time": 35.5326
+    },
+    "incre-tests-synduce-constraints-size-obfuscated_length_3": {
+        "status": "success",
+        "time": 1.18084
+    },
+    "incre-tests-synduce-constraints-size-obfuscated_length": {
+        "status": "success",
+        "time": 1.28279
+    },
+    "incre-tests-synduce-constraints-evenlist-parity_of_last": {
+        "status": "success",
+        "time": 1.07234
+    },
+    "incre-tests-synduce-constraints-evenlist-parity_of_sum": {
+        "status": "success",
+        "time": 1.06749
+    },
+    "incre-tests-synduce-constraints-evenlist-parity_of_first": {
+        "status": "success",
+        "time": 1.06665
+    },
+    "incre-tests-synduce-constraints-evenlist-first_odd": {
+        "status": "success",
+        "time": 1.08086
+    },
+    "incre-tests-synduce-constraints-constantlist-index_of": {
+        "status": "success",
+        "time": 12.7749
+    },
+    "incre-tests-synduce-constraints-constantlist-contains": {
+        "status": "success",
+        "time": 12.8625
+    },
+    "incre-tests-synduce-tree-min": {
+        "status": "success",
+        "time": 1.95733
+    },
+    "incre-tests-synduce-tree-sorted_2": {
+        "status": "success",
+        "time": 3.25134
+    },
+    "incre-tests-synduce-tree-minmax": {
+        "status": "success",
+        "time": 5.20564
+    },
+    "incre-tests-synduce-tree-sorted": {
+        "status": "success",
+        "time": 3.50672
+    },
+    "incre-tests-synduce-tree-maxPathWeight": {
+        "status": "success",
+        "time": 2.29464
+    },
+    "incre-tests-synduce-tree-sumtree": {
+        "status": "success",
+        "time": 2.61469
+    },
+    "incre-tests-synduce-tree-maxtree2": {
+        "status": "success",
+        "time": 2.21278
+    },
+    "incre-tests-synduce-tree-poly": {
+        "status": "fail"
+    },
+    "incre-tests-synduce-tree-maxtree": {
+        "status": "success",
+        "time": 2.11227
+    },
+    "incre-tests-synduce-tree-poly2": {
+        "status": "fail"
+    },
+    "incre-tests-synduce-misc-simple_nnf": {
+        "status": "success",
+        "time": 4.43059
+    },
+    "incre-tests-synduce-misc-unknowns_are_ids": {
+        "status": "success",
+        "time": 1.95855
+    },
+    "incre-tests-synduce-misc-count_between": {
+        "status": "success",
+        "time": 3.71485
+    },
+    "incre-tests-synduce-misc-composed_unkwns": {
+        "status": "success",
+        "time": 1.7457
+    },
+    "incre-tests-synduce-zipper-list_sum_basic": {
+        "status": "success",
+        "time": 1.30079
+    },
+    "incre-tests-synduce-zipper-list_sum": {
+        "status": "success",
+        "time": 2.84738
+    },
+    "incre-tests-synduce-list-zeros_ones": {
+        "status": "success",
+        "time": 0.55045
+    },
+    "incre-tests-synduce-list-zero_after_one": {
+        "status": "success",
+        "time": 3.064
+    },
+    "incre-tests-synduce-list-hamming": {
+        "status": "success",
+        "time": 2.01685
+    },
+    "incre-tests-synduce-list-bal": {
+        "status": "fail"
+    },
+    "incre-tests-synduce-list-maxhom": {
+        "status": "success",
+        "time": 1.00385
+    },
+    "incre-tests-synduce-list-mtshom": {
+        "status": "success",
+        "time": 4.545
+    },
+    "incre-tests-synduce-list-sumodds": {
+        "status": "success",
+        "time": 1.48786
+    },
+    "incre-tests-synduce-list-prodhom": {
+        "status": "success",
+        "time": 1.38651
+    },
+    "incre-tests-synduce-list-line_of_sight": {
+        "status": "success",
+        "time": 5.62176
+    },
+    "incre-tests-synduce-list-polyhom": {
+        "status": "fail"
+    },
+    "incre-tests-synduce-list-minhom": {
+        "status": "success",
+        "time": 1.07524
+    },
+    "incre-tests-synduce-list-search": {
+        "status": "success",
+        "time": 1.10259
+    },
+    "incre-tests-synduce-list-msshom": {
+        "status": "success",
+        "time": 38.4264
+    },
+    "incre-tests-synduce-list-sndmin": {
+        "status": "success",
+        "time": 8.34808
+    },
+    "incre-tests-synduce-list-mts_and_mps_hom": {
+        "status": "success",
+        "time": 8.64001
+    },
+    "incre-tests-synduce-list-mincount": {
+        "status": "success",
+        "time": 5.81338
+    },
+    "incre-tests-synduce-list-slsp": {
+        "status": "success",
+        "time": 20.9483
+    },
+    "incre-tests-synduce-list-lenhom": {
+        "status": "success",
+        "time": 1.67811
+    },
+    "incre-tests-synduce-list-issorted": {
+        "status": "success",
+        "time": 7.87868
+    },
+    "incre-tests-synduce-list-sumhom": {
+        "status": "success",
+        "time": 1.84672
+    },
+    "incre-tests-synduce-list-atoi": {
+        "status": "success",
+        "time": 6.03824
+    },
+    "incre-tests-synduce-list-maxcount": {
+        "status": "success",
+        "time": 5.51621
+    },
+    "incre-tests-synduce-list-sumgt": {
+        "status": "success",
+        "time": 2.23965
+    },
+    "incre-tests-synduce-list-mpshom": {
+        "status": "success",
+        "time": 4.33907
+    },
+    "incre-tests-synduce-list-sndmax": {
+        "status": "success",
+        "time": 8.5892
+    },
+    "incre-tests-synduce-list-alist_sum": {
+        "status": "success",
+        "time": 2.14275
+    },
+    "incre-tests-synduce-list-sumevens": {
+        "status": "success",
+        "time": 1.42932
+    },
+    "incre-tests-synduce-list-last": {
+        "status": "success",
+        "time": 1.35154
+    },
+    "incre-tests-synduce-indexed_list-position_polynomial": {
+        "status": "success",
+        "time": 2.05328
+    },
+    "incre-tests-synduce-indexed_list-search": {
+        "status": "success",
+        "time": 2.50338
+    },
+    "incre-tests-synduce-indexed_list-sum_elts_lt_pos": {
+        "status": "success",
+        "time": 2.48461
+    },
+    "incre-tests-synduce-sorted_list-min": {
+        "status": "success",
+        "time": 1.99167
+    },
+    "incre-tests-synduce-sorted_list-sumgtz": {
+        "status": "success",
+        "time": 4.34938
+    },
+    "incre-tests-synduce-sorted_list-max": {
+        "status": "success",
+        "time": 3.5797
+    },
+    "incre-tests-synduce-compressed_list-sum": {
+        "status": "success",
+        "time": 3.86818
+    },
+    "incre-tests-synduce-expressions-norm_arith": {
+        "status": "success",
+        "time": 1.43217
+    },
+    "incre-tests-synduce-expressions-max_subexpr_sum": {
+        "status": "success",
+        "time": 36.5758
+    },
+    "incre-tests-synduce-ptree-sum": {
+        "status": "success",
+        "time": 5.15043
+    },
+    "incre-tests-synduce-ptree-maxlast": {
+        "status": "success",
+        "time": 3.08166
+    },
+    "incre-tests-synduce-ptree-maxsum": {
+        "status": "fail"
+    },
+    "incre-tests-synduce-ptree-maxheads": {
+        "status": "success",
+        "time": 0.693171
+    },
+    "incre-tests-synduce-ptree-mul": {
+        "status": "success",
+        "time": 4.9915
+    },
+    "incre-tests-synduce-numbers-int_nat_twosum": {
+        "status": "success",
+        "time": 1.87268
+    },
+    "incre-tests-synduce-numbers-int_nat_toint": {
+        "status": "success",
+        "time": 1.28282
+    },
+    "incre-tests-autolifter-segment-tree-2nd-min-neg": {
+        "status": "success",
+        "time": 66.238
+    },
+    "incre-tests-autolifter-segment-tree-min-neg": {
+        "status": "success",
+        "time": 12.8171
+    },
+    "incre-tests-autolifter-segment-tree-mss-cover": {
+        "status": "success",
+        "time": 73.377
+    },
+    "incre-tests-autolifter-segment-tree-sqrsum-plus": {
+        "status": "success",
+        "time": 105.072
+    },
+    "incre-tests-autolifter-segment-tree-sum-plus": {
+        "status": "success",
+        "time": 8.20846
+    },
+    "incre-tests-autolifter-segment-tree-max-1s-p-cover": {
+        "status": "success",
+        "time": 160.822
+    },
+    "incre-tests-autolifter-segment-tree-mss-neg": {
+        "status": "success",
+        "time": 83.0993
+    },
+    "incre-tests-autolifter-segment-tree-3rd-min-neg": {
+        "status": "success",
+        "time": 145.023
+    },
+    "incre-tests-autolifter-segment-tree-max-1s-cover": {
+        "status": "success",
+        "time": 114.59
+    },
+    "incre-tests-autolifter-segment-tree-mts-neg": {
+        "status": "success",
+        "time": 30.582
+    },
+    "incre-tests-autolifter-segment-tree-mts-cover": {
+        "status": "success",
+        "time": 11.4078
+    },
+    "incre-tests-autolifter-segment-tree-sqrsum-cover": {
+        "status": "success",
+        "time": 11.569
+    },
+    "incre-tests-autolifter-segment-tree-sum-cover": {
+        "status": "success",
+        "time": 9.281
+    },
+    "incre-tests-autolifter-lsp-page22-1": {
+        "status": "success",
+        "time": 187.478
+    },
+    "incre-tests-autolifter-lsp-page9-2": {
+        "status": "success",
+        "time": 20.4056
+    },
+    "incre-tests-autolifter-lsp-page10": {
+        "status": "success",
+        "time": 9.11297
+    },
+    "incre-tests-autolifter-lsp-page22-2": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-lsp-page9-1": {
+        "status": "success",
+        "time": 18.8732
+    },
+    "incre-tests-autolifter-lsp-page21": {
+        "status": "success",
+        "time": 153.368
+    },
+    "incre-tests-autolifter-lsp-page20": {
+        "status": "success",
+        "time": 107.75
+    },
+    "incre-tests-autolifter-lsp-page12": {
+        "status": "success",
+        "time": 11.2182
+    },
+    "incre-tests-autolifter-dac-mss": {
+        "status": "success",
+        "time": 59.2377
+    },
+    "incre-tests-autolifter-dac-average": {
+        "status": "success",
+        "time": 8.3941
+    },
+    "incre-tests-autolifter-dac-min": {
+        "status": "success",
+        "time": 2.46281
+    },
+    "incre-tests-autolifter-dac-longest10s2": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-dac-0s1s": {
+        "status": "success",
+        "time": 3.16062
+    },
+    "incre-tests-autolifter-dac-lis": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-dac-sum": {
+        "status": "success",
+        "time": 2.45361
+    },
+    "incre-tests-autolifter-dac-balanced": {
+        "status": "success",
+        "time": 34.2758
+    },
+    "incre-tests-autolifter-dac-count1s2s3s": {
+        "status": "success",
+        "time": 357.434
+    },
+    "incre-tests-autolifter-dac-max_dist_between_zeros": {
+        "status": "success",
+        "time": 74.6898
+    },
+    "incre-tests-autolifter-dac-2nd-min": {
+        "status": "success",
+        "time": 5.48618
+    },
+    "incre-tests-autolifter-dac-max_sum_between_ones": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-dac-msp": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-dac-3rd-min": {
+        "status": "success",
+        "time": 80.8541
+    },
+    "incre-tests-autolifter-dac-count10p": {
+        "status": "success",
+        "time": 41.8046
+    },
+    "incre-tests-autolifter-dac-dropwhile": {
+        "status": "success",
+        "time": 3.43525
+    },
+    "incre-tests-autolifter-dac-line_sight": {
+        "status": "success",
+        "time": 3.4952
+    },
+    "incre-tests-autolifter-dac-is_sorted": {
+        "status": "success",
+        "time": 7.49554
+    },
+    "incre-tests-autolifter-dac-mpp": {
+        "status": "success",
+        "time": 44.8666
+    },
+    "incre-tests-autolifter-dac-mts": {
+        "status": "success",
+        "time": 5.63708
+    },
+    "incre-tests-autolifter-dac-max_1s_p": {
+        "status": "success",
+        "time": 149.104
+    },
+    "incre-tests-autolifter-dac-0after1": {
+        "status": "success",
+        "time": 23.0497
+    },
+    "incre-tests-autolifter-dac-longest1s": {
+        "status": "success",
+        "time": 80.3443
+    },
+    "incre-tests-autolifter-dac-mps_p": {
+        "status": "success",
+        "time": 62.5311
+    },
+    "incre-tests-autolifter-dac-count10s2": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-dac-max_len_1s": {
+        "status": "success",
+        "time": 73.6517
+    },
+    "incre-tests-autolifter-dac-mts_p": {
+        "status": "success",
+        "time": 80.6171
+    },
+    "incre-tests-autolifter-dac-mps": {
+        "status": "success",
+        "time": 4.89831
+    },
+    "incre-tests-autolifter-dac-atoi": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-dac-longest_odd10s": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-dac-mtp": {
+        "status": "success",
+        "time": 50.9708
+    },
+    "incre-tests-autolifter-dac-cnt1s": {
+        "status": "success",
+        "time": 2.71088
+    },
+    "incre-tests-autolifter-dac-largest_peak": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-dac-longest00s": {
+        "status": "success",
+        "time": 192.023
+    },
+    "incre-tests-autolifter-dac-max": {
+        "status": "success",
+        "time": 2.63545
+    },
+    "incre-tests-autolifter-dac-length": {
+        "status": "success",
+        "time": 2.24144
+    },
+    "incre-tests-autolifter-single-pass-mss": {
+        "status": "success",
+        "time": 10.4195
+    },
+    "incre-tests-autolifter-single-pass-average": {
+        "status": "success",
+        "time": 3.96697
+    },
+    "incre-tests-autolifter-single-pass-min": {
+        "status": "success",
+        "time": 1.53292
+    },
+    "incre-tests-autolifter-single-pass-mmm": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-single-pass-longest10s2": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-single-pass-0s1s": {
+        "status": "success",
+        "time": 2.42511
+    },
+    "incre-tests-autolifter-single-pass-lis": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-single-pass-sum": {
+        "status": "success",
+        "time": 1.49706
+    },
+    "incre-tests-autolifter-single-pass-balanced": {
+        "status": "success",
+        "time": 13.5783
+    },
+    "incre-tests-autolifter-single-pass-count1s2s3s": {
+        "status": "success",
+        "time": 59.8265
+    },
+    "incre-tests-autolifter-single-pass-max_dist_between_zeros": {
+        "status": "success",
+        "time": 16.319
+    },
+    "incre-tests-autolifter-single-pass-2nd-min": {
+        "status": "success",
+        "time": 3.50869
+    },
+    "incre-tests-autolifter-single-pass-max_sum_between_ones": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-single-pass-msp": {
+        "status": "success",
+        "time": 36.5509
+    },
+    "incre-tests-autolifter-single-pass-3rd-min": {
+        "status": "success",
+        "time": 48.3379
+    },
+    "incre-tests-autolifter-single-pass-count10p": {
+        "status": "success",
+        "time": 11.3172
+    },
+    "incre-tests-autolifter-single-pass-dropwhile": {
+        "status": "success",
+        "time": 3.40794
+    },
+    "incre-tests-autolifter-single-pass-line_sight": {
+        "status": "success",
+        "time": 2.09312
+    },
+    "incre-tests-autolifter-single-pass-is_sorted": {
+        "status": "success",
+        "time": 1.84014
+    },
+    "incre-tests-autolifter-single-pass-mpp": {
+        "status": "success",
+        "time": 8.01426
+    },
+    "incre-tests-autolifter-single-pass-mts": {
+        "status": "success",
+        "time": 3.31785
+    },
+    "incre-tests-autolifter-single-pass-max_1s_p": {
+        "status": "success",
+        "time": 35.3269
+    },
+    "incre-tests-autolifter-single-pass-0after1": {
+        "status": "success",
+        "time": 8.32503
+    },
+    "incre-tests-autolifter-single-pass-longest1s": {
+        "status": "success",
+        "time": 19.1173
+    },
+    "incre-tests-autolifter-single-pass-mps_p": {
+        "status": "success",
+        "time": 13.7697
+    },
+    "incre-tests-autolifter-single-pass-count10s2": {
+        "status": "success",
+        "time": 17.5864
+    },
+    "incre-tests-autolifter-single-pass-mas": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-single-pass-max_len_1s": {
+        "status": "success",
+        "time": 17.1988
+    },
+    "incre-tests-autolifter-single-pass-mts_p": {
+        "status": "success",
+        "time": 14.2251
+    },
+    "incre-tests-autolifter-single-pass-mis": {
+        "status": "success",
+        "time": 30.5465
+    },
+    "incre-tests-autolifter-single-pass-mps": {
+        "status": "success",
+        "time": 1.69457
+    },
+    "incre-tests-autolifter-single-pass-atoi": {
+        "status": "success",
+        "time": 1.81615
+    },
+    "incre-tests-autolifter-single-pass-longest_odd10s": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-single-pass-mtp": {
+        "status": "success",
+        "time": 10.1727
+    },
+    "incre-tests-autolifter-single-pass-cnt1s": {
+        "status": "success",
+        "time": 2.83113
+    },
+    "incre-tests-autolifter-single-pass-largest_peak": {
+        "status": "fail"
+    },
+    "incre-tests-autolifter-single-pass-longest00s": {
+        "status": "success",
+        "time": 22.1296
+    },
+    "incre-tests-autolifter-single-pass-max": {
+        "status": "success",
+        "time": 1.5479
+    },
+    "incre-tests-autolifter-single-pass-length": {
+        "status": "success",
+        "time": 1.61753
+    },
+    "incre-tests-fusion-algprog-ex3.13": {
+        "status": "success",
+        "time": 3.54735
+    },
+    "incre-tests-dp-15-6": {
+        "status": "success",
+        "time": 20.8737
+    },
+    "incre-tests-dp-01knapsack": {
+        "status": "success",
+        "time": 59.1042
+    },
+    "incre-tests-dp-optimalbst": {
+        "status": "success",
+        "time": 48.3231
+    },
+    "incre-tests-dp-cut": {
+        "status": "success",
+        "time": 71.7886
+    },
+    "incre-tests-synduce-combine-mts_and_mps": {
+        "status": "success",
+        "time": 4.75792
+    },
+    "incre-tests-synduce-tree-mips": {
+        "status": "success",
+        "time": 27.5972
+    },
+    "incre-tests-synduce-tree-mits": {
+        "status": "success",
+        "time": 27.1366
+    },
+    "incre-tests-synduce-tree-mpps": {
+        "status": "success",
+        "time": 159.551
+    },
+    "incre-tests-nonscalar-stack_max": {
+        "status": "fail"
+    },
+    "incre-tests-nonscalar-01knapsack_full": {
+        "status": "fail"
+    },
+    "incre-tests-nonscalar-rev_rev": {
+        "status": "fail"
+    },
+    "incre-tests-nonscalar-parallel_suffix_sum": {
+        "status": "fail"
+    }
+}

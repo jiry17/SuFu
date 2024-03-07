@@ -1,0 +1,256 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ is_sorted : List -> Bool
+min : Int -> Int -> Int
+spec : List -> Int
+target : List -> List
+main : List -> Int
+
+
+Inductive List;
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt x -> <= pre x
+    | cons {h, t} -> and (<= pre h) (f h t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt x -> true
+        | cons {h, t} -> aux h t
+        end
+;
+
+min = \a: Int. \b: Int. 
+    if (> a b) then b
+    else a;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt w -> w
+    | cons {h, t} -> min h (f t)
+    end
+);
+
+target = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      elt w -> 
+        align (label xs ) 
+    | cons {h, _} -> 
+        align (label xs ) 
+    end
+);
+
+main = \xs: List. 
+    if (is_sorted xs) then let tmp1 = (target xs) in 
+        align (spec (unlabel tmp1 )) 
+    else 0;
+align term #0: compress[0] List. <elt Int | cons {Int,List}>
+align@0 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  w: Int
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  h: Int
+align term #2: Int
+align@2 spec (unlabel tmp1)
+  xs: List. <elt Int | cons {Int,List}>
+  tmp1: compress[0] List. <elt Int | cons {Int,List}>
+Components for compress:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  min [Int,Int] -> Int 2
+
+Components for align:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  is_sorted [List. <elt Int | cons {Int,List}>] -> Bool 1
+  min [Int,Int] -> Int 2
+  spec [List. <elt Int | cons {Int,List}>] -> Int 3
+
+Components for comb:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  min [Int,Int] -> Int 2
+
+align term #0: compress[0] List. <elt Int | cons {Int,List}>
+align@0 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  w: Int
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  h: Int
+align term #2: Int
+align@2 spec (unlabel tmp1)
+  xs: List. <elt Int | cons {Int,List}>
+  tmp1: compress[0] List. <elt Int | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] List. <elt Int | cons {Int,List}>([Param0,Param1]@Compress[0] List. <elt Int | cons {Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] List. <elt Int | cons {Int,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  ite([Int@0]@Bool [Int@0]@Int [Int@0]@Int)
+  min([Int@0]@Int [Int@0]@Int)
+  spec([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  ite([Int@0,Int@1]@Bool [Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  min([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  spec([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Bool@0,Int@0]@Int
+  Int@0
+  +([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  -([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  ite([Bool@0,Int@0]@Bool [Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  min([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  spec([Bool@0,Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Bool@0,Int@0]@Bool
+  Bool@0
+  is_sorted([Bool@0,Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[List. <elt Int | cons {Int,List}>->Int]([Int@0]@Int [Int@0,Int@1]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+  min([Param0]@Int [Param0]@Int)
+  spec([Param0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Bool
+  fold[List. <elt Int | cons {Int,List}>->Bool]([Int@0]@Bool [Bool@0,Int@0]@Bool [Param0]@List. <elt Int | cons {Int,List}>)
+  is_sorted([Param0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@Bool
+  is_sorted([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1]@Bool
+  is_sorted([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0]@Int)
+node: [Int@0,Int@1]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1]@Int)
+node: [Bool@0,Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Bool@0,Int@0]@Int)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  Param0
+  elt([Param0]@Int)
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [0] Param1
+  [] spec(Param0)
+  [0] Param1
+  [] null
+  [0] Param1 -> spec(Param0)
+compress #0: Int
+pass #0: 
+w
+pass #1: 
+h
+pass #2: 
+tmp1
+
+Inductive List;
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt x -> <= pre x
+    | cons {h, t} -> and (<= pre h) (f h t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt x -> true
+        | cons {h, t} -> aux h t
+        end
+;
+
+min = \a: Int. \b: Int. 
+    if (> a b) then b
+    else a;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt w -> w
+    | cons {h, t} -> min h (f t)
+    end
+);
+
+target = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt w -> w
+    | cons {h, _} -> h
+    end
+);
+
+main = \xs: List. 
+    if (is_sorted xs) then let tmp1 = (target xs) in 
+        tmp1
+    else 0;
+syn-comb: 0.498075
+collect: 15.9696
+label: 0.011017
+extend-component: 0
+execute: 0.051475
+syn-align: 16.0327
+comb-size: 3
+align-size: 3
+extract-size: 3
+16.5481
+Success

@@ -1,0 +1,25 @@
+
+List :: List. <elt {Int,Int} | cons {Int,Int,List}>
+ elt : {Int,Int} -> List'. <elt {Int,Int} | cons {Int,Int,List'}>
+ cons : {Int,Int,List} ->
+        List'. <elt {Int,Int} | cons {Int,Int,List'}>
+ CList :: CList. <single {Int,Int} | concat {CList,CList}>
+single : {Int,Int} ->
+         CList'. <single {Int,Int} | concat {CList',CList'}>
+concat : {CList,CList} ->
+         CList'. <single {Int,Int} | concat {CList',CList'}>
+cat : List ->
+      List -> List'. <elt {Int,Int} | cons {Int,Int,List'}>
+repr : CList -> List'. <elt {Int,Int} | cons {Int,Int,List'}>
+is_sorted : List -> Bool
+c_sorted : CList -> Bool
+max : Int -> Int -> Int
+spec : List -> Int
+target : CList -> CList
+main : CList -> Int
+
+size: 201
+compress-num: 1
+label-num: 7
+rewrite-size: 15
+0.019336

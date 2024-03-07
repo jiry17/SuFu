@@ -1,0 +1,41 @@
+
+Inductive List;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+mts = fix (
+    \f: Int -> List -> Int. \pre: Int. \xs: List. 
+    match xs with
+      nil _ -> pre
+    | cons {h, t} -> f (max 0 (+ h pre)) t
+    end
+);
+
+mps = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> max (+ h (f t)) 0
+    end
+);
+
+spec = \xs: List. 
+    {mts 0 xs, mps xs};
+
+repr = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            align (label (cons {h, unlabel tmp2 }) ) 
+    end
+);
+
+main = \xs: List. 
+    let tmp3 = (repr xs) in 
+        align (spec (unlabel tmp3 )) ;

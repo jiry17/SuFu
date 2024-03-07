@@ -1,0 +1,340 @@
+
+List :: List. <cons {Int,List} | nil Unit>
+cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+length : List -> Int
+concat : List -> List -> List'. <cons {Int,List'} | nil Unit>
+split : List -> {List'. <cons {Int,List'} | nil Unit>, List}
+dac : (List->Int) -> List -> Int
+inf : Int
+count10p : List -> Int
+s1 : Bool -> Bool -> List -> Bool
+main : List -> Int
+
+
+Inductive List;
+
+length = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) 1
+    | nil _ -> 0
+    end
+);
+
+concat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+split = \xs: List. 
+    fix (
+    \f: List -> Int -> {List, List}. \x: List. \n: Int. 
+    if (< n 1) then {nil unit, x}
+    else match x with
+      cons {h, t} -> 
+        let res = (f t (- n 1)) in 
+            {cons {h, res.1}, res.2}
+    | _ -> {nil unit, nil unit}
+    end
+) xs (/ (length xs) 2);
+
+dac = \v: List -> Int. \xs: List. 
+    let run = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        align (label xs ) 
+    | cons {_, nil _} -> 
+        align (label xs ) 
+    | _ -> 
+        let sp = (split xs) in 
+            let tmp1 = (f sp.1) in 
+                let tmp2 = (f sp.2) in 
+                    align (label (concat (unlabel tmp1 ) (unlabel tmp2 )) ) 
+    end
+)) in 
+        let tmp3 = (run xs) in 
+            align (v (unlabel tmp3 )) ;
+
+inf = 100;
+
+count10p = fix (
+    \f: Bool -> Bool -> List -> Int. \s0: Bool. \s1: Bool. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let upd = (if (and s1 (== h 1)) then 1
+        else 0) in 
+            let s1 = (and (== h 0) (or s0 s1)) in 
+                let s0 = (== h 1) in 
+                    + upd (f s0 s1 t)
+    end
+) false false;
+
+s1 = fix (
+    \f: Bool -> Bool -> List -> Bool. \s0: Bool. \s1: Bool. \xs: List. 
+    match xs with
+      nil _ -> s1
+    | cons {h, t} -> f (== h 1) (and (== h 0) (or s0 s1)) t
+    end
+);
+
+main = dac count10p;
+align term #0: compress[0] List
+align@0 create@0 xs
+  xs: List. <cons {Int,List} | nil Unit>
+align term #1: compress[0] List
+align@1 create@0 xs
+  xs: List. <cons {Int,List} | nil Unit>
+align term #2: compress[0] List
+align@2 create@0 concat (unlabel tmp1) (unlabel tmp2)
+  sp: {List. <cons {Int,List} | nil Unit>,List. <cons {Int,List} | nil Unit>}
+  xs: List. <cons {Int,List} | nil Unit>
+  tmp2: compress[0] List. <cons {Int,List} | nil Unit>
+  tmp1: compress[0] List. <cons {Int,List} | nil Unit>
+align term #3: Int
+align@3 v (unlabel tmp3)
+  xs: List. <cons {Int,List} | nil Unit>
+  tmp3: compress[0] List. <cons {Int,List} | nil Unit>
+Components for compress:
+  inf [] -> Int 5
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  cons [(Int*List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+
+Components for align:
+  s1 [Bool,Bool,List. <cons {Int,List} | nil Unit>] -> Bool 7
+  inf [] -> Int 5
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  cons [(Int*List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  length [List. <cons {Int,List} | nil Unit>] -> Int 1
+  count10p [List. <cons {Int,List} | nil Unit>] -> Int 6
+  concat [List. <cons {Int,List} | nil Unit>,List. <cons {Int,List} | nil Unit>] -> List. <cons {Int,List} | nil Unit> 2
+  split [List. <cons {Int,List} | nil Unit>] -> (List. <cons {Int,List} | nil Unit>*List. <cons {Int,List} | nil Unit>) 3
+
+Components for comb:
+  inf [] -> Int 5
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  cons [(Int*List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ al_fold : (Int->Int->Int) -> Int -> List -> Int
+al_error : Int
+al_inf : Int
+al_plus : Int -> Int -> Int
+al_minus : Int -> Int -> Int
+al_times : Int -> Int -> Int
+al_min : Int -> Int -> Int
+al_max : Int -> Int -> Int
+al_maximum : List -> Int
+al_minimum : List -> Int
+al_sum : List -> Int
+al_length : List -> Int
+al_head : List -> Int
+al_inc : Int -> Int
+al_dec : Int -> Int
+al_neg : Int -> Int
+al_last : List -> Int
+al_access : Int -> List -> Int
+al_count : (Int->Bool) -> List -> Int
+al_take : Int -> List -> List
+al_drop : Int -> List -> List
+al_rev : List -> List
+al_map : (Int->Int) -> List -> List
+al_filter : (Int->Bool) -> List -> List
+al_zip : (Int->Int->Int) ->
+         List -> List -> List'. <cons {Int,List'} | nil Unit>
+al_concat : List -> List -> List
+al_sort : List -> List
+al_scanl : (Int->Int->Int) -> List -> List
+al_scanr : (Int->Int->Int) -> List -> List
+al_isneg : Int -> Bool
+al_ispos : Int -> Bool
+al_iseven : Int -> Bool
+al_isodd : Int -> Bool
+one : Int
+two : Int
+three : Int
+
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ al_fold : (Int->Int->Int) -> Int -> List -> Int
+al_error : Int
+al_inf : Int
+al_plus : Int -> Int -> Int
+al_minus : Int -> Int -> Int
+al_times : Int -> Int -> Int
+al_min : Int -> Int -> Int
+al_max : Int -> Int -> Int
+al_maximum : List -> Int
+al_minimum : List -> Int
+al_sum : List -> Int
+al_length : List -> Int
+al_head : List -> Int
+al_inc : Int -> Int
+al_dec : Int -> Int
+al_neg : Int -> Int
+al_last : List -> Int
+al_access : Int -> List -> Int
+al_count : (Int->Bool) -> List -> Int
+al_take : Int -> List -> List
+al_drop : Int -> List -> List
+al_rev : List -> List
+al_map : (Int->Int) -> List -> List
+al_filter : (Int->Bool) -> List -> List
+al_zip : (Int->Int->Int) ->
+         List -> List -> List'. <cons {Int,List'} | nil Unit>
+al_concat : List -> List -> List
+al_sort : List -> List
+al_scanl : (Int->Int->Int) -> List -> List
+al_scanr : (Int->Int->Int) -> List -> List
+al_isneg : Int -> Bool
+al_ispos : Int -> Bool
+al_iseven : Int -> Bool
+al_isodd : Int -> Bool
+one : Int
+two : Int
+three : Int
+
+align term #0: compress[0] List
+align@0 create@0 xs
+  xs: List. <cons {Int,List} | nil Unit>
+  (0) {xs: nil unit} @ {} -> compress nil unit
+align term #1: compress[0] List
+align@1 create@0 xs
+  xs: List. <cons {Int,List} | nil Unit>
+  (1) {xs: cons (0,nil unit)} @ {} -> compress cons (0,nil unit)
+  (1) {xs: cons (1,nil unit)} @ {} -> compress cons (1,nil unit)
+align term #2: compress[0] List
+align@2 create@0 concat (unlabel tmp1) (unlabel tmp2)
+  sp: {List. <cons {Int,List} | nil Unit>,List. <cons {Int,List} | nil Unit>}
+  xs: List. <cons {Int,List} | nil Unit>
+  tmp2: compress[0] List. <cons {Int,List} | nil Unit>
+  tmp1: compress[0] List. <cons {Int,List} | nil Unit>
+  (2) {sp: (cons (0,nil unit),cons (0,nil unit)),xs: cons (0,cons (0,nil unit)),tmp2: compress cons (0,nil unit),tmp1: compress cons (0,nil unit)} @ {} -> compress cons (0,cons (0,nil unit))
+  (2) {sp: (cons (1,nil unit),cons (1,nil unit)),xs: cons (1,cons (1,nil unit)),tmp2: compress cons (1,nil unit),tmp1: compress cons (1,nil unit)} @ {} -> compress cons (1,cons (1,nil unit))
+  (2) {sp: (cons (0,nil unit),cons (1,nil unit)),xs: cons (0,cons (1,nil unit)),tmp2: compress cons (1,nil unit),tmp1: compress cons (0,nil unit)} @ {} -> compress cons (0,cons (1,nil unit))
+  (2) {sp: (cons (1,cons (1,nil unit)),cons (0,cons (1,nil unit))),xs: cons (1,cons (1,cons (0,cons (1,nil unit)))),tmp2: compress cons (0,cons (1,nil unit)),tmp1: compress cons (1,cons (1,nil unit))} @ {} -> compress cons (1,cons (1,cons (0,cons (1,nil unit))))
+  (2) {sp: (cons (1,nil unit),cons (0,nil unit)),xs: cons (1,cons (0,nil unit)),tmp2: compress cons (0,nil unit),tmp1: compress cons (1,nil unit)} @ {} -> compress cons (1,cons (0,nil unit))
+  (2) {sp: (cons (1,cons (0,nil unit)),cons (1,cons (1,nil unit))),xs: cons (1,cons (0,cons (1,cons (1,nil unit)))),tmp2: compress cons (1,cons (1,nil unit)),tmp1: compress cons (1,cons (0,nil unit))} @ {} -> compress cons (1,cons (0,cons (1,cons (1,nil unit))))
+  (2) {sp: (cons (1,cons (1,cons (0,cons (1,nil unit)))),cons (1,cons (0,cons (1,cons (1,nil unit))))),xs: cons (1,cons (1,cons (0,cons (1,cons (1,cons (0,cons (1,cons (1,nil unit)))))))),tmp2: compress cons (1,cons (0,cons (1,cons (1,nil unit)))),tmp1: compress cons (1,cons (1,cons (0,cons (1,nil unit))))} @ {} -> compress cons (1,cons (1,cons (0,cons (1,cons (1,cons (0,cons (1,cons (1,nil unit))))))))
+  (2) {sp: (cons (0,cons (0,nil unit)),cons (1,cons (1,nil unit))),xs: cons (0,cons (0,cons (1,cons (1,nil unit)))),tmp2: compress cons (1,cons (1,nil unit)),tmp1: compress cons (0,cons (0,nil unit))} @ {} -> compress cons (0,cons (0,cons (1,cons (1,nil unit))))
+  (2) {sp: (cons (1,cons (1,nil unit)),cons (0,cons (0,nil unit))),xs: cons (1,cons (1,cons (0,cons (0,nil unit)))),tmp2: compress cons (0,cons (0,nil unit)),tmp1: compress cons (1,cons (1,nil unit))} @ {} -> compress cons (1,cons (1,cons (0,cons (0,nil unit))))
+  (2) {sp: (cons (0,cons (0,cons (1,cons (1,nil unit)))),cons (1,cons (1,cons (0,cons (0,nil unit))))),xs: cons (0,cons (0,cons (1,cons (1,cons (1,cons (1,cons (0,cons (0,nil unit)))))))),tmp2: compress cons (1,cons (1,cons (0,cons (0,nil unit)))),tmp1: compress cons (0,cons (0,cons (1,cons (1,nil unit))))} @ {} -> compress cons (0,cons (0,cons (1,cons (1,cons (1,cons (1,cons (0,cons (0,nil unit))))))))
+align term #3: Int
+align@3 v (unlabel tmp3)
+  xs: List. <cons {Int,List} | nil Unit>
+  tmp3: compress[0] List. <cons {Int,List} | nil Unit>
+  (3) {xs: nil unit,tmp3: compress nil unit} @ {} -> 0
+  (3) {xs: cons (0,cons (0,nil unit)),tmp3: compress cons (0,cons (0,nil unit))} @ {} -> 0
+  (3) {xs: cons (1,cons (1,cons (0,cons (1,cons (1,cons (0,cons (1,cons (1,cons (0,cons (0,cons (1,cons (1,cons (1,cons (1,cons (0,cons (0,nil unit)))))))))))))))),tmp3: compress cons (1,cons (1,cons (0,cons (1,cons (1,cons (0,cons (1,cons (1,cons (0,cons (0,cons (1,cons (1,cons (1,cons (1,cons (0,cons (0,nil unit))))))))))))))))} @ {} -> 3
+  (3) {xs: cons (1,cons (1,cons (0,cons (1,cons (1,cons (1,cons (0,cons (0,cons (0,cons (1,cons (1,cons (0,cons (1,cons (0,cons (1,nil unit))))))))))))))),tmp3: compress cons (1,cons (1,cons (0,cons (1,cons (1,cons (1,cons (0,cons (0,cons (0,cons (1,cons (1,cons (0,cons (1,cons (0,cons (1,nil unit)))))))))))))))} @ {} -> 4
+  (3) {xs: cons (1,cons (0,cons (1,cons (1,cons (0,cons (0,cons (1,cons (0,cons (0,cons (1,cons (1,cons (0,cons (0,cons (0,cons (0,cons (0,cons (0,nil unit))))))))))))))))),tmp3: compress cons (1,cons (0,cons (1,cons (1,cons (0,cons (0,cons (1,cons (0,cons (0,cons (1,cons (1,cons (0,cons (0,cons (0,cons (0,cons (0,cons (0,nil unit)))))))))))))))))} @ {} -> 3
+  (3) {xs: cons (0,cons (1,nil unit)),tmp3: compress cons (0,cons (1,nil unit))} @ {} -> 0
+  (3) {xs: cons (1,cons (1,cons (1,cons (1,cons (1,nil unit))))),tmp3: compress cons (1,cons (1,cons (1,cons (1,cons (1,nil unit)))))} @ {} -> 0
+  (3) {xs: cons (1,cons (1,cons (1,cons (1,cons (0,cons (0,cons (1,cons (1,cons (0,nil unit))))))))),tmp3: compress cons (1,cons (1,cons (1,cons (1,cons (0,cons (0,cons (1,cons (1,cons (0,nil unit)))))))))} @ {} -> 1
+  (3) {xs: cons (1,cons (1,cons (1,cons (0,cons (1,cons (0,cons (1,cons (0,cons (0,cons (0,cons (1,cons (1,cons (0,cons (0,cons (0,cons (1,cons (1,cons (1,cons (0,nil unit))))))))))))))))))),tmp3: compress cons (1,cons (1,cons (1,cons (0,cons (1,cons (0,cons (1,cons (0,cons (0,cons (0,cons (1,cons (1,cons (0,cons (0,cons (0,cons (1,cons (1,cons (1,cons (0,nil unit)))))))))))))))))))} @ {} -> 4
+  (3) {xs: cons (1,cons (0,cons (1,cons (0,cons (0,cons (0,cons (0,cons (0,cons (1,nil unit))))))))),tmp3: compress cons (1,cons (0,cons (1,cons (0,cons (0,cons (0,cons (0,cons (0,cons (1,nil unit)))))))))} @ {} -> 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] count10p(Param0)
+  [1] al_head(Param0)
+  [2] al_last(Param0)
+  [3] count10p(concat(Param0,Param0))
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [0] count10p(Param0)
+  [1] al_head(Param0)
+  [2] al_last(Param0)
+  [3] count10p(concat(Param0,Param0))
+  [0] al_head(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [0] count10p(Param0)
+  [1] al_head(Param0)
+  [2] al_last(Param0)
+  [3] count10p(concat(Param0,Param0))
+  [0] Param2 -> count10p(Param0)
+  [1] Param2 -> al_head(Param0)
+  [2] Param2 -> al_last(Param0)
+  [3] Param2 -> count10p(concat(Param0,Param0))
+  [4] Param3 -> count10p(Param0)
+  [5] Param3 -> al_head(Param0)
+  [6] Param3 -> al_last(Param0)
+  [7] Param3 -> count10p(concat(Param0,Param0))
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [1,0,1,0,100]=>0
+  [0,1,1,4,100]=>3
+  [1,1,0,0,100]=>0
+  [1,1,0,0,100]=>0
+  [0,1,1,2,100]=>2
+  [0,0,0,0,100]=>0
+  [0,1,0,1,100]=>1

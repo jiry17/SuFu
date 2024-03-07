@@ -1,0 +1,30 @@
+
+Inductive Tree;
+
+square = \x: Int. 
+    * x x;
+
+squaretr = fix (
+    \f: Tree -> Compress Tree. \t: Tree. 
+    match t with
+      leaf w -> 
+        let tmp1 = (leaf (square w)) in 
+            align (label tmp1 ) 
+    | branch {l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (branch {unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+sumtr = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> w
+    | branch {l, r} -> + (f l) (f r)
+    end
+);
+
+main = \t: Tree. 
+    let tmp4 = (squaretr t) in 
+        align (sumtr (unlabel tmp4 )) ;

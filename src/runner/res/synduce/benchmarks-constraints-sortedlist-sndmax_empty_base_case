@@ -1,0 +1,71 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/constraints/sortedlist/sndmax_empty_base_case.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (odot, init, base_case) := ∀ x : [33mclist[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): list -> int  =  
+[44m INFO :[0m  target⟨odot, init, base_case⟩(): clist -> int [95m«[0m[95mrequires[0m [34mconcat_list_sorted[0m[95m»[0m =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(): clist -> list  =  
+
+[44m INFO :[0m  concat_list_sorted⟨⟩(): clist -> bool  =  
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0194s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m ... finished in 0.0271s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m <SEGIS> This problem has no solution. Counterexample set: [32mEmpty[0m [32mElt[0m([34ml0[0m) [32mConcat[0m([32mElt[0m([34ma2[0m),
+          [32mElt[0m([34ma5[0m))
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m All counterexamples are non-spurious: nothing to refine.
+[44m INFO :[0m Lifting with components int
+[44m INFO :[0m [30m[101mLifting ... [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:1 [0;30m[0m
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m All counterexamples are non-spurious: nothing to refine.
+[44m INFO :[0m Lifting with components int, int
+[44m INFO :[0m [30m[101mLifting ... [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:2 [0;30m[0m
+[41m[ERROR][0m Term {(fun x48 (x49, x50, x51) ->  (x48, x49, x50, x51)) (max 0 (min i1 0))
+        (_L_13, _L_2, _L_3),
+(fun x48 (x49, x50, x51) ->  (x48, x49, x50, x51)) 0 (_L_14, _L_20, _L_30)} 
+max 0 (min i1 0) is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x52 (x53, x54, x55) ->  (x52, x53, x54, x55)) (max 0 (min i1 0))
+        (_L_15, _L_21, _L_31),
+(fun x52 (x53, x54, x55) ->  (x52, x53, x54, x55)) (max 0 (min i4 0))
+  (_L_16, _L_22, _L_32)} max (max 0 (min i4 0)) (min i1 (max i4 0)) is not a function-free expression, cannot deduce.
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0117s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 3:0 [0;30m[0m
+[41m[ERROR][0m Term {(fun x124 (x125, x126, x127) ->  (x124, x125, x126, x127)) 0
+        (_L_17, _L_23, _L_33),
+(fun x124 (x125, x126, x127) ->  (x124, x125, x126, x127)) 0
+  (_L_18, _L_24, _L_34)} 0 is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x128 (x129, x130, x131) ->  (x128, x129, x130, x131))
+        (max 0 (min i1 0)) (_L_19, _L_25, _L_35),
+(fun x128 (x129, x130, x131) ->  (x128, x129, x130, x131)) 0
+  (_L_110, _L_26, _L_36)} max 0 (min i1 0) is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x132 (x133, x134, x135) ->  (x132, x133, x134, x135)) 0
+        (_L_111, _L_27, _L_37),
+(fun x132 (x133, x134, x135) ->  (x132, x133, x134, x135)) (max 0 (min i7 0))
+  (_L_112, _L_28, _L_38)} max 0 (min i7 0) is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x136 (x137, x138, x139) ->  (x136, x137, x138, x139))
+        (max 0 (min i1 0)) (_L_113, _L_29, _L_39),
+(fun x136 (x137, x138, x139) ->  (x136, x137, x138, x139)) (max 0 (min i4 0))
+  (_L_114, _L_210, _L_310)} max (max 0 (min i4 0)) (min i1 (max i4 0)) is not a function-free expression, cannot deduce.
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  28 instances] 0.343s 
+        CVC4-SMT   [   6 instances] 0.049s 
+        CVC-SyGuS  [  21 instances] 2.048s 
+        > TOTAL    [  55 instances]: 2.440s 
+[44m INFO :[0m No solution: problem is unrealizable (found answer in 1.0579s).
+[44m INFO :[0m  target⟨odot, init, base_case⟩(): clist -> int [95m«[0m[95mrequires[0m [34mconcat_list_sorted[0m[95m»[0m = 
+        {‣ target  Empty  ⟹  [34minit[0m ‣ target  [3mElt[0m(a)  ⟹  [34mbase_case[0m [34ma[0m
+         ‣ target  [3mConcat[0m(x, y)  ⟹  [34modot[0m ([34mtarget[0m [34mx[0m) ([34mtarget[0m [34my[0m) }
+[44m INFO :[0m 💡 Explanation: 

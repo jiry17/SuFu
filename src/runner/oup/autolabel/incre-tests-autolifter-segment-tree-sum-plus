@@ -1,0 +1,762 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+Tag :: Int
+Result :: List
+NodeInfo :: {Tag, Result}
+SegTree :: SegTree. <empty Unit | node {NodeInfo,SegTree,SegTree}>
+empty : Unit ->
+        SegTree'. <empty Unit | node {NodeInfo,SegTree',SegTree'}>
+node : {NodeInfo,SegTree,SegTree} ->
+       SegTree'. <empty Unit | node {NodeInfo,SegTree',SegTree'}>
+Operation :: Operation. <update {Int,Int,Tag} | query {Int,Int}>
+update : {Int,Int,Tag} ->
+         Operation'. <update {Int,Int,Tag} | query {Int,Int}>
+query : {Int,Int} ->
+        Operation'. <update {Int,Int,Tag} | query {Int,Int}>
+OpList :: OpList. <onil Unit | ocons {Operation,OpList}>
+onil : Unit -> OpList'. <onil Unit | ocons {Operation,OpList'}>
+ocons : {Operation,OpList} ->
+        OpList'. <onil Unit | ocons {Operation,OpList'}>
+concat : List -> List -> List'. <nil Unit | cons {Int,List'}>
+length : List -> Int
+map : (Int->Int) -> List -> List
+solve : (Tag->Tag->Tag) ->
+        Tag ->
+        (Tag->Int->Int) ->
+        (List->Int) ->
+        List -> OpList -> List'. <nil Unit | cons {Int,List'}>
+default_tag : Int
+apply_tag : Tag -> Int -> Int
+merge_tag : Tag -> Tag -> Int
+sum : List -> Int
+main : List -> OpList -> List'. <nil Unit | cons {Int,List'}>
+
+
+Inductive List;
+
+Tag = Int;
+
+Result = Compress List;
+
+NodeInfo = {Tag, Result};
+
+Inductive SegTree;
+
+Inductive Operation;
+
+Inductive OpList;
+
+concat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+length = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) 1
+    | nil _ -> 0
+    end
+);
+
+map = \g: Int -> Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> xs
+    | cons {h, t} -> cons {g h, f t}
+    end
+);
+
+solve = \merge_tag: Tag -> Tag -> Tag. \default_tag: Tag. \apply: Tag -> Int -> Int. \target: List -> Int. 
+    let get_info = (\n: SegTree. 
+    match n with
+      node {info, _, _} -> info
+    end
+) in 
+        let merge_res = (\x: Result. \y: Result. 
+        align (label (concat (unlabel x ) (unlabel y )) ) ) in 
+            let merge = (\l: SegTree. \r: SegTree. 
+            let linfo = (get_info l) in 
+                let rinfo = (get_info r) in 
+                    node {{default_tag, merge_res linfo.2 rinfo.2}, l, r}) in 
+                let apply = (\n: SegTree. \tag: Tag. 
+                match n with
+                  node {info, l, r} -> node {{merge_tag info.1 tag, let tmp1 = (map (apply tag)) in 
+                        let tmp2 = info.2 in 
+                            align (label (tmp1 (unlabel tmp2 )) ) }, l, r}
+                end
+) in 
+                    let pushdown = (\n: SegTree. 
+                    match n with
+                      node {info, l, r} -> node {{default_tag, info.2}, apply l info.1, apply r info.1}
+                    end
+) in 
+                        let buildtree = (fix (
+                        \f: Int -> Int -> List -> {List, SegTree}. \l: Int. \r: Int. \xs: List. 
+                        if (== l r) then match xs with
+                          cons {h, t} -> {t, node {{default_tag, let tmp3 = (cons {h, nil Unit}) in 
+                                align (label tmp3 ) }, empty Unit, empty Unit}}
+                        end
+
+                        else let mid = (/ (+ l r) 2) in 
+                            let lres = (f l mid xs) in 
+                                let rres = (f (+ mid 1) r lres.1) in 
+                                    {rres.1, merge lres.2 rres.2}                    )) in 
+                            let update_tree = (\ql: Int. \qr: Int. \tag: Tag. 
+                            fix (
+                            \f: Int -> Int -> SegTree -> SegTree. \l: Int. \r: Int. \n: SegTree. 
+                            if (or (> l ql) (< r qr)) then n
+                            else if (and (<= ql l) (<= r qr)) then apply n tag
+                            else let mid = (/ (+ l r) 2) in 
+                                match pushdown n with
+                                  node {info, lnode, rnode} -> 
+                                    let lres = (f l mid lnode) in 
+                                        let rres = (f (+ mid 1) r rnode) in 
+                                            merge lres rres
+                                end
+                        )) in 
+                                let query_tree = (\ql: Int. \qr: Int. 
+                                fix (
+                                \f: Int -> Int -> SegTree -> {SegTree, Result}. \l: Int. \r: Int. \n: SegTree. 
+                                if (or (> l ql) (< r qr)) then {n, let tmp4 = (nil Unit) in 
+                                    align (label tmp4 ) }
+                                else if (and (<= ql l) (<= r qr)) then {n, (get_info n).2}
+                                else let mid = (/ (+ l r) 2) in 
+                                    let new_node = (pushdown n) in 
+                                        match new_node with
+                                          node {info, lnode, rnode} -> 
+                                            let lres = (f l mid lnode) in 
+                                                let rres = (f (+ mid 1) r rnode) in 
+                                                    {node {info, lres.1, rres.1}, merge_res lres.2 rres.2}
+                                        end
+                            )) in 
+                                    \init: List. \ops: OpList. 
+                                    let len = (length init) in 
+                                        if (== len 0) then nil Unit
+                                        else let is_range_valid = (\l: Int. \r: Int. 
+                                        and (<= 1 l) (and (<= l r) (<= r len))) in 
+                                            let root = (buildtree 1 len init).2 in 
+                                                fix (
+                                                \f: SegTree -> OpList -> List. \root: SegTree. \ops: OpList. 
+                                                match ops with
+                                                  onil _ -> nil Unit
+                                                | ocons {h, t} -> 
+                                                    match h with
+                                                      query {l, r} -> if (is_range_valid l r) then let res = (query_tree l r 1 len root) in 
+                                                            cons {let tmp5 = res.2 in 
+                                                                align (target (unlabel tmp5 )) , f res.1 t}
+                                                        else f root t
+                                                    | update {l, r, tag} -> if (is_range_valid l r) then let res = (update_tree l r tag 1 len root) in 
+                                                            f res t
+                                                        else f root t
+                                                    end
+
+                                                end
+                                            ) root ops;
+
+default_tag = 0;
+
+apply_tag = \t: Tag. \w: Int. 
+    + t w;
+
+merge_tag = \x: Tag. \y: Tag. 
+    + x y;
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+main = solve merge_tag default_tag apply_tag sum;
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 concat (unlabel x) (unlabel y)
+  y: compress[0] List. <nil Unit | cons {Int,List}>
+  x: compress[0] List. <nil Unit | cons {Int,List}>
+  default_tag: Int
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 tmp1 (unlabel tmp2)
+  l: SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  r: SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  tmp2: compress[0] List. <nil Unit | cons {Int,List}>
+  n: SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  tag: Int
+  default_tag: Int
+  info: {Int,compress[0] List. <nil Unit | cons {Int,List}>}
+align term #2: compress[0] List. <nil Unit | cons {Int,List}>
+align@2 create@0 tmp3
+  l: Int
+  r: Int
+  tmp3: List. <nil Unit | cons {Int,List}>
+  default_tag: Int
+  h: Int
+  xs: List. <nil Unit | cons {Int,List}>
+  t: List. <nil Unit | cons {Int,List}>
+align term #3: compress[0] List. <nil Unit | cons {Int,List}>
+align@3 create@0 tmp4
+  l: Int
+  ql: Int
+  n: SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  qr: Int
+  tmp4: List. <nil Unit | cons {Int,List}>
+  r: Int
+  default_tag: Int
+align term #4: Int
+align@4 target (unlabel tmp5)
+  ops: OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}>
+  h: Operation. <update {Int,Int,Int} | query {Int,Int}>
+  len: Int
+  r: Int
+  t: OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}>
+  init: List. <nil Unit | cons {Int,List}>
+  l: Int
+  root: SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  tmp5: compress[0] List. <nil Unit | cons {Int,List}>
+  res: {SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>,compress[0] List. <nil Unit | cons {Int,List}>}
+  default_tag: Int
+Components for compress:
+  merge_tag [Int,Int] -> Int 13
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  apply_tag [Int,Int] -> Int 12
+  query [(Int * Int)] -> Operation. <update {Int,Int,Int} | query {Int,Int}> 5
+  ocons [(Operation. <update {Int,Int,Int} | query {Int,Int}> * OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}>)] -> OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}> 6
+  update [(Int * Int * Int)] -> Operation. <update {Int,Int,Int} | query {Int,Int}> 5
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  default_tag [] -> Int 11
+  onil [Bot] -> OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}> 6
+
+Components for align:
+  sum [List. <nil Unit | cons {Int,List}>] -> Int 14
+  merge_tag [Int,Int] -> Int 13
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  apply_tag [Int,Int] -> Int 12
+  query [(Int * Int)] -> Operation. <update {Int,Int,Int} | query {Int,Int}> 5
+  ocons [(Operation. <update {Int,Int,Int} | query {Int,Int}> * OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}>)] -> OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}> 6
+  update [(Int * Int * Int)] -> Operation. <update {Int,Int,Int} | query {Int,Int}> 5
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  default_tag [] -> Int 11
+  onil [Bot] -> OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}> 6
+  concat [List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>] -> List. <nil Unit | cons {Int,List}> 7
+  length [List. <nil Unit | cons {Int,List}>] -> Int 8
+  map [[Int]->Int,List. <nil Unit | cons {Int,List}>] -> List. <nil Unit | cons {Int,List}> 9
+
+Components for comb:
+  merge_tag [Int,Int] -> Int 13
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  apply_tag [Int,Int] -> Int 12
+  query [(Int * Int)] -> Operation. <update {Int,Int,Int} | query {Int,Int}> 5
+  ocons [(Operation. <update {Int,Int,Int} | query {Int,Int}> * OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}>)] -> OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}> 6
+  update [(Int * Int * Int)] -> Operation. <update {Int,Int,Int} | query {Int,Int}> 5
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  default_tag [] -> Int 11
+  onil [Bot] -> OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}> 6
+
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ al_fold : (Int->Int->Int) -> Int -> List -> Int
+al_error : Int
+al_inf : Int
+al_plus : Int -> Int -> Int
+al_minus : Int -> Int -> Int
+al_times : Int -> Int -> Int
+al_min : Int -> Int -> Int
+al_max : Int -> Int -> Int
+al_maximum : List -> Int
+al_minimum : List -> Int
+al_sum : List -> Int
+al_length : List -> Int
+al_head : List -> Int
+al_inc : Int -> Int
+al_dec : Int -> Int
+al_neg : Int -> Int
+al_last : List -> Int
+al_access : Int -> List -> Int
+al_count : (Int->Bool) -> List -> Int
+al_take : Int -> List -> List
+al_drop : Int -> List -> List
+al_rev : List -> List
+al_map : (Int->Int) -> List -> List
+al_filter : (Int->Bool) -> List -> List
+al_zip : (Int->Int->Int) ->
+         List -> List -> List'. <cons {Int,List'} | nil Unit>
+al_concat : List -> List -> List
+al_sort : List -> List
+al_scanl : (Int->Int->Int) -> List -> List
+al_scanr : (Int->Int->Int) -> List -> List
+al_isneg : Int -> Bool
+al_ispos : Int -> Bool
+al_iseven : Int -> Bool
+al_isodd : Int -> Bool
+one : Int
+none : Int
+al_error : Int -> Bool
+
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ al_fold : (Int->Int->Int) -> Int -> List -> Int
+al_error : Int
+al_inf : Int
+al_plus : Int -> Int -> Int
+al_minus : Int -> Int -> Int
+al_times : Int -> Int -> Int
+al_min : Int -> Int -> Int
+al_max : Int -> Int -> Int
+al_maximum : List -> Int
+al_minimum : List -> Int
+al_sum : List -> Int
+al_length : List -> Int
+al_head : List -> Int
+al_inc : Int -> Int
+al_dec : Int -> Int
+al_neg : Int -> Int
+al_last : List -> Int
+al_access : Int -> List -> Int
+al_count : (Int->Bool) -> List -> Int
+al_take : Int -> List -> List
+al_drop : Int -> List -> List
+al_rev : List -> List
+al_map : (Int->Int) -> List -> List
+al_filter : (Int->Bool) -> List -> List
+al_zip : (Int->Int->Int) ->
+         List -> List -> List'. <cons {Int,List'} | nil Unit>
+al_concat : List -> List -> List
+al_sort : List -> List
+al_scanl : (Int->Int->Int) -> List -> List
+al_scanr : (Int->Int->Int) -> List -> List
+al_isneg : Int -> Bool
+al_ispos : Int -> Bool
+al_iseven : Int -> Bool
+al_isodd : Int -> Bool
+one : Int
+none : Int
+al_error : Int -> Bool
+
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 concat (unlabel x) (unlabel y)
+  y: compress[0] List. <nil Unit | cons {Int,List}>
+  x: compress[0] List. <nil Unit | cons {Int,List}>
+  default_tag: Int
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 tmp1 (unlabel tmp2)
+  l: SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  r: SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  tmp2: compress[0] List. <nil Unit | cons {Int,List}>
+  n: SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  tag: Int
+  default_tag: Int
+  info: {Int,compress[0] List. <nil Unit | cons {Int,List}>}
+align term #2: compress[0] List. <nil Unit | cons {Int,List}>
+align@2 create@0 tmp3
+  l: Int
+  r: Int
+  tmp3: List. <nil Unit | cons {Int,List}>
+  default_tag: Int
+  h: Int
+  xs: List. <nil Unit | cons {Int,List}>
+  t: List. <nil Unit | cons {Int,List}>
+align term #3: compress[0] List. <nil Unit | cons {Int,List}>
+align@3 create@0 tmp4
+  l: Int
+  ql: Int
+  n: SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  qr: Int
+  tmp4: List. <nil Unit | cons {Int,List}>
+  r: Int
+  default_tag: Int
+align term #4: Int
+align@4 target (unlabel tmp5)
+  ops: OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}>
+  h: Operation. <update {Int,Int,Int} | query {Int,Int}>
+  len: Int
+  r: Int
+  t: OpList. <onil Unit | ocons {Operation. <update {Int,Int,Int} | query {Int,Int}>,OpList}>
+  init: List. <nil Unit | cons {Int,List}>
+  l: Int
+  root: SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  tmp5: compress[0] List. <nil Unit | cons {Int,List}>
+  res: {SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>,compress[0] List. <nil Unit | cons {Int,List}>}
+  default_tag: Int
+num = 0
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+node: [Param0,Param1,Param2]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param0
+  Param1
+num = 1
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param2
+  access1([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Int * Compress[0] List. <nil Unit | cons {Int,List}>))
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param4
+  Param5
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+  access0([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Int * Compress[0] List. <nil Unit | cons {Int,List}>))
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Int * Compress[0] List. <nil Unit | cons {Int,List}>)
+  Param6
+  prod([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] List. <nil Unit | cons {Int,List}>)
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@List. <nil Unit | cons {Int,List}>
+  Param2
+  Param5
+  Param6
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param0
+  Param1
+  Param3
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+  al_head([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@List. <nil Unit | cons {Int,List}>)
+num = 3
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@List. <nil Unit | cons {Int,List}>
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param0
+  Param1
+  Param3
+  Param5
+  Param6
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+  al_head([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@List. <nil Unit | cons {Int,List}>)
+num = 4
+start: start
+node: start
+  Int([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int)
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Compress[0] List. <nil Unit | cons {Int,List}>)
+node: [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int
+  Param2
+  Param3
+  Param6
+  Param10
+  +([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int)
+  -([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int)
+  0
+  1
+  al_head([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@List. <nil Unit | cons {Int,List}>)
+node: [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@List. <nil Unit | cons {Int,List}>
+  Param5
+node: [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}>
+  Param7
+  access0([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@(SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}> * Compress[0] List. <nil Unit | cons {Int,List}>))
+node: [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param8
+  access1([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@(SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}> * Compress[0] List. <nil Unit | cons {Int,List}>))
+node: [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@(SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}> * Compress[0] List. <nil Unit | cons {Int,List}>)
+  Param9
+  prod([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@SegTree. <empty Unit | node {{Int,compress[0] List. <nil Unit | cons {Int,List}>},SegTree,SegTree}> [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Compress[0] List. <nil Unit | cons {Int,List}>)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  al_plus([Param0]@Int [Param0]@Int)
+  al_minus([Param0]@Int [Param0]@Int)
+  al_times([Param0]@Int [Param0]@Int)
+  al_min([Param0]@Int [Param0]@Int)
+  al_max([Param0]@Int [Param0]@Int)
+  al_maximum([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_minimum([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_sum([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_length([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_head([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_inc([Param0]@Int)
+  al_dec([Param0]@Int)
+  al_neg([Param0]@Int)
+  al_last([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_access([Param0]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_count([Param0]@[Int]->Bool [Param0]@List. <nil Unit | cons {Int,List}>)
+  one
+  none
+  sum([Param0]@List. <nil Unit | cons {Int,List}>)
+  merge_tag([Param0]@Int [Param0]@Int)
+  apply_tag([Param0]@Int [Param0]@Int)
+  default_tag
+  length([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@Bool
+  al_isneg([Param0]@Int)
+  al_ispos([Param0]@Int)
+  al_iseven([Param0]@Int)
+  al_isodd([Param0]@Int)
+node: [Param0]@[Int]->[Int]->Int
+  al_plus
+  al_minus
+  al_times
+  al_min
+  al_max
+  merge_tag
+  apply_tag
+node: [Param0]@[Int]->Int
+  al_inc
+  al_dec
+  al_neg
+  merge_tag([Param0]@Int)
+  apply_tag([Param0]@Int)
+node: [Param0]@[Int]->Bool
+  al_isneg
+  al_ispos
+  al_iseven
+  al_isodd
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  Param0
+  al_take([Param0]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_drop([Param0]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_rev([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_map([Param0]@[Int]->Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_filter([Param0]@[Int]->Bool [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_zip([Param0]@[Int]->[Int]->Int [Param0]@List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_sort([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_scanl([Param0]@[Int]->[Int]->Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_scanr([Param0]@[Int]->[Int]->Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  concat([Param0]@List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}>)
+  map([Param0]@[Int]->Int [Param0]@List. <nil Unit | cons {Int,List}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] al_sum(Param0)
+  [1] al_length(Param0)
+  [0] Param0 -> al_sum(Param0)
+  [1] Param0 -> al_length(Param0)
+  [2] Param1 -> al_sum(Param0)
+  [3] Param1 -> al_length(Param0)
+  [0] al_sum(Param0)
+  [1] al_length(Param0)
+  [0] Param4
+  [1] Param2 -> al_sum(Param0)
+  [2] Param2 -> al_length(Param0)
+  [0] al_sum(Param0)
+  [1] al_length(Param0)
+  [0] Param4
+  [0] al_sum(Param0)
+  [1] al_length(Param0)
+  [] null
+  [0] Param8 -> al_sum(Param0)
+  [1] Param8 -> al_length(Param0)
+compress #0: {Int,Int}
+pass #0: 
+{+ y.1 x.1, + y.2 x.2}
+pass #1: 
+{+ tmp2.1 (* tag tmp2.2), tmp2.2}
+pass #2: 
+{h, 1}
+pass #3: 
+{0, 0}
+pass #4: 
+tmp5.1
+
+Inductive List;
+
+Tag = Int;
+
+Result = {Int, Int};
+
+NodeInfo = {Tag, Result};
+
+Inductive SegTree;
+
+Inductive Operation;
+
+Inductive OpList;
+
+concat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+length = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) 1
+    | nil _ -> 0
+    end
+);
+
+map = \g: Int -> Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> xs
+    | cons {h, t} -> cons {g h, f t}
+    end
+);
+
+solve = \merge_tag: Tag -> Tag -> Tag. \default_tag: Tag. \apply: Tag -> Int -> Int. \target: List -> Int. 
+    let get_info = (\n: SegTree. 
+    match n with
+      node {info, _, _} -> info
+    end
+) in 
+        let merge_res = (\x: Result. \y: Result. 
+        {+ y.1 x.1, + y.2 x.2}) in 
+            let merge = (\l: SegTree. \r: SegTree. 
+            let linfo = (get_info l) in 
+                let rinfo = (get_info r) in 
+                    node {{default_tag, merge_res linfo.2 rinfo.2}, l, r}) in 
+                let apply = (\n: SegTree. \tag: Tag. 
+                match n with
+                  node {info, l, r} -> node {{merge_tag info.1 tag, let tmp2 = info.2 in 
+                        {+ tmp2.1 (* tag tmp2.2), tmp2.2}}, l, r}
+                end
+) in 
+                    let pushdown = (\n: SegTree. 
+                    match n with
+                      node {info, l, r} -> node {{default_tag, info.2}, apply l info.1, apply r info.1}
+                    end
+) in 
+                        let buildtree = (fix (
+                        \f: Int -> Int -> List -> {List, SegTree}. \l: Int. \r: Int. \xs: List. 
+                        if (== l r) then match xs with
+                          cons {h, t} -> {t, node {{default_tag, {h, 1}}, empty Unit, empty Unit}}
+                        end
+
+                        else let mid = (/ (+ l r) 2) in 
+                            let lres = (f l mid xs) in 
+                                let rres = (f (+ mid 1) r lres.1) in 
+                                    {rres.1, merge lres.2 rres.2}                    )) in 
+                            let update_tree = (\ql: Int. \qr: Int. \tag: Tag. 
+                            fix (
+                            \f: Int -> Int -> SegTree -> SegTree. \l: Int. \r: Int. \n: SegTree. 
+                            if (or (> l ql) (< r qr)) then n
+                            else if (and (<= ql l) (<= r qr)) then apply n tag
+                            else let mid = (/ (+ l r) 2) in 
+                                match pushdown n with
+                                  node {info, lnode, rnode} -> 
+                                    let lres = (f l mid lnode) in 
+                                        let rres = (f (+ mid 1) r rnode) in 
+                                            merge lres rres
+                                end
+                        )) in 
+                                let query_tree = (\ql: Int. \qr: Int. 
+                                fix (
+                                \f: Int -> Int -> SegTree -> {SegTree, Result}. \l: Int. \r: Int. \n: SegTree. 
+                                if (or (> l ql) (< r qr)) then {n, {0, 0}}
+                                else if (and (<= ql l) (<= r qr)) then {n, (get_info n).2}
+                                else let mid = (/ (+ l r) 2) in 
+                                    let new_node = (pushdown n) in 
+                                        match new_node with
+                                          node {info, lnode, rnode} -> 
+                                            let lres = (f l mid lnode) in 
+                                                let rres = (f (+ mid 1) r rnode) in 
+                                                    {node {info, lres.1, rres.1}, merge_res lres.2 rres.2}
+                                        end
+                            )) in 
+                                    \init: List. \ops: OpList. 
+                                    let len = (length init) in 
+                                        if (== len 0) then nil Unit
+                                        else let is_range_valid = (\l: Int. \r: Int. 
+                                        and (<= 1 l) (and (<= l r) (<= r len))) in 
+                                            let root = (buildtree 1 len init).2 in 
+                                                fix (
+                                                \f: SegTree -> OpList -> List. \root: SegTree. \ops: OpList. 
+                                                match ops with
+                                                  onil _ -> nil Unit
+                                                | ocons {h, t} -> 
+                                                    match h with
+                                                      query {l, r} -> if (is_range_valid l r) then let res = (query_tree l r 1 len root) in 
+                                                            cons {let tmp5 = res.2 in 
+                                                                tmp5.1, f res.1 t}
+                                                        else f root t
+                                                    | update {l, r, tag} -> if (is_range_valid l r) then let res = (update_tree l r tag 1 len root) in 
+                                                            f res t
+                                                        else f root t
+                                                    end
+
+                                                end
+                                            ) root ops;
+
+default_tag = 0;
+
+apply_tag = \t: Tag. \w: Int. 
+    + t w;
+
+merge_tag = \x: Tag. \y: Tag. 
+    + x y;
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+main = solve merge_tag default_tag apply_tag sum;
+syn-comb: 0.570787
+collect: 5.60936
+label: 0.043924
+extend-component: 0.011886
+execute: 1.88616
+syn-align: 7.55762
+comb-size: 37
+align-size: 7
+extract-size: 8
+8.20846
+Success

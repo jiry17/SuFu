@@ -1,0 +1,306 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+NList :: NList. <single List | ncons {List,NList}>
+single : List -> NList'. <single List | ncons {List,NList'}>
+ncons : {List,NList} ->
+        NList'. <single List | ncons {List,NList'}>
+head : NList -> List
+map : (List->Int) -> NList -> List'. <nil Unit | cons {Int,List'}>
+sum : List -> Int
+product : List -> Int
+tails : List -> NList'. <single List | ncons {List,NList'}>
+main : List -> Int
+
+
+Inductive List;
+
+Inductive NList;
+
+head = \xs: NList. 
+    match xs with
+      single w -> w
+    | ncons {h, t} -> h
+    end
+;
+
+map = \f: List -> Int. 
+    fix (
+    \g: NList -> List. \xs: NList. 
+    match xs with
+      single w -> cons {f w, nil Unit}
+    | ncons {h, t} -> cons {f h, g t}
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+product = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 1
+    | cons {h, t} -> * h (f t)
+    end
+);
+
+tails = fix (
+    \f: List -> Compress NList. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (single xs) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            align (label (ncons {xs, unlabel tmp2 }) ) 
+    end
+);
+
+main = \xs: List. 
+    let tmp3 = (map product) in 
+        let tmp4 = (tails xs) in 
+            align (sum (tmp3 (unlabel tmp4 ))) ;
+align term #0: compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+align@0 create@0 tmp1
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp1: NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+align term #1: compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+align@1 create@0 ncons ({xs,unlabel tmp2})
+  h: Int
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp2: compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  t: List. <nil Unit | cons {Int,List}>
+align term #2: Int
+align@2 sum (tmp3 (unlabel tmp4))
+  tmp4: compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  xs: List. <nil Unit | cons {Int,List}>
+Components for compress:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  ncons [(List. <nil Unit | cons {Int,List}> * NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)] -> NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  single [List. <nil Unit | cons {Int,List}>] -> NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  head [NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>] -> List. <nil Unit | cons {Int,List}> 2
+
+Components for align:
+  map [[List. <nil Unit | cons {Int,List}>]->Int,NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>] -> List. <nil Unit | cons {Int,List}> 3
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  sum [List. <nil Unit | cons {Int,List}>] -> Int 4
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  ncons [(List. <nil Unit | cons {Int,List}> * NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)] -> NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  product [List. <nil Unit | cons {Int,List}>] -> Int 5
+  single [List. <nil Unit | cons {Int,List}>] -> NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  head [NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>] -> List. <nil Unit | cons {Int,List}> 2
+
+Components for comb:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  ncons [(List. <nil Unit | cons {Int,List}> * NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)] -> NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  single [List. <nil Unit | cons {Int,List}>] -> NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  head [NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>] -> List. <nil Unit | cons {Int,List}> 2
+
+align term #0: compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+align@0 create@0 tmp1
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp1: NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+align term #1: compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+align@1 create@0 ncons ({xs,unlabel tmp2})
+  h: Int
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp2: compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  t: List. <nil Unit | cons {Int,List}>
+align term #2: Int
+align@2 sum (tmp3 (unlabel tmp4))
+  tmp4: compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  xs: List. <nil Unit | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+  Compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>([Param0,Param1,Param2,Param3]@Compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)
+node: [Param0,Param1,Param2,Param3]@Compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  Param2
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>([Param0,Param1]@Compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+node: [Param0,Param1]@Compress[0] NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [List. <nil Unit | cons {Int,List}>@0]@List. <nil Unit | cons {Int,List}>
+  List. <nil Unit | cons {Int,List}>@0
+  map([List. <nil Unit | cons {Int,List}>@0]@[List. <nil Unit | cons {Int,List}>]->Int [List. <nil Unit | cons {Int,List}>@0]@NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)
+  head([List. <nil Unit | cons {Int,List}>@0]@NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)
+node: [Int@0,List. <nil Unit | cons {Int,List}>@0]@List. <nil Unit | cons {Int,List}>
+  List. <nil Unit | cons {Int,List}>@0
+  map([Int@0,List. <nil Unit | cons {Int,List}>@0]@[List. <nil Unit | cons {Int,List}>]->Int [Int@0,List. <nil Unit | cons {Int,List}>@0]@NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)
+  head([Int@0,List. <nil Unit | cons {Int,List}>@0]@NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)
+node: [Int@0,List. <nil Unit | cons {Int,List}>@0]@Int
+  Int@0
+  +([Int@0,List. <nil Unit | cons {Int,List}>@0]@Int [Int@0,List. <nil Unit | cons {Int,List}>@0]@Int)
+  -([Int@0,List. <nil Unit | cons {Int,List}>@0]@Int [Int@0,List. <nil Unit | cons {Int,List}>@0]@Int)
+  fold[List. <nil Unit | cons {Int,List}>->Int]([Int@0]@Int [Int@0,Int@1,Int@2]@Int [Int@0,List. <nil Unit | cons {Int,List}>@0]@List. <nil Unit | cons {Int,List}>)
+  sum([Int@0,List. <nil Unit | cons {Int,List}>@0]@List. <nil Unit | cons {Int,List}>)
+  product([Int@0,List. <nil Unit | cons {Int,List}>@0]@List. <nil Unit | cons {Int,List}>)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  fold[NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>->Int]([List. <nil Unit | cons {Int,List}>@0]@Int [Int@0,List. <nil Unit | cons {Int,List}>@0]@Int [Param0]@NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)
+  sum([Param0]@List. <nil Unit | cons {Int,List}>)
+  product([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [List. <nil Unit | cons {Int,List}>@0]@Int
+  +([List. <nil Unit | cons {Int,List}>@0]@Int [List. <nil Unit | cons {Int,List}>@0]@Int)
+  -([List. <nil Unit | cons {Int,List}>@0]@Int [List. <nil Unit | cons {Int,List}>@0]@Int)
+  sum([List. <nil Unit | cons {Int,List}>@0]@List. <nil Unit | cons {Int,List}>)
+  product([List. <nil Unit | cons {Int,List}>@0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  map([Param0]@[List. <nil Unit | cons {Int,List}>]->Int [Param0]@NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)
+  head([Param0]@NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>)
+node: [Param0]@[List. <nil Unit | cons {Int,List}>]->Int
+  sum
+  product
+node: [List. <nil Unit | cons {Int,List}>@0]@[List. <nil Unit | cons {Int,List}>]->Int
+  sum
+  product
+node: [Int@0,List. <nil Unit | cons {Int,List}>@0]@[List. <nil Unit | cons {Int,List}>]->Int
+  sum
+  product
+node: [List. <nil Unit | cons {Int,List}>@0]@NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  single([List. <nil Unit | cons {Int,List}>@0]@List. <nil Unit | cons {Int,List}>)
+node: [Int@0,List. <nil Unit | cons {Int,List}>@0]@NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  single([Int@0,List. <nil Unit | cons {Int,List}>@0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@NList. <single List. <nil Unit | cons {Int,List}> | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  Param0
+  single([Param0]@List. <nil Unit | cons {Int,List}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] sum(map(product(),Param0))
+  [1] product(head(Param0))
+  [0] sum(map(product(),Param0))
+  [1] product(head(Param0))
+  [0] Param0
+  [1] Param2 -> sum(map(product(),Param0))
+  [2] Param2 -> product(head(Param0))
+  [] null
+  [0] Param0 -> sum(map(product(),Param0))
+  [1] Param0 -> product(head(Param0))
+compress #0: {Int,Int}
+pass #0: 
+{1, 1}
+pass #1: 
+{+ (* h tmp2.2) tmp2.1, * h tmp2.2}
+pass #2: 
+tmp4.1
+
+Inductive List;
+
+Inductive NList;
+
+head = \xs: NList. 
+    match xs with
+      single w -> w
+    | ncons {h, t} -> h
+    end
+;
+
+map = \f: List -> Int. 
+    fix (
+    \g: NList -> List. \xs: NList. 
+    match xs with
+      single w -> cons {f w, nil Unit}
+    | ncons {h, t} -> cons {f h, g t}
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+product = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 1
+    | cons {h, t} -> * h (f t)
+    end
+);
+
+tails = fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {1, 1}
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            {+ (* h tmp2.2) tmp2.1, * h tmp2.2}
+    end
+);
+
+main = \xs: List. 
+    let tmp4 = (tails xs) in 
+        tmp4.1;
+syn-comb: 0.844916
+collect: 18.7866
+label: 0.011034
+extend-component: 0.000572
+execute: 1.72591
+syn-align: 20.6295
+comb-size: 23
+align-size: 13
+extract-size: 4
+21.497
+Success

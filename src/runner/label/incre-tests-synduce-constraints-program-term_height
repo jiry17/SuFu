@@ -1,0 +1,112 @@
+
+Inductive ArithOp;
+
+Inductive BoolOp;
+
+Inductive Term;
+
+Inductive Op;
+
+Inductive Term2;
+
+mk_bin = \t1: Term. \t2: Term. \op: Op. 
+    match op with
+      opPlus _ -> tArithBin {aPlus unit, t1, t2}
+    | opMinus _ -> tArithBin {aMinus unit, t1, t2}
+    | opNot _ -> tBoolBin {bNot unit, t1, t2}
+    | opAnd _ -> tBoolBin {bAnd unit, t1, t2}
+    | opOr _ -> tBoolBin {bOr unit, t1, t2}
+    | opGt _ -> tArithBin {aGt unit, t1, t2}
+    | opEq _ -> tBoolBin {bEq unit, t1, t2}
+    end
+;
+
+mk_un = \t: Term. \op: Op. 
+    match op with
+      opPlus _ -> tArithUn {aPlus unit, t}
+    | opMinus _ -> tArithUn {aMinus unit, t}
+    | opNot _ -> tBoolUn {bNot unit, t}
+    | opAnd _ -> tBoolUn {bAnd unit, t}
+    | opOr _ -> tBoolUn {bOr unit, t}
+    | opGt _ -> tArithUn {aGt unit, t}
+    | opEq _ -> tBoolUn {bEq unit, t}
+    end
+;
+
+repr = fix (
+    \f: Term2 -> Term. \t: Term2. 
+    match t with
+      bin {op, t1, t2} -> mk_bin (f t1) (f t2) op
+    | un {o, x} -> mk_un (f x) o
+    | var i -> tVar i
+    | cInt i -> tCInt i
+    | cBool b -> tCBool b
+    end
+);
+
+is_binary = \op: Op. 
+    match op with
+      opNot _ -> false
+    | _ -> true
+    end
+;
+
+is_unary = \op: Op. 
+    match op with
+      opNot _ -> true
+    | _ -> false
+    end
+;
+
+well_formed = fix (
+    \f: Term2 -> Bool. \t: Term2. 
+    match t with
+      bin {op, a, b} -> and (is_binary op) (and (f a) (f b))
+    | un {op, a} -> and (is_unary op) (f a)
+    | _ -> true
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: Term -> Int. \t: Term. 
+    match t with
+      tArithBin {op, t1, t2} -> + 1 (max (f t1) (f t2))
+    | tBoolBin {op, t1, t2} -> + 1 (max (f t1) (f t2))
+    | tArithUn {op, t} -> + 1 (f t)
+    | tBoolUn {op, t} -> + 1 (f t)
+    | tVar _ -> 1
+    | tCInt _ -> 1
+    | tCBool _ -> 1
+    end
+);
+
+target = fix (
+    \f: Term2 -> Compress Term2. \t: Term2. 
+    match t with
+      bin {op, t1, t2} -> 
+        let tmp1 = (f t1) in 
+            let tmp2 = (f t2) in 
+                align (label (bin {op, unlabel tmp1 , unlabel tmp2 }) ) 
+    | un {op, t} -> 
+        let tmp3 = (f t) in 
+            align (label (un {op, unlabel tmp3 }) ) 
+    | var i -> 
+        let tmp4 = (var i) in 
+            align (label tmp4 ) 
+    | cInt i -> 
+        let tmp5 = (cInt i) in 
+            align (label tmp5 ) 
+    | cBool i -> 
+        let tmp6 = (cBool i) in 
+            align (label tmp6 ) 
+    end
+);
+
+main = \xs: Term2. 
+    if (well_formed xs) then let tmp7 = (target xs) in 
+        align (spec (repr (unlabel tmp7 ))) 
+    else 0;

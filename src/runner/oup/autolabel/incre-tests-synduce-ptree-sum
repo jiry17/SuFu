@@ -1,0 +1,322 @@
+
+Tree :: Tree. <leaf Unit | node {Int,Tree,Tree}>
+ leaf : Unit -> Tree'. <leaf Unit | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <leaf Unit | node {Int,Tree',Tree'}>
+ PTree :: PTree. <pleaf Unit | pnode {Int,
+                                     PList. <pnil Unit | pcons {
+                                     PTree,PList}>}>
+pleaf : Unit ->
+        PTree'. <pleaf Unit | pnode {Int,
+                                     PList. <pnil Unit | pcons {
+                                     PTree',PList}>}>
+pnode : {Int,PList. <pnil Unit | pcons {PTree,PList}>} ->
+        PTree'. <pleaf Unit | pnode {Int,
+                                     PList. <pnil Unit | pcons {
+                                     PTree',PList}>}>
+PList :: PList. <pnil Unit | pcons {PTree,PList}>
+pnil : Unit -> PList'. <pnil Unit | pcons {PTree,PList'}>
+pcons : {PTree,PList} ->
+        PList'. <pnil Unit | pcons {PTree,PList'}>
+repr : PTree -> Tree'. <leaf Unit | node {Int,Tree',Tree'}>
+spec : Tree -> Int
+main : PTree -> Int
+
+
+Inductive Tree;
+
+Inductive PTree;
+
+Inductive PList;
+
+repr = fix (
+    \f: PTree -> Compress Tree. \pt: PTree. 
+    match pt with
+      pleaf _ -> 
+        let tmp1 = (leaf Unit) in 
+            align (label tmp1 ) 
+    | pnode {a, xs} -> 
+        let l2t = (fix (
+        \g: PList -> Compress Tree. \xs: PList. 
+        match xs with
+          pnil _ -> 
+            let tmp2 = (leaf Unit) in 
+                align (label tmp2 ) 
+        | pcons {h, t} -> 
+            let tmp3 = 0 in 
+                let tmp4 = (f h) in 
+                    let tmp5 = (g t) in 
+                        align (label (node {tmp3, unlabel tmp4 , unlabel tmp5 }) ) 
+        end
+    )) in 
+            let tmp6 = (leaf Unit) in 
+                let tmp7 = (l2t xs) in 
+                    align (label (node {a, tmp6, unlabel tmp7 }) ) 
+    end
+);
+
+spec = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf _ -> 0
+    | node {a, l, r} -> + a (+ (f l) (f r))
+    end
+);
+
+main = \x: PTree. 
+    let tmp8 = (repr x) in 
+        align (spec (unlabel tmp8 )) ;
+align term #0: compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@0 create@1 tmp1
+  pt: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+  tmp1: Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@1 create@0 tmp2
+  a: Int
+  pt: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+  tmp2: Tree. <leaf Unit | node {Int,Tree,Tree}>
+  xs: PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>
+align term #2: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@2 create@0 node ({tmp3,unlabel tmp4,unlabel tmp5})
+  a: Int
+  tmp3: Int
+  tmp5: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  t: PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>
+  xs: PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>
+  tmp4: compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  h: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+  pt: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+align term #3: compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@3 create@1 node ({a,tmp6,unlabel tmp7})
+  a: Int
+  pt: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+  tmp6: Tree. <leaf Unit | node {Int,Tree,Tree}>
+  xs: PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>
+  tmp7: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #4: Int
+align@4 spec (unlabel tmp8)
+  x: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+  tmp8: compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>
+Components for compress:
+  pcons [(PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}> * PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>)] -> PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}> 2
+  node [(Int * Tree. <leaf Unit | node {Int,Tree,Tree}> * Tree. <leaf Unit | node {Int,Tree,Tree}>)] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+  leaf [Bot] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+  pleaf [Bot] -> PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}> 1
+  pnil [Bot] -> PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}> 2
+  pnode [(Int * PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>)] -> PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}> 1
+
+Components for align:
+  pcons [(PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}> * PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>)] -> PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}> 2
+  spec [Tree. <leaf Unit | node {Int,Tree,Tree}>] -> Int 4
+  node [(Int * Tree. <leaf Unit | node {Int,Tree,Tree}> * Tree. <leaf Unit | node {Int,Tree,Tree}>)] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+  leaf [Bot] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+  pleaf [Bot] -> PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}> 1
+  pnil [Bot] -> PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}> 2
+  pnode [(Int * PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>)] -> PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}> 1
+
+Components for comb:
+  pcons [(PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}> * PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>)] -> PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}> 2
+  node [(Int * Tree. <leaf Unit | node {Int,Tree,Tree}> * Tree. <leaf Unit | node {Int,Tree,Tree}>)] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+  leaf [Bot] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+  pleaf [Bot] -> PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}> 1
+  pnil [Bot] -> PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}> 2
+  pnode [(Int * PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>)] -> PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}> 1
+
+align term #0: compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@0 create@1 tmp1
+  pt: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+  tmp1: Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@1 create@0 tmp2
+  a: Int
+  pt: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+  tmp2: Tree. <leaf Unit | node {Int,Tree,Tree}>
+  xs: PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>
+align term #2: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@2 create@0 node ({tmp3,unlabel tmp4,unlabel tmp5})
+  a: Int
+  tmp3: Int
+  tmp5: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  t: PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>
+  xs: PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>
+  tmp4: compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  h: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+  pt: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+align term #3: compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@3 create@1 node ({a,tmp6,unlabel tmp7})
+  a: Int
+  pt: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+  tmp6: Tree. <leaf Unit | node {Int,Tree,Tree}>
+  xs: PList. <pnil Unit | pcons {PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>,PList}>
+  tmp7: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #4: Int
+align@4 spec (unlabel tmp8)
+  x: PTree. <pleaf Unit | pnode {Int,PList. <pnil Unit | pcons {PTree,PList}>}>
+  tmp8: compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>)
+  Compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param2
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param5
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int
+  Param0
+  Param1
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  0
+  1
+num = 3
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+  Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 4
+start: start
+node: start
+  Compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>([Param0,Param1]@Compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[1] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  spec([Param0]@Tree. <leaf Unit | node {Int,Tree,Tree}>)
+node: [Param0]@Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param0
+num = 1
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  spec([Param0]@Tree. <leaf Unit | node {Int,Tree,Tree}>)
+node: [Param0]@Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [] spec(Param0)
+  [] spec(Param0)
+  [0] Param2 -> spec(Param0)
+  [1] Param5 -> spec(Param0)
+  [] spec(Param0)
+  [0] Param0
+  [1] Param4 -> spec(Param0)
+  [] null
+  [0] Param1 -> spec(Param0)
+compress #0: Int
+compress #1: Int
+pass #0: 
+0
+pass #1: 
+0
+pass #2: 
++ tmp5 tmp4
+pass #3: 
++ a tmp7
+pass #4: 
+tmp8
+
+Inductive Tree;
+
+Inductive PTree;
+
+Inductive PList;
+
+repr = fix (
+    \f: PTree -> Int. \pt: PTree. 
+    match pt with
+      pleaf _ -> 0
+    | pnode {a, xs} -> 
+        let l2t = (fix (
+        \g: PList -> Int. \xs: PList. 
+        match xs with
+          pnil _ -> 0
+        | pcons {h, t} -> 
+            let tmp4 = (f h) in 
+                let tmp5 = (g t) in 
+                    + tmp5 tmp4
+        end
+    )) in 
+            let tmp7 = (l2t xs) in 
+                + a tmp7
+    end
+);
+
+spec = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf _ -> 0
+    | node {a, l, r} -> + a (+ (f l) (f r))
+    end
+);
+
+main = \x: PTree. 
+    let tmp8 = (repr x) in 
+        tmp8;
+syn-comb: 0.764948
+collect: 3.5613
+label: 0.011245
+extend-component: 0.000496
+execute: 0.710152
+syn-align: 4.36267
+comb-size: 13
+align-size: 6
+extract-size: 7
+5.15043
+Success

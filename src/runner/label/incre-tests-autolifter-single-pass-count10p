@@ -1,0 +1,34 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            align (v (unlabel tmp2 )) ;
+
+inf = 100;
+
+count10p = fix (
+    \f: Bool -> Bool -> List -> Int. \s0: Bool. \s1: Bool. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let upd = (if (and s1 (== h 1)) then 1
+        else 0) in 
+            let s1 = (and (== h 0) (or s0 s1)) in 
+                let s0 = (== h 1) in 
+                    + upd (f s0 s1 t)
+    end
+) false false;
+
+main = single_pass count10p;

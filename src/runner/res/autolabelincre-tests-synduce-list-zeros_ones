@@ -1,0 +1,40 @@
+
+Inductive List;
+
+Inductive CList;
+
+cat_list = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      elt a -> cons {a, ys}
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> {Bool, Bool, Bool}. \xs: CList. 
+    match xs with
+      single a -> {true, true, a}
+    | concat {a, b} -> 
+        let tmp2 = (f a) in 
+            let tmp3 = (f b) in 
+                {or (and (and tmp3.1 tmp2.2) (not tmp2.3)) (and tmp3.3 tmp2.1), or (and (and (and tmp3.2 tmp2.2) (not tmp3.3)) (not tmp2.3)) (and tmp3.3 tmp2.3), and tmp3.3 tmp2.3}
+    end
+);
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Bool, Bool, Bool}. \xs: List. 
+    match xs with
+      elt a -> {a, true, a}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let new_an = (and result.1 hd) in 
+                let new_bn = (and result.2 (or result.1 (not hd))) in 
+                    {new_an, new_bn, result.3}
+    end
+) xs).2;
+
+main = \xs: CList. 
+    let tmp4 = (repr xs) in 
+        tmp4.1;

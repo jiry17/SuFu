@@ -1,0 +1,38 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/constraints/ensures/mpss_noe.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (s1, s0) := ∀ x : [33mcnlist[0m. ([34mnspec[0m o [34mclist_to_list[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  nspec⟨⟩(): nested_list -> int  =  
+[44m INFO :[0m  target⟨s1, s0⟩(): cnlist -> int  =  
+[44m INFO :[0m [44m INFO :[0m  clist_to_list⟨⟩(): cnlist -> nested_list  =  
+
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0096s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m ... finished in 0.0117s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m All counterexamples are non-spurious: nothing to refine.
+[44m INFO :[0m ... finished in 0.0092s
+[44m INFO :[0m Refinement step 3.
+[44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m <SEGIS> This problem has no solution. Counterexample set: [32mSglt[0m([32mElt[0m([34ma7[0m)) [32mCat[0m([32mSglt[0m([32mElt[0m([34ma9[0m)),
+          [32mSglt[0m([32mElt[0m([34ma11[0m)))
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [   9 instances] 0.068s 
+        CVC-SyGuS  [  12 instances] 0.088s 
+        > TOTAL    [  21 instances]: 0.155s 
+[44m INFO :[0m No solution: problem is unrealizable (found answer in 0.0533s).
+[44m INFO :[0m  target⟨s1, s0⟩(): cnlist -> int  = 
+        {‣ target  [3mSglt[0m(x)  ⟹  [34ms0[0m ([34mtsum[0m [34mx[0m) ‣ target  [3mCat[0m(l, r)  ⟹  [34ms1[0m ([34mtarget[0m [34mr[0m) ([34mtarget[0m [34ml[0m)
+           tsum  [3mElt[0m(x)  ⟹  [34mx[0m   tsum  [3mCons[0m(hd, tl)  ⟹  [34mhd[0m + ([34mtsum[0m [34mtl[0m) }
+[44m INFO :[0m 💡 Explanation: 

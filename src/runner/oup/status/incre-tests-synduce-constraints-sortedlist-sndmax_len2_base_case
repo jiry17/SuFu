@@ -1,0 +1,21 @@
+
+List :: List. <nil Unit | cons {Int,Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,Int,List'}>
+cons : {Int,Int,List} -> List'. <nil Unit | cons {Int,Int,List'}>
+SList :: SList. <snil Unit | scons {Int,SList}>
+snil : Unit -> SList'. <snil Unit | scons {Int,SList'}>
+scons : {Int,SList} -> SList'. <snil Unit | scons {Int,SList'}>
+repr : List -> SList'. <snil Unit | scons {Int,SList'}>
+next_is_lt : Int -> List -> Bool
+is_sorted : List -> Bool
+min : Int -> Int -> Int
+max : Int -> Int -> Int
+spec : SList -> Int
+target : List -> List
+main : List -> Int
+
+size: 182
+compress-num: 1
+label-num: 6
+rewrite-size: 10
+0.017411

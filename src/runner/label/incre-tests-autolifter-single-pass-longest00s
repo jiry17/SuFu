@@ -1,0 +1,40 @@
+
+Inductive List;
+
+is_even = \a: Int. 
+    == a (* 2 (/ a 2));
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            align (v (unlabel tmp2 )) ;
+
+inf = 100;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+longest00s = fix (
+    \f: Int -> List -> Int. \len: Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let len = (if (== h 0) then + len 1
+        else 0) in 
+            if (is_even len) then max len (f len t)
+            else f len t
+    end
+) 0;
+
+main = single_pass longest00s;

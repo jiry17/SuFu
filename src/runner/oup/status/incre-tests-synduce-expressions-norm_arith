@@ -1,0 +1,27 @@
+
+ArithExpr :: ArithExpr. <int Int | plus {ArithExpr,ArithExpr} | minus {
+ ArithExpr,ArithExpr}>
+ int : Int ->
+       ArithExpr'. <int Int | plus {ArithExpr',ArithExpr'} | minus {
+       ArithExpr',ArithExpr'}>
+ plus : {ArithExpr,ArithExpr} ->
+        ArithExpr'. <int Int | plus {ArithExpr',ArithExpr'} | minus {
+        ArithExpr',ArithExpr'}>
+ minus : {ArithExpr,ArithExpr} ->
+         ArithExpr'. <int Int | plus {ArithExpr',ArithExpr'} | minus {
+         ArithExpr',ArithExpr'}>
+ NormExpr :: NormExpr. <nint Int | nplus {NormExpr,NormExpr}>
+nint : Int -> NormExpr'. <nint Int | nplus {NormExpr',NormExpr'}>
+nplus : {NormExpr,NormExpr} ->
+        NormExpr'. <nint Int | nplus {NormExpr',NormExpr'}>
+repr : NormExpr ->
+       ArithExpr'. <int Int | plus {ArithExpr',ArithExpr'} | minus {
+       ArithExpr',ArithExpr'}>
+spec : ArithExpr -> Int
+main : NormExpr -> Int
+
+size: 70
+compress-num: 1
+label-num: 8
+rewrite-size: 14
+0.010317

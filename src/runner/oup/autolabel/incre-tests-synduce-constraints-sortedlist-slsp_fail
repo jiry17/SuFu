@@ -1,0 +1,207 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ CList :: CList. <single Int | concat {Int,CList,CList}>
+single : Int -> CList'. <single Int | concat {Int,CList',CList'}>
+concat : {Int,CList,CList} ->
+         CList'. <single Int | concat {Int,CList',CList'}>
+cat : List -> List -> List'. <elt Int | cons {Int,List'}>
+repr : CList -> List'. <elt Int | cons {Int,List'}>
+max : Int -> Int -> Int
+min : Int -> Int -> Int
+lmax : CList -> Int
+lmin : CList -> Int
+is_parti : CList -> Bool
+spec : List -> {Int, Bool}
+target : CList -> CList
+main : CList -> {Int, Bool}
+
+
+Inductive List;
+
+Inductive CList;
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      elt w -> cons {w, b}
+    | cons {h, t} -> cons {h, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> List. \c: CList. 
+    match c with
+      single w -> elt w
+    | concat {w, l, r} -> cat (f l) (f r)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+lmax = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single w -> w
+    | concat {w, l, r} -> max (f l) (f r)
+    end
+);
+
+lmin = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single w -> w
+    | concat {w, l, r} -> min (f l) (f r)
+    end
+);
+
+is_parti = fix (
+    \f: CList -> Bool. \c: CList. 
+    match c with
+      single w -> true
+    | concat {w, l, r} -> and (and (< (lmax l) w) (< w (lmin r))) (and (f l) (f r))
+    end
+);
+
+spec = fix (
+    \f: List -> {Int, Bool}. \xs: List. 
+    match xs with
+      elt w -> {max 0 w, >= w 0}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            let cond = (and (>= h 0) res.2) in 
+                {if (cond) then + res.1 h
+                else res.1, cond}
+    end
+);
+
+target = fix (
+    \f: CList -> Compress CList. \xs: CList. 
+    match xs with
+      single a -> 
+        align (label xs ) 
+    | concat {w, l, r} -> if (<= w 0) then let tmp1 = (f r) in 
+            align (label (concat {w, l, unlabel tmp1 }) ) 
+        else let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (concat {w, unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+main = \xs: CList. 
+    let inp = xs in 
+        if (is_parti inp) then let tmp4 = (target inp) in 
+            align (spec (repr (unlabel tmp4 ))) 
+        else {0, false};
+align term #0: compress[0] CList
+align@0 create@0 xs
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  a: Int
+align term #1: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align@1 create@0 concat ({w,l,unlabel tmp1})
+  r: CList. <single Int | concat {Int,CList,CList}>
+  w: Int
+  l: CList. <single Int | concat {Int,CList,CList}>
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  tmp1: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align term #2: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align@2 create@0 concat ({w,unlabel tmp2,unlabel tmp3})
+  l: CList. <single Int | concat {Int,CList,CList}>
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  w: Int
+  tmp3: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  tmp2: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  r: CList. <single Int | concat {Int,CList,CList}>
+align term #3: {Int,Bool}
+align@3 spec (repr (unlabel tmp4))
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  inp: CList. <single Int | concat {Int,CList,CList}>
+  tmp4: compress[0] CList. <single Int | concat {Int,CList,CList}>
+Components for compress:
+  concat [(Int*CList. <single Int | concat {Int,CList,CList}>*CList. <single Int | concat {Int,CList,CList}>)] -> CList. <single Int | concat {Int,CList,CList}> 1
+  single [Int] -> CList. <single Int | concat {Int,CList,CList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int*List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  min [Int,Int] -> Int 5
+  max [Int,Int] -> Int 4
+
+Components for align:
+  spec [List. <elt Int | cons {Int,List}>] -> (Int*Bool) 9
+  cat [List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>] -> List. <elt Int | cons {Int,List}> 2
+  lmin [CList. <single Int | concat {Int,CList,CList}>] -> Int 7
+  concat [(Int*CList. <single Int | concat {Int,CList,CList}>*CList. <single Int | concat {Int,CList,CList}>)] -> CList. <single Int | concat {Int,CList,CList}> 1
+  single [Int] -> CList. <single Int | concat {Int,CList,CList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int*List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  repr [CList. <single Int | concat {Int,CList,CList}>] -> List. <elt Int | cons {Int,List}> 3
+  min [Int,Int] -> Int 5
+  max [Int,Int] -> Int 4
+  lmax [CList. <single Int | concat {Int,CList,CList}>] -> Int 6
+  is_parti [CList. <single Int | concat {Int,CList,CList}>] -> Bool 8
+
+Components for comb:
+  concat [(Int*CList. <single Int | concat {Int,CList,CList}>*CList. <single Int | concat {Int,CList,CList}>)] -> CList. <single Int | concat {Int,CList,CList}> 1
+  single [Int] -> CList. <single Int | concat {Int,CList,CList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int*List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  min [Int,Int] -> Int 5
+  max [Int,Int] -> Int 4
+
+align term #0: compress[0] CList
+align@0 create@0 xs
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  a: Int
+  (0) {xs: single 3,a: 3} @ {} -> compress single 3
+  (0) {xs: single -4,a: -4} @ {} -> compress single -4
+  (0) {xs: single -2,a: -2} @ {} -> compress single -2
+align term #1: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align@1 create@0 concat ({w,l,unlabel tmp1})
+  r: CList. <single Int | concat {Int,CList,CList}>
+  w: Int
+  l: CList. <single Int | concat {Int,CList,CList}>
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  tmp1: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align term #2: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align@2 create@0 concat ({w,unlabel tmp2,unlabel tmp3})
+  l: CList. <single Int | concat {Int,CList,CList}>
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  w: Int
+  tmp3: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  tmp2: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  r: CList. <single Int | concat {Int,CList,CList}>
+align term #3: {Int,Bool}
+align@3 spec (repr (unlabel tmp4))
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  inp: CList. <single Int | concat {Int,CList,CList}>
+  tmp4: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  (3) {inp: single 3,tmp4: compress single 3,xs: single 3} @ {} -> (3,true)
+  (3) {inp: single -4,tmp4: compress single -4,xs: single -4} @ {} -> (0,false)
+  (3) {inp: single -2,tmp4: compress single -2,xs: single -2} @ {} -> (0,false)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

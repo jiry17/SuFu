@@ -1,0 +1,83 @@
+
+Inductive List;
+
+Inductive CList;
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      elt w -> cons {w, b}
+    | cons {h, t} -> cons {h, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> List. \c: CList. 
+    match c with
+      single w -> elt w
+    | concat {w, l, r} -> cat (f l) (f r)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+lmax = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single w -> w
+    | concat {w, l, r} -> max (f l) (f r)
+    end
+);
+
+lmin = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single w -> w
+    | concat {w, l, r} -> min (f l) (f r)
+    end
+);
+
+is_parti = fix (
+    \f: CList -> Bool. \c: CList. 
+    match c with
+      single w -> true
+    | concat {w, l, r} -> and (and (< (lmax l) w) (< w (lmin r))) (and (f l) (f r))
+    end
+);
+
+spec = fix (
+    \f: List -> {Int, Bool}. \xs: List. 
+    match xs with
+      elt w -> {max 0 w, >= w 0}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            let cond = (and (>= h 0) res.2) in 
+                {if (cond) then + res.1 h
+                else res.1, cond}
+    end
+);
+
+target = fix (
+    \f: CList -> Compress CList. \xs: CList. 
+    match xs with
+      single a -> 
+        align (label xs ) 
+    | concat {w, l, r} -> if (<= w 0) then let tmp1 = (f r) in 
+            align (label (concat {w, l, unlabel tmp1 }) ) 
+        else let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (concat {w, unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+main = \xs: CList. 
+    let inp = xs in 
+        if (is_parti inp) then let tmp4 = (target inp) in 
+            align (spec (repr (unlabel tmp4 ))) 
+        else {0, false};

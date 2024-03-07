@@ -5,6 +5,6 @@
 tests*
 cmake-build-*
 runner/cache/* 
-basic/config.cpp
-build*
+src/basic/config.cpp
+src/build*
 .clion.source.upload.marker

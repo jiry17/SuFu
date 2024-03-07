@@ -1,0 +1,17 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ PList :: PList. <pnil Unit | pcons {List,PList}>
+pnil : Unit -> PList'. <pnil Unit | pcons {List,PList'}>
+pcons : {List,PList} -> PList'. <pnil Unit | pcons {List,PList'}>
+ref : (List->Int) -> PList -> PList
+sum : List -> Int
+xs : PList'. <pnil Unit | pcons {List,PList'}>
+pcons {cons {2,nil unit},
+       pcons {cons {-1,cons {1,nil unit}},pnil unit}}
+  : PList
+/home/jiry/2023S/ISTool/incre-tests/nonscalar/parallel_prefix_sum.f:35.1:
+arrow type expected
+
+

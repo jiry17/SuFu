@@ -1,0 +1,82 @@
+
+Inductive List;
+
+Plan = Int;
+
+Inductive PlanList;
+
+take_back = fix (
+    \f: List -> {Int, List}. \xs: List. 
+    match xs with
+      nil _ -> {-1, nil Unit}
+    | cons {h, nil _} -> {h, nil Unit}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            {res.1, cons {h, res.2}}
+    end
+);
+
+snoc = \w: Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> cons {w, nil Unit}
+    | cons {h, t} -> cons {h, f t}
+    end
+);
+
+rev = fix (
+    \f: List -> List -> List. \pre: List. \xs: List. 
+    match xs with
+      nil _ -> pre
+    | cons {h, t} -> f (cons {h, pre}) t
+    end
+) (nil Unit);
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+extend = \op: Plan -> Plan. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> xs
+    | pcons {h, t} -> pcons {op h, f t}
+    end
+);
+
+generate = fix (
+    \f: List -> PlanList. \xs: List. 
+    match xs with
+      nil _ -> pcons {1, pnil Unit}
+    | cons {h, nil _} -> pcons {+ 1 1, pcons {1, pnil Unit}}
+    | cons {h, t} -> 
+        let last = (take_back t) in 
+            let res = (merge (f t) (f (cons {h, last.2}))) in 
+                if (== h last.1) then merge (extend (\xs: Plan. 
+                + xs (+ 1 1)) (f last.2)) res
+                else res
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+one = 1;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {h, t} -> max (- h 1) (f t)
+    end
+);
+
+main = \xs: List. 
+    get_best (generate xs);

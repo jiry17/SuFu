@@ -1,0 +1,41 @@
+
+Inductive BTree;
+
+Inductive Zipper;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: ({Int, Int}) -> BTree -> {Int, Int}. \s: {Int, Int}. \t: BTree. 
+    match t with
+      empty _ -> s
+    | node {a, l, r} -> 
+        let result = (f s l) in 
+            f {+ result.1 a, max result.2 (+ result.1 a)} r
+    end
+) {0, 0};
+
+repr = fix (
+    \f: Zipper -> {Int, Int}. \z: Zipper. 
+    match z with
+      top _ -> {0, 0}
+    | left {w, tree, zz} -> 
+        let info = (spec tree) in 
+            let tmp2 = (f zz) in 
+                let c1 = info.2 in 
+                    let c2 = (+ w info.1) in 
+                        {+ tmp2.1 c2, + c2 (max tmp2.2 (- c1 c2))}
+    | right {w, tree, zz} -> 
+        let info = (spec tree) in 
+            let tmp3 = (f zz) in 
+                let c0 = info.1 in 
+                    let c1 = (+ w info.2) in 
+                        {+ tmp3.1 (+ w c0), + c1 (max tmp3.1 (- tmp3.2 c1))}
+    end
+);
+
+main = \z: Zipper. 
+    let tmp4 = (repr z) in 
+        {tmp4.1, tmp4.2};

@@ -1,0 +1,228 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ Zipper :: Zipper. <zip {List,List}>
+zip : {List,List} -> Zipper'. <zip {List,List}>
+concat : List -> List -> List
+rev : List -> List'. <nil Unit | cons {Int,List'}>
+sum : List -> Int
+repr : Zipper -> List
+target : Zipper -> Zipper'. <zip {List,List}>
+main : Zipper -> Int
+
+
+Inductive List;
+
+Inductive Zipper;
+
+concat = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      nil _ -> ys
+    | cons {h, t} -> cons {h, f t ys}
+    end
+);
+
+rev = fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> nil Unit
+    | cons {h, t} -> concat (f t) (cons {h, nil Unit})
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+repr = \z: Zipper. 
+    match z with
+      zip {l, r} -> concat (rev l) r
+    end
+;
+
+target = fix (
+    \f: Zipper -> Compress Zipper. \z: Zipper. 
+    match z with
+      zip {l, r} -> 
+        let a = (sum l) in 
+            let b = (sum r) in 
+                let tmp1 = (zip {l, r}) in 
+                    align (label tmp1 ) 
+    end
+);
+
+main = \z: Zipper. 
+    let tmp2 = (target z) in 
+        align (sum (repr (unlabel tmp2 ))) ;
+align term #0: compress[0] Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+align@0 create@0 tmp1
+  tmp1: Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+  b: Int
+  r: List. <nil Unit | cons {Int,List}>
+  l: List. <nil Unit | cons {Int,List}>
+  a: Int
+  z: Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+align term #1: Int
+align@1 sum (repr (unlabel tmp2))
+  z: Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+  tmp2: compress[0] Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+Components for compress:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  zip [(List. <nil Unit | cons {Int,List}> * List. <nil Unit | cons {Int,List}>)] -> Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}> 1
+
+Components for align:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  repr [Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>] -> List. <nil Unit | cons {Int,List}> 5
+  sum [List. <nil Unit | cons {Int,List}>] -> Int 4
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  zip [(List. <nil Unit | cons {Int,List}> * List. <nil Unit | cons {Int,List}>)] -> Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}> 1
+  concat [List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>] -> List. <nil Unit | cons {Int,List}> 2
+  rev [List. <nil Unit | cons {Int,List}>] -> List. <nil Unit | cons {Int,List}> 3
+
+Components for comb:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  zip [(List. <nil Unit | cons {Int,List}> * List. <nil Unit | cons {Int,List}>)] -> Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}> 1
+
+align term #0: compress[0] Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+align@0 create@0 tmp1
+  tmp1: Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+  b: Int
+  r: List. <nil Unit | cons {Int,List}>
+  l: List. <nil Unit | cons {Int,List}>
+  a: Int
+  z: Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+align term #1: Int
+align@1 sum (repr (unlabel tmp2))
+  z: Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+  tmp2: compress[0] Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param1
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Compress[0] Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>([Param0,Param1]@Compress[0] Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@List. <nil Unit | cons {Int,List}>
+  List. <nil Unit | cons {Int,List}>@0
+  List. <nil Unit | cons {Int,List}>@1
+  concat([List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@List. <nil Unit | cons {Int,List}> [List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@List. <nil Unit | cons {Int,List}>)
+  rev([List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  fold[Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>->Int]([List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@Int [Param0]@Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>)
+  sum([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@Int
+  +([List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@Int [List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@Int)
+  -([List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@Int [List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@Int)
+  sum([List. <nil Unit | cons {Int,List}>@0,List. <nil Unit | cons {Int,List}>@1]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  repr([Param0]@Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>)
+  concat([Param0]@List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}>)
+  rev([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@Zipper. <zip {List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>}>
+  Param0
+
+
+
+
+
+
+  [] sum(repr(Param0))
+  [0] +(Param1,Param4)
+  [] null
+  [0] Param1 -> sum(repr(Param0))
+compress #0: Int
+pass #0: 
+let c0 = (+ b a) in 
+    c0
+pass #1: 
+tmp2
+
+Inductive List;
+
+Inductive Zipper;
+
+concat = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      nil _ -> ys
+    | cons {h, t} -> cons {h, f t ys}
+    end
+);
+
+rev = fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> nil Unit
+    | cons {h, t} -> concat (f t) (cons {h, nil Unit})
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+repr = \z: Zipper. 
+    match z with
+      zip {l, r} -> concat (rev l) r
+    end
+;
+
+target = fix (
+    \f: Zipper -> Int. \z: Zipper. 
+    match z with
+      zip {l, r} -> 
+        let a = (sum l) in 
+            let b = (sum r) in 
+                let c0 = (+ b a) in 
+                    c0
+    end
+);
+
+main = \z: Zipper. 
+    let tmp2 = (target z) in 
+        tmp2;
+syn-comb: 0.329852
+collect: 0.446282
+label: 0.010969
+extend-component: 9e-06
+execute: 0.460067
+syn-align: 0.952226
+comb-size: 8
+align-size: 5
+extract-size: 6
+1.30079
+Success

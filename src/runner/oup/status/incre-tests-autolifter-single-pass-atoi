@@ -1,0 +1,14 @@
+
+List :: List. <cons {Int,List} | nil Unit>
+cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+base : Int
+single_pass : (List->Int) -> List -> Int
+atoi : List -> Int
+main : List -> Int
+
+size: 60
+compress-num: 1
+label-num: 7
+rewrite-size: 13
+0.009892

@@ -1,0 +1,635 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+EdgeList :: EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+enil : Unit -> EdgeList'. <enil Unit | econs {Int,Int,EdgeList'}>
+econs : {Int,Int,EdgeList} ->
+        EdgeList'. <enil Unit | econs {Int,Int,EdgeList'}>
+Graph :: Graph. <gnil Unit | gcons {EdgeList,Graph}>
+gnil : Unit -> Graph'. <gnil Unit | gcons {EdgeList,Graph'}>
+gcons : {EdgeList,Graph} ->
+        Graph'. <gnil Unit | gcons {EdgeList,Graph'}>
+Plan :: EdgeList
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+graph_size : Graph -> Int
+length : EdgeList -> Int
+size : List -> Int
+is_valid_graph : Graph -> Bool
+cs : List
+len : Int
+one : Int
+take_last : List -> Int -> List
+merge : PlanList -> PlanList -> PlanList
+extend : Int ->
+         Int ->
+         Int ->
+         PlanList ->
+         PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+generate_paths : Graph ->
+                 PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+is_path_match : EdgeList -> List -> Bool
+eval : EdgeList -> Int
+max : Int -> Int -> Int
+get_best : PlanList -> Int
+main : Graph -> Int
+
+
+Inductive List;
+
+Inductive EdgeList;
+
+Inductive Graph;
+
+Plan = Compress EdgeList;
+
+Inductive PlanList;
+
+graph_size = fix (
+    \f: Graph -> Int. \g: Graph. 
+    match g with
+      gnil _ -> 0
+    | gcons {h, t} -> + 1 (f t)
+    end
+);
+
+length = fix (
+    \f: EdgeList -> Int. \xs: EdgeList. 
+    match xs with
+      enil _ -> 0
+    | econs {_, _, t} -> + 1 (f t)
+    end
+);
+
+size = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+is_valid_graph = \g: Graph. 
+    let size = (graph_size g) in 
+        fix (
+        \f: Graph -> Bool. \g: Graph. 
+        match g with
+          gnil _ -> true
+        | gcons {h, t} -> if (== size (length h)) then f t
+            else false
+        end
+    ) g;
+
+@Input cs = List;
+
+@Input len = Int;
+
+one = 1;
+
+take_last = \xs: List. \num: Int. 
+    (fix (
+    \f: List -> {Int, List}. \xs: List. 
+    match xs with
+      nil _ -> {0, xs}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            if (< res.1 num) then {+ res.1 1, cons {h, res.2}}
+            else res
+    end
+) xs).2;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+extend = \c: Int. \w: Int. \target: Int. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> pnil Unit
+    | pcons {h, t} -> pcons {align (label (econs {c, w, unlabel h }) ) , f t}
+    end
+);
+
+generate_paths = \full_graph: Graph. 
+    let gen = (fix (
+    \f: EdgeList -> Graph -> List -> PlanList. \xs: EdgeList. \graph: Graph. \cs: List. 
+    match cs with
+      nil _ -> pcons {let tmp1 = (enil Unit) in 
+            align (label tmp1 ) , pnil Unit}
+    | cons {c, ct} -> 
+        match {xs, graph} with
+          {econs {a, b, t}, gcons {next_edges, remains}} -> merge (extend a b c (f next_edges full_graph ct)) (f t remains cs)
+        | _ -> pnil Unit
+        end
+
+    end
+)) in 
+        match full_graph with
+          gnil _ -> pnil Unit
+        | gcons {h, _} -> gen h full_graph cs
+        end
+;
+
+is_path_match = fix (
+    \f: EdgeList -> List -> Bool. \p: EdgeList. \xs: List. 
+    match {p, xs} with
+      {enil _, nil _} -> true
+    | {econs {_, h1, t1}, cons {h2, t2}} -> and (== h1 h2) (f t1 t2)
+    | _ -> false
+    end
+);
+
+eval = fix (
+    \f: EdgeList -> Int. \path: EdgeList. 
+    match path with
+      econs {_, w, t} -> + w (f t)
+    | enil _ -> 0
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {h, t} -> if (align (is_path_match (unlabel h ) cs) ) then max (align (eval (unlabel h )) ) (f t)
+        else f t
+    end
+);
+
+main = \graph: Graph. 
+    if (and (is_valid_graph graph) (== (size cs) len)) then get_best (generate_paths graph)
+    else 0;
+align term #0: compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+align@0 create@0 econs ({c,w,unlabel h})
+  target: Int
+  h: compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  xs: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  w: Int
+  c: Int
+align term #1: compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+align@1 create@0 tmp1
+  full_graph: Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}>
+  xs: EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  tmp1: EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  cs: List. <nil Unit | cons {Int,List}>
+  graph: Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}>
+align term #2: Bool
+align@2 is_path_match (unlabel h) (cs)
+  xs: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  h: compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+align term #3: Int
+align@3 eval (unlabel h)
+  xs: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  h: compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+Components for compress:
+  max [Int,Int] -> Int 18
+  one [] -> Int 11
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  gnil [Bot] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}> 2
+  econs [(Int * Int * EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)] -> EdgeList. <enil Unit | econs {Int,Int,EdgeList}> 1
+  enil [Bot] -> EdgeList. <enil Unit | econs {Int,Int,EdgeList}> 1
+  gcons [(EdgeList. <enil Unit | econs {Int,Int,EdgeList}> * Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}>)] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}> 2
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+
+Components for align:
+  max [Int,Int] -> Int 18
+  eval [EdgeList. <enil Unit | econs {Int,Int,EdgeList}>] -> Int 17
+  is_path_match [EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,List. <nil Unit | cons {Int,List}>] -> Bool 16
+  take_last [List. <nil Unit | cons {Int,List}>,Int] -> List. <nil Unit | cons {Int,List}> 12
+  one [] -> Int 11
+  is_valid_graph [Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}>] -> Bool 8
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  gnil [Bot] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}> 2
+  econs [(Int * Int * EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)] -> EdgeList. <enil Unit | econs {Int,Int,EdgeList}> 1
+  length [EdgeList. <enil Unit | econs {Int,Int,EdgeList}>] -> Int 6
+  enil [Bot] -> EdgeList. <enil Unit | econs {Int,Int,EdgeList}> 1
+  gcons [(EdgeList. <enil Unit | econs {Int,Int,EdgeList}> * Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}>)] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}> 2
+  size [List. <nil Unit | cons {Int,List}>] -> Int 7
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  graph_size [Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}>] -> Int 5
+
+Components for comb:
+  max [Int,Int] -> Int 18
+  one [] -> Int 11
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  gnil [Bot] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}> 2
+  econs [(Int * Int * EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)] -> EdgeList. <enil Unit | econs {Int,Int,EdgeList}> 1
+  enil [Bot] -> EdgeList. <enil Unit | econs {Int,Int,EdgeList}> 1
+  gcons [(EdgeList. <enil Unit | econs {Int,Int,EdgeList}> * Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}>)] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}> 2
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+
+align term #0: compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+align@0 create@0 econs ({c,w,unlabel h})
+  target: Int
+  h: compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  xs: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  w: Int
+  c: Int
+align term #1: compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+align@1 create@0 tmp1
+  full_graph: Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}>
+  xs: EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  tmp1: EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  cs: List. <nil Unit | cons {Int,List}>
+  graph: Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,Graph}>
+align term #2: Bool
+align@2 is_path_match (unlabel h) (cs)
+  xs: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  h: compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+align term #3: Int
+align@3 eval (unlabel h)
+  xs: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>,PlanList}>
+  h: compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  Compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  Param1
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int
+  Param0
+  Param4
+  Param5
+  Param7
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  0
+  1
+  one
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param6
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+  one
+num = 2
+start: start
+node: start
+  Compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  Param2
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  one
+num = 3
+start: start
+node: start
+  Compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  Param2
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  one
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+  Bool([Param0,Param1,Param2]@Bool)
+node: [Param0,Param1,Param2]@List. <nil Unit | cons {Int,List}>
+  Param1
+  take_last([Param0,Param1,Param2]@List. <nil Unit | cons {Int,List}> [Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  ite([Param0,Param1,Param2]@Bool [Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  fold[List. <nil Unit | cons {Int,List}>->Int]([Param0,Param2]@Int [Int@0,Int@1,Param0,Param2]@Int [Param0,Param1,Param2]@List. <nil Unit | cons {Int,List}>)
+  fold[EdgeList. <enil Unit | econs {Int,Int,EdgeList}>->Int]([Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int [Param0,Param1,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  eval([Param0,Param1,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+  one
+  length([Param0,Param1,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+  size([Param0,Param1,Param2]@List. <nil Unit | cons {Int,List}>)
+node: [Param0,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  Param0
+node: [Param0,Param2]@Int
+  Param2
+  +([Param0,Param2]@Int [Param0,Param2]@Int)
+  -([Param0,Param2]@Int [Param0,Param2]@Int)
+  fold[EdgeList. <enil Unit | econs {Int,Int,EdgeList}>->Int]([Param2]@Int [Int@0,Int@1,Int@2,Param2]@Int [Param0,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+  max([Param0,Param2]@Int [Param0,Param2]@Int)
+  eval([Param0,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+  one
+  length([Param0,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+node: [Int@0,Int@1,Param0,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  Param0
+node: [Int@0,Int@1,Param0,Param2]@Int
+  Param2
+  Int@0
+  Int@1
+  +([Int@0,Int@1,Param0,Param2]@Int [Int@0,Int@1,Param0,Param2]@Int)
+  -([Int@0,Int@1,Param0,Param2]@Int [Int@0,Int@1,Param0,Param2]@Int)
+  fold[EdgeList. <enil Unit | econs {Int,Int,EdgeList}>->Int]([Int@0,Int@1,Param2]@Int [Int@0,Int@1,Int@2,Int@3,Int@4,Param2]@Int [Int@0,Int@1,Param0,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+  max([Int@0,Int@1,Param0,Param2]@Int [Int@0,Int@1,Param0,Param2]@Int)
+  eval([Int@0,Int@1,Param0,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+  one
+  length([Int@0,Int@1,Param0,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>)
+node: [Param1,Param2]@List. <nil Unit | cons {Int,List}>
+  Param1
+  take_last([Param1,Param2]@List. <nil Unit | cons {Int,List}> [Param1,Param2]@Int)
+node: [Param1,Param2]@Int
+  Param2
+  +([Param1,Param2]@Int [Param1,Param2]@Int)
+  -([Param1,Param2]@Int [Param1,Param2]@Int)
+  fold[List. <nil Unit | cons {Int,List}>->Int]([Param2]@Int [Int@0,Int@1,Param2]@Int [Param1,Param2]@List. <nil Unit | cons {Int,List}>)
+  max([Param1,Param2]@Int [Param1,Param2]@Int)
+  one
+  size([Param1,Param2]@List. <nil Unit | cons {Int,List}>)
+node: [Int@0,Int@1,Int@2,Param1,Param2]@List. <nil Unit | cons {Int,List}>
+  Param1
+  take_last([Int@0,Int@1,Int@2,Param1,Param2]@List. <nil Unit | cons {Int,List}> [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+node: [Int@0,Int@1,Int@2,Param1,Param2]@Int
+  Param2
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+  -([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+  fold[List. <nil Unit | cons {Int,List}>->Int]([Int@0,Int@1,Int@2,Param2]@Int [Int@0,Int@1,Int@2,Int@3,Int@4,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@List. <nil Unit | cons {Int,List}>)
+  max([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+  one
+  size([Int@0,Int@1,Int@2,Param1,Param2]@List. <nil Unit | cons {Int,List}>)
+node: [Param2]@Int
+  Param2
+  +([Param2]@Int [Param2]@Int)
+  -([Param2]@Int [Param2]@Int)
+  max([Param2]@Int [Param2]@Int)
+  one
+node: [Int@0,Int@1,Int@2,Param2]@Int
+  Param2
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2,Param2]@Int [Int@0,Int@1,Int@2,Param2]@Int)
+  -([Int@0,Int@1,Int@2,Param2]@Int [Int@0,Int@1,Int@2,Param2]@Int)
+  max([Int@0,Int@1,Int@2,Param2]@Int [Int@0,Int@1,Int@2,Param2]@Int)
+  one
+node: [Int@0,Int@1,Param2]@Int
+  Param2
+  Int@0
+  Int@1
+  +([Int@0,Int@1,Param2]@Int [Int@0,Int@1,Param2]@Int)
+  -([Int@0,Int@1,Param2]@Int [Int@0,Int@1,Param2]@Int)
+  max([Int@0,Int@1,Param2]@Int [Int@0,Int@1,Param2]@Int)
+  one
+node: [Int@0,Int@1,Int@2,Int@3,Int@4,Param2]@Int
+  Param2
+  Int@0
+  Int@1
+  Int@2
+  Int@3
+  Int@4
+  +([Int@0,Int@1,Int@2,Int@3,Int@4,Param2]@Int [Int@0,Int@1,Int@2,Int@3,Int@4,Param2]@Int)
+  -([Int@0,Int@1,Int@2,Int@3,Int@4,Param2]@Int [Int@0,Int@1,Int@2,Int@3,Int@4,Param2]@Int)
+  max([Int@0,Int@1,Int@2,Int@3,Int@4,Param2]@Int [Int@0,Int@1,Int@2,Int@3,Int@4,Param2]@Int)
+  one
+node: [Param0,Param1,Param2]@Bool
+  is_path_match([Param0,Param1,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}> [Param0,Param1,Param2]@List. <nil Unit | cons {Int,List}>)
+node: [Param0,Param1,Param2]@EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] is_path_match(Param0,Param1)
+  [1] eval(Param0)
+  [2] -(Param2,length(Param0))
+  [3] is_path_match(Param0,take_last(Param1,length(Param0)))
+  [0] -(Param0,Param4)
+  [1] Param1 -> is_path_match(Param0,Param1)
+  [2] Param1 -> eval(Param0)
+  [3] Param1 -> -(Param2,length(Param0))
+  [4] Param1 -> is_path_match(Param0,take_last(Param1,length(Param0)))
+  [5] Param4
+  [0] is_path_match(Param0,Param1)
+  [1] eval(Param0)
+  [2] -(Param2,length(Param0))
+  [3] is_path_match(Param0,take_last(Param1,length(Param0)))
+  [0] Param6
+  [] null
+  [0] Param2 -> is_path_match(Param0,Param1)
+  [1] Param2 -> eval(Param0)
+  [2] Param2 -> -(Param2,length(Param0))
+  [3] Param2 -> is_path_match(Param0,take_last(Param1,length(Param0)))
+  [] null
+  [0] Param2 -> is_path_match(Param0,Param1)
+  [1] Param2 -> eval(Param0)
+  [2] Param2 -> -(Param2,length(Param0))
+  [3] Param2 -> is_path_match(Param0,take_last(Param1,length(Param0)))
+compress #0: {Bool,Int,Int,Bool}
+pass #0: 
+let c0 = (- target w) in 
+    {and (and h.4 (== c0 0)) (== h.3 1), + h.2 w, - h.3 one, and h.4 (== c0 0)}
+pass #1: 
+{== len 0, 0, len, true}
+pass #2: 
+h.1
+pass #3: 
+h.2
+
+Inductive List;
+
+Inductive EdgeList;
+
+Inductive Graph;
+
+Plan = {Bool, Int, Int, Bool};
+
+Inductive PlanList;
+
+graph_size = fix (
+    \f: Graph -> Int. \g: Graph. 
+    match g with
+      gnil _ -> 0
+    | gcons {h, t} -> + 1 (f t)
+    end
+);
+
+length = fix (
+    \f: EdgeList -> Int. \xs: EdgeList. 
+    match xs with
+      enil _ -> 0
+    | econs {_, _, t} -> + 1 (f t)
+    end
+);
+
+size = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+is_valid_graph = \g: Graph. 
+    let size = (graph_size g) in 
+        fix (
+        \f: Graph -> Bool. \g: Graph. 
+        match g with
+          gnil _ -> true
+        | gcons {h, t} -> if (== size (length h)) then f t
+            else false
+        end
+    ) g;
+
+@Input cs = List;
+
+@Input len = Int;
+
+one = 1;
+
+take_last = \xs: List. \num: Int. 
+    (fix (
+    \f: List -> {Int, List}. \xs: List. 
+    match xs with
+      nil _ -> {0, xs}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            if (< res.1 num) then {+ res.1 1, cons {h, res.2}}
+            else res
+    end
+) xs).2;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+extend = \c: Int. \w: Int. \target: Int. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> pnil Unit
+    | pcons {h, t} -> pcons {let c0 = (- target w) in 
+            {and (and h.4 (== c0 0)) (== h.3 1), + h.2 w, - h.3 one, and h.4 (== c0 0)}, f t}
+    end
+);
+
+generate_paths = \full_graph: Graph. 
+    let gen = (fix (
+    \f: EdgeList -> Graph -> List -> PlanList. \xs: EdgeList. \graph: Graph. \cs: List. 
+    match cs with
+      nil _ -> pcons {{== len 0, 0, len, true}, pnil Unit}
+    | cons {c, ct} -> 
+        match {xs, graph} with
+          {econs {a, b, t}, gcons {next_edges, remains}} -> merge (extend a b c (f next_edges full_graph ct)) (f t remains cs)
+        | _ -> pnil Unit
+        end
+
+    end
+)) in 
+        match full_graph with
+          gnil _ -> pnil Unit
+        | gcons {h, _} -> gen h full_graph cs
+        end
+;
+
+is_path_match = fix (
+    \f: EdgeList -> List -> Bool. \p: EdgeList. \xs: List. 
+    match {p, xs} with
+      {enil _, nil _} -> true
+    | {econs {_, h1, t1}, cons {h2, t2}} -> and (== h1 h2) (f t1 t2)
+    | _ -> false
+    end
+);
+
+eval = fix (
+    \f: EdgeList -> Int. \path: EdgeList. 
+    match path with
+      econs {_, w, t} -> + w (f t)
+    | enil _ -> 0
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {h, t} -> if (h.1) then max h.2 (f t)
+        else f t
+    end
+);
+
+main = \graph: Graph. 
+    if (and (is_valid_graph graph) (== (size cs) len)) then get_best (generate_paths graph)
+    else 0;
+syn-comb: 3.58374
+collect: 22.7234
+label: 0.026703
+extend-component: 19.8955
+execute: 23.5828
+syn-align: 65.6492
+comb-size: 61
+align-size: 27
+extract-size: 11
+69.2823
+Success

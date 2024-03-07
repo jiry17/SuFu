@@ -1,0 +1,40 @@
+#!/bin/bash
+
+mkdir build
+
+#install gurobi
+wget https://packages.gurobi.com/9.1/gurobi9.1.2_linux64.tar.gz
+tar xvfz gurobi9.1.2_linux64.tar.gz
+pushd gurobi912/linux64
+gurobipath=`pwd`
+sgurobipath=${gurobipath//\//\\\/}
+popd
+sed -i "s/GUROBIPATH/${sgurobipath}/g" src/CMakeLists.txt
+#select the static library of gurobi
+gcc_major_version=`echo __GNUC__ | gcc -E -xc - | tail -n 1`
+gcc_minor_version=`echo __GNUC_MINOR__ | gcc -E -xc - | tail -n 1`
+gcc_version=$gcc_major_version.$gcc_minor_version
+if [ $gcc_version = 4.6 ] || [ $gcc_version = 4.8 ]
+then
+    sed -i "s/5.2.a/4.2.a/g" src/CMakeLists.txt
+fi
+
+#configure z3
+pushd recommend/my-euphony/thirdparty/z3
+z3path=`pwd`
+echo ${z3path}
+popd
+sz3path=${z3path//\//\\\/}
+sed -i "s/Z3PATH/${sz3path}/g" src/CMakeLists.txt
+
+#build source
+pushd src
+path=`pwd`
+spath=${path//\//\\\/}
+sed -i "s/SOURCEPATH/\"${spath}\"/g" basic/config.cpp
+popd
+
+pushd build
+cmake ../src
+make
+

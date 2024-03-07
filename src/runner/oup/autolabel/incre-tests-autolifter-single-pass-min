@@ -1,0 +1,337 @@
+
+List :: List. <cons {Int,List} | nil Unit>
+cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+single_pass : (List->Int) -> List -> Int
+inf : Int
+min : List -> Int
+main : List -> Int
+
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            align (v (unlabel tmp2 )) ;
+
+inf = 100;
+
+min = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> inf
+    | cons {h, t} -> 
+        let res = (f t) in 
+            if (< res h) then res
+            else h
+    end
+);
+
+main = single_pass min;
+align term #0: compress[0] List. <cons {Int,List} | nil Unit>
+align@0 create@0 xs
+  xs: List. <cons {Int,List} | nil Unit>
+align term #1: compress[0] List. <cons {Int,List} | nil Unit>
+align@1 create@0 cons ({h,unlabel tmp1})
+  h: Int
+  xs: List. <cons {Int,List} | nil Unit>
+  t: List. <cons {Int,List} | nil Unit>
+  tmp1: compress[0] List. <cons {Int,List} | nil Unit>
+align term #2: Int
+align@2 v (unlabel tmp2)
+  tmp2: compress[0] List. <cons {Int,List} | nil Unit>
+  xs: List. <cons {Int,List} | nil Unit>
+Components for compress:
+  cons [(Int * List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  inf [] -> Int 2
+
+Components for align:
+  cons [(Int * List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  min [List. <cons {Int,List} | nil Unit>] -> Int 3
+  inf [] -> Int 2
+
+Components for comb:
+  cons [(Int * List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  inf [] -> Int 2
+
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ al_fold : (Int->Int->Int) -> Int -> List -> Int
+al_error : Int
+al_inf : Int
+al_plus : Int -> Int -> Int
+al_minus : Int -> Int -> Int
+al_times : Int -> Int -> Int
+al_min : Int -> Int -> Int
+al_max : Int -> Int -> Int
+al_maximum : List -> Int
+al_minimum : List -> Int
+al_sum : List -> Int
+al_length : List -> Int
+al_head : List -> Int
+al_inc : Int -> Int
+al_dec : Int -> Int
+al_neg : Int -> Int
+al_last : List -> Int
+al_access : Int -> List -> Int
+al_count : (Int->Bool) -> List -> Int
+al_take : Int -> List -> List
+al_drop : Int -> List -> List
+al_rev : List -> List
+al_map : (Int->Int) -> List -> List
+al_filter : (Int->Bool) -> List -> List
+al_zip : (Int->Int->Int) ->
+         List -> List -> List'. <cons {Int,List'} | nil Unit>
+al_concat : List -> List -> List
+al_sort : List -> List
+al_scanl : (Int->Int->Int) -> List -> List
+al_scanr : (Int->Int->Int) -> List -> List
+al_isneg : Int -> Bool
+al_ispos : Int -> Bool
+al_iseven : Int -> Bool
+al_isodd : Int -> Bool
+one : Int
+none : Int
+al_error : Int -> Bool
+
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ al_fold : (Int->Int->Int) -> Int -> List -> Int
+al_error : Int
+al_inf : Int
+al_plus : Int -> Int -> Int
+al_minus : Int -> Int -> Int
+al_times : Int -> Int -> Int
+al_min : Int -> Int -> Int
+al_max : Int -> Int -> Int
+al_maximum : List -> Int
+al_minimum : List -> Int
+al_sum : List -> Int
+al_length : List -> Int
+al_head : List -> Int
+al_inc : Int -> Int
+al_dec : Int -> Int
+al_neg : Int -> Int
+al_last : List -> Int
+al_access : Int -> List -> Int
+al_count : (Int->Bool) -> List -> Int
+al_take : Int -> List -> List
+al_drop : Int -> List -> List
+al_rev : List -> List
+al_map : (Int->Int) -> List -> List
+al_filter : (Int->Bool) -> List -> List
+al_zip : (Int->Int->Int) ->
+         List -> List -> List'. <cons {Int,List'} | nil Unit>
+al_concat : List -> List -> List
+al_sort : List -> List
+al_scanl : (Int->Int->Int) -> List -> List
+al_scanr : (Int->Int->Int) -> List -> List
+al_isneg : Int -> Bool
+al_ispos : Int -> Bool
+al_iseven : Int -> Bool
+al_isodd : Int -> Bool
+one : Int
+none : Int
+al_error : Int -> Bool
+
+align term #0: compress[0] List. <cons {Int,List} | nil Unit>
+align@0 create@0 xs
+  xs: List. <cons {Int,List} | nil Unit>
+align term #1: compress[0] List. <cons {Int,List} | nil Unit>
+align@1 create@0 cons ({h,unlabel tmp1})
+  h: Int
+  xs: List. <cons {Int,List} | nil Unit>
+  t: List. <cons {Int,List} | nil Unit>
+  tmp1: compress[0] List. <cons {Int,List} | nil Unit>
+align term #2: Int
+align@2 v (unlabel tmp2)
+  tmp2: compress[0] List. <cons {Int,List} | nil Unit>
+  xs: List. <cons {Int,List} | nil Unit>
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  1
+  al_head([Param0]@List. <cons {Int,List} | nil Unit>)
+node: [Param0]@List. <cons {Int,List} | nil Unit>
+  Param0
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1,Param2,Param3]@Compress[0] List. <cons {Int,List} | nil Unit>)
+node: [Param0,Param1,Param2,Param3]@List. <cons {Int,List} | nil Unit>
+  Param1
+  Param2
+node: [Param0,Param1,Param2,Param3]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param3
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  al_head([Param0,Param1,Param2,Param3]@List. <cons {Int,List} | nil Unit>)
+num = 2
+start: start
+node: start
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1]@Compress[0] List. <cons {Int,List} | nil Unit>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@List. <cons {Int,List} | nil Unit>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  al_head([Param0,Param1]@List. <cons {Int,List} | nil Unit>)
+node: [Param0,Param1]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  al_plus([Param0]@Int [Param0]@Int)
+  al_minus([Param0]@Int [Param0]@Int)
+  al_times([Param0]@Int [Param0]@Int)
+  al_min([Param0]@Int [Param0]@Int)
+  al_max([Param0]@Int [Param0]@Int)
+  al_maximum([Param0]@List. <cons {Int,List} | nil Unit>)
+  al_minimum([Param0]@List. <cons {Int,List} | nil Unit>)
+  al_sum([Param0]@List. <cons {Int,List} | nil Unit>)
+  al_length([Param0]@List. <cons {Int,List} | nil Unit>)
+  al_head([Param0]@List. <cons {Int,List} | nil Unit>)
+  al_inc([Param0]@Int)
+  al_dec([Param0]@Int)
+  al_neg([Param0]@Int)
+  al_last([Param0]@List. <cons {Int,List} | nil Unit>)
+  al_access([Param0]@Int [Param0]@List. <cons {Int,List} | nil Unit>)
+  al_count([Param0]@[Int]->Bool [Param0]@List. <cons {Int,List} | nil Unit>)
+  one
+  none
+  min([Param0]@List. <cons {Int,List} | nil Unit>)
+  inf
+node: [Param0]@Bool
+  al_isneg([Param0]@Int)
+  al_ispos([Param0]@Int)
+  al_iseven([Param0]@Int)
+  al_isodd([Param0]@Int)
+node: [Param0]@[Int]->[Int]->Int
+  al_plus
+  al_minus
+  al_times
+  al_min
+  al_max
+node: [Param0]@[Int]->Int
+  al_inc
+  al_dec
+  al_neg
+node: [Param0]@[Int]->Bool
+  al_isneg
+  al_ispos
+  al_iseven
+  al_isodd
+node: [Param0]@List. <cons {Int,List} | nil Unit>
+  Param0
+  al_take([Param0]@Int [Param0]@List. <cons {Int,List} | nil Unit>)
+  al_drop([Param0]@Int [Param0]@List. <cons {Int,List} | nil Unit>)
+  al_rev([Param0]@List. <cons {Int,List} | nil Unit>)
+  al_map([Param0]@[Int]->Int [Param0]@List. <cons {Int,List} | nil Unit>)
+  al_filter([Param0]@[Int]->Bool [Param0]@List. <cons {Int,List} | nil Unit>)
+  al_zip([Param0]@[Int]->[Int]->Int [Param0]@List. <cons {Int,List} | nil Unit> [Param0]@List. <cons {Int,List} | nil Unit>)
+  al_sort([Param0]@List. <cons {Int,List} | nil Unit>)
+  al_scanl([Param0]@[Int]->[Int]->Int [Param0]@List. <cons {Int,List} | nil Unit>)
+  al_scanr([Param0]@[Int]->[Int]->Int [Param0]@List. <cons {Int,List} | nil Unit>)
+
+
+
+
+
+
+
+
+
+  [] al_minimum(Param0)
+  [] al_minimum(Param0)
+  [0] Param0
+  [1] Param3 -> al_minimum(Param0)
+  [] null
+  [0] Param0 -> al_minimum(Param0)
+compress #0: Int
+pass #0: 
+al_inf
+pass #1: 
+if (< tmp1 h) then tmp1
+else h
+pass #2: 
+tmp2
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> al_inf
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            if (< tmp1 h) then tmp1
+            else h
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2;
+
+inf = 100;
+
+min = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> inf
+    | cons {h, t} -> 
+        let res = (f t) in 
+            if (< res h) then res
+            else h
+    end
+);
+
+main = single_pass min;
+syn-comb: 0.619406
+collect: 0.526052
+label: 0.009466
+extend-component: 0.010537
+execute: 0.305998
+syn-align: 0.87853
+comb-size: 10
+align-size: 3
+extract-size: 4
+1.53292
+Success

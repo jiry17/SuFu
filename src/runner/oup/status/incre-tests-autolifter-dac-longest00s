@@ -1,0 +1,19 @@
+
+List :: List. <cons {Int,List} | nil Unit>
+cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+is_even : Int -> Bool
+length : List -> Int
+concat : List -> List -> List'. <cons {Int,List'} | nil Unit>
+split : List -> {List'. <cons {Int,List'} | nil Unit>, List}
+dac : (List->Int) -> List -> Int
+inf : Int
+max : Int -> Int -> Int
+longest00s : List -> Int
+main : List -> Int
+
+size: 226
+compress-num: 1
+label-num: 10
+rewrite-size: 16
+0.024501

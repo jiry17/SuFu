@@ -1,0 +1,35 @@
+
+Inductive List;
+
+map = \f: Int -> Int. 
+    fix (
+    \g: List -> List. \xs: List. 
+    match xs with
+      nil _ -> nil Unit
+    | cons {h, t} -> cons {f h, g t}
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+square = \x: Int. 
+    * x x;
+
+upto = \n: Int. 
+    fix (
+    \f: Int -> Compress List. \now: Int. 
+    if (> now n) then let tmp1 = (nil Unit) in 
+        align (label tmp1 ) 
+    else let tmp2 = (f (+ now 1)) in 
+        align (label (cons {now, unlabel tmp2 }) ) ) 1;
+
+main = \n: Int. 
+    let tmp3 = (map square) in 
+        let tmp4 = (upto n) in 
+            align (sum (tmp3 (unlabel tmp4 ))) ;

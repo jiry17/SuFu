@@ -1,0 +1,15 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ insert : Int -> List -> List'. <elt Int | cons {Int,List'}>
+sort : List -> List'. <elt Int | cons {Int,List'}>
+spec : List -> Int
+target : List -> List'. <elt Int | cons {Int,List'}>
+main : List -> Int
+
+size: 108
+compress-num: 1
+label-num: 7
+rewrite-size: 15
+0.013029

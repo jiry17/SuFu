@@ -1,0 +1,31 @@
+
+Inductive List;
+
+single_pass = \v: List -> Bool. 
+    let run = (fix (
+    \f: List -> {Bool, Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {true, -100, al_inf}
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            let c0 = (+ h (al_head t)) in 
+                {or (and (and tmp1.1 (<= tmp1.2 (+ c0 c0))) (<= 0 (+ c0 tmp1.2))) (and (< tmp1.2 (+ c0 c0)) (not (al_error tmp1.2))), if (< (+ (- tmp1.2 (* 2 tmp1.3)) h) h) then h
+                else + (- tmp1.2 (* 2 tmp1.3)) h, h}
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2.1;
+
+balanced = fix (
+    \f: Int -> List -> Bool. \cnt: Int. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> 
+        let cnt = (+ cnt h) in 
+            if (< cnt 0) then false
+            else f cnt t
+    end
+) 0;
+
+main = single_pass balanced;

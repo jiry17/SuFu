@@ -1,0 +1,47 @@
+
+Inductive BTree;
+
+Inductive Zipper;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+height = fix (
+    \f: BTree -> Int. \t: BTree. 
+    match t with
+      empty _ -> 0
+    | node {a, l, r} -> + 1 (max (f l) (f r))
+    end
+);
+
+tree_repr = fix (
+    \f: BTree -> Int. \t: BTree. 
+    match t with
+      empty _ -> 0
+    | node {a, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                + 1 (max tmp2 tmp3)
+    end
+);
+
+repr = fix (
+    \f: Zipper -> Int. \z: Zipper. 
+    match z with
+      top _ -> 0
+    | left {w, tree, zz} -> 
+        let tmp5 = (tree_repr tree) in 
+            let tmp6 = (f zz) in 
+                + 1 (max tmp6 tmp5)
+    | right {w, tree, zz} -> 
+        let tw = (height tree) in 
+            let tmp7 = (f zz) in 
+                if (< tmp7 tw) then + 1 tw
+                else + 1 tmp7
+    end
+);
+
+main = \z: Zipper. 
+    let tmp9 = (repr z) in 
+        tmp9;

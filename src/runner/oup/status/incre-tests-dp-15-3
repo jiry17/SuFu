@@ -1,0 +1,30 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+Point :: {Int, Int}
+PointList :: PointList. <ponil Unit | pocons {Point,PointList}>
+ponil : Unit ->
+        PointList'. <ponil Unit | pocons {Point,PointList'}>
+pocons : {Point,PointList} ->
+         PointList'. <ponil Unit | pocons {Point,PointList'}>
+Plan :: {PointList, PointList}
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+sqr : Int -> Int
+dis : Point -> Point -> Int
+head : PointList -> {Int, Int}
+extend : Point -> PlanList -> PlanList
+generate : List -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+eval_plist : Point -> PointList -> Int
+min : Int -> Int -> Int
+get_best : PlanList -> Int
+main : List -> Int
+
+size: 247
+compress-num: 1
+label-num: 12
+rewrite-size: 30
+0.024875

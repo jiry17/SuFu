@@ -1,0 +1,29 @@
+
+Tree :: Tree. <leaf Unit | node {Int,Tree,Tree}>
+leaf : Unit -> Tree'. <leaf Unit | node {Int,Tree',Tree'}>
+node : {Int,Tree,Tree} ->
+       Tree'. <leaf Unit | node {Int,Tree',Tree'}>
+Plan :: Tree
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+is_valid_tree : Tree -> Bool
+merge : PlanList -> PlanList -> PlanList
+extend : Plan ->
+         Plan ->
+         Int -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+extend_all : Int ->
+             PlanList ->
+             PlanList ->
+             PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+generate : Tree -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+max : Int -> Int -> Int
+get_best : PlanList -> Int
+main : Tree -> Int
+
+size: 266
+compress-num: 1
+label-num: 18
+rewrite-size: 37
+0.035068

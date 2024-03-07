@@ -1,0 +1,39 @@
+
+Inductive Formula;
+
+Inductive NnfFormula;
+
+spec = fix (
+    \f: Formula -> Bool. \x: Formula. 
+    match x with
+      flit b -> b
+    | fand {b1, b2} -> and (f b1) (f b2)
+    | forr {b1, b2} -> or (f b1) (f b2)
+    | fnot b -> if (f b) then false
+        else true
+    end
+);
+
+repr = fix (
+    \f: NnfFormula -> Compress Formula. \x: NnfFormula. 
+    match x with
+      nflit b -> 
+        let tmp1 = (flit b) in 
+            align (label tmp1 ) 
+    | nfneglit b -> 
+        let tmp2 = (fnot (flit b)) in 
+            align (label tmp2 ) 
+    | nfand {b1, b2} -> 
+        let tmp3 = (f b1) in 
+            let tmp4 = (f b2) in 
+                align (label (fand {unlabel tmp3 , unlabel tmp4 }) ) 
+    | nfor {b1, b2} -> 
+        let tmp5 = (f b1) in 
+            let tmp6 = (f b2) in 
+                align (label (forr {unlabel tmp5 , unlabel tmp6 }) ) 
+    end
+);
+
+main = \xs: NnfFormula. 
+    let tmp7 = (repr xs) in 
+        align (spec (unlabel tmp7 )) ;

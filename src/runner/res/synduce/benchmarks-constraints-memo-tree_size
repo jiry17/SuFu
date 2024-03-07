@@ -1,0 +1,39 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/constraints/memo/tree_size.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (xi_1, xi_0) := ∀ x : [33mparam2 tree_memo[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): param1 tree -> int [95m«[0m[95mensures[0m fun x -> [34mx[0m ≥ [36m1[0m[95m»[0m =  
+[44m INFO :[0m  target⟨xi_1, xi_0⟩(): param2 tree_memo -> int [95m«[0m[95mrequires[0m [34mis_memo[0m[95m»[0m =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(): param39 tree_memo -> param39 tree  =  
+
+[44m INFO :[0m  is_memo⟨⟩(): param30 tree_memo -> bool  =  
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m Classify counterexamples...
+	[44m INFO :[0m ... finished in 0.0248s
+[44m INFO :[0m 2 counterexamples violate requires.
+[44m INFO :[0m Lemma [32mMNode[0m([34mi[0m, [34mp[0m, [34mp0[0m, [34mp1[0m): "lemma i i1 i2 = ([34mi1[0m + ([34mi1[0m + [34mi2[0m)) ≥ [34mi[0m" is correct, memorizing.
+[44m INFO :[0m Lemma [32mMNode[0m([34mi[0m, [34mp[0m, [34mp0[0m, [34mp1[0m): "lemma i i1 i2 = ([34mi1[0m + ([34mi1[0m + [34mi2[0m)) ≥ [34mi[0m" is correct, memorizing.
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:1 [0;30m[0m
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m 2 counterexamples violate requires.
+[44m INFO :[0m Lemma [32mMNode[0m([34mi[0m, [34mp[0m, [34mp0[0m, [34mp1[0m): "lemma i i1 i2 = [34mi[0m = (([34mi1[0m + [34mi2[0m) + [36m1[0m)" is correct, memorizing.
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  15 instances] 0.676s 
+        CVC4-SMT   [  11 instances] 0.616s 
+        CVC-SyGuS  [  13 instances] 0.436s 
+        > TOTAL    [  39 instances]: 1.728s 
+[44m INFO :[0m Solution found in 1.0345s (2.4% verifying):
+
+[31mlet[0m [36mxi_0[0m  [31m=[0m [36m1[0m
+
+[31mlet[0m [36mxi_1[0m [34mx1[0m [31m=[0m [34mx1[0m
+
+[31mlet rec[0m [36mtarget[0m [31m=[0m [33mfunction[0m [3mMLeaf[0m(a) -> [34mxi_0[0m [33m| [0m[3mMNode[0m(n, a, l, r) -> [34mxi_1[0m [34mn[0m
+
+

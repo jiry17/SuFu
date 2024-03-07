@@ -1,0 +1,332 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+IndexedList :: IndexedList. <inil Unit | icons {Int,Int,
+                                                IndexedList}>
+inil : Unit ->
+       IndexedList'. <inil Unit | icons {Int,Int,IndexedList'}>
+icons : {Int,Int,IndexedList} ->
+        IndexedList'. <inil Unit | icons {Int,Int,IndexedList'}>
+length : List -> Int
+repr : List ->
+       IndexedList'. <inil Unit | icons {Int,Int,IndexedList'}>
+spec : IndexedList -> Int
+main : List -> Int
+
+
+Inductive List;
+
+Inductive IndexedList;
+
+length = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+repr = fix (
+    \f: List -> Compress IndexedList. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (inil Unit) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (length t) in 
+            let tmp3 = (f t) in 
+                align (label (icons {h, tmp2, unlabel tmp3 }) ) 
+    end
+);
+
+spec = fix (
+    \f: IndexedList -> Int. \xs: IndexedList. 
+    match xs with
+      inil _ -> 0
+    | icons {h, i, t} -> if (> h i) then + h (f t)
+        else f t
+    end
+);
+
+main = \xs: List. 
+    let tmp4 = (repr xs) in 
+        align (spec (unlabel tmp4 )) ;
+align term #0: compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+align@0 create@0 tmp1
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp1: IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+align term #1: compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+align@1 create@0 icons ({h,tmp2,unlabel tmp3})
+  tmp3: compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+  t: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp2: Int
+  h: Int
+align term #2: Int
+align@2 spec (unlabel tmp4)
+  tmp4: compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+  xs: List. <nil Unit | cons {Int,List}>
+Components for compress:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  inil [Bot] -> IndexedList. <inil Unit | icons {Int,Int,IndexedList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  icons [(Int * Int * IndexedList. <inil Unit | icons {Int,Int,IndexedList}>)] -> IndexedList. <inil Unit | icons {Int,Int,IndexedList}> 1
+
+Components for align:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  inil [Bot] -> IndexedList. <inil Unit | icons {Int,Int,IndexedList}> 1
+  length [List. <nil Unit | cons {Int,List}>] -> Int 2
+  spec [IndexedList. <inil Unit | icons {Int,Int,IndexedList}>] -> Int 4
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  icons [(Int * Int * IndexedList. <inil Unit | icons {Int,Int,IndexedList}>)] -> IndexedList. <inil Unit | icons {Int,Int,IndexedList}> 1
+
+Components for comb:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  inil [Bot] -> IndexedList. <inil Unit | icons {Int,Int,IndexedList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  icons [(Int * Int * IndexedList. <inil Unit | icons {Int,Int,IndexedList}>)] -> IndexedList. <inil Unit | icons {Int,Int,IndexedList}> 1
+
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ al_fold : (Int->Int->Int) -> Int -> List -> Int
+al_error : Int
+al_inf : Int
+al_plus : Int -> Int -> Int
+al_minus : Int -> Int -> Int
+al_times : Int -> Int -> Int
+al_min : Int -> Int -> Int
+al_max : Int -> Int -> Int
+al_maximum : List -> Int
+al_minimum : List -> Int
+al_sum : List -> Int
+al_length : List -> Int
+al_head : List -> Int
+al_inc : Int -> Int
+al_dec : Int -> Int
+al_neg : Int -> Int
+al_last : List -> Int
+al_access : Int -> List -> Int
+al_count : (Int->Bool) -> List -> Int
+al_take : Int -> List -> List
+al_drop : Int -> List -> List
+al_rev : List -> List
+al_map : (Int->Int) -> List -> List
+al_filter : (Int->Bool) -> List -> List
+al_zip : (Int->Int->Int) ->
+         List -> List -> List'. <cons {Int,List'} | nil Unit>
+al_concat : List -> List -> List
+al_sort : List -> List
+al_scanl : (Int->Int->Int) -> List -> List
+al_scanr : (Int->Int->Int) -> List -> List
+al_isneg : Int -> Bool
+al_ispos : Int -> Bool
+al_iseven : Int -> Bool
+al_isodd : Int -> Bool
+one : Int
+none : Int
+al_error : Int -> Bool
+
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ al_fold : (Int->Int->Int) -> Int -> List -> Int
+al_error : Int
+al_inf : Int
+al_plus : Int -> Int -> Int
+al_minus : Int -> Int -> Int
+al_times : Int -> Int -> Int
+al_min : Int -> Int -> Int
+al_max : Int -> Int -> Int
+al_maximum : List -> Int
+al_minimum : List -> Int
+al_sum : List -> Int
+al_length : List -> Int
+al_head : List -> Int
+al_inc : Int -> Int
+al_dec : Int -> Int
+al_neg : Int -> Int
+al_last : List -> Int
+al_access : Int -> List -> Int
+al_count : (Int->Bool) -> List -> Int
+al_take : Int -> List -> List
+al_drop : Int -> List -> List
+al_rev : List -> List
+al_map : (Int->Int) -> List -> List
+al_filter : (Int->Bool) -> List -> List
+al_zip : (Int->Int->Int) ->
+         List -> List -> List'. <cons {Int,List'} | nil Unit>
+al_concat : List -> List -> List
+al_sort : List -> List
+al_scanl : (Int->Int->Int) -> List -> List
+al_scanr : (Int->Int->Int) -> List -> List
+al_isneg : Int -> Bool
+al_ispos : Int -> Bool
+al_iseven : Int -> Bool
+al_isodd : Int -> Bool
+one : Int
+none : Int
+al_error : Int -> Bool
+
+align term #0: compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+align@0 create@0 tmp1
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp1: IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+align term #1: compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+align@1 create@0 icons ({h,tmp2,unlabel tmp3})
+  tmp3: compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+  t: List. <nil Unit | cons {Int,List}>
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp2: Int
+  h: Int
+align term #2: Int
+align@2 spec (unlabel tmp4)
+  tmp4: compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+  xs: List. <nil Unit | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  al_head([Param0,Param1]@List. <nil Unit | cons {Int,List}>)
+node: [Param0,Param1]@List. <nil Unit | cons {Int,List}>
+  Param0
+num = 1
+start: start
+node: start
+  Compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@List. <nil Unit | cons {Int,List}>
+  Param1
+  Param2
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param3
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  al_head([Param0,Param1,Param2,Param3,Param4]@List. <nil Unit | cons {Int,List}>)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+  Param0
+num = 2
+start: start
+node: start
+  Compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>([Param0,Param1]@Compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@List. <nil Unit | cons {Int,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  al_head([Param0,Param1]@List. <nil Unit | cons {Int,List}>)
+node: [Param0,Param1]@Compress[0] IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  al_plus([Param0]@Int [Param0]@Int)
+  al_minus([Param0]@Int [Param0]@Int)
+  al_times([Param0]@Int [Param0]@Int)
+  al_min([Param0]@Int [Param0]@Int)
+  al_max([Param0]@Int [Param0]@Int)
+  al_inc([Param0]@Int)
+  al_dec([Param0]@Int)
+  al_neg([Param0]@Int)
+  one
+  none
+  spec([Param0]@IndexedList. <inil Unit | icons {Int,Int,IndexedList}>)
+node: [Param0]@Bool
+  al_isneg([Param0]@Int)
+  al_ispos([Param0]@Int)
+  al_iseven([Param0]@Int)
+  al_isodd([Param0]@Int)
+node: [Param0]@IndexedList. <inil Unit | icons {Int,Int,IndexedList}>
+  Param0
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [] spec(Param0)
+  [0] Param4
+  [1] Param0 -> spec(Param0)
+  [2] Param3
+  [] null
+  [0] Param0 -> spec(Param0)
+compress #0: Int
+pass #0: 
+0
+pass #1: 
+if (< tmp2 h) then + h tmp3
+else tmp3
+pass #2: 
+tmp4
+
+Inductive List;
+
+Inductive IndexedList;
+
+length = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+repr = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let tmp2 = (length t) in 
+            let tmp3 = (f t) in 
+                if (< tmp2 h) then + h tmp3
+                else tmp3
+    end
+);
+
+spec = fix (
+    \f: IndexedList -> Int. \xs: IndexedList. 
+    match xs with
+      inil _ -> 0
+    | icons {h, i, t} -> if (> h i) then + h (f t)
+        else f t
+    end
+);
+
+main = \xs: List. 
+    let tmp4 = (repr xs) in 
+        tmp4;
+syn-comb: 0.482321
+collect: 1.28674
+label: 0.01016
+extend-component: 0.024505
+execute: 0.580884
+syn-align: 1.96587
+comb-size: 14
+align-size: 3
+extract-size: 5
+2.48461
+Success

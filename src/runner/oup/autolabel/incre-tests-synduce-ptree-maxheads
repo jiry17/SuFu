@@ -1,0 +1,347 @@
+
+Tree :: Tree. <telt Int | tnode {Int,Tree,Tree}>
+ telt : Int -> Tree'. <telt Int | tnode {Int,Tree',Tree'}>
+ tnode : {Int,Tree,Tree} ->
+         Tree'. <telt Int | tnode {Int,Tree',Tree'}>
+ PTree :: PTree. <pelt Int | pnode {Int,
+                                   List. <elt PTree | cons {
+                                   PTree,List}>}>
+pelt : Int ->
+       PTree'. <pelt Int | pnode {Int,
+                                  List. <elt PTree' | cons {
+                                  PTree',List}>}>
+pnode : {Int,List. <elt PTree | cons {PTree,List}>} ->
+        PTree'. <pelt Int | pnode {Int,
+                                   List. <elt PTree' | cons {
+                                   PTree',List}>}>
+List :: List. <elt PTree | cons {PTree,List}>
+elt : PTree -> List'. <elt PTree | cons {PTree,List'}>
+cons : {PTree,List} -> List'. <elt PTree | cons {PTree,List'}>
+max : Int -> Int -> Int
+repr : Tree ->
+       PTree'. <pelt Int | pnode {Int,
+                                  List'. <elt PTree' | cons {
+                                  PTree',List'}>}>
+spec : PTree -> Int
+main : Tree -> Int
+
+
+Inductive Tree;
+
+Inductive PTree;
+
+Inductive List;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+repr = fix (
+    \f: Tree -> Compress PTree. \x: Tree. 
+    match x with
+      telt a -> 
+        let tmp1 = (pelt a) in 
+            align (label tmp1 ) 
+    | tnode {a, l, r} -> 
+        let repr_list = (fix (
+        \g: Tree -> Compress List. \y: Tree. 
+        match y with
+          telt a -> 
+            let z = (pelt a) in 
+                let tmp2 = (elt z) in 
+                    align (label tmp2 ) 
+        | tnode {a, l, r} -> 
+            let tmp3 = (pelt a) in 
+                let tmp4 = (f l) in 
+                    let tmp5 = (g r) in 
+                        align (label (cons {tmp3, cons {unlabel tmp4 , unlabel tmp5 }}) ) 
+        end
+    )) in 
+            let tmp6 = (f l) in 
+                let tmp7 = (repr_list r) in 
+                    align (label (pnode {a, cons {unlabel tmp6 , unlabel tmp7 }}) ) 
+    end
+);
+
+spec = fix (
+    \f: PTree -> Int. \x: PTree. 
+    match x with
+      pelt a -> a
+    | pnode {a, l} -> 
+        let maxh_aux = (fix (
+        \g: List -> Int. \y: List. 
+        match y with
+          elt a -> f a
+        | cons {hd, tl} -> f hd
+        end
+    )) in 
+            max a (maxh_aux l)
+    end
+);
+
+main = \x: Tree. 
+    let tmp8 = (repr x) in 
+        align (spec (unlabel tmp8 )) ;
+align term #0: compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+align@0 create@1 tmp1
+  a: Int
+  tmp1: PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  x: Tree. <telt Int | tnode {Int,Tree,Tree}>
+align term #1: compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+align@1 create@0 tmp2
+  a: Int
+  z: PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  l: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  tmp2: List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+  y: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  x: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  r: Tree. <telt Int | tnode {Int,Tree,Tree}>
+align term #2: compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+align@2 create@0 cons ({tmp3,cons ({unlabel tmp4,unlabel tmp5})})
+  a: Int
+  tmp3: PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  tmp5: compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+  l: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  y: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  r: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  x: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  tmp4: compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+align term #3: compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+align@3 create@1 pnode ({a,cons ({unlabel tmp6,unlabel tmp7})})
+  a: Int
+  tmp7: compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+  l: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  r: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  x: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  tmp6: compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+align term #4: Int
+align@4 spec (unlabel tmp8)
+  tmp8: compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  x: Tree. <telt Int | tnode {Int,Tree,Tree}>
+Components for compress:
+  max [Int,Int] -> Int 3
+  telt [Int] -> Tree. <telt Int | tnode {Int,Tree,Tree}> 0
+  tnode [(Int * Tree. <telt Int | tnode {Int,Tree,Tree}> * Tree. <telt Int | tnode {Int,Tree,Tree}>)] -> Tree. <telt Int | tnode {Int,Tree,Tree}> 0
+  elt [PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>] -> List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}> 2
+  cons [(PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> * List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>)] -> List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}> 2
+  pelt [Int] -> PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> 1
+  pnode [(Int * List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>)] -> PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> 1
+
+Components for align:
+  spec [PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>] -> Int 5
+  max [Int,Int] -> Int 3
+  telt [Int] -> Tree. <telt Int | tnode {Int,Tree,Tree}> 0
+  tnode [(Int * Tree. <telt Int | tnode {Int,Tree,Tree}> * Tree. <telt Int | tnode {Int,Tree,Tree}>)] -> Tree. <telt Int | tnode {Int,Tree,Tree}> 0
+  elt [PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>] -> List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}> 2
+  cons [(PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> * List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>)] -> List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}> 2
+  pelt [Int] -> PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> 1
+  pnode [(Int * List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>)] -> PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> 1
+
+Components for comb:
+  max [Int,Int] -> Int 3
+  telt [Int] -> Tree. <telt Int | tnode {Int,Tree,Tree}> 0
+  tnode [(Int * Tree. <telt Int | tnode {Int,Tree,Tree}> * Tree. <telt Int | tnode {Int,Tree,Tree}>)] -> Tree. <telt Int | tnode {Int,Tree,Tree}> 0
+  elt [PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>] -> List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}> 2
+  cons [(PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> * List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>)] -> List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}> 2
+  pelt [Int] -> PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> 1
+  pnode [(Int * List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>)] -> PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> 1
+
+align term #0: compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+align@0 create@1 tmp1
+  a: Int
+  tmp1: PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  x: Tree. <telt Int | tnode {Int,Tree,Tree}>
+align term #1: compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+align@1 create@0 tmp2
+  a: Int
+  z: PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  l: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  tmp2: List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+  y: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  x: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  r: Tree. <telt Int | tnode {Int,Tree,Tree}>
+align term #2: compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+align@2 create@0 cons ({tmp3,cons ({unlabel tmp4,unlabel tmp5})})
+  a: Int
+  tmp3: PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  tmp5: compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+  l: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  y: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  r: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  x: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  tmp4: compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+align term #3: compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+align@3 create@1 pnode ({a,cons ({unlabel tmp6,unlabel tmp7})})
+  a: Int
+  tmp7: compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+  l: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  r: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  x: Tree. <telt Int | tnode {Int,Tree,Tree}>
+  tmp6: compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+align term #4: Int
+align@4 spec (unlabel tmp8)
+  tmp8: compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  x: Tree. <telt Int | tnode {Int,Tree,Tree}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param0
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  Compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>)
+  Compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+  Param2
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  Param7
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+num = 3
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>)
+  Compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <elt PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}> | cons {PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>,List}>
+  Param1
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  Param5
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+num = 4
+start: start
+node: start
+  Compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>([Param0,Param1]@Compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[1] PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  Param0
+num = 0
+start: start
+node: start
+num = 1
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  spec([Param0]@PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>)
+  max([Param0]@Int [Param0]@Int)
+node: [Param0]@PTree. <pelt Int | pnode {Int,List. <elt PTree | cons {PTree,List}>}>
+  Param0
+  pelt([Param0]@Int)
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [0] Param0
+  [] spec(Param0)
+  [0] Param0
+  [1] Param5 -> spec(Param0)
+  [] null
+  [0] Param0 -> spec(Param0)
+compress #0: Unit
+compress #1: Int
+pass #0: 
+a
+pass #1: 
+Unit
+pass #2: 
+Unit
+pass #3: 
+max a tmp6
+pass #4: 
+tmp8
+
+Inductive Tree;
+
+Inductive PTree;
+
+Inductive List;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+repr = fix (
+    \f: Tree -> Int. \x: Tree. 
+    match x with
+      telt a -> a
+    | tnode {a, l, r} -> 
+        let tmp6 = (f l) in 
+            max a tmp6
+    end
+);
+
+spec = fix (
+    \f: PTree -> Int. \x: PTree. 
+    match x with
+      pelt a -> a
+    | pnode {a, l} -> 
+        let maxh_aux = (fix (
+        \g: List -> Int. \y: List. 
+        match y with
+          elt a -> f a
+        | cons {hd, tl} -> f hd
+        end
+    )) in 
+            max a (maxh_aux l)
+    end
+);
+
+main = \x: Tree. 
+    let tmp8 = (repr x) in 
+        tmp8;
+syn-comb: 0.051868
+collect: 0.433265
+label: 0.015297
+extend-component: 2.9e-05
+execute: 0.142303
+syn-align: 0.614925
+comb-size: 9
+align-size: 3
+extract-size: 5
+0.693171
+Success

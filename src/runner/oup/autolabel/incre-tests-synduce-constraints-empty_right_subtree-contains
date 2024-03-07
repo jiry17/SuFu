@@ -1,0 +1,360 @@
+
+Tree :: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+ nil : Unit ->
+       Tree'. <nil Unit | leaf Int | node {Int,Tree',Tree'}>
+ leaf : Int ->
+        Tree'. <nil Unit | leaf Int | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <nil Unit | leaf Int | node {Int,Tree',Tree'}>
+ size : Tree -> Int
+empty_right : Tree -> Bool
+w : Int
+spec : Tree -> Int
+target : Tree ->
+         Tree'. <nil Unit | leaf Int | node {Int,Tree',Tree'}>
+main : Tree -> Int
+
+
+Inductive Tree;
+
+size = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      nil _ -> 0
+    | leaf _ -> 1
+    | node {_, l, r} -> + 1 (+ (f l) (f r))
+    end
+);
+
+empty_right = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      node {_, l, r} -> and (== 0 (size r)) (f l)
+    | _ -> true
+    end
+);
+
+@Input w = Int;
+
+spec = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      nil _ -> 0
+    | leaf a -> if (== a w) then 1
+        else 0
+    | node {a, l, r} -> if (== a w) then 1
+        else if (== 1 (f l)) then 1
+        else f r
+    end
+);
+
+target = fix (
+    \f: Tree -> Compress Tree. \t: Tree. 
+    match t with
+      nil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | leaf a -> 
+        let tmp2 = (leaf a) in 
+            align (label tmp2 ) 
+    | node {a, l, r} -> 
+        let tmp3 = (f l) in 
+            align (label (node {a, unlabel tmp3 , r}) ) 
+    end
+);
+
+main = \t: Tree. 
+    if (empty_right t) then let tmp4 = (target t) in 
+        align (spec (unlabel tmp4 )) 
+    else 0;
+align term #0: compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  tmp1: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+align@1 create@0 tmp2
+  t: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  tmp2: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  a: Int
+align term #2: compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+align@2 create@0 node ({a,unlabel tmp3,r})
+  r: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  a: Int
+  l: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  tmp3: compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+align term #3: Int
+align@3 spec (unlabel tmp4)
+  t: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  tmp4: compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+Components for compress:
+  leaf [Int] -> Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> 0
+  nil [Bot] -> Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> 0
+  node [(Int * Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> * Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)] -> Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> 0
+
+Components for align:
+  leaf [Int] -> Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> 0
+  empty_right [Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>] -> Bool 2
+  spec [Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>] -> Int 4
+  nil [Bot] -> Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> 0
+  node [(Int * Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> * Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)] -> Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> 0
+  size [Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>] -> Int 1
+
+Components for comb:
+  leaf [Int] -> Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> 0
+  nil [Bot] -> Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> 0
+  node [(Int * Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> * Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)] -> Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}> 0
+
+align term #0: compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  tmp1: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+align@1 create@0 tmp2
+  t: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  tmp2: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  a: Int
+align term #2: compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+align@2 create@0 node ({a,unlabel tmp3,r})
+  r: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  a: Int
+  l: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  tmp3: compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+align term #3: Int
+align@3 spec (unlabel tmp4)
+  t: Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  tmp4: compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param2
+  Param3
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param2
+  Param5
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  Param4
+num = 3
+start: start
+node: start
+  Compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>([Param0,Param1,Param2]@Compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  Param1
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+  Bool([Param0,Param1]@Bool)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  ite([Param0,Param1]@Bool [Param0,Param1]@Int [Param0,Param1]@Int)
+  fold[Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>->Int]([Param1]@Int [Int@0,Param1]@Int [Int@0,Int@1,Int@2,Param1]@Int [Param0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+  spec([Param0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+  size([Param0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Param1]@Int
+  Param1
+  +([Param1]@Int [Param1]@Int)
+  -([Param1]@Int [Param1]@Int)
+  ite([Param1]@Bool [Param1]@Int [Param1]@Int)
+  fold[Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>->Int]([Param1]@Int [Int@0,Param1]@Int [Int@0,Int@1,Int@2,Param1]@Int [Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+  spec([Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+  size([Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Param1]@Int
+  Param1
+  Int@0
+  +([Int@0,Param1]@Int [Int@0,Param1]@Int)
+  -([Int@0,Param1]@Int [Int@0,Param1]@Int)
+  ite([Int@0,Param1]@Bool [Int@0,Param1]@Int [Int@0,Param1]@Int)
+  spec([Int@0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+  size([Int@0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Int@2,Param1]@Int
+  Param1
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2,Param1]@Int [Int@0,Int@1,Int@2,Param1]@Int)
+  -([Int@0,Int@1,Int@2,Param1]@Int [Int@0,Int@1,Int@2,Param1]@Int)
+  ite([Int@0,Int@1,Int@2,Param1]@Bool [Int@0,Int@1,Int@2,Param1]@Int [Int@0,Int@1,Int@2,Param1]@Int)
+  spec([Int@0,Int@1,Int@2,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+  size([Int@0,Int@1,Int@2,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Bool@0,Bool@1,Int@0,Param1]@Int
+  Param1
+  Int@0
+  +([Bool@0,Bool@1,Int@0,Param1]@Int [Bool@0,Bool@1,Int@0,Param1]@Int)
+  -([Bool@0,Bool@1,Int@0,Param1]@Int [Bool@0,Bool@1,Int@0,Param1]@Int)
+  ite([Bool@0,Bool@1,Int@0,Param1]@Bool [Bool@0,Bool@1,Int@0,Param1]@Int [Bool@0,Bool@1,Int@0,Param1]@Int)
+  spec([Bool@0,Bool@1,Int@0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+  size([Bool@0,Bool@1,Int@0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Bool@0,Bool@1,Int@0,Param1]@Bool
+  Bool@0
+  Bool@1
+  empty_right([Bool@0,Bool@1,Int@0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Param0,Param1]@Bool
+  fold[Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>->Bool]([Param1]@Bool [Int@0,Param1]@Bool [Bool@0,Bool@1,Int@0,Param1]@Bool [Param0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+  empty_right([Param0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Param1]@Bool
+  fold[Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>->Bool]([Param1]@Bool [Int@0,Param1]@Bool [Bool@0,Bool@1,Int@0,Param1]@Bool [Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+  empty_right([Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Param1]@Bool
+  empty_right([Int@0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Int@2,Param1]@Bool
+  empty_right([Int@0,Int@1,Int@2,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>)
+node: [Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  leaf([Param1]@Int)
+node: [Int@0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  leaf([Int@0,Param1]@Int)
+node: [Int@0,Int@1,Int@2,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  leaf([Int@0,Int@1,Int@2,Param1]@Int)
+node: [Bool@0,Bool@1,Int@0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  leaf([Bool@0,Bool@1,Int@0,Param1]@Int)
+node: [Param0,Param1]@Tree. <nil Unit | leaf Int | node {Int,Tree,Tree}>
+  Param0
+  leaf([Param0,Param1]@Int)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(Param0)
+  [1] Param1
+  [0] Param2
+  [0] spec(Param0)
+  [1] Param1
+  [0] -(Param2,Param3)
+  [1] Param3
+  [0] spec(Param0)
+  [1] Param1
+  [0] Param2
+  [1] Param4 -> spec(Param0)
+  [2] Param4 -> Param1
+  [3] Param5
+  [] null
+  [0] Param1 -> spec(Param0)
+  [1] Param1 -> Param1
+compress #0: {Int,Int}
+pass #0: 
+{0, w}
+pass #1: 
+let c0 = (- a w) in 
+    {if (== c0 0) then - 1 c0
+    else 0, w}
+pass #2: 
+{if (== a tmp3.2) then 1
+else tmp3.1, w}
+pass #3: 
+tmp4.1
+
+Inductive Tree;
+
+size = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      nil _ -> 0
+    | leaf _ -> 1
+    | node {_, l, r} -> + 1 (+ (f l) (f r))
+    end
+);
+
+empty_right = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      node {_, l, r} -> and (== 0 (size r)) (f l)
+    | _ -> true
+    end
+);
+
+@Input w = Int;
+
+spec = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      nil _ -> 0
+    | leaf a -> if (== a w) then 1
+        else 0
+    | node {a, l, r} -> if (== a w) then 1
+        else if (== 1 (f l)) then 1
+        else f r
+    end
+);
+
+target = fix (
+    \f: Tree -> {Int, Int}. \t: Tree. 
+    match t with
+      nil _ -> {0, w}
+    | leaf a -> 
+        let c0 = (- a w) in 
+            {if (== c0 0) then - 1 c0
+            else 0, w}
+    | node {a, l, r} -> 
+        let tmp3 = (f l) in 
+            {if (== a tmp3.2) then 1
+            else tmp3.1, w}
+    end
+);
+
+main = \t: Tree. 
+    if (empty_right t) then let tmp4 = (target t) in 
+        tmp4.1
+    else 0;
+syn-comb: 1.56547
+collect: 7.41433
+label: 0.014829
+extend-component: 0.00181
+execute: 0.263351
+syn-align: 7.75339
+comb-size: 37
+align-size: 5
+extract-size: 13
+9.34131
+Success

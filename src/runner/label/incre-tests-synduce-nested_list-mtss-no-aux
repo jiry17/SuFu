@@ -1,0 +1,82 @@
+
+Inductive List;
+
+Inductive NList;
+
+Inductive CNList;
+
+cton = fix (
+    \f: CNList -> NList. 
+    let dec = (fix (
+    \g: CNList -> CNList -> NList. \l: CNList. \c: CNList. 
+    match c with
+      sglt x -> ncons {x, f l}
+    | cat {x, y} -> g (cat {y, l}) x
+    end
+)) in 
+        \c: CNList. 
+        match c with
+          sglt x -> line x
+        | cat {x, y} -> dec y x
+        end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> x
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+nsum = fix (
+    \f: NList -> Int. \xs: NList. 
+    match xs with
+      line a -> sum a
+    | ncons {h, t} -> + (sum h) (f t)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: NList -> Int. \xs: NList. 
+    match xs with
+      line a -> max 0 (sum a)
+    | ncons {h, t} -> 
+        let hsum = (sum h) in 
+            let tres = (f t) in 
+                max (+ tres hsum) 0
+    end
+);
+
+target = fix (
+    \f: CNList -> Compress CNList. 
+    let tsum = (fix (
+    \g: List -> Compress List. \xs: List. 
+    match xs with
+      elt x -> 
+        let tmp1 = (elt x) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (g t) in 
+            align (label (cons {h, unlabel tmp2 }) ) 
+    end
+)) in 
+        \c: CNList. 
+        match c with
+          sglt x -> 
+            let tmp3 = (tsum x) in 
+                align (label (sglt (unlabel tmp3 )) ) 
+        | cat {l, r} -> 
+            let tmp4 = (f l) in 
+                let tmp5 = (f r) in 
+                    align (label (cat {unlabel tmp4 , unlabel tmp5 }) ) 
+        end
+);
+
+main = \c: CNList. 
+    let tmp6 = (target c) in 
+        align (spec (cton (unlabel tmp6 ))) ;

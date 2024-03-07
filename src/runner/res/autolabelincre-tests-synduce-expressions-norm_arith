@@ -1,0 +1,28 @@
+
+Inductive ArithExpr;
+
+Inductive NormExpr;
+
+repr = fix (
+    \f: NormExpr -> Int. \e: NormExpr. 
+    match e with
+      nint i -> i
+    | nplus {e1, e2} -> 
+        let tmp2 = (f e1) in 
+            let tmp3 = (f e2) in 
+                + tmp2 tmp3
+    end
+);
+
+spec = fix (
+    \f: ArithExpr -> Int. \e: ArithExpr. 
+    match e with
+      int i -> i
+    | plus {e1, e2} -> + (f e1) (f e2)
+    | minus {e1, e2} -> - (f e1) (f e2)
+    end
+);
+
+main = \e: NormExpr. 
+    let tmp4 = (repr e) in 
+        tmp4;

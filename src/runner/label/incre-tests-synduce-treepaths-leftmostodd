@@ -1,0 +1,67 @@
+
+Inductive BTree;
+
+Inductive Zipper;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+mod2 = \x: Int. 
+    - x (* (/ x 2) 2);
+
+spec = \t: BTree. 
+    (fix (
+    \f: BTree -> {Bool, Int}. \t: BTree. 
+    match t with
+      empty _ -> {false, 1}
+    | node {a, l, r} -> 
+        let result = (f l) in 
+            if (result.1) then result
+            else if (== 1 (mod2 a)) then {true, a}
+            else f r
+    end
+) t).2;
+
+repr = fix (
+    \f: Zipper -> BTree. \z: Zipper. 
+    match z with
+      top _ -> empty Unit
+    | left {w, tree, zz} -> node {w, tree, f zz}
+    | right {w, tree, zz} -> node {w, f zz, tree}
+    end
+);
+
+tree_rec = fix (
+    \f: BTree -> Compress BTree. \t: BTree. 
+    match t with
+      empty _ -> 
+        let tmp1 = (empty Unit) in 
+            align (label tmp1 ) 
+    | node {a, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (node {a, unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+zip_rec = fix (
+    \f: Zipper -> Compress Zipper. \z: Zipper. 
+    match z with
+      top _ -> 
+        let tmp4 = (top Unit) in 
+            align (label tmp4 ) 
+    | left {w, tree, zz} -> 
+        let tmp5 = (tree_rec tree) in 
+            let tmp6 = (f zz) in 
+                align (label (left {w, unlabel tmp5 , unlabel tmp6 }) ) 
+    | right {w, tree, zz} -> 
+        let tmp7 = (tree_rec tree) in 
+            let tmp8 = (f zz) in 
+                align (label (right {w, unlabel tmp7 , unlabel tmp8 }) ) 
+    end
+);
+
+main = \z: Zipper. 
+    let tmp9 = (zip_rec z) in 
+        align (spec (repr (unlabel tmp9 ))) ;

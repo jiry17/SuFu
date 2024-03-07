@@ -1,0 +1,29 @@
+
+UList :: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,
+                                                 UList}>
+ unil : Unit ->
+        UList'. <unil Unit | uelt Int | usplit {UList',Int,Int,
+                                                UList'}>
+ uelt : Int ->
+        UList'. <unil Unit | uelt Int | usplit {UList',Int,Int,
+                                                UList'}>
+ usplit : {UList,Int,Int,UList} ->
+          UList'. <unil Unit | uelt Int | usplit {UList',Int,Int,
+                                                  UList'}>
+ List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+repr : UList -> List
+is_unimodal : List -> Bool
+w : Int
+spec : List -> Bool
+target : UList ->
+         UList'. <unil Unit | uelt Int | usplit {UList',Int,Int,
+                                                 UList'}>
+main : UList -> Bool
+
+size: 186
+compress-num: 1
+label-num: 10
+rewrite-size: 20
+0.019827

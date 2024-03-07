@@ -1,0 +1,39 @@
+
+Inductive List;
+
+Inductive CList;
+
+min = \x: Int. \y: Int. 
+    if (< x y) then x
+    else y;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt a -> a
+    | cons {hd, tl} -> min hd (f tl)
+    end
+);
+
+cat = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      elt a -> cons {a, ys}
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> Int. \xs: CList. 
+    match xs with
+      single a -> a
+    | concat {a, b} -> 
+        let tmp2 = (f a) in 
+            let tmp3 = (f b) in 
+                min tmp2 tmp3
+    end
+);
+
+main = \x: CList. 
+    let tmp4 = (repr x) in 
+        tmp4;

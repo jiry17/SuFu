@@ -1,0 +1,25 @@
+
+BList :: BList. <nil Unit | cons {Bool,BList}>
+ nil : Unit -> BList'. <nil Unit | cons {Bool,BList'}>
+ cons : {Bool,BList} -> BList'. <nil Unit | cons {Bool,BList'}>
+ CList :: CList. <emp Unit | single Bool | concat {CList,CList}>
+emp : Unit ->
+      CList'. <emp Unit | single Bool | concat {CList',CList'}>
+single : Bool ->
+         CList'. <emp Unit | single Bool | concat {CList',CList'}>
+concat : {CList,CList} ->
+         CList'. <emp Unit | single Bool | concat {CList',CList'}>
+const_true : Bool
+const_false : Bool
+op_and : Bool -> Bool -> Bool
+op_or : Bool -> Bool -> Bool
+cat_list : BList -> BList -> BList
+repr : CList -> BList'. <nil Unit | cons {Bool,BList'}>
+spec : BList -> Bool
+main : CList -> Bool
+
+size: 149
+compress-num: 1
+label-num: 10
+rewrite-size: 16
+0.01705

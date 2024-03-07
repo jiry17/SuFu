@@ -1,0 +1,321 @@
+
+UList :: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,
+                                                 UList}>
+ unil : Unit ->
+        UList'. <unil Unit | uelt Int | usplit {UList',Int,Int,
+                                                UList'}>
+ uelt : Int ->
+        UList'. <unil Unit | uelt Int | usplit {UList',Int,Int,
+                                                UList'}>
+ usplit : {UList,Int,Int,UList} ->
+          UList'. <unil Unit | uelt Int | usplit {UList',Int,Int,
+                                                  UList'}>
+ List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+repr : UList -> List
+is_unimodal : List -> Bool
+spec : List -> Int
+target : UList ->
+         UList'. <unil Unit | uelt Int | usplit {UList',Int,Int,
+                                                 UList'}>
+main : UList -> Int
+
+
+Inductive UList;
+
+Inductive List;
+
+repr = fix (
+    \f: List -> UList -> List. \res: List. \xs: UList. 
+    match xs with
+      unil _ -> res
+    | uelt x -> cons {x, res}
+    | usplit {x, a, b, y} -> f (cons {a, cons {b, f res y}}) x
+    end
+) (nil Unit);
+
+is_unimodal = let aux_down = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> and (>= pre h) (f h t)
+    end
+)) in 
+        let aux_up = (fix (
+        \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+        match xs with
+          nil _ -> true
+        | cons {h, t} -> if (<= pre h) then f h t
+            else aux_down h t
+        end
+    )) in 
+            \xs: List. 
+            match xs with
+              nil _ -> true
+            | cons {h, t} -> aux_up h t
+            end
+;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+target = fix (
+    \f: UList -> Compress UList. \xs: UList. 
+    match xs with
+      unil _ -> 
+        let tmp1 = (unil Unit) in 
+            align (label tmp1 ) 
+    | uelt x -> 
+        let tmp2 = (uelt x) in 
+            align (label tmp2 ) 
+    | usplit {x, a, b, y} -> 
+        let tmp3 = (f x) in 
+            let tmp4 = (f y) in 
+                align (label (usplit {unlabel tmp3 , a, b, unlabel tmp4 }) ) 
+    end
+);
+
+main = \xs: UList. 
+    if (is_unimodal (repr xs)) then let tmp5 = (target xs) in 
+        align (spec (repr (unlabel tmp5 ))) 
+    else 0;
+align term #0: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+align@0 create@0 tmp1
+  xs: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  tmp1: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+align term #1: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+align@1 create@0 tmp2
+  xs: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  tmp2: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  x: Int
+align term #2: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+align@2 create@0 usplit ({unlabel tmp3,a,b,unlabel tmp4})
+  tmp4: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  xs: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  x: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  y: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  b: Int
+  tmp3: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  a: Int
+align term #3: Int
+align@3 spec (repr (unlabel tmp5))
+  tmp5: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  xs: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+Components for compress:
+  usplit [(UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> * Int * Int * UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>)] -> UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> 0
+  unil [Bot] -> UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> 0
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 1
+  uelt [Int] -> UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 1
+
+Components for align:
+  is_unimodal [List. <nil Unit | cons {Int,List}>] -> Bool 3
+  usplit [(UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> * Int * Int * UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>)] -> UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> 0
+  unil [Bot] -> UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> 0
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 1
+  spec [List. <nil Unit | cons {Int,List}>] -> Int 4
+  repr [UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>] -> List. <nil Unit | cons {Int,List}> 2
+  uelt [Int] -> UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 1
+
+Components for comb:
+  usplit [(UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> * Int * Int * UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>)] -> UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> 0
+  unil [Bot] -> UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> 0
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 1
+  uelt [Int] -> UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 1
+
+align term #0: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+align@0 create@0 tmp1
+  xs: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  tmp1: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+align term #1: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+align@1 create@0 tmp2
+  xs: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  tmp2: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  x: Int
+align term #2: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+align@2 create@0 usplit ({unlabel tmp3,a,b,unlabel tmp4})
+  tmp4: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  xs: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  x: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  y: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  b: Int
+  tmp3: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  a: Int
+align term #3: Int
+align@3 spec (repr (unlabel tmp5))
+  tmp5: compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  xs: UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param4
+  Param6
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  Param0
+  Param5
+num = 3
+start: start
+node: start
+  Compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>([Param0,Param1]@Compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+node: [Param0,Param1]@Compress[0] UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  spec([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@Bool
+  is_unimodal([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  repr([Param0]@UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>)
+node: [Param0]@UList. <unil Unit | uelt Int | usplit {UList,Int,Int,UList}>
+  Param0
+  uelt([Param0]@Int)
+
+
+
+
+
+
+
+
+
+
+
+
+  [] spec(repr(Param0))
+  [] spec(repr(Param0))
+  [0] Param2
+  [] spec(repr(Param0))
+  [0] Param0 -> spec(repr(Param0))
+  [1] Param5 -> spec(repr(Param0))
+  [2] +(Param4,Param6)
+  [] null
+  [0] Param0 -> spec(repr(Param0))
+compress #0: Int
+pass #0: 
+0
+pass #1: 
+x
+pass #2: 
+let c0 = (+ b a) in 
+    + (+ tmp4 tmp3) c0
+pass #3: 
+tmp5
+
+Inductive UList;
+
+Inductive List;
+
+repr = fix (
+    \f: List -> UList -> List. \res: List. \xs: UList. 
+    match xs with
+      unil _ -> res
+    | uelt x -> cons {x, res}
+    | usplit {x, a, b, y} -> f (cons {a, cons {b, f res y}}) x
+    end
+) (nil Unit);
+
+is_unimodal = let aux_down = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> and (>= pre h) (f h t)
+    end
+)) in 
+        let aux_up = (fix (
+        \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+        match xs with
+          nil _ -> true
+        | cons {h, t} -> if (<= pre h) then f h t
+            else aux_down h t
+        end
+    )) in 
+            \xs: List. 
+            match xs with
+              nil _ -> true
+            | cons {h, t} -> aux_up h t
+            end
+;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+target = fix (
+    \f: UList -> Int. \xs: UList. 
+    match xs with
+      unil _ -> 0
+    | uelt x -> x
+    | usplit {x, a, b, y} -> 
+        let tmp3 = (f x) in 
+            let tmp4 = (f y) in 
+                let c0 = (+ b a) in 
+                    + (+ tmp4 tmp3) c0
+    end
+);
+
+main = \xs: UList. 
+    if (is_unimodal (repr xs)) then let tmp5 = (target xs) in 
+        tmp5
+    else 0;
+syn-comb: 0.931072
+collect: 7.34476
+label: 0.016217
+extend-component: 0.002671
+execute: 0.842297
+syn-align: 8.31151
+comb-size: 18
+align-size: 5
+extract-size: 10
+9.26786
+Success

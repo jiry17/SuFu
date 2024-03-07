@@ -1,0 +1,83 @@
+
+Inductive CList;
+
+Inductive List;
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      nil _ -> b
+    | cons {h, t} -> cons {h, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> List. \xs: CList. 
+    match xs with
+      empty _ -> nil Unit
+    | elt w -> cons {w, nil Unit}
+    | concat {l, r} -> cat (f l) (f r)
+    end
+);
+
+all_pos = fix (
+    \f: CList -> Bool. \c: CList. 
+    match c with
+      empty _ -> true
+    | elt w -> > w 0
+    | concat {l, r} -> and (f l) (f r)
+    end
+);
+
+geq_head = \x: Int. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> >= x h
+    end
+;
+
+is_sorted = fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, t} -> and (geq_head h t) (f t)
+    end
+);
+
+min = \x: Int. \y: Int. 
+    if (< x y) then x
+    else y;
+
+max = \x: Int. \y: Int. 
+    if (> x y) then x
+    else y;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            {max res.1 h, max res.2 (min res.1 h)}
+    end
+) xs).2;
+
+target = fix (
+    \f: CList -> Compress CList. \c: CList. 
+    match c with
+      empty _ -> 
+        align (label c ) 
+    | elt w -> 
+        align (label c ) 
+    | concat {l, r} -> 
+        let tmp1 = (f l) in 
+            let tmp2 = (f r) in 
+                align (label (concat {unlabel tmp1 , unlabel tmp2 }) ) 
+    end
+);
+
+main = \c: CList. 
+    if (is_sorted (repr c)) then let tmp3 = (target c) in 
+        align (spec (repr (unlabel tmp3 ))) 
+    else 0;

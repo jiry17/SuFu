@@ -1,0 +1,26 @@
+
+ZipCList :: ZipCList. <cnil Unit | single {Int,Int} | concat {
+ ZipCList,ZipCList}>
+ cnil : Unit ->
+        ZipCList'. <cnil Unit | single {Int,Int} | concat {
+        ZipCList',ZipCList'}>
+ single : {Int,Int} ->
+          ZipCList'. <cnil Unit | single {Int,Int} | concat {
+          ZipCList',ZipCList'}>
+ concat : {ZipCList,ZipCList} ->
+          ZipCList'. <cnil Unit | single {Int,Int} | concat {
+          ZipCList',ZipCList'}>
+ ZipList :: ZipList. <nil Unit | cons {Int,Int,ZipList}>
+nil : Unit -> ZipList'. <nil Unit | cons {Int,Int,ZipList'}>
+cons : {Int,Int,ZipList} ->
+       ZipList'. <nil Unit | cons {Int,Int,ZipList'}>
+cat : ZipList -> ZipList -> ZipList
+repr : ZipCList -> ZipList'. <nil Unit | cons {Int,Int,ZipList'}>
+spec : ZipList -> Int
+main : ZipCList -> Int
+
+size: 101
+compress-num: 1
+label-num: 10
+rewrite-size: 16
+0.012537

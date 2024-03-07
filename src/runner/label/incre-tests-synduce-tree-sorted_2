@@ -1,0 +1,31 @@
+
+Inductive Tree;
+
+spec = fix (
+    \f: Int -> Tree -> Bool. \y: Int. \t: Tree. 
+    match t with
+      leaf a -> > y a
+    | node {a, l, r} -> 
+        let r1 = (f a l) in 
+            let r2 = (f a r) in 
+                and r1 (and r2 (> y a))
+    end
+);
+
+repr = fix (
+    \f: ({Int, Tree}) -> Compress {Int, Tree}. \t: {Int, Tree}. 
+    match t with
+      {pre, leaf a} -> 
+        let tmp1 = {pre, leaf a} in 
+            align (label tmp1 ) 
+    | {pre, node {a, l, r}} -> 
+        let lres = (f {a, l}) in 
+            let rres = (f {a, r}) in 
+                align (label {pre, node {a, (unlabel lres ).2, (unlabel rres ).2}} ) 
+    end
+);
+
+main = \key: Int. \t: Tree. 
+    let res = (repr {key, t}) in 
+        let tmp2 = (spec key) in 
+            align (tmp2 (unlabel res ).2) ;

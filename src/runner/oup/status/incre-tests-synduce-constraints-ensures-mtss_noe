@@ -1,0 +1,23 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ NList :: NList. <line List | ncons {List,NList}>
+line : List -> NList'. <line List | ncons {List,NList'}>
+ncons : {List,NList} -> NList'. <line List | ncons {List,NList'}>
+CNList :: CNList. <sglt List | cat {CNList,CNList}>
+sglt : List -> CNList'. <sglt List | cat {CNList',CNList'}>
+cat : {CNList,CNList} ->
+      CNList'. <sglt List | cat {CNList',CNList'}>
+cton : CNList -> NList'. <line List | ncons {List,NList'}>
+sum : List -> Int
+max : Int -> Int -> Int
+spec : NList -> Int
+target : CNList -> CNList
+main : CNList -> Int
+
+size: 176
+compress-num: 1
+label-num: 8
+rewrite-size: 16
+0.019928

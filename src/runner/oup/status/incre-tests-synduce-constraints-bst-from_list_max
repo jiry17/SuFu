@@ -1,0 +1,24 @@
+
+Tree :: Tree. <leaf Int | node {Int,Tree,Tree}>
+ leaf : Int -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ List :: List. <elt Int | cons {Int,List}>
+elt : Int -> List'. <elt Int | cons {Int,List'}>
+cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+min : Int -> Int -> Int
+max : Int -> Int -> Int
+tmin : Tree -> Int
+tmax : Tree -> Int
+is_bst : Tree -> Bool
+cat : List -> List -> List'. <elt Int | cons {Int,List'}>
+repr : Tree -> List'. <elt Int | cons {Int,List'}>
+spec : List -> Int
+target : Tree -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+main : Tree -> Int
+
+size: 224
+compress-num: 1
+label-num: 7
+rewrite-size: 16
+0.020434

@@ -1,0 +1,17 @@
+
+Tree :: Tree. <elt Int | node {Int,Tree,Tree}>
+ elt : Int -> Tree'. <elt Int | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <elt Int | node {Int,Tree',Tree'}>
+ mod2 : Int -> Int
+is_even : Tree -> Bool
+max : Int -> Int -> Int
+spec : Tree -> Int
+target : Tree -> Tree'. <elt Int | node {Int,Tree',Tree'}>
+main : Tree -> Int
+
+size: 128
+compress-num: 1
+label-num: 6
+rewrite-size: 8
+0.013948

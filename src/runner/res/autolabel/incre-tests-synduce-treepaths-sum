@@ -1,0 +1,33 @@
+
+Inductive BTree;
+
+Inductive Zipper;
+
+sum = fix (
+    \f: BTree -> Int. \t: BTree. 
+    match t with
+      empty _ -> 0
+    | node {a, l, r} -> + a (+ (f l) (f r))
+    end
+);
+
+repr = fix (
+    \f: Zipper -> Int. \z: Zipper. 
+    match z with
+      top _ -> 0
+    | left {w, tree, zz} -> 
+        let tw = (sum tree) in 
+            let tmp2 = (f zz) in 
+                let c0 = (+ tw w) in 
+                    + tmp2 c0
+    | right {w, tree, zz} -> 
+        let tw = (sum tree) in 
+            let tmp3 = (f zz) in 
+                let c0 = (+ w tw) in 
+                    + tmp3 c0
+    end
+);
+
+main = \z: Zipper. 
+    let tmp4 = (repr z) in 
+        tmp4;

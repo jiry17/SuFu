@@ -1,0 +1,41 @@
+
+Inductive List;
+
+is_even = \a: Int. 
+    == a (* 2 (/ a 2));
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> {Int, Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0, 0}
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            {if (or (or (not (is_even (+ (- tmp1.2 tmp1.3) 1))) (< (+ (- tmp1.2 tmp1.3) 1) tmp1.1)) (== h 1)) then tmp1.1
+            else + (- tmp1.2 tmp1.3) 1, + 1 tmp1.2, if (is_even h) then + h tmp1.3
+            else + h tmp1.2}
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2.1;
+
+inf = 100;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+longest00s = fix (
+    \f: Int -> List -> Int. \len: Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let len = (if (== h 0) then + len 1
+        else 0) in 
+            if (is_even len) then max len (f len t)
+            else f len t
+    end
+) 0;
+
+main = single_pass longest00s;

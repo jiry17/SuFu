@@ -1,0 +1,57 @@
+
+Inductive Tree;
+
+Inductive PTree;
+
+Inductive List;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+repr = fix (
+    \f: Tree -> Compress PTree. \x: Tree. 
+    match x with
+      telt a -> 
+        let tmp1 = (pelt a) in 
+            align (label tmp1 ) 
+    | tnode {a, l, r} -> 
+        let repr_list = (fix (
+        \g: Tree -> Compress List. \y: Tree. 
+        match y with
+          telt a -> 
+            let z = (pelt a) in 
+                let tmp2 = (elt z) in 
+                    align (label tmp2 ) 
+        | tnode {a, l, r} -> 
+            let tmp3 = (pelt a) in 
+                let tmp4 = (f l) in 
+                    let tmp5 = (g r) in 
+                        align (label (cons {tmp3, cons {unlabel tmp4 , unlabel tmp5 }}) ) 
+        end
+    )) in 
+            let tmp6 = (f l) in 
+                let tmp7 = (repr_list r) in 
+                    align (label (pnode {a, cons {unlabel tmp6 , unlabel tmp7 }}) ) 
+    end
+);
+
+spec = fix (
+    \f: PTree -> Int. \x: PTree. 
+    match x with
+      pelt a -> a
+    | pnode {a, l} -> 
+        let maxh_aux = (fix (
+        \g: List -> Int. \y: List. 
+        match y with
+          elt a -> f a
+        | cons {hd, tl} -> f hd
+        end
+    )) in 
+            max a (maxh_aux l)
+    end
+);
+
+main = \x: Tree. 
+    let tmp8 = (repr x) in 
+        align (spec (unlabel tmp8 )) ;

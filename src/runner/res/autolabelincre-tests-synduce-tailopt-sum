@@ -1,0 +1,30 @@
+
+Inductive List;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+snoc = fix (
+    \f: List -> Int -> List. \xs: List. \w: Int. 
+    match xs with
+      nil _ -> cons {w, nil unit}
+    | cons {h, t} -> cons {h, f t w}
+    end
+);
+
+repr = fix (
+    \f: Int -> List -> Int. \pre: Int. \xs: List. 
+    match xs with
+      nil _ -> pre
+    | cons {h, t} -> f (+ pre h) t
+    end
+) 0;
+
+main = \xs: List. 
+    let tmp2 = (repr xs) in 
+        tmp2;

@@ -1,0 +1,31 @@
+
+Inductive List;
+
+single_pass = \v: List -> Bool. 
+    let run = (fix (
+    \f: List -> {Bool, Int}. \xs: List. 
+    match xs with
+      nil _ -> {true, - 0 al_inf}
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            {or (and (<= h tmp1.2) tmp1.1) (al_error tmp1.2), if (< h tmp1.2) then tmp1.2
+            else h}
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2.1;
+
+inf = 100;
+
+line_sight = fix (
+    \f: Int -> List -> Bool. \ma: Int. \xs: List. 
+    match xs with
+      nil _ -> true
+    | cons {h, nil _} -> >= h ma
+    | cons {h, t} -> if (> h ma) then f h t
+        else f ma t
+    end
+) (- 0 inf);
+
+main = single_pass line_sight;

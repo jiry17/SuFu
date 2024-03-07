@@ -1,0 +1,366 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ Nat :: Nat. <z Unit | s Nat>
+z : Unit -> Nat'. <z Unit | s Nat'>
+s : Nat -> Nat'. <z Unit | s Nat'>
+AList :: AList. <anil Unit | acons {Int,Nat,AList}>
+anil : Unit -> AList'. <anil Unit | acons {Int,Nat,AList'}>
+acons : {Int,Nat,AList} ->
+        AList'. <anil Unit | acons {Int,Nat,AList'}>
+is_unique : AList -> Bool
+w : Int
+spec : List -> Int
+repr : AList -> List'. <nil Unit | cons {Int,List'}>
+n2i : Nat -> Int
+target : AList -> AList'. <anil Unit | acons {Int,Nat,AList'}>
+main : AList -> Int
+
+
+Inductive List;
+
+Inductive Nat;
+
+Inductive AList;
+
+is_unique = let key_differ = (\key: Int. 
+    fix (
+    \f: AList -> Bool. \xs: AList. 
+    match xs with
+      anil _ -> true
+    | acons {h, _, t} -> and (not (== h key)) (f t)
+    end
+)) in 
+        fix (
+        \f: AList -> Bool. \xs: AList. 
+        match xs with
+          anil _ -> true
+        | acons {h, _, t} -> and (key_differ h t) (f t)
+        end
+    );
+
+@Input w = Int;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> if (== h w) then + 1 (f t)
+        else f t
+    end
+);
+
+repr = let repeat = (\w: Int. \suf: List. 
+    fix (
+    \f: Nat -> List. \n: Nat. 
+    match n with
+      z _ -> suf
+    | s m -> cons {w, f m}
+    end
+)) in 
+        fix (
+        \f: AList -> List. \xs: AList. 
+        match xs with
+          anil _ -> nil unit
+        | acons {h, n, t} -> repeat h (f t) n
+        end
+    );
+
+n2i = fix (
+    \f: Nat -> Int. \n: Nat. 
+    match n with
+      z _ -> 0
+    | s m -> + 1 (f m)
+    end
+);
+
+target = let nat_repr = (fix (
+    \f: Nat -> Compress Nat. \n: Nat. 
+    match n with
+      z _ -> 
+        let tmp1 = (z unit) in 
+            align (label tmp1 ) 
+    | s m -> 
+        let tmp2 = (f m) in 
+            align (label (s (unlabel tmp2 )) ) 
+    end
+)) in 
+        fix (
+        \f: AList -> Compress AList. \xs: AList. 
+        match xs with
+          anil _ -> 
+            let tmp3 = (anil unit) in 
+                align (label tmp3 ) 
+        | acons {h, n, t} -> if (== h w) then let tmp4 = (nat_repr n) in 
+                align (label (acons {h, unlabel tmp4 , t}) ) 
+            else let tmp5 = (f t) in 
+                align (label (acons {h, n, unlabel tmp5 }) ) 
+        end
+    );
+
+main = \xs: AList. 
+    if (is_unique xs) then let tmp6 = (target xs) in 
+        align (spec (repr (unlabel tmp6 ))) 
+    else 0;
+align term #0: compress[0] Nat. <z Unit | s Nat>
+align@0 create@0 tmp1
+  tmp1: Nat. <z Unit | s Nat>
+  n: Nat. <z Unit | s Nat>
+align term #1: compress[0] Nat. <z Unit | s Nat>
+align@1 create@0 s (unlabel tmp2)
+  tmp2: compress[0] Nat. <z Unit | s Nat>
+  m: Nat. <z Unit | s Nat>
+  n: Nat. <z Unit | s Nat>
+align term #2: compress[1] AList. <anil Unit | acons {Int,Nat,AList}>
+align@2 create@1 tmp3
+  tmp3: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  xs: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+align term #3: compress[1] AList. <anil Unit | acons {Int,Nat,AList}>
+align@3 create@1 acons ({h,unlabel tmp4,t})
+  tmp4: compress[0] Nat. <z Unit | s Nat>
+  t: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  xs: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  n: Nat. <z Unit | s Nat>
+  h: Int
+align term #4: compress[1] AList. <anil Unit | acons {Int,Nat,AList}>
+align@4 create@1 acons ({h,n,unlabel tmp5})
+  t: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  xs: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  h: Int
+  tmp5: compress[1] AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  n: Nat. <z Unit | s Nat>
+align term #5: Int
+align@5 spec (repr (unlabel tmp6))
+  xs: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  tmp6: compress[1] AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+Components for compress:
+  anil [Bot] -> AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}> 2
+  cons [(Int*List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  acons [(Int*Nat. <z Unit | s Nat>*AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>)] -> AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}> 2
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 1
+  z [Bot] -> Nat. <z Unit | s Nat> 1
+
+Components for align:
+  anil [Bot] -> AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}> 2
+  n2i [Nat. <z Unit | s Nat>] -> Int 7
+  cons [(Int*List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  acons [(Int*Nat. <z Unit | s Nat>*AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>)] -> AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}> 2
+  spec [List. <nil Unit | cons {Int,List}>] -> Int 5
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 1
+  is_unique [AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>] -> Bool 3
+  z [Bot] -> Nat. <z Unit | s Nat> 1
+  repr [AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>] -> List. <nil Unit | cons {Int,List}> 6
+
+Components for comb:
+  anil [Bot] -> AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}> 2
+  cons [(Int*List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  acons [(Int*Nat. <z Unit | s Nat>*AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>)] -> AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}> 2
+  s [Nat. <z Unit | s Nat>] -> Nat. <z Unit | s Nat> 1
+  z [Bot] -> Nat. <z Unit | s Nat> 1
+
+align term #0: compress[0] Nat. <z Unit | s Nat>
+align@0 create@0 tmp1
+  tmp1: Nat. <z Unit | s Nat>
+  n: Nat. <z Unit | s Nat>
+  (0) {tmp1: z unit,n: z unit} @ {w: 5} -> compress z unit
+  (0) {tmp1: z unit,n: z unit} @ {w: 3} -> compress z unit
+align term #1: compress[0] Nat. <z Unit | s Nat>
+align@1 create@0 s (unlabel tmp2)
+  tmp2: compress[0] Nat. <z Unit | s Nat>
+  m: Nat. <z Unit | s Nat>
+  n: Nat. <z Unit | s Nat>
+  (1) {m: z unit,n: s z unit,tmp2: compress z unit} @ {w: 5} -> compress s z unit
+align term #2: compress[1] AList. <anil Unit | acons {Int,Nat,AList}>
+align@2 create@1 tmp3
+  tmp3: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  xs: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  (2) {tmp3: anil unit,xs: anil unit} @ {w: -5} -> compress anil unit
+  (2) {tmp3: anil unit,xs: anil unit} @ {w: 1} -> compress anil unit
+  (2) {tmp3: anil unit,xs: anil unit} @ {w: -1} -> compress anil unit
+  (2) {tmp3: anil unit,xs: anil unit} @ {w: 2} -> compress anil unit
+  (2) {tmp3: anil unit,xs: anil unit} @ {w: 0} -> compress anil unit
+align term #3: compress[1] AList. <anil Unit | acons {Int,Nat,AList}>
+align@3 create@1 acons ({h,unlabel tmp4,t})
+  tmp4: compress[0] Nat. <z Unit | s Nat>
+  t: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  xs: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  n: Nat. <z Unit | s Nat>
+  h: Int
+  (3) {t: acons (-1,s z unit,acons (1,z unit,anil unit)),tmp4: compress s z unit,xs: acons (5,s z unit,acons (-1,s z unit,acons (1,z unit,anil unit))),h: 5,n: s z unit} @ {w: 5} -> compress acons (5,s z unit,acons (-1,s z unit,acons (1,z unit,anil unit)))
+  (3) {t: anil unit,tmp4: compress z unit,xs: acons (3,z unit,anil unit),h: 3,n: z unit} @ {w: 3} -> compress acons (3,z unit,anil unit)
+align term #4: compress[1] AList. <anil Unit | acons {Int,Nat,AList}>
+align@4 create@1 acons ({h,n,unlabel tmp5})
+  t: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  xs: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  h: Int
+  tmp5: compress[1] AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  n: Nat. <z Unit | s Nat>
+  (4) {xs: acons (-3,s s s z unit,anil unit),t: anil unit,h: -3,n: s s s z unit,tmp5: compress anil unit} @ {w: -5} -> compress acons (-3,s s s z unit,anil unit)
+  (4) {xs: acons (-1,s z unit,anil unit),t: anil unit,h: -1,n: s z unit,tmp5: compress anil unit} @ {w: 1} -> compress acons (-1,s z unit,anil unit)
+  (4) {xs: acons (4,s s z unit,acons (-1,s z unit,anil unit)),t: acons (-1,s z unit,anil unit),h: 4,n: s s z unit,tmp5: compress acons (-1,s z unit,anil unit)} @ {w: 1} -> compress acons (4,s s z unit,acons (-1,s z unit,anil unit))
+  (4) {xs: acons (1,z unit,anil unit),t: anil unit,h: 1,n: z unit,tmp5: compress anil unit} @ {w: -1} -> compress acons (1,z unit,anil unit)
+  (4) {xs: acons (-5,s s s s z unit,acons (1,z unit,anil unit)),t: acons (1,z unit,anil unit),h: -5,n: s s s s z unit,tmp5: compress acons (1,z unit,anil unit)} @ {w: -1} -> compress acons (-5,s s s s z unit,acons (1,z unit,anil unit))
+  (4) {xs: acons (-3,s z unit,anil unit),t: anil unit,h: -3,n: s z unit,tmp5: compress anil unit} @ {w: 2} -> compress acons (-3,s z unit,anil unit)
+  (4) {xs: acons (3,z unit,acons (-3,s z unit,anil unit)),t: acons (-3,s z unit,anil unit),h: 3,n: z unit,tmp5: compress acons (-3,s z unit,anil unit)} @ {w: 2} -> compress acons (3,z unit,acons (-3,s z unit,anil unit))
+  (4) {xs: acons (-5,z unit,anil unit),t: anil unit,h: -5,n: z unit,tmp5: compress anil unit} @ {w: 0} -> compress acons (-5,z unit,anil unit)
+  (4) {xs: acons (-4,s z unit,acons (-5,z unit,anil unit)),t: acons (-5,z unit,anil unit),h: -4,n: s z unit,tmp5: compress acons (-5,z unit,anil unit)} @ {w: 0} -> compress acons (-4,s z unit,acons (-5,z unit,anil unit))
+  (4) {xs: acons (2,s s s s z unit,acons (3,z unit,anil unit)),t: acons (3,z unit,anil unit),h: 2,n: s s s s z unit,tmp5: compress acons (3,z unit,anil unit)} @ {w: 3} -> compress acons (2,s s s s z unit,acons (3,z unit,anil unit))
+align term #5: Int
+align@5 spec (repr (unlabel tmp6))
+  xs: AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  tmp6: compress[1] AList. <anil Unit | acons {Int,Nat. <z Unit | s Nat>,AList}>
+  (5) {xs: acons (-3,s s s z unit,anil unit),tmp6: compress acons (-3,s s s z unit,anil unit)} @ {w: -5} -> 0
+  (5) {xs: acons (4,s s z unit,acons (-1,s z unit,anil unit)),tmp6: compress acons (4,s s z unit,acons (-1,s z unit,anil unit))} @ {w: 1} -> 0
+  (5) {xs: acons (5,s z unit,acons (-1,s z unit,acons (1,z unit,anil unit))),tmp6: compress acons (5,s z unit,acons (-1,s z unit,acons (1,z unit,anil unit)))} @ {w: 5} -> 1
+  (5) {xs: acons (-5,s s s s z unit,acons (1,z unit,anil unit)),tmp6: compress acons (-5,s s s s z unit,acons (1,z unit,anil unit))} @ {w: -1} -> 0
+  (5) {xs: acons (3,z unit,acons (-3,s z unit,anil unit)),tmp6: compress acons (3,z unit,acons (-3,s z unit,anil unit))} @ {w: 2} -> 0
+  (5) {xs: acons (-4,s z unit,acons (-5,z unit,anil unit)),tmp6: compress acons (-4,s z unit,acons (-5,z unit,anil unit))} @ {w: 0} -> 0
+  (5) {xs: acons (2,s s s s z unit,acons (3,z unit,anil unit)),tmp6: compress acons (2,s s s s z unit,acons (3,z unit,anil unit))} @ {w: 3} -> 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [] n2i(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [] n2i(Param0)
+  [0] Param0 -> n2i(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [] spec(repr(Param0))
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [] spec(repr(Param0))
+  [0] Param0 -> n2i(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [] spec(repr(Param0))
+  [0] Param3 -> spec(repr(Param0))
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [] null
+  [0] Param1 -> spec(repr(Param0))
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+compress #0: Int
+compress #1: Int
+pass #0: 
+0
+pass #1: 
++ 1 tmp2
+pass #2: 
+0
+pass #3: 
+tmp4
+pass #4: 
+tmp5
+pass #5: 
+tmp6
+
+Inductive List;
+
+Inductive Nat;
+
+Inductive AList;
+
+is_unique = let key_differ = (\key: Int. 
+    fix (
+    \f: AList -> Bool. \xs: AList. 
+    match xs with
+      anil _ -> true
+    | acons {h, _, t} -> and (not (== h key)) (f t)
+    end
+)) in 
+        fix (
+        \f: AList -> Bool. \xs: AList. 
+        match xs with
+          anil _ -> true
+        | acons {h, _, t} -> and (key_differ h t) (f t)
+        end
+    );
+
+@Input w = Int;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> if (== h w) then + 1 (f t)
+        else f t
+    end
+);
+
+repr = let repeat = (\w: Int. \suf: List. 
+    fix (
+    \f: Nat -> List. \n: Nat. 
+    match n with
+      z _ -> suf
+    | s m -> cons {w, f m}
+    end
+)) in 
+        fix (
+        \f: AList -> List. \xs: AList. 
+        match xs with
+          anil _ -> nil unit
+        | acons {h, n, t} -> repeat h (f t) n
+        end
+    );
+
+n2i = fix (
+    \f: Nat -> Int. \n: Nat. 
+    match n with
+      z _ -> 0
+    | s m -> + 1 (f m)
+    end
+);
+
+target = let nat_repr = (fix (
+    \f: Nat -> Int. \n: Nat. 
+    match n with
+      z _ -> 0
+    | s m -> 
+        let tmp2 = (f m) in 
+            + 1 tmp2
+    end
+)) in 
+        fix (
+        \f: AList -> Int. \xs: AList. 
+        match xs with
+          anil _ -> 0
+        | acons {h, n, t} -> if (== h w) then let tmp4 = (nat_repr n) in 
+                tmp4
+            else let tmp5 = (f t) in 
+                tmp5
+        end
+    );
+
+main = \xs: AList. 
+    if (is_unique xs) then let tmp6 = (target xs) in 
+        tmp6
+    else 0;
+syn-comb: 1.7298
+collect: 15.6867
+label: 0.022035
+extend-component: 7.3e-05
+execute: 0.378375
+syn-align: 16.1427
+17.9042
+Success

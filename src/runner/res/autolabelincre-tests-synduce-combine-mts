@@ -1,0 +1,39 @@
+
+Inductive List;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+mts = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> max (+ h (sum t)) (f t)
+    end
+);
+
+spec = \xs: List. 
+    mts xs;
+
+repr = fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            {+ tmp2.2 (max h (- tmp2.1 tmp2.2)), + h tmp2.2}
+    end
+);
+
+main = \xs: List. 
+    let tmp3 = (repr xs) in 
+        tmp3.1;

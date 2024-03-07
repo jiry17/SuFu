@@ -1,0 +1,517 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ TwoList :: {List, List}
+is_sorted : List -> Bool
+is_sorted_pair : TwoList -> Bool
+find : Int -> List -> Bool
+spec : TwoList -> Bool
+target : TwoList -> TwoList
+main : TwoList -> Bool
+
+
+Inductive List;
+
+TwoList = {List, List};
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt x -> >= pre x
+    | cons {h, t} -> and (>= pre h) (f h t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt x -> true
+        | cons {h, t} -> aux h t
+        end
+;
+
+is_sorted_pair = \p: TwoList. 
+    and (is_sorted p.1) (is_sorted p.2);
+
+find = \w: Int. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt x -> == x w
+    | cons {h, t} -> or (== w h) (f t)
+    end
+);
+
+spec = \p: TwoList. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt a -> find a p.1
+    | cons {h, t} -> or (find h p.1) (f t)
+    end
+) p.2;
+
+target = fix (
+    \f: TwoList -> Compress TwoList. \p: TwoList. 
+    match p with
+      {elt a, elt b} -> 
+        align (label p ) 
+    | {elt a, cons {h, t}} -> if (> a h) then align (label p ) 
+        else let res = (f {elt a, t}) in 
+            align (label {(unlabel res ).1, cons {h, (unlabel res ).2}} ) 
+    | {cons {h, t}, elt b} -> if (> b h) then align (label p ) 
+        else let res = (f {t, elt b}) in 
+            align (label {cons {h, (unlabel res ).1}, (unlabel res ).2} ) 
+    | {cons {h1, t1}, cons {h2, t2}} -> if (== h1 h2) then align (label p ) 
+        else if (> h1 h2) then let res = (f {t1, p.2}) in 
+            align (label {cons {h1, (unlabel res ).1}, (unlabel res ).2} ) 
+        else let res = (f {p.1, t2}) in 
+            align (label {(unlabel res ).1, cons {h2, (unlabel res ).2}} ) 
+    end
+);
+
+main = \p: TwoList. 
+    if (is_sorted_pair p) then let tmp1 = (target p) in 
+        align (spec (unlabel tmp1 )) 
+    else false;
+align term #0: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@0 create@0 p
+  a: Int
+  b: Int
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align term #1: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@1 create@0 p
+  t: List. <elt Int | cons {Int,List}>
+  a: Int
+  h: Int
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align term #2: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@2 create@0 {unlabel res.1,cons ({h,unlabel res.2})}
+  t: List. <elt Int | cons {Int,List}>
+  a: Int
+  h: Int
+  res: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align term #3: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@3 create@0 p
+  t: List. <elt Int | cons {Int,List}>
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  b: Int
+  h: Int
+align term #4: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@4 create@0 {cons ({h,unlabel res.1}),unlabel res.2}
+  t: List. <elt Int | cons {Int,List}>
+  res: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  b: Int
+  h: Int
+align term #5: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@5 create@0 p
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  h2: Int
+  h1: Int
+  t2: List. <elt Int | cons {Int,List}>
+  t1: List. <elt Int | cons {Int,List}>
+align term #6: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@6 create@0 {cons ({h1,unlabel res.1}),unlabel res.2}
+  h1: Int
+  t1: List. <elt Int | cons {Int,List}>
+  t2: List. <elt Int | cons {Int,List}>
+  h2: Int
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  res: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align term #7: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@7 create@0 {unlabel res.1,cons ({h2,unlabel res.2})}
+  h1: Int
+  t1: List. <elt Int | cons {Int,List}>
+  t2: List. <elt Int | cons {Int,List}>
+  h2: Int
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  res: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align term #8: Bool
+align@8 spec (unlabel tmp1)
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  tmp1: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+Components for compress:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+
+Components for align:
+  spec [(List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)] -> Bool 5
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  is_sorted [List. <elt Int | cons {Int,List}>] -> Bool 2
+  is_sorted_pair [(List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)] -> Bool 3
+  find [Int,List. <elt Int | cons {Int,List}>] -> Bool 4
+
+Components for comb:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+
+align term #0: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@0 create@0 p
+  a: Int
+  b: Int
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align term #1: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@1 create@0 p
+  t: List. <elt Int | cons {Int,List}>
+  a: Int
+  h: Int
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align term #2: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@2 create@0 {unlabel res.1,cons ({h,unlabel res.2})}
+  t: List. <elt Int | cons {Int,List}>
+  a: Int
+  h: Int
+  res: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align term #3: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@3 create@0 p
+  t: List. <elt Int | cons {Int,List}>
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  b: Int
+  h: Int
+align term #4: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@4 create@0 {cons ({h,unlabel res.1}),unlabel res.2}
+  t: List. <elt Int | cons {Int,List}>
+  res: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  b: Int
+  h: Int
+align term #5: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@5 create@0 p
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  h2: Int
+  h1: Int
+  t2: List. <elt Int | cons {Int,List}>
+  t1: List. <elt Int | cons {Int,List}>
+align term #6: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@6 create@0 {cons ({h1,unlabel res.1}),unlabel res.2}
+  h1: Int
+  t1: List. <elt Int | cons {Int,List}>
+  t2: List. <elt Int | cons {Int,List}>
+  h2: Int
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  res: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align term #7: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align@7 create@0 {unlabel res.1,cons ({h2,unlabel res.2})}
+  h1: Int
+  t1: List. <elt Int | cons {Int,List}>
+  t2: List. <elt Int | cons {Int,List}>
+  h2: Int
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  res: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+align term #8: Bool
+align@8 spec (unlabel tmp1)
+  p: {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+  tmp1: compress[0] {List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>}
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param0
+  Param1
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param1
+  Param2
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+  Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)([Param0,Param1,Param2,Param3,Param4]@Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>))
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param1
+  Param2
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)
+  Param3
+num = 3
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param2
+  Param3
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+num = 4
+start: start
+node: start
+  Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)([Param0,Param1,Param2,Param3,Param4]@Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>))
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)
+  Param1
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param3
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 5
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param1
+  Param2
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 6
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>))
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)
+  Param5
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param0
+  Param3
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+num = 7
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>))
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)
+  Param5
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param0
+  Param3
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+num = 8
+start: start
+node: start
+  Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)([Param0,Param1]@Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>))
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] (List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  ite([Int@0]@Bool [Int@0]@Int [Int@0]@Int)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  ite([Int@0,Int@1]@Bool [Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+node: [Bool@0,Int@0]@Int
+  Int@0
+  +([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  -([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  ite([Bool@0,Int@0]@Bool [Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+node: [Bool@0,Int@0]@Bool
+  Bool@0
+  is_sorted([Bool@0,Int@0]@List. <elt Int | cons {Int,List}>)
+  find([Bool@0,Int@0]@Int [Bool@0,Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[List. <elt Int | cons {Int,List}>->Int]([Int@0]@Int [Int@0,Int@1]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Bool
+  fold[List. <elt Int | cons {Int,List}>->Bool]([Int@0]@Bool [Bool@0,Int@0]@Bool [Param0]@List. <elt Int | cons {Int,List}>)
+  spec([Param0]@(List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>))
+  is_sorted([Param0]@List. <elt Int | cons {Int,List}>)
+  is_sorted_pair([Param0]@(List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>))
+  find([Param0]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@Bool
+  is_sorted([Int@0]@List. <elt Int | cons {Int,List}>)
+  find([Int@0]@Int [Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1]@Bool
+  is_sorted([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  find([Int@0,Int@1]@Int [Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  access0([Param0]@(List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>))
+  access1([Param0]@(List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>))
+  elt([Param0]@Int)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0]@Int)
+node: [Int@0,Int@1]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1]@Int)
+node: [Bool@0,Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Bool@0,Int@0]@Int)
+node: [Param0]@(List. <elt Int | cons {Int,List}> * List. <elt Int | cons {Int,List}>)
+  Param0
+  prod([Param0]@List. <elt Int | cons {Int,List}> [Param0]@List. <elt Int | cons {Int,List}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [0] -(Param0,Param1)
+  [] spec(Param0)
+  [] spec(Param0)
+  [0] Param3 -> spec(Param0)
+  [1] -(Param1,Param2)
+  [] spec(Param0)
+  [] spec(Param0)
+  [0] Param1 -> spec(Param0)
+  [1] -(Param3,Param4)
+  [] spec(Param0)
+  [] spec(Param0)
+  [0] Param5 -> spec(Param0)
+  [] spec(Param0)
+  [0] Param5 -> spec(Param0)
+  [] null
+  [0] Param1 -> spec(Param0)
+compress #0: Bool
+pass #0: 
+let c0 = (- a b) in 
+    == c0 0
+pass #1: 
+false
+pass #2: 
+let c0 = (- a h) in 
+    or (== c0 0) res
+pass #3: 
+false
+pass #4: 
+let c0 = (- b h) in 
+    or (== c0 0) res
+pass #5: 
+true
+pass #6: 
+res
+pass #7: 
+res
+pass #8: 
+tmp1
+
+Inductive List;
+
+TwoList = {List, List};
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt x -> >= pre x
+    | cons {h, t} -> and (>= pre h) (f h t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt x -> true
+        | cons {h, t} -> aux h t
+        end
+;
+
+is_sorted_pair = \p: TwoList. 
+    and (is_sorted p.1) (is_sorted p.2);
+
+find = \w: Int. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt x -> == x w
+    | cons {h, t} -> or (== w h) (f t)
+    end
+);
+
+spec = \p: TwoList. 
+    fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt a -> find a p.1
+    | cons {h, t} -> or (find h p.1) (f t)
+    end
+) p.2;
+
+target = fix (
+    \f: TwoList -> Bool. \p: TwoList. 
+    match p with
+      {elt a, elt b} -> 
+        let c0 = (- a b) in 
+            == c0 0
+    | {elt a, cons {h, t}} -> if (> a h) then false
+        else let res = (f {elt a, t}) in 
+            let c0 = (- a h) in 
+                or (== c0 0) res
+    | {cons {h, t}, elt b} -> if (> b h) then false
+        else let res = (f {t, elt b}) in 
+            let c0 = (- b h) in 
+                or (== c0 0) res
+    | {cons {h1, t1}, cons {h2, t2}} -> if (== h1 h2) then true
+        else if (> h1 h2) then let res = (f {t1, p.2}) in 
+            res
+        else let res = (f {p.1, t2}) in 
+            res
+    end
+);
+
+main = \p: TwoList. 
+    if (is_sorted_pair p) then let tmp1 = (target p) in 
+        tmp1
+    else false;
+syn-comb: 0.062685
+collect: 49.3264
+label: 0.040673
+extend-component: 0.003659
+execute: 1.04624
+syn-align: 50.5004
+comb-size: 47
+align-size: 3
+extract-size: 22
+50.6131
+Success

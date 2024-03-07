@@ -1,0 +1,42 @@
+
+AExpr :: AExpr. <int Int | plus {AExpr,AExpr} | minus {AExpr,
+                                                        AExpr}>
+ int : Int ->
+       AExpr'. <int Int | plus {AExpr',AExpr'} | minus {AExpr',
+                                                        AExpr'}>
+ plus : {AExpr,AExpr} ->
+        AExpr'. <int Int | plus {AExpr',AExpr'} | minus {AExpr',
+                                                         AExpr'}>
+ minus : {AExpr,AExpr} ->
+         AExpr'. <int Int | plus {AExpr',AExpr'} | minus {
+         AExpr',AExpr'}>
+ NExpr :: NExpr. <nint Int | nplus {Int,NExpr,NExpr} | nminus {
+Int,NExpr,NExpr}>
+nint : Int ->
+       NExpr'. <nint Int | nplus {Int,NExpr',NExpr'} | nminus {
+       Int,NExpr',NExpr'}>
+nplus : {Int,NExpr,NExpr} ->
+        NExpr'. <nint Int | nplus {Int,NExpr',NExpr'} | nminus {
+        Int,NExpr',NExpr'}>
+nminus : {Int,NExpr,NExpr} ->
+         NExpr'. <nint Int | nplus {Int,NExpr',NExpr'} | nminus {
+         Int,NExpr',NExpr'}>
+repr : NExpr ->
+       AExpr'. <int Int | plus {AExpr',AExpr'} | minus {AExpr',
+                                                        AExpr'}>
+memo : NExpr -> Int
+is_memo : NExpr -> Bool
+spec : AExpr -> Int
+target : NExpr ->
+         NExpr'. <nint Int | nplus {Int,NExpr',NExpr'} | nminus {
+         Int,NExpr',NExpr'}>
+gen : AExpr ->
+      NExpr'. <nint Int | nplus {Int,NExpr',NExpr'} | nminus {
+      Int,NExpr',NExpr'}>
+main : AExpr -> Int
+
+size: 240
+compress-num: 1
+label-num: 8
+rewrite-size: 12
+0.024494

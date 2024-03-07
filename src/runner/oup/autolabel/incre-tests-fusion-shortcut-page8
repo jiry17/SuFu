@@ -1,0 +1,352 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ NList :: NList. <nnil Unit | ncons {List,NList}>
+nnil : Unit -> NList'. <nnil Unit | ncons {List,NList'}>
+ncons : {List,NList} -> NList'. <nnil Unit | ncons {List,NList'}>
+length : List -> Int
+sum : List -> Int
+append : Int -> List -> List'. <nil Unit | cons {Int,List'}>
+cat : List -> List -> List
+concat : NList -> List'. <nil Unit | cons {Int,List'}>
+safe : List -> List -> Int -> Bool
+queens : Int -> NList'. <nnil Unit | ncons {List,NList'}>
+main : Int -> NList'. <nnil Unit | ncons {List,NList'}>
+
+
+Inductive List;
+
+Inductive NList;
+
+length = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+append = \w: Int. 
+    fix (
+    \f: List -> List. \a: List. 
+    match a with
+      nil _ -> cons {w, nil Unit}
+    | cons {h, t} -> cons {h, f t}
+    end
+);
+
+cat = fix (
+    \f: List -> Compress List -> Compress List. \a: List. \b: Compress List. 
+    match a with
+      nil _ -> b
+    | cons {h, t} -> 
+        let tmp1 = (f t b) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+);
+
+concat = fix (
+    \f: NList -> Compress List. \xs: NList. 
+    match xs with
+      nnil _ -> 
+        let tmp2 = (nil Unit) in 
+            align (label tmp2 ) 
+    | ncons {h, t} -> cat h (f t)
+    end
+);
+
+safe = \p: List. \l: Compress List. \n: Int. 
+    let m = (+ 1 (align (length (unlabel l )) )) in 
+        fix (
+        \f: List -> Int -> Bool. \xs: List. \i: Int. 
+        match xs with
+          nil _ -> true
+        | cons {j, t} -> if (or (== j n) (or (== (+ i j) (+ n m)) (== (- i j) (- m n)))) then false
+            else f t (+ i 1)
+        end
+    ) p 1;
+
+queens = \n: Int. 
+    fix (
+    \f: Int -> NList. \m: Int. 
+    if (== m 0) then ncons {nil Unit, nnil Unit}
+    else let subres = (f (- m 1)) in 
+        let enum = (fix (
+        \g: NList -> Int -> NList. \sols: NList. \choice: Int. 
+        match sols with
+          nnil _ -> if (== choice n) then nnil Unit
+            else g subres (+ choice 1)
+        | ncons {sol, remain} -> 
+            let tailres = (g remain choice) in 
+                if (safe sol (align (label sol ) ) choice) then ncons {append choice sol, tailres}
+                else tailres
+        end
+    )) in 
+            enum subres 1) n;
+
+@Start main = \n: Int. 
+    if (> n 0) then queens n
+    else nnil Unit;
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 cons ({h,unlabel tmp1})
+  a: List. <nil Unit | cons {Int,List}>
+  tmp1: compress[0] List. <nil Unit | cons {Int,List}>
+  t: List. <nil Unit | cons {Int,List}>
+  b: compress[0] List. <nil Unit | cons {Int,List}>
+  h: Int
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 tmp2
+  xs: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  tmp2: List. <nil Unit | cons {Int,List}>
+align term #2: Int
+align@2 length (unlabel l)
+  l: compress[1] List. <nil Unit | cons {Int,List}>
+  p: List. <nil Unit | cons {Int,List}>
+  n: Int
+align term #3: compress[1] List. <nil Unit | cons {Int,List}>
+align@3 create@1 sol
+  sol: List. <nil Unit | cons {Int,List}>
+  n: Int
+  m: Int
+  subres: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  remain: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  tailres: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  choice: Int
+  sols: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+Components for compress:
+  ncons [(List. <nil Unit | cons {Int,List}> * NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>)] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  nnil [Bot] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+
+Components for align:
+  ncons [(List. <nil Unit | cons {Int,List}> * NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>)] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  nnil [Bot] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  append [Int,List. <nil Unit | cons {Int,List}>] -> List. <nil Unit | cons {Int,List}> 4
+  sum [List. <nil Unit | cons {Int,List}>] -> Int 3
+  length [List. <nil Unit | cons {Int,List}>] -> Int 2
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+
+Components for comb:
+  ncons [(List. <nil Unit | cons {Int,List}> * NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>)] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  nnil [Bot] -> NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}> 1
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 cons ({h,unlabel tmp1})
+  a: List. <nil Unit | cons {Int,List}>
+  tmp1: compress[0] List. <nil Unit | cons {Int,List}>
+  t: List. <nil Unit | cons {Int,List}>
+  b: compress[0] List. <nil Unit | cons {Int,List}>
+  h: Int
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 tmp2
+  xs: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  tmp2: List. <nil Unit | cons {Int,List}>
+align term #2: Int
+align@2 length (unlabel l)
+  l: compress[1] List. <nil Unit | cons {Int,List}>
+  p: List. <nil Unit | cons {Int,List}>
+  n: Int
+align term #3: compress[1] List. <nil Unit | cons {Int,List}>
+align@3 create@1 sol
+  sol: List. <nil Unit | cons {Int,List}>
+  n: Int
+  m: Int
+  subres: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  remain: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  tailres: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+  choice: Int
+  sols: NList. <nnil Unit | ncons {List. <nil Unit | cons {Int,List}>,NList}>
+num = 0
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param1
+  Param3
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[1] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2]@Compress[1] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+node: [Param0,Param1,Param2]@Compress[1] List. <nil Unit | cons {Int,List}>
+  Param0
+num = 3
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int
+  Param1
+  Param2
+  Param6
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  sum([Param0]@List. <nil Unit | cons {Int,List}>)
+  length([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  Param0
+  append([Param0]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+num = 1
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  sum([Param0]@List. <nil Unit | cons {Int,List}>)
+  length([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  Param0
+  append([Param0]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+
+
+
+
+
+
+  [] null
+  [0] Param0 -> length(Param0)
+  [] length(Param0)
+  [0] Param2
+compress #0: Unit
+compress #1: Int
+pass #0: 
+Unit
+pass #1: 
+Unit
+pass #2: 
+l
+pass #3: 
+- m 1
+
+Inductive List;
+
+Inductive NList;
+
+length = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+append = \w: Int. 
+    fix (
+    \f: List -> List. \a: List. 
+    match a with
+      nil _ -> cons {w, nil Unit}
+    | cons {h, t} -> cons {h, f t}
+    end
+);
+
+cat = fix (
+    \f: List -> Unit -> Unit. \a: List. \b: Unit. 
+    match a with
+      nil _ -> b
+    | cons {h, t} -> Unit
+    end
+);
+
+concat = fix (
+    \f: NList -> Unit. \xs: NList. 
+    match xs with
+      nnil _ -> Unit
+    | ncons {h, t} -> cat h (f t)
+    end
+);
+
+safe = \p: List. \l: Int. \n: Int. 
+    let m = (+ 1 l) in 
+        fix (
+        \f: List -> Int -> Bool. \xs: List. \i: Int. 
+        match xs with
+          nil _ -> true
+        | cons {j, t} -> if (or (== j n) (or (== (+ i j) (+ n m)) (== (- i j) (- m n)))) then false
+            else f t (+ i 1)
+        end
+    ) p 1;
+
+queens = \n: Int. 
+    fix (
+    \f: Int -> NList. \m: Int. 
+    if (== m 0) then ncons {nil Unit, nnil Unit}
+    else let subres = (f (- m 1)) in 
+        let enum = (fix (
+        \g: NList -> Int -> NList. \sols: NList. \choice: Int. 
+        match sols with
+          nnil _ -> if (== choice n) then nnil Unit
+            else g subres (+ choice 1)
+        | ncons {sol, remain} -> 
+            let tailres = (g remain choice) in 
+                if (safe sol (- m 1) choice) then ncons {append choice sol, tailres}
+                else tailres
+        end
+    )) in 
+            enum subres 1) n;
+
+@Start main = \n: Int. 
+    if (> n 0) then queens n
+    else nnil Unit;
+syn-comb: 0.306748
+collect: 21.518
+label: 0.022923
+extend-component: 2.7e-05
+execute: 0.002145
+syn-align: 21.5394
+comb-size: 8
+align-size: 3
+extract-size: 2
+21.8789
+Success

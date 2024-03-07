@@ -1,0 +1,458 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+Graph :: Graph. <gnil Unit | gcons {List,Graph}>
+gnil : Unit -> Graph'. <gnil Unit | gcons {List,Graph'}>
+gcons : {List,Graph} -> Graph'. <gnil Unit | gcons {List,Graph'}>
+Choice :: Choice. <cnil Unit | ccons {Int,Int,Choice}>
+cnil : Unit -> Choice'. <cnil Unit | ccons {Int,Int,Choice'}>
+ccons : {Int,Int,Choice} ->
+        Choice'. <cnil Unit | ccons {Int,Int,Choice'}>
+Plan :: Choice
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+cost1 : Int
+cost2 : Int
+head : Choice -> {Int, Int}
+merge : PlanList -> PlanList -> PlanList
+snoc : Int ->
+       Int ->
+       Choice -> Choice'. <cnil Unit | ccons {Int,Int,Choice'}>
+extend : Int ->
+         Int ->
+         PlanList ->
+         PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+take_last : Graph -> {List'. <nil Unit | cons {Int,List'}>, Graph}
+generate_paths : Graph ->
+                 PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+eval : Choice -> Int
+max : Int -> Int -> Int
+get_best : PlanList -> Int
+main : Graph -> Int
+
+
+Inductive List;
+
+Inductive Graph;
+
+Inductive Choice;
+
+Plan = Compress Choice;
+
+Inductive PlanList;
+
+@Input cost1 = Int;
+
+@Input cost2 = Int;
+
+head = \xs: Choice. 
+    match xs with
+      cnil _ -> {-1, -1}
+    | ccons {a, b, t} -> {a, b}
+    end
+;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+snoc = \pos: Int. \w: Int. 
+    fix (
+    \f: Choice -> Choice. \xs: Choice. 
+    match xs with
+      cnil _ -> ccons {pos, w, cnil Unit}
+    | ccons {a, b, t} -> ccons {a, b, f t}
+    end
+);
+
+extend = \pos: Int. \w: Int. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> pnil Unit
+    | pcons {h, t} -> pcons {let tmp1 = (snoc pos w) in 
+            align (label (tmp1 (unlabel h )) ) , f t}
+    end
+);
+
+take_last = fix (
+    \f: Graph -> {List, Graph}. \g: Graph. 
+    match g with
+      gnil _ -> {nil Unit, g}
+    | gcons {h, gnil _} -> {h, gnil Unit}
+    | gcons {h, t} -> 
+        let res = (f t) in 
+            {res.1, gcons {h, res.2}}
+    end
+);
+
+generate_paths = fix (
+    \f: Graph -> PlanList. \graph: Graph. 
+    match graph with
+      gnil _ -> pcons {let tmp2 = (cnil Unit) in 
+            align (label tmp2 ) , pnil Unit}
+    | _ -> 
+        let split = (take_last graph) in 
+            let sub_res = (f split.2) in 
+                fix (
+                \g: Int -> List -> PlanList. \pos: Int. \xs: List. 
+                match xs with
+                  nil _ -> pnil Unit
+                | cons {h, t} -> merge (extend pos h sub_res) (g (+ 1 pos) t)
+                end
+            ) 0 split.1
+    end
+);
+
+eval = fix (
+    \f: Int -> Int -> Choice -> Int. \pre: Int. \now: Int. \xs: Choice. 
+    match xs with
+      cnil _ -> now
+    | ccons {a, b, t} -> 
+        let now = (if (== pre -1) then * b now
+        else if (== a pre) then * b (- now cost1)
+        else * b (- now cost2)) in 
+            f a now t
+    end
+) -1 1;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {h, t} -> max (align (eval (unlabel h )) ) (f t)
+    end
+);
+
+main = \graph: Graph. 
+    get_best (generate_paths graph);
+align term #0: compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>
+align@0 create@0 tmp1 (unlabel h)
+  h: compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>
+  xs: PlanList. <pnil Unit | pcons {compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>,PlanList}>
+  w: Int
+  pos: Int
+align term #1: compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>
+align@1 create@0 tmp2
+  graph: Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>
+  tmp2: Choice. <cnil Unit | ccons {Int,Int,Choice}>
+align term #2: Int
+align@2 eval (unlabel h)
+  xs: PlanList. <pnil Unit | pcons {compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>,PlanList}>
+  h: compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>
+Components for compress:
+  max [Int,Int] -> Int 14
+  gcons [(List. <nil Unit | cons {Int,List}> * Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>)] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  cnil [Bot] -> Choice. <cnil Unit | ccons {Int,Int,Choice}> 2
+  ccons [(Int * Int * Choice. <cnil Unit | ccons {Int,Int,Choice}>)] -> Choice. <cnil Unit | ccons {Int,Int,Choice}> 2
+  gnil [Bot] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  head [Choice. <cnil Unit | ccons {Int,Int,Choice}>] -> (Int * Int) 7
+
+Components for align:
+  max [Int,Int] -> Int 14
+  eval [Choice. <cnil Unit | ccons {Int,Int,Choice}>] -> Int 13
+  take_last [Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>] -> (List. <nil Unit | cons {Int,List}> * Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>) 11
+  gcons [(List. <nil Unit | cons {Int,List}> * Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>)] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  snoc [Int,Int,Choice. <cnil Unit | ccons {Int,Int,Choice}>] -> Choice. <cnil Unit | ccons {Int,Int,Choice}> 9
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  cnil [Bot] -> Choice. <cnil Unit | ccons {Int,Int,Choice}> 2
+  ccons [(Int * Int * Choice. <cnil Unit | ccons {Int,Int,Choice}>)] -> Choice. <cnil Unit | ccons {Int,Int,Choice}> 2
+  gnil [Bot] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  head [Choice. <cnil Unit | ccons {Int,Int,Choice}>] -> (Int * Int) 7
+
+Components for comb:
+  max [Int,Int] -> Int 14
+  gcons [(List. <nil Unit | cons {Int,List}> * Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>)] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  cnil [Bot] -> Choice. <cnil Unit | ccons {Int,Int,Choice}> 2
+  ccons [(Int * Int * Choice. <cnil Unit | ccons {Int,Int,Choice}>)] -> Choice. <cnil Unit | ccons {Int,Int,Choice}> 2
+  gnil [Bot] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  head [Choice. <cnil Unit | ccons {Int,Int,Choice}>] -> (Int * Int) 7
+
+align term #0: compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>
+align@0 create@0 tmp1 (unlabel h)
+  h: compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>
+  xs: PlanList. <pnil Unit | pcons {compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>,PlanList}>
+  w: Int
+  pos: Int
+align term #1: compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>
+align@1 create@0 tmp2
+  graph: Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>
+  tmp2: Choice. <cnil Unit | ccons {Int,Int,Choice}>
+align term #2: Int
+align@2 eval (unlabel h)
+  xs: PlanList. <pnil Unit | pcons {compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>,PlanList}>
+  h: compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>
+num = 0
+start: start
+node: start
+  Compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param3
+  Param4
+  Param5
+  Param6
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+  access0([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Int * Int))
+  access1([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Int * Int))
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Int * Int)
+  prod([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>
+  Param0
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Choice. <cnil Unit | ccons {Int,Int,Choice}>
+  Param1
+node: [Param0,Param1,Param2,Param3]@Int
+  Param2
+  Param3
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  access0([Param0,Param1,Param2,Param3]@(Int * Int))
+  access1([Param0,Param1,Param2,Param3]@(Int * Int))
+node: [Param0,Param1,Param2,Param3]@(Int * Int)
+  prod([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  head([Param0,Param1,Param2,Param3]@Choice. <cnil Unit | ccons {Int,Int,Choice}>)
+num = 2
+start: start
+node: start
+  Compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] Choice. <cnil Unit | ccons {Int,Int,Choice}>
+  Param2
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param3
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  access0([Param0,Param1,Param2,Param3,Param4]@(Int * Int))
+  access1([Param0,Param1,Param2,Param3,Param4]@(Int * Int))
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@(Int * Int)
+  prod([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param1
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  access0([Param0,Param1,Param2]@(Int * Int))
+  access1([Param0,Param1,Param2]@(Int * Int))
+  fold[Choice. <cnil Unit | ccons {Int,Int,Choice}>->Int]([Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int [Param0,Param1,Param2]@Choice. <cnil Unit | ccons {Int,Int,Choice}>)
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  eval([Param0,Param1,Param2]@Choice. <cnil Unit | ccons {Int,Int,Choice}>)
+node: [Param1,Param2]@Int
+  Param1
+  Param2
+  +([Param1,Param2]@Int [Param1,Param2]@Int)
+  -([Param1,Param2]@Int [Param1,Param2]@Int)
+  access0([Param1,Param2]@(Int * Int))
+  access1([Param1,Param2]@(Int * Int))
+  max([Param1,Param2]@Int [Param1,Param2]@Int)
+node: [Int@0,Int@1,Int@2,Param1,Param2]@Int
+  Param1
+  Param2
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+  -([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+  access0([Int@0,Int@1,Int@2,Param1,Param2]@(Int * Int))
+  access1([Int@0,Int@1,Int@2,Param1,Param2]@(Int * Int))
+  max([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@(Int * Int)
+  prod([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  head([Param0,Param1,Param2]@Choice. <cnil Unit | ccons {Int,Int,Choice}>)
+node: [Param1,Param2]@(Int * Int)
+  prod([Param1,Param2]@Int [Param1,Param2]@Int)
+node: [Int@0,Int@1,Int@2,Param1,Param2]@(Int * Int)
+  prod([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Choice. <cnil Unit | ccons {Int,Int,Choice}>
+  Param0
+  snoc([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Choice. <cnil Unit | ccons {Int,Int,Choice}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] eval(Param0)
+  [1] head(Param0).0
+  [0] Param4
+  [1] Param5
+  [2] Param6
+  [3] Param3
+  [4] Param0 -> eval(Param0)
+  [5] Param0 -> head(Param0).0
+  [0] eval(Param0)
+  [1] head(Param0).0
+  [] null
+  [0] Param2 -> eval(Param0)
+  [1] Param2 -> head(Param0).0
+compress #0: {Int,Int}
+pass #0: 
+{if (== pos h.2) then * (- h.1 cost1) w
+else if (== w (- 0 (* w h.2))) then - 0 (* w h.2)
+else * (- h.1 cost2) w, if (<= 0 h.2) then h.2
+else pos}
+pass #1: 
+{1, -1}
+pass #2: 
+h.1
+
+Inductive List;
+
+Inductive Graph;
+
+Inductive Choice;
+
+Plan = {Int, Int};
+
+Inductive PlanList;
+
+@Input cost1 = Int;
+
+@Input cost2 = Int;
+
+head = \xs: Choice. 
+    match xs with
+      cnil _ -> {-1, -1}
+    | ccons {a, b, t} -> {a, b}
+    end
+;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+snoc = \pos: Int. \w: Int. 
+    fix (
+    \f: Choice -> Choice. \xs: Choice. 
+    match xs with
+      cnil _ -> ccons {pos, w, cnil Unit}
+    | ccons {a, b, t} -> ccons {a, b, f t}
+    end
+);
+
+extend = \pos: Int. \w: Int. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> pnil Unit
+    | pcons {h, t} -> pcons {{if (== pos h.2) then * (- h.1 cost1) w
+        else if (== w (- 0 (* w h.2))) then - 0 (* w h.2)
+        else * (- h.1 cost2) w, if (<= 0 h.2) then h.2
+        else pos}, f t}
+    end
+);
+
+take_last = fix (
+    \f: Graph -> {List, Graph}. \g: Graph. 
+    match g with
+      gnil _ -> {nil Unit, g}
+    | gcons {h, gnil _} -> {h, gnil Unit}
+    | gcons {h, t} -> 
+        let res = (f t) in 
+            {res.1, gcons {h, res.2}}
+    end
+);
+
+generate_paths = fix (
+    \f: Graph -> PlanList. \graph: Graph. 
+    match graph with
+      gnil _ -> pcons {{1, -1}, pnil Unit}
+    | _ -> 
+        let split = (take_last graph) in 
+            let sub_res = (f split.2) in 
+                fix (
+                \g: Int -> List -> PlanList. \pos: Int. \xs: List. 
+                match xs with
+                  nil _ -> pnil Unit
+                | cons {h, t} -> merge (extend pos h sub_res) (g (+ 1 pos) t)
+                end
+            ) 0 split.1
+    end
+);
+
+eval = fix (
+    \f: Int -> Int -> Choice -> Int. \pre: Int. \now: Int. \xs: Choice. 
+    match xs with
+      cnil _ -> now
+    | ccons {a, b, t} -> 
+        let now = (if (== pre -1) then * b now
+        else if (== a pre) then * b (- now cost1)
+        else * b (- now cost2)) in 
+            f a now t
+    end
+) -1 1;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {h, t} -> max h.1 (f t)
+    end
+);
+
+main = \graph: Graph. 
+    get_best (generate_paths graph);
+syn-comb: 0.882757
+collect: 3.15914
+label: 0.018841
+extend-component: 0.205372
+execute: 0.954932
+syn-align: 4.58801
+comb-size: 68
+align-size: 8
+extract-size: 7
+5.50261
+Success

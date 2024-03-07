@@ -1,0 +1,51 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/constraints/sortedlist/is_intersection_empty.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (fcontinue, fstop, base_case, combine) := ∀ x : [33mtwo_list[0m. ([34mis_intersection_nonempty[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  is_intersection_nonempty⟨⟩(): two_list -> bool  =  
+[44m INFO :[0m  target⟨fcontinue, fstop, base_case, combine⟩(): two_list -> bool
+        [95m«[0m[95mrequires[0m [34mis_sorted[0m[95m»[0m =  
+[44m INFO :[0m repr(x) = [34mx[0m
+[44m INFO :[0m  is_sorted⟨⟩(): two_list -> bool  =  
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0112s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0115s
+[44m INFO :[0m Refinement step 3.
+[44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0157s
+[44m INFO :[0m Refinement step 4.
+[44m INFO :[0m [30m[102m		 segis Refinement step 4:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0151s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  18 instances] 0.176s 
+        CVC-SyGuS  [  22 instances] 2.508s 
+        > TOTAL    [  40 instances]: 2.684s 
+[44m INFO :[0m Solution found in 1.1750s (4.5% verifying):
+
+[31mlet[0m [36mbase_case[0m [34mx50[0m [34mx51[0m [31m=[0m [34mx51[0m = [34mx50[0m
+
+[31mlet[0m [36mcombine[0m [34m_auto5[0m [34m_auto6[0m [31m=[0m [34m_auto5[0m || [34m_auto6[0m
+
+[31mlet[0m [36mfcontinue[0m [34m_auto10[0m [34m_auto11[0m [34m_auto12[0m [31m=[0m [34m_auto12[0m || ([34m_auto10[0m = [34m_auto11[0m)
+
+[31mlet[0m [36mfstop[0m [34mx56[0m [34mx57[0m [31m=[0m ([34mx56[0m > [34mx56[0m) || ([34mx57[0m ≥ [34mx56[0m)
+
+[31mlet rec[0m [36mtarget[0m _x [31m=[0m [33mmatch[0m _x [33mwith[0m [3mTwoLists[0m(x, y) -> [34mseek[0m [34mx[0m [34my[0m
+[31mand[0m [36mseek[0m y[31m=[0m
+  [33mfunction[0m [3mElt[0m(a) -> [34mfind2[0m [34ma[0m [34my[0m [33m| [0m[3mCons[0m(hd, tl) -> [34mcombine[0m ([34mfind2[0m [34mhd[0m [34my[0m) ([34mtarget[0m [32mTwoLists[0m([34mtl[0m, [34my[0m))
+[31mand[0m [36mfind2[0m a[31m=[0m
+  [33mfunction[0m [3mElt[0m(b) -> [34mbase_case[0m [34ma[0m [34mb[0m
+  [33m| [0m[3mCons[0m(hd, tl) -> [34ma[0m > [34mhd[0m ? [34mfstop[0m [34ma[0m [34mhd[0m : [34mfcontinue[0m [34mhd[0m [34ma[0m ([34mfind2[0m [34ma[0m [34mtl[0m)
+
+

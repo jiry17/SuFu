@@ -1,0 +1,37 @@
+
+Inductive Tree;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+height = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      nil _ -> 0
+    | node {w, l, r} -> + 1 (max (f l) (f r))
+    end
+);
+
+balanced = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      nil _ -> true
+    | node {w, l, r} -> and (and (== (height l) (height r)) (f l)) (f r)
+    end
+);
+
+target = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      nil _ -> 0
+    | node {w, l, r} -> 
+        let tmp2 = (f l) in 
+            + tmp2 1
+    end
+);
+
+main = \t: Tree. 
+    if (balanced t) then let tmp4 = (target t) in 
+        tmp4
+    else 0;

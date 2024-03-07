@@ -1,0 +1,34 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/constraints/sortedlist/max.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (join) := ∀ x : [33mint clist[0m. ([34mmaxs[0m o [34mrepr[0m)(x) = [34mamax[0m(x)
+[44m INFO :[0m  maxs⟨⟩(): int clist -> int  =  
+[44m INFO :[0m  amax⟨join⟩(): int clist -> int [95m«[0m[95mrequires[0m [34mis_sorted[0m[95m»[0m =  
+[44m INFO :[0m repr(x) = [34mx[0m
+[44m INFO :[0m  is_sorted⟨⟩(): int clist -> bool  =  
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m Classify counterexamples...
+	[44m INFO :[0m ... finished in 0.0097s
+[44m INFO :[0m 1 counterexamples violate requires.
+[44m INFO :[0m Lemma [32mCons[0m([34mi1[0m, [34mp0[0m): "lemma i1 i3 = [34mi1[0m ≥ [34mi3[0m" is correct, memorizing.
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:1 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0161s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  10 instances] 0.182s 
+        CVC4-SMT   [   5 instances] 0.137s 
+        CVC-SyGuS  [   9 instances] 0.068s 
+        > TOTAL    [  24 instances]: 0.388s 
+[44m INFO :[0m Solution found in 0.2153s (12.0% verifying):
+
+[31mlet[0m [36mjoin[0m [34ma[0m [31m=[0m max [34ma[0m [34ma[0m
+
+[31mlet rec[0m [36mamax[0m [31m=[0m [33mfunction[0m [3mElt[0m(x) -> [34mx[0m [33m| [0m[3mCons[0m(hd, _) -> [34mjoin[0m [34mhd[0m
+
+

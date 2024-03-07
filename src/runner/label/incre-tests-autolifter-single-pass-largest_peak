@@ -1,0 +1,36 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            align (v (unlabel tmp2 )) ;
+
+inf = 100;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+largest_peak = fix (
+    \f: Int -> List -> Int. \cmo: Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let cmo = (if (> h 0) then + cmo h
+        else 0) in 
+            max cmo (f cmo t)
+    end
+) 0;
+
+main = single_pass largest_peak;

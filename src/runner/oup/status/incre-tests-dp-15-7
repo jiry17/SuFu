@@ -1,0 +1,44 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+EdgeList :: EdgeList. <enil Unit | econs {Int,Int,EdgeList}>
+enil : Unit -> EdgeList'. <enil Unit | econs {Int,Int,EdgeList'}>
+econs : {Int,Int,EdgeList} ->
+        EdgeList'. <enil Unit | econs {Int,Int,EdgeList'}>
+Graph :: Graph. <gnil Unit | gcons {EdgeList,Graph}>
+gnil : Unit -> Graph'. <gnil Unit | gcons {EdgeList,Graph'}>
+gcons : {EdgeList,Graph} ->
+        Graph'. <gnil Unit | gcons {EdgeList,Graph'}>
+Plan :: EdgeList
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+graph_size : Graph -> Int
+length : EdgeList -> Int
+size : List -> Int
+is_valid_graph : Graph -> Bool
+cs : List
+len : Int
+one : Int
+take_last : List -> Int -> List
+merge : PlanList -> PlanList -> PlanList
+extend : Int ->
+         Int ->
+         Int ->
+         PlanList ->
+         PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+generate_paths : Graph ->
+                 PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+is_path_match : EdgeList -> List -> Bool
+eval : EdgeList -> Int
+max : Int -> Int -> Int
+get_best : PlanList -> Int
+main : Graph -> Int
+
+size: 386
+compress-num: 1
+label-num: 9
+rewrite-size: 20
+0.035682

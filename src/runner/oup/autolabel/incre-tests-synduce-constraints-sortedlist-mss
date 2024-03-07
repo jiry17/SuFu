@@ -1,0 +1,707 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ CList :: CList. <single Int | concat {Int,CList,CList}>
+single : Int -> CList'. <single Int | concat {Int,CList',CList'}>
+concat : {Int,CList,CList} ->
+         CList'. <single Int | concat {Int,CList',CList'}>
+cat : List -> List -> List'. <elt Int | cons {Int,List'}>
+repr : CList -> List'. <elt Int | cons {Int,List'}>
+max : Int -> Int -> Int
+min : Int -> Int -> Int
+lmax : CList -> Int
+lmin : CList -> Int
+is_parti : CList -> Bool
+spec : List -> {Int, Int, Int, Int}
+sum : CList -> Int
+target : CList -> CList
+insert : Int -> List -> List'. <elt Int | cons {Int,List'}>
+sort : List -> List
+access : List -> {Int, List}
+fill : CList ->
+       List ->
+       {CList'. <single Int | concat {Int,CList',CList'}>, List}
+flatten : CList -> List'. <elt Int | cons {Int,List'}>
+gen : CList -> CList'. <single Int | concat {Int,CList',CList'}>
+main : CList -> {Int, Int, Int, Int}
+
+
+Inductive List;
+
+Inductive CList;
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      elt w -> cons {w, b}
+    | cons {h, t} -> cons {h, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> List. \c: CList. 
+    match c with
+      single w -> elt w
+    | concat {w, l, r} -> cat (f l) (f r)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+lmax = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single w -> w
+    | concat {w, l, r} -> max (f l) (f r)
+    end
+);
+
+lmin = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single w -> w
+    | concat {w, l, r} -> min (f l) (f r)
+    end
+);
+
+is_parti = fix (
+    \f: CList -> Bool. \c: CList. 
+    match c with
+      single w -> true
+    | concat {w, l, r} -> and (and (< (lmax l) w) (< w (lmin r))) (and (f l) (f r))
+    end
+);
+
+spec = fix (
+    \f: List -> {Int, Int, Int, Int}. \xs: List. 
+    match xs with
+      elt w -> {w, max w 0, max w 0, max w 0}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            {+ res.1 h, max res.2 (+ res.1 h), max (+ res.3 h) 0, max res.4 (+ res.3 h)}
+    end
+);
+
+sum = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single a -> a
+    | concat {a, l, r} -> + (f l) (f r)
+    end
+);
+
+target = fix (
+    \f: CList -> Compress CList. \xs: CList. 
+    match xs with
+      single a -> 
+        align (label xs ) 
+    | concat {w, l, r} -> if (< w 0) then let s = (sum l) in 
+            let tmp1 = (f r) in 
+                align (label (concat {w, l, unlabel tmp1 }) ) 
+        else let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (concat {w, unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+insert = \w: Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      elt a -> if (< w a) then cons {w, elt a}
+        else cons {a, elt w}
+    | cons {h, t} -> if (< w h) then cons {w, xs}
+        else cons {h, f t}
+    end
+);
+
+sort = fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      elt w -> xs
+    | cons {h, t} -> insert h (f t)
+    end
+);
+
+access = \x: List. 
+    match x with
+      elt w -> {w, x}
+    | cons {h, t} -> {h, t}
+    end
+;
+
+fill = fix (
+    \f: CList -> List -> {CList, List}. \c: CList. \xs: List. 
+    match c with
+      single _ -> 
+        let info = (access xs) in 
+            {single info.1, info.2}
+    | concat {_, l, r} -> 
+        let lres = (f l xs) in 
+            let info = (access lres.2) in 
+                let rres = (f r info.2) in 
+                    {concat {info.1, lres.1, rres.1}, rres.2}
+    end
+);
+
+flatten = fix (
+    \f: CList -> List. \c: CList. 
+    match c with
+      single w -> elt w
+    | concat {w, l, r} -> cat (f l) (cons {w, f r})
+    end
+);
+
+gen = \c: CList. 
+    let xs = (sort (flatten c)) in 
+        (fill c xs).1;
+
+main = \xs: CList. 
+    let inp = (gen xs) in 
+        if (is_parti inp) then let tmp4 = (target inp) in 
+            align (spec (repr (unlabel tmp4 ))) 
+        else {0, 0, 0, 0};
+align term #0: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align@0 create@0 xs
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  a: Int
+align term #1: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align@1 create@0 concat ({w,l,unlabel tmp1})
+  l: CList. <single Int | concat {Int,CList,CList}>
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  w: Int
+  tmp1: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  s: Int
+  r: CList. <single Int | concat {Int,CList,CList}>
+align term #2: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align@2 create@0 concat ({w,unlabel tmp2,unlabel tmp3})
+  l: CList. <single Int | concat {Int,CList,CList}>
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  w: Int
+  tmp3: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  tmp2: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  r: CList. <single Int | concat {Int,CList,CList}>
+align term #3: {Int,Int,Int,Int}
+align@3 spec (repr (unlabel tmp4))
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  tmp4: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  inp: CList. <single Int | concat {Int,CList,CList}>
+Components for compress:
+  concat [(Int * CList. <single Int | concat {Int,CList,CList}> * CList. <single Int | concat {Int,CList,CList}>)] -> CList. <single Int | concat {Int,CList,CList}> 1
+  single [Int] -> CList. <single Int | concat {Int,CList,CList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  min [Int,Int] -> Int 5
+  max [Int,Int] -> Int 4
+  access [List. <elt Int | cons {Int,List}>] -> (Int * List. <elt Int | cons {Int,List}>) 14
+
+Components for align:
+  flatten [CList. <single Int | concat {Int,CList,CList}>] -> List. <elt Int | cons {Int,List}> 16
+  sort [List. <elt Int | cons {Int,List}>] -> List. <elt Int | cons {Int,List}> 13
+  sum [CList. <single Int | concat {Int,CList,CList}>] -> Int 10
+  spec [List. <elt Int | cons {Int,List}>] -> (Int * Int * Int * Int) 9
+  insert [Int,List. <elt Int | cons {Int,List}>] -> List. <elt Int | cons {Int,List}> 12
+  cat [List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>] -> List. <elt Int | cons {Int,List}> 2
+  lmin [CList. <single Int | concat {Int,CList,CList}>] -> Int 7
+  concat [(Int * CList. <single Int | concat {Int,CList,CList}> * CList. <single Int | concat {Int,CList,CList}>)] -> CList. <single Int | concat {Int,CList,CList}> 1
+  single [Int] -> CList. <single Int | concat {Int,CList,CList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  repr [CList. <single Int | concat {Int,CList,CList}>] -> List. <elt Int | cons {Int,List}> 3
+  min [Int,Int] -> Int 5
+  max [Int,Int] -> Int 4
+  gen [CList. <single Int | concat {Int,CList,CList}>] -> CList. <single Int | concat {Int,CList,CList}> 17
+  lmax [CList. <single Int | concat {Int,CList,CList}>] -> Int 6
+  fill [CList. <single Int | concat {Int,CList,CList}>,List. <elt Int | cons {Int,List}>] -> (CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>) 15
+  access [List. <elt Int | cons {Int,List}>] -> (Int * List. <elt Int | cons {Int,List}>) 14
+  is_parti [CList. <single Int | concat {Int,CList,CList}>] -> Bool 8
+
+Components for comb:
+  concat [(Int * CList. <single Int | concat {Int,CList,CList}> * CList. <single Int | concat {Int,CList,CList}>)] -> CList. <single Int | concat {Int,CList,CList}> 1
+  single [Int] -> CList. <single Int | concat {Int,CList,CList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  min [Int,Int] -> Int 5
+  max [Int,Int] -> Int 4
+  access [List. <elt Int | cons {Int,List}>] -> (Int * List. <elt Int | cons {Int,List}>) 14
+
+align term #0: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align@0 create@0 xs
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  a: Int
+align term #1: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align@1 create@0 concat ({w,l,unlabel tmp1})
+  l: CList. <single Int | concat {Int,CList,CList}>
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  w: Int
+  tmp1: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  s: Int
+  r: CList. <single Int | concat {Int,CList,CList}>
+align term #2: compress[0] CList. <single Int | concat {Int,CList,CList}>
+align@2 create@0 concat ({w,unlabel tmp2,unlabel tmp3})
+  l: CList. <single Int | concat {Int,CList,CList}>
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  w: Int
+  tmp3: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  tmp2: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  r: CList. <single Int | concat {Int,CList,CList}>
+align term #3: {Int,Int,Int,Int}
+align@3 spec (repr (unlabel tmp4))
+  xs: CList. <single Int | concat {Int,CList,CList}>
+  tmp4: compress[0] CList. <single Int | concat {Int,CList,CList}>
+  inp: CList. <single Int | concat {Int,CList,CList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] CList. <single Int | concat {Int,CList,CList}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] CList. <single Int | concat {Int,CList,CList}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param2
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  min([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] CList. <single Int | concat {Int,CList,CList}>
+  Param3
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] CList. <single Int | concat {Int,CList,CList}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] CList. <single Int | concat {Int,CList,CList}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param2
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  min([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] CList. <single Int | concat {Int,CList,CList}>
+  Param3
+  Param4
+num = 3
+start: start
+node: start
+  Compress[0] CList. <single Int | concat {Int,CList,CList}>([Param0,Param1,Param2]@Compress[0] CList. <single Int | concat {Int,CList,CList}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] CList. <single Int | concat {Int,CList,CList}>
+  Param1
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  access0([Param0,Param1,Param2]@(Int * List. <elt Int | cons {Int,List}>))
+  min([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@List. <elt Int | cons {Int,List}>
+  access1([Param0,Param1,Param2]@(Int * List. <elt Int | cons {Int,List}>))
+  elt([Param0,Param1,Param2]@Int)
+  cons([Param0,Param1,Param2]@(Int * List. <elt Int | cons {Int,List}>))
+node: [Param0,Param1,Param2]@(Int * List. <elt Int | cons {Int,List}>)
+  prod([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@List. <elt Int | cons {Int,List}>)
+  access([Param0,Param1,Param2]@List. <elt Int | cons {Int,List}>)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  ite([Int@0]@Bool [Int@0]@Int [Int@0]@Int)
+  access0([Int@0]@(Int * Int * Int * Int))
+  access1([Int@0]@(Int * Int * Int * Int))
+  access2([Int@0]@(Int * Int * Int * Int))
+  access3([Int@0]@(Int * Int * Int * Int))
+  access0([Int@0]@(Int * List. <elt Int | cons {Int,List}>))
+  sum([Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+  lmin([Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+  min([Int@0]@Int [Int@0]@Int)
+  max([Int@0]@Int [Int@0]@Int)
+  lmax([Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  ite([Int@0,Int@1,Int@2]@Bool [Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  access0([Int@0,Int@1,Int@2]@(Int * Int * Int * Int))
+  access1([Int@0,Int@1,Int@2]@(Int * Int * Int * Int))
+  access2([Int@0,Int@1,Int@2]@(Int * Int * Int * Int))
+  access3([Int@0,Int@1,Int@2]@(Int * Int * Int * Int))
+  access0([Int@0,Int@1,Int@2]@(Int * List. <elt Int | cons {Int,List}>))
+  sum([Int@0,Int@1,Int@2]@CList. <single Int | concat {Int,CList,CList}>)
+  lmin([Int@0,Int@1,Int@2]@CList. <single Int | concat {Int,CList,CList}>)
+  min([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  max([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  lmax([Int@0,Int@1,Int@2]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Bool@0,Bool@1,Int@0]@Int
+  Int@0
+  +([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  -([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  ite([Bool@0,Bool@1,Int@0]@Bool [Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  access0([Bool@0,Bool@1,Int@0]@(Int * Int * Int * Int))
+  access1([Bool@0,Bool@1,Int@0]@(Int * Int * Int * Int))
+  access2([Bool@0,Bool@1,Int@0]@(Int * Int * Int * Int))
+  access3([Bool@0,Bool@1,Int@0]@(Int * Int * Int * Int))
+  access0([Bool@0,Bool@1,Int@0]@(Int * List. <elt Int | cons {Int,List}>))
+  sum([Bool@0,Bool@1,Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+  lmin([Bool@0,Bool@1,Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+  min([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  max([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  lmax([Bool@0,Bool@1,Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Bool@0,Bool@1,Int@0]@Bool
+  Bool@0
+  Bool@1
+  is_parti([Bool@0,Bool@1,Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  access0([Param0]@(Int * Int * Int * Int))
+  access1([Param0]@(Int * Int * Int * Int))
+  access2([Param0]@(Int * Int * Int * Int))
+  access3([Param0]@(Int * Int * Int * Int))
+  access0([Param0]@(Int * List. <elt Int | cons {Int,List}>))
+  fold[CList. <single Int | concat {Int,CList,CList}>->Int]([Int@0]@Int [Int@0,Int@1,Int@2]@Int [Param0]@CList. <single Int | concat {Int,CList,CList}>)
+  sum([Param0]@CList. <single Int | concat {Int,CList,CList}>)
+  lmin([Param0]@CList. <single Int | concat {Int,CList,CList}>)
+  min([Param0]@Int [Param0]@Int)
+  max([Param0]@Int [Param0]@Int)
+  lmax([Param0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Param0]@Bool
+  fold[CList. <single Int | concat {Int,CList,CList}>->Bool]([Int@0]@Bool [Bool@0,Bool@1,Int@0]@Bool [Param0]@CList. <single Int | concat {Int,CList,CList}>)
+  is_parti([Param0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Int@0]@Bool
+  is_parti([Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Int@0,Int@1,Int@2]@Bool
+  is_parti([Int@0,Int@1,Int@2]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  access1([Param0]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>))
+  access1([Param0]@(Int * List. <elt Int | cons {Int,List}>))
+  flatten([Param0]@CList. <single Int | concat {Int,CList,CList}>)
+  sort([Param0]@List. <elt Int | cons {Int,List}>)
+  insert([Param0]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+  cat([Param0]@List. <elt Int | cons {Int,List}> [Param0]@List. <elt Int | cons {Int,List}>)
+  elt([Param0]@Int)
+  cons([Param0]@(Int * List. <elt Int | cons {Int,List}>))
+  repr([Param0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  access1([Int@0]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>))
+  access1([Int@0]@(Int * List. <elt Int | cons {Int,List}>))
+  flatten([Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+  sort([Int@0]@List. <elt Int | cons {Int,List}>)
+  insert([Int@0]@Int [Int@0]@List. <elt Int | cons {Int,List}>)
+  cat([Int@0]@List. <elt Int | cons {Int,List}> [Int@0]@List. <elt Int | cons {Int,List}>)
+  elt([Int@0]@Int)
+  cons([Int@0]@(Int * List. <elt Int | cons {Int,List}>))
+  repr([Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>
+  access1([Int@0,Int@1,Int@2]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>))
+  access1([Int@0,Int@1,Int@2]@(Int * List. <elt Int | cons {Int,List}>))
+  flatten([Int@0,Int@1,Int@2]@CList. <single Int | concat {Int,CList,CList}>)
+  sort([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  insert([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  cat([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}> [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  elt([Int@0,Int@1,Int@2]@Int)
+  cons([Int@0,Int@1,Int@2]@(Int * List. <elt Int | cons {Int,List}>))
+  repr([Int@0,Int@1,Int@2]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>
+  access1([Bool@0,Bool@1,Int@0]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>))
+  access1([Bool@0,Bool@1,Int@0]@(Int * List. <elt Int | cons {Int,List}>))
+  flatten([Bool@0,Bool@1,Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+  sort([Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+  insert([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+  cat([Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}> [Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+  elt([Bool@0,Bool@1,Int@0]@Int)
+  cons([Bool@0,Bool@1,Int@0]@(Int * List. <elt Int | cons {Int,List}>))
+  repr([Bool@0,Bool@1,Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Param0]@(Int * Int * Int * Int)
+  prod([Param0]@Int [Param0]@Int [Param0]@Int [Param0]@Int)
+  spec([Param0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@(Int * Int * Int * Int)
+  prod([Int@0]@Int [Int@0]@Int [Int@0]@Int [Int@0]@Int)
+  spec([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1,Int@2]@(Int * Int * Int * Int)
+  prod([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  spec([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+node: [Bool@0,Bool@1,Int@0]@(Int * Int * Int * Int)
+  prod([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  spec([Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@CList. <single Int | concat {Int,CList,CList}>
+  access0([Int@0]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>))
+  single([Int@0]@Int)
+  gen([Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Int@0,Int@1,Int@2]@CList. <single Int | concat {Int,CList,CList}>
+  access0([Int@0,Int@1,Int@2]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>))
+  single([Int@0,Int@1,Int@2]@Int)
+  gen([Int@0,Int@1,Int@2]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Bool@0,Bool@1,Int@0]@CList. <single Int | concat {Int,CList,CList}>
+  access0([Bool@0,Bool@1,Int@0]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>))
+  single([Bool@0,Bool@1,Int@0]@Int)
+  gen([Bool@0,Bool@1,Int@0]@CList. <single Int | concat {Int,CList,CList}>)
+node: [Param0]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>)
+  prod([Param0]@CList. <single Int | concat {Int,CList,CList}> [Param0]@List. <elt Int | cons {Int,List}>)
+  fill([Param0]@CList. <single Int | concat {Int,CList,CList}> [Param0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>)
+  prod([Int@0]@CList. <single Int | concat {Int,CList,CList}> [Int@0]@List. <elt Int | cons {Int,List}>)
+  fill([Int@0]@CList. <single Int | concat {Int,CList,CList}> [Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1,Int@2]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>)
+  prod([Int@0,Int@1,Int@2]@CList. <single Int | concat {Int,CList,CList}> [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  fill([Int@0,Int@1,Int@2]@CList. <single Int | concat {Int,CList,CList}> [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+node: [Bool@0,Bool@1,Int@0]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>)
+  prod([Bool@0,Bool@1,Int@0]@CList. <single Int | concat {Int,CList,CList}> [Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+  fill([Bool@0,Bool@1,Int@0]@CList. <single Int | concat {Int,CList,CList}> [Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@(Int * List. <elt Int | cons {Int,List}>)
+  prod([Param0]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+  access([Param0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@(Int * List. <elt Int | cons {Int,List}>)
+  prod([Int@0]@Int [Int@0]@List. <elt Int | cons {Int,List}>)
+  access([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1,Int@2]@(Int * List. <elt Int | cons {Int,List}>)
+  prod([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  access([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+node: [Bool@0,Bool@1,Int@0]@(Int * List. <elt Int | cons {Int,List}>)
+  prod([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+  access([Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@CList. <single Int | concat {Int,CList,CList}>
+  Param0
+  access0([Param0]@(CList. <single Int | concat {Int,CList,CList}> * List. <elt Int | cons {Int,List}>))
+  single([Param0]@Int)
+  gen([Param0]@CList. <single Int | concat {Int,CList,CList}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] sum(Param0)
+  [1] spec(repr(Param0)).1
+  [0] Param1
+  [0] sum(Param0)
+  [1] spec(repr(Param0)).1
+  [0] Param4
+  [1] Param3 -> sum(Param0)
+  [2] Param3 -> spec(repr(Param0)).1
+  [0] sum(Param0)
+  [1] spec(repr(Param0)).1
+  [0] Param3 -> sum(Param0)
+  [1] Param3 -> spec(repr(Param0)).1
+  [2] Param4 -> sum(Param0)
+  [3] Param4 -> spec(repr(Param0)).1
+  [0] null
+  [1] null
+  [2] null
+  [3] null
+  [0] Param1 -> sum(Param0)
+  [1] Param1 -> spec(repr(Param0)).1
+compress #0: {Int,Int}
+pass #0: 
+{a, - a (min a 0)}
+pass #1: 
+{+ s tmp1.1, tmp1.2}
+pass #2: 
+{+ tmp3.1 tmp2.1, + tmp3.2 tmp2.2}
+pass #3: 
+{tmp4.1, tmp4.2, - tmp4.1 (min tmp4.1 0), tmp4.2}
+
+Inductive List;
+
+Inductive CList;
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      elt w -> cons {w, b}
+    | cons {h, t} -> cons {h, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> List. \c: CList. 
+    match c with
+      single w -> elt w
+    | concat {w, l, r} -> cat (f l) (f r)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+lmax = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single w -> w
+    | concat {w, l, r} -> max (f l) (f r)
+    end
+);
+
+lmin = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single w -> w
+    | concat {w, l, r} -> min (f l) (f r)
+    end
+);
+
+is_parti = fix (
+    \f: CList -> Bool. \c: CList. 
+    match c with
+      single w -> true
+    | concat {w, l, r} -> and (and (< (lmax l) w) (< w (lmin r))) (and (f l) (f r))
+    end
+);
+
+spec = fix (
+    \f: List -> {Int, Int, Int, Int}. \xs: List. 
+    match xs with
+      elt w -> {w, max w 0, max w 0, max w 0}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            {+ res.1 h, max res.2 (+ res.1 h), max (+ res.3 h) 0, max res.4 (+ res.3 h)}
+    end
+);
+
+sum = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single a -> a
+    | concat {a, l, r} -> + (f l) (f r)
+    end
+);
+
+target = fix (
+    \f: CList -> {Int, Int}. \xs: CList. 
+    match xs with
+      single a -> {a, - a (min a 0)}
+    | concat {w, l, r} -> if (< w 0) then let s = (sum l) in 
+            let tmp1 = (f r) in 
+                {+ s tmp1.1, tmp1.2}
+        else let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                {+ tmp3.1 tmp2.1, + tmp3.2 tmp2.2}
+    end
+);
+
+insert = \w: Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      elt a -> if (< w a) then cons {w, elt a}
+        else cons {a, elt w}
+    | cons {h, t} -> if (< w h) then cons {w, xs}
+        else cons {h, f t}
+    end
+);
+
+sort = fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      elt w -> xs
+    | cons {h, t} -> insert h (f t)
+    end
+);
+
+access = \x: List. 
+    match x with
+      elt w -> {w, x}
+    | cons {h, t} -> {h, t}
+    end
+;
+
+fill = fix (
+    \f: CList -> List -> {CList, List}. \c: CList. \xs: List. 
+    match c with
+      single _ -> 
+        let info = (access xs) in 
+            {single info.1, info.2}
+    | concat {_, l, r} -> 
+        let lres = (f l xs) in 
+            let info = (access lres.2) in 
+                let rres = (f r info.2) in 
+                    {concat {info.1, lres.1, rres.1}, rres.2}
+    end
+);
+
+flatten = fix (
+    \f: CList -> List. \c: CList. 
+    match c with
+      single w -> elt w
+    | concat {w, l, r} -> cat (f l) (cons {w, f r})
+    end
+);
+
+gen = \c: CList. 
+    let xs = (sort (flatten c)) in 
+        (fill c xs).1;
+
+main = \xs: CList. 
+    let inp = (gen xs) in 
+        if (is_parti inp) then let tmp4 = (target inp) in 
+            {tmp4.1, tmp4.2, - tmp4.1 (min tmp4.1 0), tmp4.2}
+        else {0, 0, 0, 0};
+syn-comb: 0.15296
+collect: 8.94096
+label: 0.03861
+extend-component: 0.002133
+execute: 0.710324
+syn-align: 9.72682
+comb-size: 53
+align-size: 10
+extract-size: 8
+9.93371
+Success

@@ -1,0 +1,61 @@
+
+Inductive List;
+
+Plan = Int;
+
+Inductive PlanList;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+extend = \w: Int. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> xs
+    | pcons {h, t} -> pcons {+ w h, f t}
+    end
+);
+
+size = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+generate = \full_xs: List. 
+    fix (
+    \f: Int -> PlanList. \n: Int. 
+    if (== n 0) then pcons {0, pnil Unit}
+    else fix (
+    \g: Int -> List -> PlanList. \m: Int. \xs: List. 
+    match xs with
+      nil _ -> pnil Unit
+    | cons {h, t} -> 
+        let take = (extend h (f (- n m))) in 
+            if (< m n) then merge take (g (+ m 1) t)
+            else take
+    end
+) 1 full_xs) (size full_xs);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {h, t} -> max h (f t)
+    end
+);
+
+main = \xs: List. 
+    get_best (generate xs);

@@ -1,0 +1,59 @@
+
+Inductive List;
+
+Inductive List2D;
+
+sum = fix (
+    \f: List -> Int. \l: List. 
+    match l with
+      cons {h, t} -> + h (f t)
+    | nil _ -> 0
+    end
+);
+
+max = \x: Int. \y: Int. 
+    if (> x y) then x
+    else y;
+
+maximum = fix (
+    \f: List -> Int. \l: List. 
+    match l with
+      cons {h, t} -> 
+        let res = (f t) in 
+            max h res
+    | _ -> 0
+    end
+);
+
+pushback = fix (
+    \f: List -> Int -> List. \l: List. \a: Int. 
+    match l with
+      cons {h, t} -> cons {h, f t a}
+    | _ -> cons {a, nil unit}
+    end
+);
+
+inits = fix (
+    \f: Compress List -> List -> Compress List2D. \init: Compress List. \l: List. 
+    match l with
+      cons {h, t} -> 
+        let tmp1 = (f (align (label (pushback (unlabel init ) h) ) ) t) in 
+            align (label (cons2D {init, unlabel tmp1 }) ) 
+    | nil _ -> 
+        let tmp2 = (cons2D {init, nil2D unit}) in 
+            align (label tmp2 ) 
+    end
+) (let tmp3 = (nil unit) in 
+        align (label tmp3 ) );
+
+maxsum = fix (
+    \f: List2D -> Int. \l: List2D. 
+    match l with
+      cons2D {h, t} -> max (align (sum (unlabel h )) ) (f t)
+    | nil2D _ -> 0
+    end
+);
+
+mps = \x: List. 
+    let tmp4 = (inits x) in 
+        align (maxsum (unlabel tmp4 )) ;

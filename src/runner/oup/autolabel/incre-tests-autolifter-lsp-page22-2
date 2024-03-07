@@ -1,0 +1,600 @@
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ CartTree :: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+node : {CartTree,Int,CartTree} ->
+       CartTree'. <node {CartTree',Int,CartTree'} | leaf Unit>
+leaf : Unit ->
+       CartTree'. <node {CartTree',Int,CartTree'} | leaf Unit>
+CartPath :: CartPath. <consNode {CartTree,CartPath} | nilNode Unit>
+consNode : {CartTree,CartPath} ->
+           CartPath'. <consNode {CartTree,CartPath'} | nilNode Unit>
+nilNode : Unit ->
+          CartPath'. <consNode {CartTree,CartPath'} | nilNode Unit>
+l2cart : (Int->Int->Bool) -> List -> CartTree
+concat : List -> List -> List'. <cons {Int,List'} | nil Unit>
+cart2l : CartTree -> List'. <cons {Int,List'} | nil Unit>
+fold_list : (Int->List->List) -> List -> List -> List
+max : Int -> Int -> Int
+append : List -> Int -> List
+fold : (Int->Int->Int) -> List -> Int -> Int
+length : List -> Int
+sum : List -> Int
+head : Int -> List -> Int
+minimum : List -> Int
+maximum : List -> Int
+raw_pre : (List->Bool) -> List -> Int
+raw_suf : (List->Bool) -> List -> Int
+raw_lsp : (List->Bool) -> List -> Int
+lsp : (Int->Int->Bool) -> (List->Bool) -> List -> Int
+last : Int -> List -> Int
+isval : List -> Bool
+order : Int -> Int -> Bool
+run : List -> Int
+
+
+Inductive List;
+
+Inductive CartTree;
+
+Inductive CartPath;
+
+l2cart = \order: Int -> Int -> Bool. 
+    let insert = (\w: Int. 
+    fix (
+    \insert: CartTree -> CartPath -> CartPath. \tmp: CartTree. \p: CartPath. 
+    match p with
+      consNode {dnode, rem} -> 
+        match dnode with
+          node {l, v, r} -> if (order v w) then consNode {node {tmp, w, leaf Unit}, p}
+            else insert (node {l, v, tmp}) rem
+        end
+
+    | _ -> consNode {node {tmp, w, leaf Unit}, nilNode Unit}
+    end
+) (leaf Unit)) in 
+        let merge = (fix (
+        \f: CartTree -> CartPath -> CartTree. \pre: CartTree. \p: CartPath. 
+        match p with
+          consNode {dnode, rem} -> 
+            match dnode with
+              node {l, v, r} -> f (node {l, v, pre}) rem
+            end
+
+        | _ -> pre
+        end
+    ) (leaf Unit)) in 
+            fix (
+            \f: CartPath -> List -> CartTree. \p: CartPath. \l: List. 
+            match l with
+              cons {h, t} -> f (insert h p) t
+            | nil _ -> merge p
+            end
+        ) (nilNode Unit);
+
+concat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+cart2l = fix (
+    \f: CartTree -> Compress List. \t: CartTree. 
+    match t with
+      node {leaf _, w, leaf _} -> 
+        let tmp1 = (cons {w, nil Unit}) in 
+            align (label tmp1 ) 
+    | node {l, w, leaf _} -> 
+        let lres = (f l) in 
+            let tmp2 = (cons {w, nil Unit}) in 
+                align (label (concat (unlabel lres ) tmp2) ) 
+    | node {leaf _, w, r} -> 
+        let rres = (f r) in 
+            let tmp3 = (concat (cons {w, nil Unit})) in 
+                align (label (tmp3 (unlabel rres )) ) 
+    | node {l, w, r} -> 
+        let lres = (f l) in 
+            let rres = (f r) in 
+                let tmp4 = (concat (cons {w, nil Unit})) in 
+                    align (label (concat (unlabel lres ) (tmp4 (unlabel rres ))) ) 
+    | _ -> 
+        let tmp5 = (nil Unit) in 
+            align (label tmp5 ) 
+    end
+);
+
+fold_list = \f: Int -> List -> List. \x: List. \w0: List. 
+    fix (
+    \g: List -> List. \x: List. 
+    match x with
+      cons {h, t} -> f h (g t)
+    | _ -> w0
+    end
+) x;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+append = \x: List. \y: Int. 
+    fold_list (\a: Int. \b: List. 
+    cons {a, b}) x (cons {y, nil Unit});
+
+fold = \f: Int -> Int -> Int. \x: List. \w0: Int. 
+    fix (
+    \g: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> f h (g t)
+    | _ -> w0
+    end
+) x;
+
+length = \x: List. 
+    fold (\a: Int. \b: Int. 
+    + b 1) x 0;
+
+sum = \x: List. 
+    fold (\a: Int. \b: Int. 
+    + a b) x 0;
+
+head = \default: Int. \l: List. 
+    match l with
+      cons {h, t} -> h
+    | nil _ -> default
+    end
+;
+
+minimum = \x: List. 
+    fold (\a: Int. \b: Int. 
+    if (< a b) then a
+    else b) x (head 0 x);
+
+maximum = \x: List. 
+    fold (\a: Int. \b: Int. 
+    if (> a b) then a
+    else b) x (head 0 x);
+
+raw_pre = \b: List -> Bool. 
+    fix (
+    \f: List -> Int -> List -> Int. \pre: List. \len: Int. \rem: List. 
+    let sub_res = (match rem with
+      cons {h, t} -> f (append pre h) (+ len 1) t
+    | nil _ -> 0
+    end
+) in 
+        if (b pre) then max len sub_res
+        else sub_res) (nil Unit) 0;
+
+raw_suf = \b: List -> Bool. 
+    fix (
+    \f: List -> Int. \l: List. 
+    if (b l) then length l
+    else match l with
+      cons {h, t} -> f t
+    | _ -> 0
+    end
+);
+
+raw_lsp = \b: List -> Bool. 
+    fix (
+    \f: List -> Int. \l: List. 
+    match l with
+      cons {h, t} -> max (raw_pre b l) (f t)
+    | nil _ -> 0
+    end
+);
+
+lsp = \r: Int -> Int -> Bool. \b: List -> Bool. \x: List. 
+    let t = (l2cart r x) in 
+        let tmp6 = (raw_lsp b) in 
+            let tmp7 = (cart2l t) in 
+                align (tmp6 (unlabel tmp7 )) ;
+
+last = \default: Int. 
+    fix (
+    \f: List -> Int. \l: List. 
+    match l with
+      cons {h, nil _} -> h
+    | cons {h, t} -> f t
+    | nil _ -> default
+    end
+);
+
+isval = \l: List. 
+    match l with
+      nil _ -> true
+    | _ -> > (+ (maximum l) (minimum l)) (length l)
+    end
+;
+
+order = \a: Int. \b: Int. 
+    > b a;
+
+run = lsp order isval;
+align term #0: compress[0] List. <cons {Int,List} | nil Unit>
+align@0 create@0 tmp1
+  w: Int
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  tmp1: List. <cons {Int,List} | nil Unit>
+align term #1: compress[0] List
+align@1 create@0 concat (unlabel lres) (tmp2)
+  w: Int
+  l: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  tmp2: List. <cons {Int,List} | nil Unit>
+  lres: compress[0] List. <cons {Int,List} | nil Unit>
+align term #2: compress[0] List
+align@2 create@0 tmp3 (unlabel rres)
+  w: Int
+  r: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  rres: compress[0] List. <cons {Int,List} | nil Unit>
+align term #3: compress[0] List
+align@3 create@0 concat (unlabel lres) (tmp4 (unlabel rres))
+  w: Int
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  lres: compress[0] List. <cons {Int,List} | nil Unit>
+  l: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  rres: compress[0] List. <cons {Int,List} | nil Unit>
+  r: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+align term #4: compress[0] List. <cons {Int,List} | nil Unit>
+align@4 create@0 tmp5
+  tmp5: List. <cons {Int,List} | nil Unit>
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+align term #5: Int
+align@5 tmp6 (unlabel tmp7)
+  tmp7: compress[0] List. <cons {Int,List} | nil Unit>
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  x: List. <cons {Int,List} | nil Unit>
+Components for compress:
+  max [Int,Int] -> Int 7
+  cons [(Int * List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  nilNode [Bot] -> CartPath. <consNode {CartTree. <node {CartTree,Int,CartTree} | leaf Unit>,CartPath} | nilNode Unit> 2
+  leaf [Bot] -> CartTree. <node {CartTree,Int,CartTree} | leaf Unit> 1
+  order [Int,Int] -> Bool 21
+  consNode [(CartTree. <node {CartTree,Int,CartTree} | leaf Unit> * CartPath. <consNode {CartTree. <node {CartTree,Int,CartTree} | leaf Unit>,CartPath} | nilNode Unit>)] -> CartPath. <consNode {CartTree. <node {CartTree,Int,CartTree} | leaf Unit>,CartPath} | nilNode Unit> 2
+  head [Int,List. <cons {Int,List} | nil Unit>] -> Int 12
+  node [(CartTree. <node {CartTree,Int,CartTree} | leaf Unit> * Int * CartTree. <node {CartTree,Int,CartTree} | leaf Unit>)] -> CartTree. <node {CartTree,Int,CartTree} | leaf Unit> 1
+
+Components for align:
+  isval [List. <cons {Int,List} | nil Unit>] -> Bool 20
+  max [Int,Int] -> Int 7
+  l2cart [[Int]->[Int]->Bool,List. <cons {Int,List} | nil Unit>] -> CartTree. <node {CartTree,Int,CartTree} | leaf Unit> 3
+  length [List. <cons {Int,List} | nil Unit>] -> Int 10
+  raw_lsp [[List. <cons {Int,List} | nil Unit>]->Bool,List. <cons {Int,List} | nil Unit>] -> Int 17
+  cons [(Int * List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  nilNode [Bot] -> CartPath. <consNode {CartTree. <node {CartTree,Int,CartTree} | leaf Unit>,CartPath} | nilNode Unit> 2
+  leaf [Bot] -> CartTree. <node {CartTree,Int,CartTree} | leaf Unit> 1
+  fold [[Int]->[Int]->Int,List. <cons {Int,List} | nil Unit>,Int] -> Int 9
+  append [List. <cons {Int,List} | nil Unit>,Int] -> List. <cons {Int,List} | nil Unit> 8
+  sum [List. <cons {Int,List} | nil Unit>] -> Int 11
+  order [Int,Int] -> Bool 21
+  concat [List. <cons {Int,List} | nil Unit>,List. <cons {Int,List} | nil Unit>] -> List. <cons {Int,List} | nil Unit> 4
+  consNode [(CartTree. <node {CartTree,Int,CartTree} | leaf Unit> * CartPath. <consNode {CartTree. <node {CartTree,Int,CartTree} | leaf Unit>,CartPath} | nilNode Unit>)] -> CartPath. <consNode {CartTree. <node {CartTree,Int,CartTree} | leaf Unit>,CartPath} | nilNode Unit> 2
+  last [Int,List. <cons {Int,List} | nil Unit>] -> Int 19
+  head [Int,List. <cons {Int,List} | nil Unit>] -> Int 12
+  node [(CartTree. <node {CartTree,Int,CartTree} | leaf Unit> * Int * CartTree. <node {CartTree,Int,CartTree} | leaf Unit>)] -> CartTree. <node {CartTree,Int,CartTree} | leaf Unit> 1
+  maximum [List. <cons {Int,List} | nil Unit>] -> Int 14
+  fold_list [[Int]->[List. <cons {Int,List} | nil Unit>]->List. <cons {Int,List} | nil Unit>,List. <cons {Int,List} | nil Unit>,List. <cons {Int,List} | nil Unit>] -> List. <cons {Int,List} | nil Unit> 6
+  raw_suf [[List. <cons {Int,List} | nil Unit>]->Bool,List. <cons {Int,List} | nil Unit>] -> Int 16
+  minimum [List. <cons {Int,List} | nil Unit>] -> Int 13
+  raw_pre [[List. <cons {Int,List} | nil Unit>]->Bool,List. <cons {Int,List} | nil Unit>] -> Int 15
+
+Components for comb:
+  max [Int,Int] -> Int 7
+  cons [(Int * List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  nilNode [Bot] -> CartPath. <consNode {CartTree. <node {CartTree,Int,CartTree} | leaf Unit>,CartPath} | nilNode Unit> 2
+  leaf [Bot] -> CartTree. <node {CartTree,Int,CartTree} | leaf Unit> 1
+  order [Int,Int] -> Bool 21
+  consNode [(CartTree. <node {CartTree,Int,CartTree} | leaf Unit> * CartPath. <consNode {CartTree. <node {CartTree,Int,CartTree} | leaf Unit>,CartPath} | nilNode Unit>)] -> CartPath. <consNode {CartTree. <node {CartTree,Int,CartTree} | leaf Unit>,CartPath} | nilNode Unit> 2
+  head [Int,List. <cons {Int,List} | nil Unit>] -> Int 12
+  node [(CartTree. <node {CartTree,Int,CartTree} | leaf Unit> * Int * CartTree. <node {CartTree,Int,CartTree} | leaf Unit>)] -> CartTree. <node {CartTree,Int,CartTree} | leaf Unit> 1
+
+align term #0: compress[0] List. <cons {Int,List} | nil Unit>
+align@0 create@0 tmp1
+  w: Int
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  tmp1: List. <cons {Int,List} | nil Unit>
+  (0) {w: 3,t: Node (Leaf Unit) (3) (Leaf Unit),tmp1: Cons (3) (Nil Unit)} @ {} -> compress[0] Cons (3) (Nil Unit)
+  (0) {w: 5,t: Node (Leaf Unit) (5) (Leaf Unit),tmp1: Cons (5) (Nil Unit)} @ {} -> compress[0] Cons (5) (Nil Unit)
+  (0) {w: 0,t: Node (Leaf Unit) (0) (Leaf Unit),tmp1: Cons (0) (Nil Unit)} @ {} -> compress[0] Cons (0) (Nil Unit)
+  (0) {w: 4,t: Node (Leaf Unit) (4) (Leaf Unit),tmp1: Cons (4) (Nil Unit)} @ {} -> compress[0] Cons (4) (Nil Unit)
+  (0) {w: -2,t: Node (Leaf Unit) (-2) (Leaf Unit),tmp1: Cons (-2) (Nil Unit)} @ {} -> compress[0] Cons (-2) (Nil Unit)
+  (0) {w: 2,t: Node (Leaf Unit) (2) (Leaf Unit),tmp1: Cons (2) (Nil Unit)} @ {} -> compress[0] Cons (2) (Nil Unit)
+  (0) {w: -1,t: Node (Leaf Unit) (-1) (Leaf Unit),tmp1: Cons (-1) (Nil Unit)} @ {} -> compress[0] Cons (-1) (Nil Unit)
+  (0) {w: 1,t: Node (Leaf Unit) (1) (Leaf Unit),tmp1: Cons (1) (Nil Unit)} @ {} -> compress[0] Cons (1) (Nil Unit)
+align term #1: compress[0] List
+align@1 create@0 concat (unlabel lres) (tmp2)
+  w: Int
+  l: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  tmp2: List. <cons {Int,List} | nil Unit>
+  lres: compress[0] List. <cons {Int,List} | nil Unit>
+  (1) {l: Node (Leaf Unit) (5) (Leaf Unit),w: 4,t: Node (Node (Leaf Unit) (5) (Leaf Unit)) (4) (Leaf Unit),lres: compress[0] Cons (5) (Nil Unit),tmp2: Cons (4) (Nil Unit)} @ {} -> compress[0] Cons (5) (Cons (4) (Nil Unit))
+  (1) {l: Node (Leaf Unit) (4) (Leaf Unit),w: 3,t: Node (Node (Leaf Unit) (4) (Leaf Unit)) (3) (Leaf Unit),lres: compress[0] Cons (4) (Nil Unit),tmp2: Cons (3) (Nil Unit)} @ {} -> compress[0] Cons (4) (Cons (3) (Nil Unit))
+  (1) {l: Node (Leaf Unit) (-1) (Leaf Unit),w: -4,t: Node (Node (Leaf Unit) (-1) (Leaf Unit)) (-4) (Leaf Unit),lres: compress[0] Cons (-1) (Nil Unit),tmp2: Cons (-4) (Nil Unit)} @ {} -> compress[0] Cons (-1) (Cons (-4) (Nil Unit))
+  (1) {l: Node (Leaf Unit) (-3) (Node (Leaf Unit) (1) (Leaf Unit)),w: -3,t: Node (Node (Leaf Unit) (-3) (Node (Leaf Unit) (1) (Leaf Unit))) (-3) (Leaf Unit),lres: compress[0] Cons (-3) (Cons (1) (Nil Unit)),tmp2: Cons (-3) (Nil Unit)} @ {} -> compress[0] Cons (-3) (Cons (1) (Cons (-3) (Nil Unit)))
+  (1) {l: Node (Node (Leaf Unit) (-3) (Node (Leaf Unit) (1) (Leaf Unit))) (-3) (Leaf Unit),w: -3,t: Node (Node (Node (Leaf Unit) (-3) (Node (Leaf Unit) (1) (Leaf Unit))) (-3) (Leaf Unit)) (-3) (Leaf Unit),lres: compress[0] Cons (-3) (Cons (1) (Cons (-3) (Nil Unit))),tmp2: Cons (-3) (Nil Unit)} @ {} -> compress[0] Cons (-3) (Cons (1) (Cons (-3) (Cons (-3) (Nil Unit))))
+  (1) {l: Node (Node (Node (Leaf Unit) (-3) (Node (Leaf Unit) (1) (Leaf Unit))) (-3) (Leaf Unit)) (-3) (Leaf Unit),w: -4,t: Node (Node (Node (Node (Leaf Unit) (-3) (Node (Leaf Unit) (1) (Leaf Unit))) (-3) (Leaf Unit)) (-3) (Leaf Unit)) (-4) (Leaf Unit),lres: compress[0] Cons (-3) (Cons (1) (Cons (-3) (Cons (-3) (Nil Unit)))),tmp2: Cons (-4) (Nil Unit)} @ {} -> compress[0] Cons (-3) (Cons (1) (Cons (-3) (Cons (-3) (Cons (-4) (Nil Unit)))))
+  (1) {l: Node (Leaf Unit) (3) (Leaf Unit),w: 0,t: Node (Node (Leaf Unit) (3) (Leaf Unit)) (0) (Leaf Unit),lres: compress[0] Cons (3) (Nil Unit),tmp2: Cons (0) (Nil Unit)} @ {} -> compress[0] Cons (3) (Cons (0) (Nil Unit))
+align term #2: compress[0] List
+align@2 create@0 tmp3 (unlabel rres)
+  w: Int
+  r: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  rres: compress[0] List. <cons {Int,List} | nil Unit>
+  (2) {r: Node (Node (Leaf Unit) (3) (Leaf Unit)) (1) (Node (Leaf Unit) (3) (Leaf Unit)),w: -1,rres: compress[0] Cons (3) (Cons (1) (Cons (3) (Nil Unit))),t: Node (Leaf Unit) (-1) (Node (Node (Leaf Unit) (3) (Leaf Unit)) (1) (Node (Leaf Unit) (3) (Leaf Unit)))} @ {} -> compress[0] Cons (-1) (Cons (3) (Cons (1) (Cons (3) (Nil Unit))))
+  (2) {r: Node (Leaf Unit) (-1) (Node (Node (Leaf Unit) (3) (Leaf Unit)) (1) (Node (Leaf Unit) (3) (Leaf Unit))),w: -3,rres: compress[0] Cons (-1) (Cons (3) (Cons (1) (Cons (3) (Nil Unit)))),t: Node (Leaf Unit) (-3) (Node (Leaf Unit) (-1) (Node (Node (Leaf Unit) (3) (Leaf Unit)) (1) (Node (Leaf Unit) (3) (Leaf Unit))))} @ {} -> compress[0] Cons (-3) (Cons (-1) (Cons (3) (Cons (1) (Cons (3) (Nil Unit)))))
+  (2) {r: Node (Node (Leaf Unit) (5) (Leaf Unit)) (4) (Leaf Unit),w: 2,rres: compress[0] Cons (5) (Cons (4) (Nil Unit)),t: Node (Leaf Unit) (2) (Node (Node (Leaf Unit) (5) (Leaf Unit)) (4) (Leaf Unit))} @ {} -> compress[0] Cons (2) (Cons (5) (Cons (4) (Nil Unit)))
+  (2) {r: Node (Leaf Unit) (0) (Leaf Unit),w: -1,rres: compress[0] Cons (0) (Nil Unit),t: Node (Leaf Unit) (-1) (Node (Leaf Unit) (0) (Leaf Unit))} @ {} -> compress[0] Cons (-1) (Cons (0) (Nil Unit))
+  (2) {r: Node (Node (Leaf Unit) (4) (Leaf Unit)) (3) (Leaf Unit),w: -1,rres: compress[0] Cons (4) (Cons (3) (Nil Unit)),t: Node (Leaf Unit) (-1) (Node (Node (Leaf Unit) (4) (Leaf Unit)) (3) (Leaf Unit))} @ {} -> compress[0] Cons (-1) (Cons (4) (Cons (3) (Nil Unit)))
+  (2) {r: Node (Node (Leaf Unit) (-1) (Node (Node (Leaf Unit) (4) (Leaf Unit)) (3) (Leaf Unit))) (-3) (Node (Leaf Unit) (3) (Leaf Unit)),w: -4,rres: compress[0] Cons (-1) (Cons (4) (Cons (3) (Cons (-3) (Cons (3) (Nil Unit))))),t: Node (Leaf Unit) (-4) (Node (Node (Leaf Unit) (-1) (Node (Node (Leaf Unit) (4) (Leaf Unit)) (3) (Leaf Unit))) (-3) (Node (Leaf Unit) (3) (Leaf Unit)))} @ {} -> compress[0] Cons (-4) (Cons (-1) (Cons (4) (Cons (3) (Cons (-3) (Cons (3) (Nil Unit))))))
+  (2) {r: Node (Leaf Unit) (5) (Leaf Unit),w: -1,rres: compress[0] Cons (5) (Nil Unit),t: Node (Leaf Unit) (-1) (Node (Leaf Unit) (5) (Leaf Unit))} @ {} -> compress[0] Cons (-1) (Cons (5) (Nil Unit))
+  (2) {r: Node (Leaf Unit) (-1) (Node (Leaf Unit) (5) (Leaf Unit)),w: -2,rres: compress[0] Cons (-1) (Cons (5) (Nil Unit)),t: Node (Leaf Unit) (-2) (Node (Leaf Unit) (-1) (Node (Leaf Unit) (5) (Leaf Unit)))} @ {} -> compress[0] Cons (-2) (Cons (-1) (Cons (5) (Nil Unit)))
+  (2) {r: Node (Leaf Unit) (1) (Leaf Unit),w: -3,rres: compress[0] Cons (1) (Nil Unit),t: Node (Leaf Unit) (-3) (Node (Leaf Unit) (1) (Leaf Unit))} @ {} -> compress[0] Cons (-3) (Cons (1) (Nil Unit))
+align term #3: compress[0] List
+align@3 create@0 concat (unlabel lres) (tmp4 (unlabel rres))
+  w: Int
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  lres: compress[0] List. <cons {Int,List} | nil Unit>
+  l: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  rres: compress[0] List. <cons {Int,List} | nil Unit>
+  r: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  (3) {w: 1,t: Node (Node (Leaf Unit) (3) (Leaf Unit)) (1) (Node (Leaf Unit) (3) (Leaf Unit)),l: Node (Leaf Unit) (3) (Leaf Unit),lres: compress[0] Cons (3) (Nil Unit),rres: compress[0] Cons (3) (Nil Unit),r: Node (Leaf Unit) (3) (Leaf Unit)} @ {} -> compress[0] Cons (3) (Cons (1) (Cons (3) (Nil Unit)))
+  (3) {w: -1,t: Node (Node (Leaf Unit) (5) (Leaf Unit)) (-1) (Node (Leaf Unit) (2) (Node (Node (Leaf Unit) (5) (Leaf Unit)) (4) (Leaf Unit))),l: Node (Leaf Unit) (5) (Leaf Unit),lres: compress[0] Cons (5) (Nil Unit),rres: compress[0] Cons (2) (Cons (5) (Cons (4) (Nil Unit))),r: Node (Leaf Unit) (2) (Node (Node (Leaf Unit) (5) (Leaf Unit)) (4) (Leaf Unit))} @ {} -> compress[0] Cons (5) (Cons (-1) (Cons (2) (Cons (5) (Cons (4) (Nil Unit)))))
+  (3) {w: -2,t: Node (Node (Node (Leaf Unit) (5) (Leaf Unit)) (-1) (Node (Leaf Unit) (2) (Node (Node (Leaf Unit) (5) (Leaf Unit)) (4) (Leaf Unit)))) (-2) (Node (Leaf Unit) (-1) (Node (Leaf Unit) (0) (Leaf Unit))),l: Node (Node (Leaf Unit) (5) (Leaf Unit)) (-1) (Node (Leaf Unit) (2) (Node (Node (Leaf Unit) (5) (Leaf Unit)) (4) (Leaf Unit))),lres: compress[0] Cons (5) (Cons (-1) (Cons (2) (Cons (5) (Cons (4) (Nil Unit))))),rres: compress[0] Cons (-1) (Cons (0) (Nil Unit)),r: Node (Leaf Unit) (-1) (Node (Leaf Unit) (0) (Leaf Unit))} @ {} -> compress[0] Cons (5) (Cons (-1) (Cons (2) (Cons (5) (Cons (4) (Cons (-2) (Cons (-1) (Cons (0) (Nil Unit))))))))
+  (3) {w: -3,t: Node (Node (Leaf Unit) (-1) (Node (Node (Leaf Unit) (4) (Leaf Unit)) (3) (Leaf Unit))) (-3) (Node (Leaf Unit) (3) (Leaf Unit)),l: Node (Leaf Unit) (-1) (Node (Node (Leaf Unit) (4) (Leaf Unit)) (3) (Leaf Unit)),lres: compress[0] Cons (-1) (Cons (4) (Cons (3) (Nil Unit))),rres: compress[0] Cons (3) (Nil Unit),r: Node (Leaf Unit) (3) (Leaf Unit)} @ {} -> compress[0] Cons (-1) (Cons (4) (Cons (3) (Cons (-3) (Cons (3) (Nil Unit)))))
+  (3) {w: -4,t: Node (Node (Leaf Unit) (-2) (Node (Leaf Unit) (-1) (Node (Leaf Unit) (5) (Leaf Unit)))) (-4) (Node (Leaf Unit) (-2) (Leaf Unit)),l: Node (Leaf Unit) (-2) (Node (Leaf Unit) (-1) (Node (Leaf Unit) (5) (Leaf Unit))),lres: compress[0] Cons (-2) (Cons (-1) (Cons (5) (Nil Unit))),rres: compress[0] Cons (-2) (Nil Unit),r: Node (Leaf Unit) (-2) (Leaf Unit)} @ {} -> compress[0] Cons (-2) (Cons (-1) (Cons (5) (Cons (-4) (Cons (-2) (Nil Unit)))))
+  (3) {w: -5,t: Node (Node (Leaf Unit) (2) (Leaf Unit)) (-5) (Node (Node (Leaf Unit) (-1) (Leaf Unit)) (-4) (Leaf Unit)),l: Node (Leaf Unit) (2) (Leaf Unit),lres: compress[0] Cons (2) (Nil Unit),rres: compress[0] Cons (-1) (Cons (-4) (Nil Unit)),r: Node (Node (Leaf Unit) (-1) (Leaf Unit)) (-4) (Leaf Unit)} @ {} -> compress[0] Cons (2) (Cons (-5) (Cons (-1) (Cons (-4) (Nil Unit))))
+  (3) {w: -3,t: Node (Node (Node (Leaf Unit) (3) (Leaf Unit)) (0) (Leaf Unit)) (-3) (Node (Leaf Unit) (1) (Leaf Unit)),l: Node (Node (Leaf Unit) (3) (Leaf Unit)) (0) (Leaf Unit),lres: compress[0] Cons (3) (Cons (0) (Nil Unit)),rres: compress[0] Cons (1) (Nil Unit),r: Node (Leaf Unit) (1) (Leaf Unit)} @ {} -> compress[0] Cons (3) (Cons (0) (Cons (-3) (Cons (1) (Nil Unit))))
+align term #4: compress[0] List. <cons {Int,List} | nil Unit>
+align@4 create@0 tmp5
+  tmp5: List. <cons {Int,List} | nil Unit>
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  (4) {tmp5: Nil Unit,t: Leaf Unit} @ {} -> compress[0] Nil Unit
+align term #5: Int
+align@5 tmp6 (unlabel tmp7)
+  tmp7: compress[0] List. <cons {Int,List} | nil Unit>
+  t: CartTree. <node {CartTree,Int,CartTree} | leaf Unit>
+  x: List. <cons {Int,List} | nil Unit>
+  (5) {tmp7: compress[0] Cons (-3) (Cons (-1) (Cons (3) (Cons (1) (Cons (3) (Nil Unit))))),t: Node (Leaf Unit) (-3) (Node (Leaf Unit) (-1) (Node (Node (Leaf Unit) (3) (Leaf Unit)) (1) (Node (Leaf Unit) (3) (Leaf Unit)))),x: Cons (-3) (Cons (-1) (Cons (3) (Cons (1) (Cons (3) (Nil Unit)))))} @ {} -> 3
+  (5) {tmp7: compress[0] Cons (5) (Cons (-1) (Cons (2) (Cons (5) (Cons (4) (Cons (-2) (Cons (-1) (Cons (0) (Nil Unit)))))))),t: Node (Node (Node (Leaf Unit) (5) (Leaf Unit)) (-1) (Node (Leaf Unit) (2) (Node (Node (Leaf Unit) (5) (Leaf Unit)) (4) (Leaf Unit)))) (-2) (Node (Leaf Unit) (-1) (Node (Leaf Unit) (0) (Leaf Unit))),x: Cons (5) (Cons (-1) (Cons (2) (Cons (5) (Cons (4) (Cons (-2) (Cons (-1) (Cons (0) (Nil Unit))))))))} @ {} -> 3
+  (5) {tmp7: compress[0] Cons (-4) (Cons (-1) (Cons (4) (Cons (3) (Cons (-3) (Cons (3) (Nil Unit)))))),t: Node (Leaf Unit) (-4) (Node (Node (Leaf Unit) (-1) (Node (Node (Leaf Unit) (4) (Leaf Unit)) (3) (Leaf Unit))) (-3) (Node (Leaf Unit) (3) (Leaf Unit))),x: Cons (-4) (Cons (-1) (Cons (4) (Cons (3) (Cons (-3) (Cons (3) (Nil Unit))))))} @ {} -> 2
+  (5) {tmp7: compress[0] Cons (-2) (Cons (-1) (Cons (5) (Cons (-4) (Cons (-2) (Nil Unit))))),t: Node (Node (Leaf Unit) (-2) (Node (Leaf Unit) (-1) (Node (Leaf Unit) (5) (Leaf Unit)))) (-4) (Node (Leaf Unit) (-2) (Leaf Unit)),x: Cons (-2) (Cons (-1) (Cons (5) (Cons (-4) (Cons (-2) (Nil Unit)))))} @ {} -> 2
+  (5) {tmp7: compress[0] Nil Unit,t: Leaf Unit,x: Nil Unit} @ {} -> 0
+  (5) {tmp7: compress[0] Cons (2) (Cons (-5) (Cons (-1) (Cons (-4) (Nil Unit)))),t: Node (Node (Leaf Unit) (2) (Leaf Unit)) (-5) (Node (Node (Leaf Unit) (-1) (Leaf Unit)) (-4) (Leaf Unit)),x: Cons (2) (Cons (-5) (Cons (-1) (Cons (-4) (Nil Unit))))} @ {} -> 1
+  (5) {tmp7: compress[0] Cons (-3) (Cons (1) (Cons (-3) (Cons (-3) (Cons (-4) (Nil Unit))))),t: Node (Node (Node (Node (Leaf Unit) (-3) (Node (Leaf Unit) (1) (Leaf Unit))) (-3) (Leaf Unit)) (-3) (Leaf Unit)) (-4) (Leaf Unit),x: Cons (-3) (Cons (1) (Cons (-3) (Cons (-3) (Cons (-4) (Nil Unit)))))} @ {} -> 1
+  (5) {tmp7: compress[0] Cons (3) (Cons (0) (Cons (-3) (Cons (1) (Nil Unit)))),t: Node (Node (Node (Leaf Unit) (3) (Leaf Unit)) (0) (Leaf Unit)) (-3) (Node (Leaf Unit) (1) (Leaf Unit)),x: Cons (3) (Cons (0) (Cons (-3) (Cons (1) (Nil Unit))))} @ {} -> 2
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param0
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <cons {Int,List} | nil Unit>)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1,Param2,Param3]@Compress[0] List. <cons {Int,List} | nil Unit>)
+node: [Param0,Param1,Param2,Param3]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param3
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+num = 3
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param2
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+num = 4
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+num = 5
+start: start
+node: start
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1,Param2]@Compress[0] List. <cons {Int,List} | nil Unit>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@List. <cons {Int,List} | nil Unit>
+  Param2
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  head([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@List. <cons {Int,List} | nil Unit>)
+node: [Param0,Param1,Param2]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  0
+  ite([Int@0,Int@1]@Bool [Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+node: [Bool@0,Int@0]@Int
+  Int@0
+  +([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  -([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  0
+  ite([Bool@0,Int@0]@Bool [Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  max([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+node: [Bool@0,Int@0]@Bool
+  Bool@0
+  order([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[List. <cons {Int,List} | nil Unit>->Int]([Int@0,Int@1]@Int []@Int [Param0]@List. <cons {Int,List} | nil Unit>)
+  max([Param0]@Int [Param0]@Int)
+  length([Param0]@List. <cons {Int,List} | nil Unit>)
+  raw_lsp([Param0]@[List. <cons {Int,List} | nil Unit>]->Bool [Param0]@List. <cons {Int,List} | nil Unit>)
+  fold([Param0]@[Int]->[Int]->Int [Param0]@List. <cons {Int,List} | nil Unit> [Param0]@Int)
+  sum([Param0]@List. <cons {Int,List} | nil Unit>)
+  last([Param0]@Int [Param0]@List. <cons {Int,List} | nil Unit>)
+  head([Param0]@Int [Param0]@List. <cons {Int,List} | nil Unit>)
+  maximum([Param0]@List. <cons {Int,List} | nil Unit>)
+  raw_suf([Param0]@[List. <cons {Int,List} | nil Unit>]->Bool [Param0]@List. <cons {Int,List} | nil Unit>)
+  minimum([Param0]@List. <cons {Int,List} | nil Unit>)
+  raw_pre([Param0]@[List. <cons {Int,List} | nil Unit>]->Bool [Param0]@List. <cons {Int,List} | nil Unit>)
+node: []@Int
+  +([]@Int []@Int)
+  -([]@Int []@Int)
+  0
+  ite([]@Bool []@Int []@Int)
+  max([]@Int []@Int)
+node: [Param0]@Bool
+  fold[List. <cons {Int,List} | nil Unit>->Bool]([Bool@0,Int@0]@Bool []@Bool [Param0]@List. <cons {Int,List} | nil Unit>)
+  isval([Param0]@List. <cons {Int,List} | nil Unit>)
+  order([Param0]@Int [Param0]@Int)
+node: [Int@0,Int@1]@Bool
+  order([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+node: []@Bool
+  order([]@Int []@Int)
+node: [Param0]@[List. <cons {Int,List} | nil Unit>]->Bool
+  isval
+node: [Param0]@[Int]->[Int]->Int
+  max
+node: [Param0]@List. <cons {Int,List} | nil Unit>
+  Param0
+  append([Param0]@List. <cons {Int,List} | nil Unit> [Param0]@Int)
+  concat([Param0]@List. <cons {Int,List} | nil Unit> [Param0]@List. <cons {Int,List} | nil Unit>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] raw_lsp(isval(),Param0)
+  [1] maximum(Param0)
+  [2] length(Param0)
+  [0] Param0
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [0] raw_lsp(isval(),Param0)
+  [1] maximum(Param0)
+  [2] length(Param0)
+  [0] Param0
+  [1] Param4 -> raw_lsp(isval(),Param0)
+  [2] Param4 -> maximum(Param0)
+  [3] Param4 -> length(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [0] raw_lsp(isval(),Param0)
+  [1] maximum(Param0)
+  [2] length(Param0)
+  [0] Param0
+  [1] Param3 -> raw_lsp(isval(),Param0)
+  [2] Param3 -> maximum(Param0)
+  [3] Param3 -> length(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [0] raw_lsp(isval(),Param0)
+  [1] maximum(Param0)
+  [2] length(Param0)
+  [0] Param0
+  [1] Param2 -> raw_lsp(isval(),Param0)
+  [2] Param2 -> maximum(Param0)
+  [3] Param2 -> length(Param0)
+  [4] Param4 -> raw_lsp(isval(),Param0)
+  [5] Param4 -> maximum(Param0)
+  [6] Param4 -> length(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17

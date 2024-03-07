@@ -1,0 +1,41 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/tailopt/sum.pmrs[0m with [36mpmrs[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (oplus, s0) := ∀ x : [33mint list[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(l): int list -> int  =  
+[44m INFO :[0m  target⟨oplus, s0⟩(l): int list -> int  =  
+[44m INFO :[0m repr(x) = [34mx[0m
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0084s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0083s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0094s
+[44m INFO :[0m ... finished in 0.0081s
+[44m INFO :[0m Refinement step 3.
+[44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0089s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  11 instances] 0.101s 
+        CVC-SyGuS  [   4 instances] 0.022s 
+        > TOTAL    [  15 instances]: 0.124s 
+[44m INFO :[0m Solution found in 0.0504s (85.3% verifying):
+
+[31mlet[0m [36moplus[0m [34mx8[0m [34mx9[0m [31m=[0m [34mx8[0m + [34mx9[0m
+
+[31mlet[0m [36ms0[0m  [31m=[0m [36m0[0m
+
+ target⟨oplus, s0⟩(l): int list -> int  = 
+{‣ main l   ⟹  [34mf[0m [34ms0[0m [34ml[0m   f s Nil  ⟹  [34ms[0m   f s [3mCons[0m(hd, tl)  ⟹  [34mf[0m ([34moplus[0m [34ms[0m [34mhd[0m) [34mtl[0m }
+

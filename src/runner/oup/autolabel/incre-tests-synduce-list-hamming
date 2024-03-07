@@ -1,0 +1,265 @@
+
+ZipCList :: ZipCList. <cnil Unit | single {Int,Int} | concat {
+ ZipCList,ZipCList}>
+ cnil : Unit ->
+        ZipCList'. <cnil Unit | single {Int,Int} | concat {
+        ZipCList',ZipCList'}>
+ single : {Int,Int} ->
+          ZipCList'. <cnil Unit | single {Int,Int} | concat {
+          ZipCList',ZipCList'}>
+ concat : {ZipCList,ZipCList} ->
+          ZipCList'. <cnil Unit | single {Int,Int} | concat {
+          ZipCList',ZipCList'}>
+ ZipList :: ZipList. <nil Unit | cons {Int,Int,ZipList}>
+nil : Unit -> ZipList'. <nil Unit | cons {Int,Int,ZipList'}>
+cons : {Int,Int,ZipList} ->
+       ZipList'. <nil Unit | cons {Int,Int,ZipList'}>
+cat : ZipList -> ZipList -> ZipList
+repr : ZipCList -> ZipList'. <nil Unit | cons {Int,Int,ZipList'}>
+spec : ZipList -> Int
+main : ZipCList -> Int
+
+
+Inductive ZipCList;
+
+Inductive ZipList;
+
+cat = fix (
+    \f: ZipList -> ZipList -> ZipList. \xs: ZipList. \ys: ZipList. 
+    match xs with
+      nil _ -> ys
+    | cons {a, b, t} -> cons {a, b, f t ys}
+    end
+);
+
+repr = fix (
+    \f: ZipCList -> Compress ZipList. \xs: ZipCList. 
+    match xs with
+      cnil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | single {a, b} -> 
+        let tmp2 = (cons {a, b, nil Unit}) in 
+            align (label tmp2 ) 
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                align (label (cat (unlabel tmp3 ) (unlabel tmp4 )) ) 
+    end
+);
+
+spec = fix (
+    \f: ZipList -> Int. \xs: ZipList. 
+    match xs with
+      nil _ -> 0
+    | cons {a, b, t} -> if (== a b) then + 1 (f t)
+        else f t
+    end
+);
+
+main = \xs: ZipCList. 
+    let tmp5 = (repr xs) in 
+        align (spec (unlabel tmp5 )) ;
+align term #0: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+align@0 create@0 tmp1
+  xs: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+  tmp1: ZipList. <nil Unit | cons {Int,Int,ZipList}>
+align term #1: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+align@1 create@0 tmp2
+  b: Int
+  a: Int
+  tmp2: ZipList. <nil Unit | cons {Int,Int,ZipList}>
+  xs: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+align term #2: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+align@2 create@0 cat (unlabel tmp3) (unlabel tmp4)
+  b: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+  a: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+  tmp3: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+  tmp4: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+  xs: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+align term #3: Int
+align@3 spec (unlabel tmp5)
+  xs: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+  tmp5: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+Components for compress:
+  cnil [Bot] -> ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> 0
+  cons [(Int * Int * ZipList. <nil Unit | cons {Int,Int,ZipList}>)] -> ZipList. <nil Unit | cons {Int,Int,ZipList}> 1
+  single [(Int * Int)] -> ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> 0
+  concat [(ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> * ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>)] -> ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> 0
+  nil [Bot] -> ZipList. <nil Unit | cons {Int,Int,ZipList}> 1
+
+Components for align:
+  cat [ZipList. <nil Unit | cons {Int,Int,ZipList}>,ZipList. <nil Unit | cons {Int,Int,ZipList}>] -> ZipList. <nil Unit | cons {Int,Int,ZipList}> 2
+  cnil [Bot] -> ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> 0
+  cons [(Int * Int * ZipList. <nil Unit | cons {Int,Int,ZipList}>)] -> ZipList. <nil Unit | cons {Int,Int,ZipList}> 1
+  single [(Int * Int)] -> ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> 0
+  concat [(ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> * ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>)] -> ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> 0
+  spec [ZipList. <nil Unit | cons {Int,Int,ZipList}>] -> Int 4
+  nil [Bot] -> ZipList. <nil Unit | cons {Int,Int,ZipList}> 1
+
+Components for comb:
+  cnil [Bot] -> ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> 0
+  cons [(Int * Int * ZipList. <nil Unit | cons {Int,Int,ZipList}>)] -> ZipList. <nil Unit | cons {Int,Int,ZipList}> 1
+  single [(Int * Int)] -> ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> 0
+  concat [(ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> * ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>)] -> ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}> 0
+  nil [Bot] -> ZipList. <nil Unit | cons {Int,Int,ZipList}> 1
+
+align term #0: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+align@0 create@0 tmp1
+  xs: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+  tmp1: ZipList. <nil Unit | cons {Int,Int,ZipList}>
+align term #1: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+align@1 create@0 tmp2
+  b: Int
+  a: Int
+  tmp2: ZipList. <nil Unit | cons {Int,Int,ZipList}>
+  xs: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+align term #2: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+align@2 create@0 cat (unlabel tmp3) (unlabel tmp4)
+  b: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+  a: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+  tmp3: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+  tmp4: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+  xs: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+align term #3: Int
+align@3 spec (unlabel tmp5)
+  xs: ZipCList. <cnil Unit | single {Int,Int} | concat {ZipCList,ZipCList}>
+  tmp5: compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  Param1
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+  Param2
+  Param3
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 3
+start: start
+node: start
+  Compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>([Param0,Param1]@Compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] ZipList. <nil Unit | cons {Int,Int,ZipList}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  spec([Param0]@ZipList. <nil Unit | cons {Int,Int,ZipList}>)
+node: [Param0]@ZipList. <nil Unit | cons {Int,Int,ZipList}>
+  Param0
+  cat([Param0]@ZipList. <nil Unit | cons {Int,Int,ZipList}> [Param0]@ZipList. <nil Unit | cons {Int,Int,ZipList}>)
+
+
+
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [] spec(Param0)
+  [0] -(Param0,Param1)
+  [] spec(Param0)
+  [0] Param2 -> spec(Param0)
+  [1] Param3 -> spec(Param0)
+  [] null
+  [0] Param1 -> spec(Param0)
+compress #0: Int
+pass #0: 
+0
+pass #1: 
+let c0 = (- b a) in 
+    if (== c0 0) then 1
+    else 0
+pass #2: 
++ tmp3 tmp4
+pass #3: 
+tmp5
+
+Inductive ZipCList;
+
+Inductive ZipList;
+
+cat = fix (
+    \f: ZipList -> ZipList -> ZipList. \xs: ZipList. \ys: ZipList. 
+    match xs with
+      nil _ -> ys
+    | cons {a, b, t} -> cons {a, b, f t ys}
+    end
+);
+
+repr = fix (
+    \f: ZipCList -> Int. \xs: ZipCList. 
+    match xs with
+      cnil _ -> 0
+    | single {a, b} -> 
+        let c0 = (- b a) in 
+            if (== c0 0) then 1
+            else 0
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                + tmp3 tmp4
+    end
+);
+
+spec = fix (
+    \f: ZipList -> Int. \xs: ZipList. 
+    match xs with
+      nil _ -> 0
+    | cons {a, b, t} -> if (== a b) then + 1 (f t)
+        else f t
+    end
+);
+
+main = \xs: ZipCList. 
+    let tmp5 = (repr xs) in 
+        tmp5;
+syn-comb: 0.771724
+collect: 0.991897
+label: 0.010577
+extend-component: 5e-06
+execute: 0.187583
+syn-align: 1.22649
+comb-size: 21
+align-size: 3
+extract-size: 9
+2.01685
+Success

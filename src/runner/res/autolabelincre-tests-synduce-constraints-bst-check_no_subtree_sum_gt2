@@ -1,0 +1,95 @@
+
+Inductive Tree;
+
+Inductive MTree;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+tmin = fix (
+    \f: MTree -> Int. \t: MTree. 
+    match t with
+      mleaf w -> w
+    | mnode {w, _, l, r} -> min w (min (f l) (f r))
+    end
+);
+
+tmax = fix (
+    \f: MTree -> Int. \t: MTree. 
+    match t with
+      mleaf w -> w
+    | mnode {w, _, l, r} -> max w (max (f l) (f r))
+    end
+);
+
+tsum = fix (
+    \f: MTree -> Int. \t: MTree. 
+    match t with
+      mleaf w -> w
+    | mnode {w, _, l, r} -> + w (+ (f l) (f r))
+    end
+);
+
+is_bst = fix (
+    \f: MTree -> Bool. \t: MTree. 
+    match t with
+      mleaf w -> > w 0
+    | mnode {w, s, l, r} -> and (and (> w 0) (== s (+ (tsum l) (tsum r)))) (and (and (>= w (tmax l)) (<= w (tmin r))) (and (f l) (f r)))
+    end
+);
+
+spec = \global0: Int. \t: Tree. 
+    (fix (
+    \f: Tree -> {Bool, Int}. \t: Tree. 
+    match t with
+      leaf x -> {<= x global0, x}
+    | node {a, l, r} -> 
+        let lres = (f l) in 
+            let rres = (f r) in 
+                let sum = (+ a (+ lres.2 rres.2)) in 
+                    {and (<= sum global0) (and lres.1 rres.1), sum}
+    end
+) t).1;
+
+drop_tag = fix (
+    \f: MTree -> Tree. \t: MTree. 
+    match t with
+      mleaf x -> leaf x
+    | mnode {a, s, l, r} -> node {a, f l, f r}
+    end
+);
+
+add_tag = fix (
+    \f: Tree -> MTree. \t: Tree. 
+    match t with
+      leaf x -> mleaf x
+    | node {a, l, r} -> 
+        let lres = (f l) in 
+            let rres = (f r) in 
+                let s = (+ (tsum lres) (tsum rres)) in 
+                    mnode {a, s, lres, rres}
+    end
+);
+
+target = \global0: Int. 
+    fix (
+    \f: MTree -> Int. \t: MTree. 
+    match t with
+      mleaf x -> x
+    | mnode {a, s, l, r} -> if (> a global0) then + s a
+        else let tmp3 = (f l) in 
+            let tmp4 = (f r) in 
+                + tmp3 (+ tmp4 a)
+    end
+);
+
+main = \global0: Int. \t: Tree. 
+    let inp = (add_tag t) in 
+        if (is_bst inp) then let tmp6 = (target global0 inp) in 
+            <= tmp6 global0
+        else false;

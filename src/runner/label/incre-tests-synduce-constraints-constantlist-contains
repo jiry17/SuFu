@@ -1,0 +1,46 @@
+
+Inductive List;
+
+head = \xs: List. 
+    match xs with
+      elt w -> w
+    | cons {h, t} -> h
+    end
+;
+
+is_const = fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt x -> true
+    | cons {h, t} -> and (== h (head t)) (f t)
+    end
+);
+
+@Input w = Int;
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> if (== w x) then 1
+        else 0
+    | cons {h, t} -> if (== w h) then 1
+        else f t
+    end
+);
+
+target = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      elt a -> 
+        let tmp1 = (elt a) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (cons {h, t}) in 
+            align (label tmp2 ) 
+    end
+);
+
+main = \xs: List. 
+    if (is_const xs) then let tmp3 = (target xs) in 
+        align (spec (unlabel tmp3 )) 
+    else 0;

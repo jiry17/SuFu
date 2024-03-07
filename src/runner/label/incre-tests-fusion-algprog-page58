@@ -1,0 +1,40 @@
+
+Inductive List;
+
+tri = \op: Int -> Int. 
+    fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tail = (let tmp2 = (fix (
+        \g: List -> List. \ys: List. 
+        match ys with
+          nil _ -> nil Unit
+        | cons {h, t} -> cons {op h, g t}
+        end
+    )) in 
+            let tmp3 = (f t) in 
+                align (label (tmp2 (unlabel tmp3 )) ) ) in 
+            align (label (cons {h, unlabel tail }) ) 
+    end
+);
+
+@Input w = Int;
+
+op = \x: Int. 
+    * x w;
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+main = \xs: List. 
+    let tmp4 = (tri op xs) in 
+        align (sum (unlabel tmp4 )) ;

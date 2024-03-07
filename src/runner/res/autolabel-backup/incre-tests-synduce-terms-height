@@ -1,0 +1,82 @@
+
+Inductive ArithOp;
+
+Inductive BoolOp;
+
+Inductive Term;
+
+Inductive Op;
+
+Inductive Term2;
+
+mk_bin = \t1: Term. \t2: Term. \op: Op. 
+    match op with
+      opPlus _ -> tArithBin {aPlus Unit, t1, t2}
+    | opMinus _ -> tArithBin {aMinus Unit, t1, t2}
+    | opNot _ -> tBoolBin {bNot Unit, t1, t2}
+    | opAnd _ -> tBoolBin {bAnd Unit, t1, t2}
+    | opOr _ -> tBoolBin {bOr Unit, t1, t2}
+    | opGt _ -> tArithBin {aGt Unit, t1, t2}
+    | opEq _ -> tBoolBin {bEq Unit, t1, t2}
+    end
+;
+
+mk_un = \t: Term. \op: Op. 
+    match op with
+      opPlus _ -> tArithUn {aPlus Unit, t}
+    | opMinus _ -> tArithUn {aMinus Unit, t}
+    | opNot _ -> tBoolUn {bNot Unit, t}
+    | opAnd _ -> tBoolUn {bAnd Unit, t}
+    | opOr _ -> tBoolUn {bOr Unit, t}
+    | opGt _ -> tArithUn {aGt Unit, t}
+    | opEq _ -> tBoolUn {bEq Unit, t}
+    end
+;
+
+repr = fix (
+    \f: Term2 -> Term. \t: Term2. 
+    match t with
+      bin {op, t1, t2} -> mk_bin (f t1) (f t2) op
+    | un {o, x} -> mk_un (f x) o
+    | var i -> tVar i
+    | cInt i -> tCInt i
+    | cBool b -> tCBool b
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: Term -> Int. \t: Term. 
+    match t with
+      tArithBin {op, t1, t2} -> + 1 (max (f t1) (f t2))
+    | tBoolBin {op, t1, t2} -> + 1 (max (f t1) (f t2))
+    | tArithUn {op, t} -> + 1 (f t)
+    | tBoolUn {op, t} -> + 1 (f t)
+    | tVar _ -> 1
+    | tCInt _ -> 1
+    | tCBool _ -> 1
+    end
+);
+
+target = fix (
+    \f: Term2 -> Int. \t: Term2. 
+    match t with
+      bin {op, t1, t2} -> 
+        let tmp1 = (f t1) in 
+            let tmp2 = (f t2) in 
+                + 1 (max tmp2 tmp1)
+    | un {op, t} -> 
+        let tmp3 = (f t) in 
+            + 1 tmp3
+    | var i -> 1
+    | cInt i -> 1
+    | cBool i -> 1
+    end
+);
+
+main = \xs: Term2. 
+    let tmp7 = (target xs) in 
+        tmp7;

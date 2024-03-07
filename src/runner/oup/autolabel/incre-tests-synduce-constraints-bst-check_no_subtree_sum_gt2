@@ -1,0 +1,500 @@
+
+Tree :: Tree. <leaf Int | node {Int,Tree,Tree}>
+ leaf : Int -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ MTree :: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+mleaf : Int -> MTree'. <mleaf Int | mnode {Int,Int,MTree',MTree'}>
+mnode : {Int,Int,MTree,MTree} ->
+        MTree'. <mleaf Int | mnode {Int,Int,MTree',MTree'}>
+min : Int -> Int -> Int
+max : Int -> Int -> Int
+tmin : MTree -> Int
+tmax : MTree -> Int
+tsum : MTree -> Int
+is_bst : MTree -> Bool
+lim : Int
+spec : Tree -> Bool
+drop_tag : MTree -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+add_tag : Tree ->
+          MTree'. <mleaf Int | mnode {Int,Int,MTree',MTree'}>
+target : MTree ->
+         MTree'. <mleaf Int | mnode {Int,Int,MTree',MTree'}>
+main : Tree -> Bool
+
+
+Inductive Tree;
+
+Inductive MTree;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+tmin = fix (
+    \f: MTree -> Int. \t: MTree. 
+    match t with
+      mleaf w -> w
+    | mnode {w, _, l, r} -> min w (min (f l) (f r))
+    end
+);
+
+tmax = fix (
+    \f: MTree -> Int. \t: MTree. 
+    match t with
+      mleaf w -> w
+    | mnode {w, _, l, r} -> max w (max (f l) (f r))
+    end
+);
+
+tsum = fix (
+    \f: MTree -> Int. \t: MTree. 
+    match t with
+      mleaf w -> w
+    | mnode {w, _, l, r} -> + w (+ (f l) (f r))
+    end
+);
+
+is_bst = fix (
+    \f: MTree -> Bool. \t: MTree. 
+    match t with
+      mleaf w -> > w 0
+    | mnode {w, s, l, r} -> and (and (> w 0) (== s (+ (tsum l) (tsum r)))) (and (and (>= w (tmax l)) (<= w (tmin r))) (and (f l) (f r)))
+    end
+);
+
+@Input lim = Int;
+
+spec = \t: Tree. 
+    (fix (
+    \f: Tree -> {Bool, Int}. \t: Tree. 
+    match t with
+      leaf x -> {<= x lim, x}
+    | node {a, l, r} -> 
+        let lres = (f l) in 
+            let rres = (f r) in 
+                let sum = (+ a (+ lres.2 rres.2)) in 
+                    {and (<= sum lim) (and lres.1 rres.1), sum}
+    end
+) t).1;
+
+drop_tag = fix (
+    \f: MTree -> Tree. \t: MTree. 
+    match t with
+      mleaf x -> leaf x
+    | mnode {a, s, l, r} -> node {a, f l, f r}
+    end
+);
+
+add_tag = fix (
+    \f: Tree -> MTree. \t: Tree. 
+    match t with
+      leaf x -> mleaf x
+    | node {a, l, r} -> 
+        let lres = (f l) in 
+            let rres = (f r) in 
+                let s = (+ (tsum lres) (tsum rres)) in 
+                    mnode {a, s, lres, rres}
+    end
+);
+
+target = fix (
+    \f: MTree -> Compress MTree. \t: MTree. 
+    match t with
+      mleaf x -> 
+        let tmp1 = (mleaf x) in 
+            align (label tmp1 ) 
+    | mnode {a, s, l, r} -> if (> a lim) then let tmp2 = (mnode {a, s, l, r}) in 
+            align (label tmp2 ) 
+        else let tmp3 = (f l) in 
+            let tmp4 = (f r) in 
+                align (label (mnode {a, s, unlabel tmp3 , unlabel tmp4 }) ) 
+    end
+);
+
+main = \t: Tree. 
+    let inp = (add_tag t) in 
+        if (is_bst inp) then let tmp5 = (target inp) in 
+            align (spec (drop_tag (unlabel tmp5 ))) 
+        else false;
+align term #0: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+align@0 create@0 tmp1
+  tmp1: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  x: Int
+  t: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+align term #1: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+align@1 create@0 tmp2
+  r: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  s: Int
+  tmp2: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  t: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  a: Int
+  l: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+align term #2: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+align@2 create@0 mnode ({a,s,unlabel tmp3,unlabel tmp4})
+  t: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  tmp4: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  s: Int
+  r: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  l: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  tmp3: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  a: Int
+align term #3: Bool
+align@3 spec (drop_tag (unlabel tmp5))
+  tmp5: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  inp: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+Components for compress:
+  min [Int,Int] -> Int 2
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  mnode [(Int * Int * MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}> * MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)] -> MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}> 1
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  max [Int,Int] -> Int 3
+  mleaf [Int] -> MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}> 1
+
+Components for align:
+  add_tag [Tree. <leaf Int | node {Int,Tree,Tree}>] -> MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}> 11
+  drop_tag [MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>] -> Tree. <leaf Int | node {Int,Tree,Tree}> 10
+  min [Int,Int] -> Int 2
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  mnode [(Int * Int * MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}> * MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)] -> MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}> 1
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  spec [Tree. <leaf Int | node {Int,Tree,Tree}>] -> Bool 9
+  tmax [MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>] -> Int 5
+  max [Int,Int] -> Int 3
+  mleaf [Int] -> MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}> 1
+  tmin [MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>] -> Int 4
+  is_bst [MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>] -> Bool 7
+  tsum [MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>] -> Int 6
+
+Components for comb:
+  min [Int,Int] -> Int 2
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  mnode [(Int * Int * MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}> * MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)] -> MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}> 1
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  max [Int,Int] -> Int 3
+  mleaf [Int] -> MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}> 1
+
+align term #0: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+align@0 create@0 tmp1
+  tmp1: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  x: Int
+  t: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+align term #1: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+align@1 create@0 tmp2
+  r: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  s: Int
+  tmp2: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  t: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  a: Int
+  l: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+align term #2: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+align@2 create@0 mnode ({a,s,unlabel tmp3,unlabel tmp4})
+  t: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  tmp4: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  s: Int
+  r: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  l: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  tmp3: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  a: Int
+align term #3: Bool
+align@3 spec (drop_tag (unlabel tmp5))
+  tmp5: compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  inp: MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param1
+  Param3
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  min([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  max([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param1
+  Param4
+  Param6
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+  min([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  max([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  Param1
+  Param5
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int
+  Param2
+  Param6
+  Param7
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  0
+  1
+  min([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  max([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+num = 3
+start: start
+node: start
+  Compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>([Param0,Param1,Param2,Param3]@Compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param3
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  min([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  max([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Compress[0] MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+  Bool([Param0,Param1]@Bool)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  ite([Param0,Param1]@Bool [Param0,Param1]@Int [Param0,Param1]@Int)
+  fold[MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>->Int]([Int@0,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int [Param0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+  tmax([Param0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+  tmin([Param0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  tsum([Param0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+node: [Int@0,Param1]@Int
+  Param1
+  Int@0
+  +([Int@0,Param1]@Int [Int@0,Param1]@Int)
+  -([Int@0,Param1]@Int [Int@0,Param1]@Int)
+  ite([Int@0,Param1]@Bool [Int@0,Param1]@Int [Int@0,Param1]@Int)
+  min([Int@0,Param1]@Int [Int@0,Param1]@Int)
+  tmax([Int@0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  max([Int@0,Param1]@Int [Int@0,Param1]@Int)
+  tmin([Int@0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  tsum([Int@0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+node: [Int@0,Int@1,Int@2,Int@3,Param1]@Int
+  Param1
+  Int@0
+  Int@1
+  Int@2
+  Int@3
+  +([Int@0,Int@1,Int@2,Int@3,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+  -([Int@0,Int@1,Int@2,Int@3,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+  ite([Int@0,Int@1,Int@2,Int@3,Param1]@Bool [Int@0,Int@1,Int@2,Int@3,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+  min([Int@0,Int@1,Int@2,Int@3,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+  tmax([Int@0,Int@1,Int@2,Int@3,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  max([Int@0,Int@1,Int@2,Int@3,Param1]@Int [Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+  tmin([Int@0,Int@1,Int@2,Int@3,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  tsum([Int@0,Int@1,Int@2,Int@3,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+node: [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int
+  Param1
+  Int@0
+  Int@1
+  +([Bool@0,Bool@1,Int@0,Int@1,Param1]@Int [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+  -([Bool@0,Bool@1,Int@0,Int@1,Param1]@Int [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+  ite([Bool@0,Bool@1,Int@0,Int@1,Param1]@Bool [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+  min([Bool@0,Bool@1,Int@0,Int@1,Param1]@Int [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+  tmax([Bool@0,Bool@1,Int@0,Int@1,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  max([Bool@0,Bool@1,Int@0,Int@1,Param1]@Int [Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+  tmin([Bool@0,Bool@1,Int@0,Int@1,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  tsum([Bool@0,Bool@1,Int@0,Int@1,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+node: [Bool@0,Bool@1,Int@0,Int@1,Param1]@Bool
+  Bool@0
+  Bool@1
+  spec([Bool@0,Bool@1,Int@0,Int@1,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  is_bst([Bool@0,Bool@1,Int@0,Int@1,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+node: [Param0,Param1]@Bool
+  fold[MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>->Bool]([Int@0,Param1]@Bool [Bool@0,Bool@1,Int@0,Int@1,Param1]@Bool [Param0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  spec([Param0,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  is_bst([Param0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+node: [Int@0,Param1]@Bool
+  spec([Int@0,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  is_bst([Int@0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+node: [Int@0,Int@1,Int@2,Int@3,Param1]@Bool
+  spec([Int@0,Int@1,Int@2,Int@3,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  is_bst([Int@0,Int@1,Int@2,Int@3,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+node: [Int@0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  add_tag([Int@0,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  mleaf([Int@0,Param1]@Int)
+node: [Int@0,Int@1,Int@2,Int@3,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  add_tag([Int@0,Int@1,Int@2,Int@3,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  mleaf([Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+node: [Bool@0,Bool@1,Int@0,Int@1,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  add_tag([Bool@0,Bool@1,Int@0,Int@1,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  mleaf([Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+node: [Param0,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  drop_tag([Param0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  leaf([Param0,Param1]@Int)
+node: [Int@0,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  drop_tag([Int@0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  leaf([Int@0,Param1]@Int)
+node: [Int@0,Int@1,Int@2,Int@3,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  drop_tag([Int@0,Int@1,Int@2,Int@3,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  leaf([Int@0,Int@1,Int@2,Int@3,Param1]@Int)
+node: [Bool@0,Bool@1,Int@0,Int@1,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  drop_tag([Bool@0,Bool@1,Int@0,Int@1,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>)
+  leaf([Bool@0,Bool@1,Int@0,Int@1,Param1]@Int)
+node: [Param0,Param1]@MTree. <mleaf Int | mnode {Int,Int,MTree,MTree}>
+  Param0
+  add_tag([Param0,Param1]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  mleaf([Param0,Param1]@Int)
+
+
+
+
+
+
+
+
+
+
+
+
+  [] spec(drop_tag(Param0))
+  [0] -(Param1,Param3)
+  [] spec(drop_tag(Param0))
+  [] spec(drop_tag(Param0))
+  [0] Param7
+  [1] +(Param2,Param6)
+  [] null
+  [0] Param0 -> spec(drop_tag(Param0))
+compress #0: Bool
+pass #0: 
+let c0 = (- x lim) in 
+    < c0 1
+pass #1: 
+false
+pass #2: 
+let c0 = (+ s a) in 
+    <= c0 lim
+pass #3: 
+tmp5
+
+Inductive Tree;
+
+Inductive MTree;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+tmin = fix (
+    \f: MTree -> Int. \t: MTree. 
+    match t with
+      mleaf w -> w
+    | mnode {w, _, l, r} -> min w (min (f l) (f r))
+    end
+);
+
+tmax = fix (
+    \f: MTree -> Int. \t: MTree. 
+    match t with
+      mleaf w -> w
+    | mnode {w, _, l, r} -> max w (max (f l) (f r))
+    end
+);
+
+tsum = fix (
+    \f: MTree -> Int. \t: MTree. 
+    match t with
+      mleaf w -> w
+    | mnode {w, _, l, r} -> + w (+ (f l) (f r))
+    end
+);
+
+is_bst = fix (
+    \f: MTree -> Bool. \t: MTree. 
+    match t with
+      mleaf w -> > w 0
+    | mnode {w, s, l, r} -> and (and (> w 0) (== s (+ (tsum l) (tsum r)))) (and (and (>= w (tmax l)) (<= w (tmin r))) (and (f l) (f r)))
+    end
+);
+
+@Input lim = Int;
+
+spec = \t: Tree. 
+    (fix (
+    \f: Tree -> {Bool, Int}. \t: Tree. 
+    match t with
+      leaf x -> {<= x lim, x}
+    | node {a, l, r} -> 
+        let lres = (f l) in 
+            let rres = (f r) in 
+                let sum = (+ a (+ lres.2 rres.2)) in 
+                    {and (<= sum lim) (and lres.1 rres.1), sum}
+    end
+) t).1;
+
+drop_tag = fix (
+    \f: MTree -> Tree. \t: MTree. 
+    match t with
+      mleaf x -> leaf x
+    | mnode {a, s, l, r} -> node {a, f l, f r}
+    end
+);
+
+add_tag = fix (
+    \f: Tree -> MTree. \t: Tree. 
+    match t with
+      leaf x -> mleaf x
+    | node {a, l, r} -> 
+        let lres = (f l) in 
+            let rres = (f r) in 
+                let s = (+ (tsum lres) (tsum rres)) in 
+                    mnode {a, s, lres, rres}
+    end
+);
+
+target = fix (
+    \f: MTree -> Bool. \t: MTree. 
+    match t with
+      mleaf x -> 
+        let c0 = (- x lim) in 
+            < c0 1
+    | mnode {a, s, l, r} -> if (> a lim) then false
+        else let c0 = (+ s a) in 
+            <= c0 lim
+    end
+);
+
+main = \t: Tree. 
+    let inp = (add_tag t) in 
+        if (is_bst inp) then let tmp5 = (target inp) in 
+            tmp5
+        else false;
+syn-comb: 0.003307
+collect: 28.4712
+label: 0.023946
+extend-component: 0.020778
+execute: 0.068196
+syn-align: 28.5815
+comb-size: 24
+align-size: 5
+extract-size: 13
+28.6197
+Success

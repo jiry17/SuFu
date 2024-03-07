@@ -1,0 +1,26 @@
+
+BTree :: BTree. <empty Unit | node {Int,BTree,BTree}>
+ empty : Unit -> BTree'. <empty Unit | node {Int,BTree',BTree'}>
+ node : {Int,BTree,BTree} ->
+        BTree'. <empty Unit | node {Int,BTree',BTree'}>
+ Zipper :: Zipper. <top Unit | left {Int,BTree,Zipper} | right {
+Int,BTree,Zipper}>
+top : Unit ->
+      Zipper'. <top Unit | left {Int,BTree,Zipper'} | right {
+      Int,BTree,Zipper'}>
+left : {Int,BTree,Zipper} ->
+       Zipper'. <top Unit | left {Int,BTree,Zipper'} | right {
+       Int,BTree,Zipper'}>
+right : {Int,BTree,Zipper} ->
+        Zipper'. <top Unit | left {Int,BTree,Zipper'} | right {
+        Int,BTree,Zipper'}>
+max : Int -> Int -> Int
+spec : BTree -> Int
+repr : Zipper -> BTree'. <empty Unit | node {Int,BTree',BTree'}>
+main : Zipper -> Int
+
+size: 129
+compress-num: 1
+label-num: 10
+rewrite-size: 22
+0.017895

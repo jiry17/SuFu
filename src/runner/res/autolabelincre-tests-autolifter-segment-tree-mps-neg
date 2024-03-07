@@ -1,0 +1,153 @@
+
+Inductive List;
+
+Tag = Bool;
+
+Result = {Int, Int, Int};
+
+NodeInfo = {Tag, Result};
+
+Inductive SegTree;
+
+Inductive Operation;
+
+Inductive OpList;
+
+concat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | nil _ -> y
+    end
+);
+
+length = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> + (f t) 1
+    | nil _ -> 0
+    end
+);
+
+map = \g: Int -> Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> xs
+    | cons {h, t} -> cons {g h, f t}
+    end
+);
+
+solve = \merge_tag: Tag -> Tag -> Tag. \default_tag: Tag. \apply: Tag -> Int -> Int. \target: List -> Int. 
+    let get_info = (\n: SegTree. 
+    match n with
+      node {info, _, _} -> info
+    end
+) in 
+        let merge_res = (\x: Result. \y: Result. 
+        {if (< x.1 (+ y.1 x.2)) then x.1
+        else + y.1 x.2, + y.2 x.2, if (< y.3 (+ y.2 x.3)) then y.3
+        else + y.2 x.3}) in 
+            let merge = (\l: SegTree. \r: SegTree. 
+            let linfo = (get_info l) in 
+                let rinfo = (get_info r) in 
+                    node {{default_tag, merge_res linfo.2 rinfo.2}, l, r}) in 
+                let apply = (\n: SegTree. \tag: Tag. 
+                match n with
+                  node {info, l, r} -> node {{merge_tag info.1 tag, let tmp2 = info.2 in 
+                        {if (tag) then + (* -1 tmp2.2) tmp2.3
+                        else tmp2.1, if (tag) then * -1 tmp2.2
+                        else tmp2.2, if (tag) then - tmp2.1 tmp2.2
+                        else tmp2.3}}, l, r}
+                end
+) in 
+                    let pushdown = (\n: SegTree. 
+                    match n with
+                      node {info, l, r} -> node {{default_tag, info.2}, apply l info.1, apply r info.1}
+                    end
+) in 
+                        let buildtree = (fix (
+                        \f: Int -> Int -> List -> {List, SegTree}. \l: Int. \r: Int. \xs: List. 
+                        if (== l r) then match xs with
+                          cons {h, t} -> {t, node {{default_tag, {if (< 0 h) then 0
+                            else h, h, if (< 0 h) then 0
+                            else h}}, empty unit, empty unit}}
+                        end
+
+                        else let mid = (/ (+ l r) 2) in 
+                            let lres = (f l mid xs) in 
+                                let rres = (f (+ mid 1) r lres.1) in 
+                                    {rres.1, merge lres.2 rres.2}                    )) in 
+                            let update_tree = (\ql: Int. \qr: Int. \tag: Tag. 
+                            fix (
+                            \f: Int -> Int -> SegTree -> SegTree. \l: Int. \r: Int. \n: SegTree. 
+                            if (or (> l ql) (< r qr)) then n
+                            else if (and (<= ql l) (<= r qr)) then apply n tag
+                            else let mid = (/ (+ l r) 2) in 
+                                match pushdown n with
+                                  node {info, lnode, rnode} -> 
+                                    let lres = (f l mid lnode) in 
+                                        let rres = (f (+ mid 1) r rnode) in 
+                                            merge lres rres
+                                end
+                        )) in 
+                                let query_tree = (\ql: Int. \qr: Int. 
+                                fix (
+                                \f: Int -> Int -> SegTree -> {SegTree, Result}. \l: Int. \r: Int. \n: SegTree. 
+                                if (or (> l ql) (< r qr)) then {n, {0, 0, 0}}
+                                else if (and (<= ql l) (<= r qr)) then {n, (get_info n).2}
+                                else let mid = (/ (+ l r) 2) in 
+                                    let new_node = (pushdown n) in 
+                                        match new_node with
+                                          node {info, lnode, rnode} -> 
+                                            let lres = (f l mid lnode) in 
+                                                let rres = (f (+ mid 1) r rnode) in 
+                                                    {node {info, lres.1, rres.1}, merge_res lres.2 rres.2}
+                                        end
+                            )) in 
+                                    \init: List. \ops: OpList. 
+                                    let len = (length init) in 
+                                        if (== len 0) then nil unit
+                                        else let is_range_valid = (\l: Int. \r: Int. 
+                                        and (<= 1 l) (and (<= l r) (<= r len))) in 
+                                            let root = (buildtree 1 len init).2 in 
+                                                fix (
+                                                \f: SegTree -> OpList -> List. \root: SegTree. \ops: OpList. 
+                                                match ops with
+                                                  onil _ -> nil unit
+                                                | ocons {h, t} -> 
+                                                    match h with
+                                                      query {l, r} -> if (is_range_valid l r) then let res = (query_tree l r 1 len root) in 
+                                                            cons {let tmp5 = res.2 in 
+                                                                tmp5.1, f res.1 t}
+                                                        else f root t
+                                                    | update {l, r, tag} -> if (is_range_valid l r) then let res = (update_tree l r tag 1 len root) in 
+                                                            f res t
+                                                        else f root t
+                                                    end
+
+                                                end
+                                            ) root ops;
+
+default_tag = false;
+
+apply_tag = \t: Tag. \w: Int. 
+    if (t) then - 0 w
+    else w;
+
+merge_tag = \x: Tag. \y: Tag. 
+    if (x) then not y
+    else y;
+
+mps = fix (
+    \f: List -> Int. \l: List. 
+    match l with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let res = (f t) in 
+            if (< 0 (+ res h)) then 0
+            else + res h
+    end
+);
+
+main = solve merge_tag default_tag apply_tag mps;

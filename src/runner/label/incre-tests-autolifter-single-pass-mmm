@@ -1,0 +1,39 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      nil _ -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            align (label (cons {h, unlabel tmp1 }) ) 
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            align (v (unlabel tmp2 )) ;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+mmm = fix (
+    \f: Int -> Int -> Int -> List -> Int. \p: Int. \np: Int. \z: Int. \xs: List. 
+    match xs with
+      nil _ -> max p (max np z)
+    | cons {h, t} -> f (+ (max z np) h) (- (max z p) h) (max p np) t
+    end
+) 0 0 0;
+
+expected = fix (
+    \f: Int -> Int -> Int -> List -> {Int, Int, Int}. \p: Int. \np: Int. \z: Int. \xs: List. 
+    match xs with
+      nil _ -> {p, np, z}
+    | cons {h, t} -> f (+ (max z np) h) (- (max z p) h) (max p np) t
+    end
+) 0 0 0;
+
+main = single_pass mmm;

@@ -1,0 +1,477 @@
+
+Tree :: Tree. <leaf Unit | node {Int,Tree,Tree}>
+leaf : Unit -> Tree'. <leaf Unit | node {Int,Tree',Tree'}>
+node : {Int,Tree,Tree} ->
+       Tree'. <leaf Unit | node {Int,Tree',Tree'}>
+Plan :: Tree
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+is_valid_tree : Tree -> Bool
+merge : PlanList -> PlanList -> PlanList
+extend : Plan ->
+         Plan ->
+         Int -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+extend_all : Int ->
+             PlanList ->
+             PlanList ->
+             PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+generate : Tree -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+max : Int -> Int -> Int
+get_best : PlanList -> Int
+main : Tree -> Int
+
+
+Inductive Tree;
+
+Plan = Compress Tree;
+
+Inductive PlanList;
+
+is_valid_tree = \t: Tree. 
+    match t with
+      leaf _ -> false
+    | node {_, w, leaf _} -> true
+    | _ -> false
+    end
+;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+extend = \l: Plan. \r: Plan. \w: Int. 
+    let is_used = (let tmp1 = (fix (
+    \f: Tree -> Bool. \p: Tree. 
+    match p with
+      leaf _ -> false
+    | node {w, _, r} -> if (> w 0) then true
+        else f r
+    end
+)) in 
+        align (tmp1 (unlabel l )) ) in 
+        if (is_used) then pcons {let tmp2 = 0 in 
+            align (label (node {tmp2, unlabel l , unlabel r }) ) , pnil Unit}
+        else pcons {align (label (node {w, unlabel l , unlabel r }) ) , pcons {let tmp3 = 0 in 
+            align (label (node {tmp3, unlabel l , unlabel r }) ) , pnil Unit}};
+
+extend_all = \w: Int. 
+    let extend_one = (\l: Plan. 
+    fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \pre: PlanList. 
+    match xs with
+      pnil _ -> pre
+    | pcons {h, t} -> merge (extend l h w) (f t pre)
+    end
+)) in 
+        fix (
+        \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+        match xs with
+          pnil _ -> pnil Unit
+        | pcons {h, t} -> extend_one h ys (f t ys)
+        end
+    );
+
+generate = fix (
+    \f: Tree -> PlanList. \t: Tree. 
+    match t with
+      leaf _ -> pcons {align (label t ) , pnil Unit}
+    | node {w, l, r} -> 
+        let lres = (f l) in 
+            let rres = (f r) in 
+                extend_all w lres rres
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = let eval = (fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf _ -> 0
+    | node {w, l, r} -> + w (+ (f l) (f r))
+    end
+)) in 
+        fix (
+        \f: PlanList -> Int. \xs: PlanList. 
+        match xs with
+          pnil _ -> 0
+        | pcons {h, t} -> max (align (eval (unlabel h )) ) (f t)
+        end
+    );
+
+main = \t: Tree. 
+    if (is_valid_tree t) then get_best (generate t)
+    else 0;
+align term #0: Bool
+align@0 tmp1 (unlabel l)
+  r: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  l: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  w: Int
+align term #1: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@1 create@0 node ({tmp2,unlabel l,unlabel r})
+  tmp2: Int
+  r: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  is_used: Bool
+  w: Int
+  l: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #2: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@2 create@0 node ({w,unlabel l,unlabel r})
+  r: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  is_used: Bool
+  w: Int
+  l: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #3: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@3 create@0 node ({tmp3,unlabel l,unlabel r})
+  r: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  is_used: Bool
+  tmp3: Int
+  w: Int
+  l: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #4: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@4 create@0 t
+  t: Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #5: Int
+align@5 eval (unlabel h)
+  h: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  t: PlanList. <pnil Unit | pcons {compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>,PlanList}>
+  xs: PlanList. <pnil Unit | pcons {compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>,PlanList}>
+Components for compress:
+  max [Int,Int] -> Int 8
+  node [(Int * Tree. <leaf Unit | node {Int,Tree,Tree}> * Tree. <leaf Unit | node {Int,Tree,Tree}>)] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+  is_valid_tree [Tree. <leaf Unit | node {Int,Tree,Tree}>] -> Bool 3
+  leaf [Bot] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+
+Components for align:
+  max [Int,Int] -> Int 8
+  node [(Int * Tree. <leaf Unit | node {Int,Tree,Tree}> * Tree. <leaf Unit | node {Int,Tree,Tree}>)] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+  is_valid_tree [Tree. <leaf Unit | node {Int,Tree,Tree}>] -> Bool 3
+  leaf [Bot] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+
+Components for comb:
+  max [Int,Int] -> Int 8
+  node [(Int * Tree. <leaf Unit | node {Int,Tree,Tree}> * Tree. <leaf Unit | node {Int,Tree,Tree}>)] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+  is_valid_tree [Tree. <leaf Unit | node {Int,Tree,Tree}>] -> Bool 3
+  leaf [Bot] -> Tree. <leaf Unit | node {Int,Tree,Tree}> 0
+
+align term #0: Bool
+align@0 tmp1 (unlabel l)
+  r: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  l: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  w: Int
+align term #1: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@1 create@0 node ({tmp2,unlabel l,unlabel r})
+  tmp2: Int
+  r: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  is_used: Bool
+  w: Int
+  l: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #2: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@2 create@0 node ({w,unlabel l,unlabel r})
+  r: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  is_used: Bool
+  w: Int
+  l: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #3: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@3 create@0 node ({tmp3,unlabel l,unlabel r})
+  r: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  is_used: Bool
+  tmp3: Int
+  w: Int
+  l: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #4: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+align@4 create@0 t
+  t: Tree. <leaf Unit | node {Int,Tree,Tree}>
+align term #5: Int
+align@5 eval (unlabel h)
+  h: compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  t: PlanList. <pnil Unit | pcons {compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>,PlanList}>
+  xs: PlanList. <pnil Unit | pcons {compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>,PlanList}>
+num = 0
+start: start
+node: start
+  Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+node: [Param0,Param1,Param2]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param0
+  Param1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+  Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>)
+  Bool([Param0,Param1,Param2,Param3,Param4]@Bool)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param1
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4]@Bool
+  Param2
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param0
+  Param3
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  ite([Param0,Param1,Param2,Param3,Param4]@Bool [Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>)
+  Bool([Param0,Param1,Param2,Param3]@Bool)
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Bool
+  Param1
+node: [Param0,Param1,Param2,Param3]@Int
+  Param2
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  ite([Param0,Param1,Param2,Param3]@Bool [Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param0
+  Param3
+num = 3
+start: start
+node: start
+  Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>)
+  Bool([Param0,Param1,Param2,Param3,Param4]@Bool)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Bool
+  Param1
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param2
+  Param3
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  ite([Param0,Param1,Param2,Param3,Param4]@Bool [Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param0
+  Param4
+num = 4
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  1
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+node: [Param0]@Bool
+  is_valid_tree([Param0]@Tree. <leaf Unit | node {Int,Tree,Tree}>)
+node: [Param0]@Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param0
+num = 5
+start: start
+node: start
+  Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>([Param0,Param1,Param2]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  0
+  max([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int]([]@Int [Int@0,Int@1,Int@2]@Int [Param0]@Tree. <leaf Unit | node {Int,Tree,Tree}>)
+  max([Param0]@Int [Param0]@Int)
+node: []@Int
+  +([]@Int []@Int)
+  -([]@Int []@Int)
+  0
+  max([]@Int []@Int)
+node: [Param0]@Bool
+  is_valid_tree([Param0]@Tree. <leaf Unit | node {Int,Tree,Tree}>)
+node: [Param0]@Tree. <leaf Unit | node {Int,Tree,Tree}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [] null
+  [0] Param0 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [1] Param0 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [2] Param1 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [3] Param1 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [0] fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [1] fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [0] Param1 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [1] Param1 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [2] Param4 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [3] Param4 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [0] fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [1] fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [0] Param0 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [1] Param0 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [2] Param3 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [3] Param3 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [4] Param2
+  [0] fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [1] fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [0] Param0 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [1] Param0 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [2] Param4 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [3] Param4 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [0] fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [1] fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+  [] null
+  [0] Param0 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(Int@0(),Int@2()),Param0)
+  [1] Param0 -> fold[Tree. <leaf Unit | node {Int,Tree,Tree}>->Int](0,+(-(Int@1(),Int@0()),Int@2()),Param0)
+compress #0: {Int,Int}
+pass #0: 
+< 0 l.1
+pass #1: 
+{r.1, + r.2 l.2}
+pass #2: 
+{+ r.1 w, - (+ r.2 l.2) w}
+pass #3: 
+{r.1, + r.2 l.2}
+pass #4: 
+{0, 0}
+pass #5: 
+- 0 h.2
+
+Inductive Tree;
+
+Plan = {Int, Int};
+
+Inductive PlanList;
+
+is_valid_tree = \t: Tree. 
+    match t with
+      leaf _ -> false
+    | node {_, w, leaf _} -> true
+    | _ -> false
+    end
+;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+extend = \l: Plan. \r: Plan. \w: Int. 
+    let is_used = (< 0 l.1) in 
+        if (is_used) then pcons {{r.1, + r.2 l.2}, pnil Unit}
+        else pcons {{+ r.1 w, - (+ r.2 l.2) w}, pcons {{r.1, + r.2 l.2}, pnil Unit}};
+
+extend_all = \w: Int. 
+    let extend_one = (\l: Plan. 
+    fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \pre: PlanList. 
+    match xs with
+      pnil _ -> pre
+    | pcons {h, t} -> merge (extend l h w) (f t pre)
+    end
+)) in 
+        fix (
+        \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+        match xs with
+          pnil _ -> pnil Unit
+        | pcons {h, t} -> extend_one h ys (f t ys)
+        end
+    );
+
+generate = fix (
+    \f: Tree -> PlanList. \t: Tree. 
+    match t with
+      leaf _ -> pcons {{0, 0}, pnil Unit}
+    | node {w, l, r} -> 
+        let lres = (f l) in 
+            let rres = (f r) in 
+                extend_all w lres rres
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {h, t} -> max (- 0 h.2) (f t)
+    end
+);
+
+main = \t: Tree. 
+    if (is_valid_tree t) then get_best (generate t)
+    else 0;
+syn-comb: 1.32527
+collect: 18.7156
+label: 0.026171
+extend-component: 0.042697
+execute: 0.425416
+syn-align: 19.5134
+comb-size: 53
+align-size: 27
+extract-size: 14
+20.8737
+Success

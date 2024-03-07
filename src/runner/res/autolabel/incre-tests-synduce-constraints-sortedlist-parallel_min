@@ -1,0 +1,75 @@
+
+Inductive List;
+
+Inductive CList;
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      elt x -> cons {x, b}
+    | cons {h, t} -> cons {h, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> List. \xs: CList. 
+    match xs with
+      single x -> elt x
+    | concat {a, b} -> cat (f a) (f b)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+lmax = fix (
+    \f: CList -> Int. \xs: CList. 
+    match xs with
+      single x -> x
+    | concat {x, y} -> max (f x) (f y)
+    end
+);
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+lmin = fix (
+    \f: CList -> Int. \xs: CList. 
+    match xs with
+      single x -> x
+    | concat {x, y} -> min (f x) (f y)
+    end
+);
+
+is_part = fix (
+    \f: CList -> Bool. \c: CList. 
+    match c with
+      single w -> true
+    | concat {x, y} -> and (< (lmax x) (lmin y)) (and (f x) (f y))
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> x
+    | cons {h, t} -> min h (f t)
+    end
+);
+
+target = fix (
+    \f: CList -> Int. \c: CList. 
+    match c with
+      single w -> w
+    | concat {x, y} -> 
+        let tmp1 = (f x) in 
+            tmp1
+    end
+);
+
+main = \xs: CList. 
+    if (is_part xs) then let tmp2 = (target xs) in 
+        tmp2
+    else 0;

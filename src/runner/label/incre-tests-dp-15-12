@@ -1,0 +1,76 @@
+
+Player = {Int, Int};
+
+Inductive List;
+
+Inductive NList;
+
+Plan = Compress List;
+
+Inductive PlanList;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+extend = \p: Player. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> xs
+    | pcons {h, t} -> pcons {align (label (cons {p, unlabel h }) ) , f t}
+    end
+);
+
+@Input lim = Int;
+
+generate = fix (
+    \f: NList -> PlanList. \xs: NList. 
+    match xs with
+      nnil _ -> pcons {let tmp1 = (nil Unit) in 
+            align (label tmp1 ) , pnil Unit}
+    | ncons {players, remains} -> 
+        let res = (f remains) in 
+            fix (
+            \g: List -> PlanList. \ys: List. 
+            match ys with
+              nil _ -> pnil Unit
+            | cons {h, t} -> merge (extend h res) (g t)
+            end
+        ) players
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = let sumw = (fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {p, t} -> + p.1 (f t)
+    end
+)) in 
+        let sumv = (fix (
+        \f: List -> Int. \xs: List. 
+        match xs with
+          nil _ -> 0
+        | cons {p, t} -> + p.2 (f t)
+        end
+    )) in 
+            fix (
+            \f: PlanList -> Int. \xs: PlanList. 
+            match xs with
+              pnil _ -> 0
+            | pcons {h, t} -> if (<= (align (sumw (unlabel h )) ) lim) then max (align (sumv (unlabel h )) ) (f t)
+                else f t
+            end
+        );
+
+main = \xs: NList. 
+    get_best (generate xs);

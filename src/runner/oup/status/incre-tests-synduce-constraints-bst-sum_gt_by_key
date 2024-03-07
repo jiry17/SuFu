@@ -1,0 +1,28 @@
+
+List :: List. <elt {Int,Int} | cons {Int,Int,List}>
+ elt : {Int,Int} -> List'. <elt {Int,Int} | cons {Int,Int,List'}>
+ cons : {Int,Int,List} ->
+        List'. <elt {Int,Int} | cons {Int,Int,List'}>
+ Map :: Map. <value {Int,Int} | node {Int,Map,Map}>
+value : {Int,Int} ->
+        Map'. <value {Int,Int} | node {Int,Map',Map'}>
+node : {Int,Map,Map} ->
+       Map'. <value {Int,Int} | node {Int,Map',Map'}>
+min : Int -> Int -> Int
+max : Int -> Int -> Int
+min_key : Map -> Int
+max_key : Map -> Int
+is_map : Map -> Bool
+cat : List ->
+      List -> List'. <elt {Int,Int} | cons {Int,Int,List'}>
+repr : Map -> List'. <elt {Int,Int} | cons {Int,Int,List'}>
+key : Int
+spec : List -> Int
+target : Map -> Map'. <value {Int,Int} | node {Int,Map',Map'}>
+main : Map -> Int
+
+size: 253
+compress-num: 1
+label-num: 11
+rewrite-size: 25
+0.023986

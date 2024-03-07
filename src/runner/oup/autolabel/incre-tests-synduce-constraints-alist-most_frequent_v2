@@ -1,0 +1,457 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ Pos :: Pos. <one Unit | s Pos>
+one : Unit -> Pos'. <one Unit | s Pos'>
+s : Pos -> Pos'. <one Unit | s Pos'>
+AList :: AList. <aelt {Int,Pos} | acons {Int,Pos,AList}>
+aelt : {Int,Pos} ->
+       AList'. <aelt {Int,Pos} | acons {Int,Pos,AList'}>
+acons : {Int,Pos,AList} ->
+        AList'. <aelt {Int,Pos} | acons {Int,Pos,AList'}>
+is_unique : AList -> Bool
+max : Int -> Int -> Int
+count : Int -> List -> Int
+spec : List -> Int
+repr : AList -> List'. <elt Int | cons {Int,List'}>
+p2i : Pos -> Int
+target : AList -> AList
+main : AList -> Int
+
+
+Inductive List;
+
+Inductive Pos;
+
+Inductive AList;
+
+is_unique = let key_differ = (\key: Int. 
+    fix (
+    \f: AList -> Bool. \xs: AList. 
+    match xs with
+      aelt {h, _} -> not (== h key)
+    | acons {h, _, t} -> and (not (== h key)) (f t)
+    end
+)) in 
+        fix (
+        \f: AList -> Bool. \xs: AList. 
+        match xs with
+          aelt _ -> true
+        | acons {h, _, t} -> and (key_differ h t) (f t)
+        end
+    );
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+count = \w: Int. 
+    fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt h -> if (== h w) then 1
+        else 0
+    | cons {h, t} -> + (if (== h w) then 1
+        else 0) (f t)
+    end
+);
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      elt h -> {1, h}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            let c = (count h xs) in 
+                if (> c res.1) then {c, h}
+                else res
+    end
+) xs).2;
+
+repr = let repeat = (\w: Int. \suf: List. 
+    fix (
+    \f: Pos -> List. \n: Pos. 
+    match n with
+      one _ -> cons {w, suf}
+    | s m -> cons {w, f m}
+    end
+)) in 
+        let dup = (\w: Int. 
+        fix (
+        \f: Pos -> List. \n: Pos. 
+        match n with
+          one _ -> elt w
+        | s m -> cons {w, f m}
+        end
+    )) in 
+            fix (
+            \f: AList -> List. \xs: AList. 
+            match xs with
+              aelt {h, n} -> dup h n
+            | acons {h, n, t} -> repeat h (f t) n
+            end
+        );
+
+p2i = fix (
+    \f: Pos -> Int. \n: Pos. 
+    match n with
+      one _ -> 1
+    | s m -> + 1 (f m)
+    end
+);
+
+target = fix (
+    \f: AList -> Compress AList. \xs: AList. 
+    match xs with
+      aelt {h, n} -> 
+        let num = (p2i n) in 
+            align (label xs ) 
+    | acons {h, n, t} -> 
+        let num = (p2i n) in 
+            let tmp1 = (f t) in 
+                align (label (acons {h, n, unlabel tmp1 }) ) 
+    end
+);
+
+main = \xs: AList. 
+    if (is_unique xs) then let tmp2 = (target xs) in 
+        align (spec (repr (unlabel tmp2 ))) 
+    else 0;
+align term #0: compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+align@0 create@0 xs
+  xs: AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  h: Int
+  num: Int
+  n: Pos. <one Unit | s Pos>
+align term #1: compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+align@1 create@0 acons ({h,n,unlabel tmp1})
+  num: Int
+  xs: AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  tmp1: compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  t: AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  n: Pos. <one Unit | s Pos>
+  h: Int
+align term #2: Int
+align@2 spec (repr (unlabel tmp2))
+  tmp2: compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  xs: AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+Components for compress:
+  aelt [(Int * Pos. <one Unit | s Pos>)] -> AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}> 2
+  s [Pos. <one Unit | s Pos>] -> Pos. <one Unit | s Pos> 1
+  one [Bot] -> Pos. <one Unit | s Pos> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  acons [(Int * Pos. <one Unit | s Pos> * AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>)] -> AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}> 2
+  max [Int,Int] -> Int 4
+
+Components for align:
+  aelt [(Int * Pos. <one Unit | s Pos>)] -> AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}> 2
+  s [Pos. <one Unit | s Pos>] -> Pos. <one Unit | s Pos> 1
+  one [Bot] -> Pos. <one Unit | s Pos> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  p2i [Pos. <one Unit | s Pos>] -> Int 8
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  acons [(Int * Pos. <one Unit | s Pos> * AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>)] -> AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}> 2
+  spec [List. <elt Int | cons {Int,List}>] -> Int 6
+  repr [AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>] -> List. <elt Int | cons {Int,List}> 7
+  max [Int,Int] -> Int 4
+  is_unique [AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>] -> Bool 3
+  count [Int,List. <elt Int | cons {Int,List}>] -> Int 5
+
+Components for comb:
+  aelt [(Int * Pos. <one Unit | s Pos>)] -> AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}> 2
+  s [Pos. <one Unit | s Pos>] -> Pos. <one Unit | s Pos> 1
+  one [Bot] -> Pos. <one Unit | s Pos> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  acons [(Int * Pos. <one Unit | s Pos> * AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>)] -> AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}> 2
+  max [Int,Int] -> Int 4
+
+align term #0: compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+align@0 create@0 xs
+  xs: AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  h: Int
+  num: Int
+  n: Pos. <one Unit | s Pos>
+align term #1: compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+align@1 create@0 acons ({h,n,unlabel tmp1})
+  num: Int
+  xs: AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  tmp1: compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  t: AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  n: Pos. <one Unit | s Pos>
+  h: Int
+align term #2: Int
+align@2 spec (repr (unlabel tmp2))
+  tmp2: compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  xs: AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param1
+  Param2
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  Param2
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param0
+  Param5
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>([Param0,Param1]@Compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  fold[List. <elt Int | cons {Int,List}>->Int]([Int@0,Int@1]@Int [Int@0,Int@1,Int@2]@Int [Int@0]@List. <elt Int | cons {Int,List}>)
+  spec([Int@0]@List. <elt Int | cons {Int,List}>)
+  max([Int@0]@Int [Int@0]@Int)
+  count([Int@0]@Int [Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Pos. <one Unit | s Pos>@0]@Int
+  Int@0
+  +([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Pos. <one Unit | s Pos>@0]@Int)
+  -([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Pos. <one Unit | s Pos>@0]@Int)
+  fold[Pos. <one Unit | s Pos>->Int]([Int@0]@Int [Int@0,Int@1]@Int [Int@0,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>)
+  p2i([Int@0,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>)
+  spec([Int@0,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}>)
+  max([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Pos. <one Unit | s Pos>@0]@Int)
+  count([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>
+  Pos. <one Unit | s Pos>@0
+  s([Int@0,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>)
+node: [Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Int [Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Int)
+  -([Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Int [Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Int)
+  fold[Pos. <one Unit | s Pos>->Int]([Int@0,Int@1]@Int [Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>)
+  p2i([Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>)
+  spec([Int@0,Int@1,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}>)
+  max([Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Int [Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Int)
+  count([Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Int [Int@0,Int@1,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>
+  Pos. <one Unit | s Pos>@0
+  s([Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  spec([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  count([Int@0,Int@1]@Int [Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  spec([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  max([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  count([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>->Int]([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Int [Param0]@AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>)
+  spec([Param0]@List. <elt Int | cons {Int,List}>)
+  max([Param0]@Int [Param0]@Int)
+  count([Param0]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Bool
+  is_unique([Param0]@AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  elt([Param0]@Int)
+  repr([Param0]@AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0]@Int)
+node: [Int@0,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Pos. <one Unit | s Pos>@0]@Int)
+node: [Int@0,Int@1,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1,Pos. <one Unit | s Pos>@0]@Int)
+node: [Int@0,Int@1]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1]@Int)
+node: [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1,Int@2]@Int)
+node: [Param0]@AList. <aelt {Int,Pos. <one Unit | s Pos>} | acons {Int,Pos. <one Unit | s Pos>,AList}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(repr(Param0))
+  [1] count(spec(repr(Param0)),repr(Param0))
+  [0] Param1
+  [1] Param2
+  [0] spec(repr(Param0))
+  [1] count(spec(repr(Param0)),repr(Param0))
+  [0] Param0
+  [1] Param5
+  [2] Param2 -> spec(repr(Param0))
+  [3] Param2 -> count(spec(repr(Param0)),repr(Param0))
+  [] null
+  [0] Param0 -> spec(repr(Param0))
+  [1] Param0 -> count(spec(repr(Param0)),repr(Param0))
+compress #0: {Int,Int}
+pass #0: 
+{h, num}
+pass #1: 
+{if (<= num tmp1.2) then tmp1.1
+else h, max num tmp1.2}
+pass #2: 
+tmp2.1
+
+Inductive List;
+
+Inductive Pos;
+
+Inductive AList;
+
+is_unique = let key_differ = (\key: Int. 
+    fix (
+    \f: AList -> Bool. \xs: AList. 
+    match xs with
+      aelt {h, _} -> not (== h key)
+    | acons {h, _, t} -> and (not (== h key)) (f t)
+    end
+)) in 
+        fix (
+        \f: AList -> Bool. \xs: AList. 
+        match xs with
+          aelt _ -> true
+        | acons {h, _, t} -> and (key_differ h t) (f t)
+        end
+    );
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+count = \w: Int. 
+    fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt h -> if (== h w) then 1
+        else 0
+    | cons {h, t} -> + (if (== h w) then 1
+        else 0) (f t)
+    end
+);
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      elt h -> {1, h}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            let c = (count h xs) in 
+                if (> c res.1) then {c, h}
+                else res
+    end
+) xs).2;
+
+repr = let repeat = (\w: Int. \suf: List. 
+    fix (
+    \f: Pos -> List. \n: Pos. 
+    match n with
+      one _ -> cons {w, suf}
+    | s m -> cons {w, f m}
+    end
+)) in 
+        let dup = (\w: Int. 
+        fix (
+        \f: Pos -> List. \n: Pos. 
+        match n with
+          one _ -> elt w
+        | s m -> cons {w, f m}
+        end
+    )) in 
+            fix (
+            \f: AList -> List. \xs: AList. 
+            match xs with
+              aelt {h, n} -> dup h n
+            | acons {h, n, t} -> repeat h (f t) n
+            end
+        );
+
+p2i = fix (
+    \f: Pos -> Int. \n: Pos. 
+    match n with
+      one _ -> 1
+    | s m -> + 1 (f m)
+    end
+);
+
+target = fix (
+    \f: AList -> {Int, Int}. \xs: AList. 
+    match xs with
+      aelt {h, n} -> 
+        let num = (p2i n) in 
+            {h, num}
+    | acons {h, n, t} -> 
+        let num = (p2i n) in 
+            let tmp1 = (f t) in 
+                {if (<= num tmp1.2) then tmp1.1
+                else h, max num tmp1.2}
+    end
+);
+
+main = \xs: AList. 
+    if (is_unique xs) then let tmp2 = (target xs) in 
+        tmp2.1
+    else 0;
+syn-comb: 3.59259
+collect: 18.8068
+label: 0.019882
+extend-component: 0.668817
+execute: 12.5808
+syn-align: 30.0916
+comb-size: 22
+align-size: 17
+extract-size: 8
+33.7205
+Success

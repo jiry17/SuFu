@@ -1,0 +1,188 @@
+
+Edge :: {Int, Int}
+EdgeList :: EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+enil : Unit ->
+       EdgeList'. <enil Unit | econs {{Int,Int},EdgeList'}>
+econs : {{Int,Int},EdgeList} ->
+        EdgeList'. <enil Unit | econs {{Int,Int},EdgeList'}>
+Path :: EdgeList
+Graph :: Graph. <gnil Unit | gcons {EdgeList,Graph}>
+gnil : Unit -> Graph'. <gnil Unit | gcons {EdgeList,Graph'}>
+gcons : {EdgeList,Graph} ->
+        Graph'. <gnil Unit | gcons {EdgeList,Graph'}>
+PlanList :: PlanList. <pnil Unit | pcons {Path,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Path,PlanList'}>
+pcons : {Path,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Path,PlanList'}>
+graph_size : Graph -> Int
+is_valid_graph : Graph -> Bool
+generate_paths : Graph -> PlanList
+inf : Int
+min : Int -> Int -> Int
+get_best : PlanList -> Int
+main : Graph -> Int
+
+
+Edge = {Int, Int};
+
+Inductive EdgeList;
+
+Path = Compress EdgeList;
+
+Inductive Graph;
+
+Inductive PlanList;
+
+graph_size = fix (
+    \f: Graph -> Int. \g: Graph. 
+    match g with
+      gnil _ -> 0
+    | gcons {h, t} -> + 1 (f t)
+    end
+);
+
+is_valid_graph = \g: Graph. 
+    let size = (graph_size g) in 
+        fix (
+        \f: Graph -> Int -> Bool. \g: Graph. \now: Int. 
+        match g with
+          gnil _ -> false
+        | gcons {enil _, gnil _} -> true
+        | gcons {enil _, _} -> false
+        | gcons {edges, remain} -> if (f remain (+ 1 now)) then fix (
+            \f: EdgeList -> Bool. \xs: EdgeList. 
+            match xs with
+              enil _ -> true
+            | econs {{target, _}, tails} -> if (or (<= target now) (>= target size)) then false
+                else f tails
+            end
+        ) edges
+            else false
+        end
+    ) g 0;
+
+generate_paths = \g: Graph. 
+    let size = (graph_size g) in 
+        fix (
+        \f: Graph -> Int -> Int -> Path -> PlanList -> PlanList. \g: Graph. \now: Int. \next: Int. \p: Path. \current: PlanList. 
+        match g with
+          gnil _ -> current
+        | gcons {edges, remain} -> if (< now next) then f remain (+ now 1) next p current
+            else if (== now (- size 1)) then pcons {p, current}
+            else fix (
+            \enum: EdgeList -> PlanList. \xs: EdgeList. 
+            match xs with
+              enil _ -> current
+            | econs {edge, tails} -> 
+                let res = (enum tails) in 
+                    if (or (<= edge.1 now) (>= edge.1 size)) then res
+                    else f remain (+ now 1) edge.1 (align (label (econs {edge, unlabel p }) ) ) res
+            end
+        ) edges
+        end
+    ) g 0 0 (let tmp1 = (enil unit) in 
+            align (label tmp1 ) ) (pnil unit);
+
+inf = 100;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+get_best = let eval = (fix (
+    \f: Path -> Int. \p: Path. 
+    let tmp2 = 0 in 
+        align (match unlabel p  with
+          enil _ -> tmp2
+        | econs {{_, w}, t} -> + w (f (label t ))
+        end
+) )) in 
+        fix (
+        \f: PlanList -> Int. \xs: PlanList. 
+        match xs with
+          pnil _ -> inf
+        | pcons {h, t} -> min (eval h) (f t)
+        end
+    );
+
+main = \g: Graph. 
+    if (is_valid_graph g) then get_best (generate_paths g)
+    else 0;
+align term #0: compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+align@0 create@0 econs ({edge,unlabel p})
+  p: compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  xs: EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  edge: {Int,Int}
+  current: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,PlanList}>
+  edges: EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  next: Int
+  remain: Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>
+  res: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,PlanList}>
+  g: Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>
+  size: Int
+  tails: EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  now: Int
+align term #1: compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+align@1 create@0 tmp1
+  size: Int
+  tmp1: EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  g: Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>
+align term #2: Int
+align@2 match unlabel p with enil _ -> tmp2 | econs {{_,w},t} -> + (w) (f (create@0 t))
+  p: compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  tmp2: Int
+Components for compress:
+  econs [((Int*Int)*EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>)] -> EdgeList. <enil Unit | econs {{Int,Int},EdgeList}> 1
+  enil [Bot] -> EdgeList. <enil Unit | econs {{Int,Int},EdgeList}> 1
+  gnil [Bot] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}> 3
+  inf [] -> Int 8
+  gcons [(EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>*Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>)] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}> 3
+  min [Int,Int] -> Int 9
+
+Components for align:
+  econs [((Int*Int)*EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>)] -> EdgeList. <enil Unit | econs {{Int,Int},EdgeList}> 1
+  enil [Bot] -> EdgeList. <enil Unit | econs {{Int,Int},EdgeList}> 1
+  gnil [Bot] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}> 3
+  is_valid_graph [Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>] -> Bool 6
+  graph_size [Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>] -> Int 5
+  inf [] -> Int 8
+  gcons [(EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>*Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>)] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}> 3
+  min [Int,Int] -> Int 9
+
+Components for comb:
+  econs [((Int*Int)*EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>)] -> EdgeList. <enil Unit | econs {{Int,Int},EdgeList}> 1
+  enil [Bot] -> EdgeList. <enil Unit | econs {{Int,Int},EdgeList}> 1
+  gnil [Bot] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}> 3
+  inf [] -> Int 8
+  gcons [(EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>*Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>)] -> Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}> 3
+  min [Int,Int] -> Int 9
+
+align term #0: compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+align@0 create@0 econs ({edge,unlabel p})
+  p: compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  xs: EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  edge: {Int,Int}
+  current: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,PlanList}>
+  edges: EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  next: Int
+  remain: Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>
+  res: PlanList. <pnil Unit | pcons {compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,PlanList}>
+  g: Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>
+  size: Int
+  tails: EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  now: Int
+align term #1: compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+align@1 create@0 tmp1
+  size: Int
+  tmp1: EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  g: Graph. <gnil Unit | gcons {EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>,Graph}>
+align term #2: Int
+align@2 match unlabel p with enil _ -> tmp2 | econs {{_,w},t} -> + (w) (f (create@0 t))
+  p: compress[0] EdgeList. <enil Unit | econs {{Int,Int},EdgeList}>
+  tmp2: Int
+
+
+
+
+
+

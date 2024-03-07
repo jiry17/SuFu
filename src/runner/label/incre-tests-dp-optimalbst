@@ -1,0 +1,87 @@
+
+Inductive List;
+
+Inductive Tree;
+
+Plan = Compress Tree;
+
+Inductive PlanList;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+combine = \w: Int. 
+    let combine_single = (\l: Plan. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> xs
+    | pcons {h, t} -> pcons {align (label (node {w, unlabel l , unlabel h }) ) , f t}
+    end
+)) in 
+        fix (
+        \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+        match xs with
+          pnil _ -> xs
+        | pcons {h, t} -> merge (combine_single h ys) (f t ys)
+        end
+    );
+
+snoc = \w: Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> cons {w, nil Unit}
+    | cons {h, t} -> cons {h, f t}
+    end
+);
+
+generate = fix (
+    \f: List -> PlanList. \xs: List. 
+    match xs with
+      nil _ -> pcons {let tmp1 = (leaf Unit) in 
+            align (label tmp1 ) , pnil Unit}
+    | _ -> fix (
+        \g: List -> List -> PlanList. \l: List. \r: List. 
+        match r with
+          nil _ -> pnil Unit
+        | cons {root, newr} -> 
+            let newl = (snoc root l) in 
+                merge (combine root (f l) (f newr)) (g newl newr)
+        end
+    ) (nil Unit) xs
+    end
+);
+
+eval = \t: Tree. 
+    (fix (
+    \f: Tree -> {Int, Int}. \t: Tree. 
+    match t with
+      leaf _ -> {0, 0}
+    | node {w, l, r} -> 
+        let lres = (f l) in 
+            let rres = (f r) in 
+                let sum = (+ w (+ lres.2 rres.2)) in 
+                    {+ sum (+ lres.1 rres.1), sum}
+    end
+) t).1;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> 1000
+    | pcons {h, t} -> min (align (eval (unlabel h )) ) (f t)
+    end
+);
+
+main = \xs: List. 
+    get_best (generate xs);

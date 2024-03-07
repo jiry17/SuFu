@@ -1,0 +1,35 @@
+
+ArithExpr :: ArithExpr. <int Int | plus {ArithExpr,ArithExpr} | minus {
+ ArithExpr,ArithExpr}>
+ int : Int ->
+       ArithExpr'. <int Int | plus {ArithExpr',ArithExpr'} | minus {
+       ArithExpr',ArithExpr'}>
+ plus : {ArithExpr,ArithExpr} ->
+        ArithExpr'. <int Int | plus {ArithExpr',ArithExpr'} | minus {
+        ArithExpr',ArithExpr'}>
+ minus : {ArithExpr,ArithExpr} ->
+         ArithExpr'. <int Int | plus {ArithExpr',ArithExpr'} | minus {
+         ArithExpr',ArithExpr'}>
+ PsumExpr :: PsumExpr. <nint Int | nplus {PsumExpr,PsumExpr} | nminus {
+PsumExpr,PsumExpr}>
+nint : Int ->
+       PsumExpr'. <nint Int | nplus {PsumExpr',PsumExpr'} | nminus {
+       PsumExpr',PsumExpr'}>
+nplus : {PsumExpr,PsumExpr} ->
+        PsumExpr'. <nint Int | nplus {PsumExpr',PsumExpr'} | nminus {
+        PsumExpr',PsumExpr'}>
+nminus : {PsumExpr,PsumExpr} ->
+         PsumExpr'. <nint Int | nplus {PsumExpr',PsumExpr'} | nminus {
+         PsumExpr',PsumExpr'}>
+max : Int -> Int -> Int
+repr : PsumExpr ->
+       ArithExpr'. <int Int | plus {ArithExpr',ArithExpr'} | minus {
+       ArithExpr',ArithExpr'}>
+spec : ArithExpr -> Int
+main : PsumExpr -> Int
+
+size: 147
+compress-num: 1
+label-num: 12
+rewrite-size: 22
+0.021174

@@ -1,0 +1,49 @@
+
+Inductive List;
+
+Inductive CList;
+
+min = \a: Int. \b: Int. 
+    if (> a b) then b
+    else a;
+
+spec = fix (
+    \f: List -> {Int, Int, Bool}. \x: List. 
+    match x with
+      nil _ -> {0, 0, true}
+    | cons {h, t} -> 
+        let result = (f t) in 
+            let cnt = result.1 in 
+                let min_cnt = result.2 in 
+                    let bal = result.3 in 
+                        let new_cnt = (if (> h 0) then + cnt 1
+                        else - cnt 1) in 
+                            {new_cnt, min min_cnt new_cnt, and bal (>= new_cnt 0)}
+    end
+);
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      nil _ -> b
+    | cons {h, t} -> cons {h, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> {Int, Int}. \xs: CList. 
+    match xs with
+      cnil _ -> {0, 0}
+    | single x -> {if (< x 1) then -1
+        else 1, if (< 0 x) then 0
+        else -1}
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                {+ tmp4.1 tmp3.1, + tmp3.2 (min tmp4.1 (- tmp4.2 tmp3.2))}
+    end
+);
+
+main = \x: CList. 
+    let tmp5 = (repr x) in 
+        {tmp5.1, tmp5.2, == tmp5.2 0};

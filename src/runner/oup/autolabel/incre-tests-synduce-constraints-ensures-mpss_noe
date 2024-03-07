@@ -1,0 +1,353 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ NList :: NList. <line List | ncons {List,NList}>
+line : List -> NList'. <line List | ncons {List,NList'}>
+ncons : {List,NList} -> NList'. <line List | ncons {List,NList'}>
+CNList :: CNList. <sglt List | cat {CNList,CNList}>
+sglt : List -> CNList'. <sglt List | cat {CNList',CNList'}>
+cat : {CNList,CNList} ->
+      CNList'. <sglt List | cat {CNList',CNList'}>
+cton : CNList -> NList'. <line List | ncons {List,NList'}>
+sum : List -> Int
+max : Int -> Int -> Int
+spec : NList -> Int
+target : CNList -> CNList
+main : CNList -> Int
+
+
+Inductive List;
+
+Inductive NList;
+
+Inductive CNList;
+
+cton = fix (
+    \f: CNList -> NList. 
+    let dec = (fix (
+    \g: CNList -> CNList -> NList. \l: CNList. \c: CNList. 
+    match c with
+      sglt x -> ncons {x, f l}
+    | cat {x, y} -> g (cat {y, l}) x
+    end
+)) in 
+        \c: CNList. 
+        match c with
+          sglt x -> line x
+        | cat {x, y} -> dec y x
+        end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> x
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \xs: NList. 
+    (fix (
+    \f: NList -> {Int, Int}. \xs: NList. 
+    match xs with
+      line a -> {max 0 (sum a), sum a}
+    | ncons {h, t} -> 
+        let hsum = (sum h) in 
+            let tres = (f t) in 
+                {max (+ tres.2 hsum) tres.1, + tres.2 hsum}
+    end
+) xs).1;
+
+target = fix (
+    \f: CNList -> Compress CNList. \c: CNList. 
+    match c with
+      sglt x -> 
+        let info = (sum x) in 
+            align (label c ) 
+    | cat {l, r} -> 
+        let tmp1 = (f l) in 
+            let tmp2 = (f r) in 
+                align (label (cat {unlabel tmp1 , unlabel tmp2 }) ) 
+    end
+);
+
+main = \c: CNList. 
+    let tmp3 = (target c) in 
+        align (spec (cton (unlabel tmp3 ))) ;
+align term #0: compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+align@0 create@0 c
+  c: CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  info: Int
+  x: List. <elt Int | cons {Int,List}>
+align term #1: compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+align@1 create@0 cat ({unlabel tmp1,unlabel tmp2})
+  l: CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  c: CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  r: CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  tmp2: compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  tmp1: compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+align term #2: Int
+align@2 spec (cton (unlabel tmp3))
+  c: CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  tmp3: compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+Components for compress:
+  ncons [(List. <elt Int | cons {Int,List}> * NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>)] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  cat [(CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}> * CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>)] -> CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}> 2
+  sglt [List. <elt Int | cons {Int,List}>] -> CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}> 2
+  line [List. <elt Int | cons {Int,List}>] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  max [Int,Int] -> Int 5
+
+Components for align:
+  ncons [(List. <elt Int | cons {Int,List}> * NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>)] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  cat [(CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}> * CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>)] -> CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}> 2
+  sglt [List. <elt Int | cons {Int,List}>] -> CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}> 2
+  cton [CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 3
+  sum [List. <elt Int | cons {Int,List}>] -> Int 4
+  spec [NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>] -> Int 6
+  line [List. <elt Int | cons {Int,List}>] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  max [Int,Int] -> Int 5
+
+Components for comb:
+  ncons [(List. <elt Int | cons {Int,List}> * NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>)] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  cat [(CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}> * CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>)] -> CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}> 2
+  sglt [List. <elt Int | cons {Int,List}>] -> CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}> 2
+  line [List. <elt Int | cons {Int,List}>] -> NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}> 1
+  max [Int,Int] -> Int 5
+
+align term #0: compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+align@0 create@0 c
+  c: CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  info: Int
+  x: List. <elt Int | cons {Int,List}>
+align term #1: compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+align@1 create@0 cat ({unlabel tmp1,unlabel tmp2})
+  l: CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  c: CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  r: CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  tmp2: compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  tmp1: compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+align term #2: Int
+align@2 spec (cton (unlabel tmp3))
+  c: CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  tmp3: compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param1
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  Param3
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>([Param0,Param1]@Compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [List. <elt Int | cons {Int,List}>@0]@List. <elt Int | cons {Int,List}>
+  List. <elt Int | cons {Int,List}>@0
+  elt([List. <elt Int | cons {Int,List}>@0]@Int)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  sum([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  spec([Int@0,Int@1]@NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>)
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  sum([Int@0]@List. <elt Int | cons {Int,List}>)
+  spec([Int@0]@NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>)
+  max([Int@0]@Int [Int@0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  fold[CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>->Int]([List. <elt Int | cons {Int,List}>@0]@Int [Int@0,Int@1]@Int [Param0]@CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>)
+  fold[List. <elt Int | cons {Int,List}>->Int]([Int@0]@Int [Int@0,Int@1]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+  sum([Param0]@List. <elt Int | cons {Int,List}>)
+  spec([Param0]@NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>)
+  max([Param0]@Int [Param0]@Int)
+node: [List. <elt Int | cons {Int,List}>@0]@Int
+  +([List. <elt Int | cons {Int,List}>@0]@Int [List. <elt Int | cons {Int,List}>@0]@Int)
+  -([List. <elt Int | cons {Int,List}>@0]@Int [List. <elt Int | cons {Int,List}>@0]@Int)
+  fold[List. <elt Int | cons {Int,List}>->Int]([Int@0]@Int [Int@0,Int@1]@Int [List. <elt Int | cons {Int,List}>@0]@List. <elt Int | cons {Int,List}>)
+  sum([List. <elt Int | cons {Int,List}>@0]@List. <elt Int | cons {Int,List}>)
+  spec([List. <elt Int | cons {Int,List}>@0]@NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>)
+  max([List. <elt Int | cons {Int,List}>@0]@Int [List. <elt Int | cons {Int,List}>@0]@Int)
+node: [Param0]@NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>
+  cton([Param0]@CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>)
+  line([Param0]@List. <elt Int | cons {Int,List}>)
+node: [List. <elt Int | cons {Int,List}>@0]@NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>
+  cton([List. <elt Int | cons {Int,List}>@0]@CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>)
+  line([List. <elt Int | cons {Int,List}>@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1]@NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>
+  cton([Int@0,Int@1]@CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>)
+  line([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@NList. <line List. <elt Int | cons {Int,List}> | ncons {List. <elt Int | cons {Int,List}>,NList}>
+  cton([Int@0]@CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>)
+  line([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  elt([Param0]@Int)
+node: [Int@0,Int@1]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1]@Int)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0]@Int)
+node: [List. <elt Int | cons {Int,List}>@0]@CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  sglt([List. <elt Int | cons {Int,List}>@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1]@CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  sglt([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  sglt([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>
+  Param0
+  sglt([Param0]@List. <elt Int | cons {Int,List}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(cton(Param0))
+  [1] fold[CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>->Int](sum(List. <elt Int | cons {Int,List}>@0()),+(Int@0(),Int@1()),Param0)
+  [0] Param1
+  [0] spec(cton(Param0))
+  [1] fold[CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>->Int](sum(List. <elt Int | cons {Int,List}>@0()),+(Int@0(),Int@1()),Param0)
+  [0] Param3 -> spec(cton(Param0))
+  [1] Param3 -> fold[CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>->Int](sum(List. <elt Int | cons {Int,List}>@0()),+(Int@0(),Int@1()),Param0)
+  [2] Param4 -> spec(cton(Param0))
+  [3] Param4 -> fold[CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>->Int](sum(List. <elt Int | cons {Int,List}>@0()),+(Int@0(),Int@1()),Param0)
+  [] null
+  [0] Param1 -> spec(cton(Param0))
+  [1] Param1 -> fold[CNList. <sglt List. <elt Int | cons {Int,List}> | cat {CNList,CNList}>->Int](sum(List. <elt Int | cons {Int,List}>@0()),+(Int@0(),Int@1()),Param0)
+compress #0: {Int,Int}
+pass #0: 
+{max info 0, info}
+pass #1: 
+{max tmp2.1 (+ tmp2.2 tmp1.1), + tmp2.2 tmp1.2}
+pass #2: 
+tmp3.1
+
+Inductive List;
+
+Inductive NList;
+
+Inductive CNList;
+
+cton = fix (
+    \f: CNList -> NList. 
+    let dec = (fix (
+    \g: CNList -> CNList -> NList. \l: CNList. \c: CNList. 
+    match c with
+      sglt x -> ncons {x, f l}
+    | cat {x, y} -> g (cat {y, l}) x
+    end
+)) in 
+        \c: CNList. 
+        match c with
+          sglt x -> line x
+        | cat {x, y} -> dec y x
+        end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> x
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \xs: NList. 
+    (fix (
+    \f: NList -> {Int, Int}. \xs: NList. 
+    match xs with
+      line a -> {max 0 (sum a), sum a}
+    | ncons {h, t} -> 
+        let hsum = (sum h) in 
+            let tres = (f t) in 
+                {max (+ tres.2 hsum) tres.1, + tres.2 hsum}
+    end
+) xs).1;
+
+target = fix (
+    \f: CNList -> {Int, Int}. \c: CNList. 
+    match c with
+      sglt x -> 
+        let info = (sum x) in 
+            {max info 0, info}
+    | cat {l, r} -> 
+        let tmp1 = (f l) in 
+            let tmp2 = (f r) in 
+                {max tmp2.1 (+ tmp2.2 tmp1.1), + tmp2.2 tmp1.2}
+    end
+);
+
+main = \c: CNList. 
+    let tmp3 = (target c) in 
+        tmp3.1;
+syn-comb: 0.594721
+collect: 2.69659
+label: 0.015358
+extend-component: 0.00082
+execute: 3.34035
+syn-align: 6.33355
+comb-size: 29
+align-size: 19
+extract-size: 5
+6.95569
+Success

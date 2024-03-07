@@ -1,0 +1,34 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/tree/maxtree2.pmrs[0m with [36mpmrs[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (join, f0) := ∀ x : [33mint tree[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): int tree -> int  =  
+[44m INFO :[0m  target⟨join, f0⟩(): int tree -> int  =  
+[44m INFO :[0m repr(x) = [34mx[0m
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0086s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.2277s
+[44m INFO :[0m ... finished in 0.4088s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [   4 instances] 0.647s 
+        CVC-SyGuS  [   2 instances] 0.007s 
+        > TOTAL    [   6 instances]: 0.654s 
+[44m INFO :[0m Solution found in 0.4111s (156.9% verifying):
+
+[31mlet[0m [36mf0[0m [34ma[0m [31m=[0m [34ma[0m
+
+[31mlet[0m [36mjoin[0m [34mb[0m [34mc[0m [34mx[0m [31m=[0m max (max [34mb[0m [34mc[0m) [34mx[0m
+
+ target⟨join, f0⟩(): int tree -> int  = 
+{‣ main t1   ⟹  [34mh[0m [34mt1[0m   h  [3mLeaf[0m(x)  ⟹  [34mf0[0m [34mx[0m   h  [3mNode[0m(a, l, r)  ⟹  [34mjoin[0m [34ma[0m ([34mh[0m [34ml[0m) ([34mh[0m [34mr[0m) }
+

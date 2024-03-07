@@ -1,0 +1,63 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/list/mtshom.pmrs[0m with [36mpmrs[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (join, s0, f0) := ∀ x : [33mint clist[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): int list -> int  =  
+[44m INFO :[0m  target⟨join, s0, f0⟩(): int clist -> int  =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(l): int clist -> int list  =  
+
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0176s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0178s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0190s
+[44m INFO :[0m Refinement step 3.
+[44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m ... finished in 0.0124s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0190s
+[44m INFO :[0m Refinement step 4.
+[44m INFO :[0m [30m[102m		 segis Refinement step 4:0 [0;30m[0m
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m All counterexamples are non-spurious: nothing to refine.
+[44m INFO :[0m Lifting with components int
+[44m INFO :[0m [30m[101mLifting ... [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 3:1 [0;30m[0m
+[44m INFO :[0m <SEGIS> This problem has no solution. Counterexample set: [32mCNil[0m [32mSingle[0m([34ml0[0m) [32mConcat[0m([32mCNil[0m,
+          [32mSingle[0m([34ma5[0m)) [32mConcat[0m([32mSingle[0m([34ma9[0m), [32mCNil[0m) [32mConcat[0m([32mSingle[0m([34ma16[0m), [32mSingle[0m([34ma19[0m))
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0145s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 4:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0142s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 5:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0373s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 6:0 [0;30m[0m
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  43 instances] 0.608s 
+        CVC-SyGuS  [  20 instances] 1.871s 
+        > TOTAL    [  63 instances]: 2.479s 
+[44m INFO :[0m No solution: problem is unrealizable (found answer in 1.1178s).
+[44m INFO :[0m  target⟨join, s0, f0⟩(): int clist -> int  = 
+        {‣ main t   ⟹  [34mh[0m [34mt[0m   h  CNil  ⟹  [34ms0[0m   h  [3mSingle[0m(a)  ⟹  [34mf0[0m [34ma[0m
+           h  [3mConcat[0m(y, z)  ⟹  [34mjoin[0m ([34mh[0m [34my[0m) ([34mh[0m [34mz[0m) }
+[44m INFO :[0m 💡 Explanation: 
+[44m INFO :[0m On input [3m[32mConcat[0;3m([32mSingle[0;3m([36m1[0;3m), [32mCNil[0;3m)[0m, the constraint ([34mjoin[0m (max [36m0[0m [36m1[0m) [36m0[0m = max [36m0[0m [36m1[0m) states
+        [34mjoin[0m [36m1[0m [36m0[0m = [36m1[0m
+[44m INFO :[0m On input [3m[32mConcat[0;3m([32mSingle[0;3m([36m1[0;3m), [32mSingle[0;3m([36m-1[0;3m))[0m, the constraint
+        ([34mjoin[0m (max [36m0[0m [36m1[0m) (max [36m0[0m (- [36m1[0m)) = max (max [36m0[0m (- [36m1[0m)) ((- [36m1[0m) + [36m1[0m)) states 
+        [34mjoin[0m [36m1[0m [36m0[0m = [36m0[0m
+[44m INFO :[0m There is no function [34m[3mjoin[0;34m[0m that can satisfy these constraints.

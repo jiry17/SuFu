@@ -1,0 +1,38 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/list/bal.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (odot, s0, f0) := ∀ x : [33mbool clist[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): bool list -> bool  =  
+[44m INFO :[0m  target⟨odot, s0, f0⟩(): bool clist -> bool  =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(): bool clist -> bool list  =  
+
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0161s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0154s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0179s
+[44m INFO :[0m Refinement step 3.
+[44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m ... finished in 0.0140s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 3:0 [0;30m[0m
+[41m[ERROR][0m Solver CVC-SyGuS (pid : 19910) exited with code 1.
+[41m[ERROR][0m Solver CVC-SyGuS (pid : 19909) exited with code 1.
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m All counterexamples are non-spurious: nothing to refine.
+[41m[ERROR][0m <SEGIS> SyGuS solver failed to find a solution.
+
+------------------------------------------------------------------------------------------------[0]-
+[41m[ERROR][0m Failed to find a solution or a witness of unrealizability
+[44m INFO :[0m Failed to find solution 1.0714s (5.9% verifying):
+[31mlet rec[0m [36mtarget[0m [31m=[0m
+  [33mfunction[0m CNil -> [34ms0[0m [33m| [0m[3mSingle[0m(a) -> [34mf0[0m [34ma[0m [33m| [0m[3mConcat[0m(x, y) -> [34modot[0m ([34mtarget[0m [34mx[0m) ([34mtarget[0m [34my[0m)
+

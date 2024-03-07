@@ -1,0 +1,175 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ is_sorted : List -> Bool
+max : Int -> Int -> Int
+maximum : List -> Int
+target : List -> List
+main : List -> Int
+
+
+Inductive List;
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt x -> >= pre x
+    | cons {h, t} -> and (>= pre h) (f h t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt x -> true
+        | cons {h, t} -> aux h t
+        end
+;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+maximum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt w -> w
+    | cons {h, t} -> max h (f t)
+    end
+);
+
+target = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      elt w -> 
+        align (label xs ) 
+    | cons {h, _} -> 
+        align (label xs ) 
+    end
+);
+
+main = \xs: List. 
+    if (is_sorted xs) then let tmp1 = (target xs) in 
+        align (maximum (unlabel tmp1 )) 
+    else 0;
+align term #0: compress[0] List
+align@0 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  w: Int
+align term #1: compress[0] List
+align@1 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  h: Int
+align term #2: Int
+align@2 maximum (unlabel tmp1)
+  xs: List. <elt Int | cons {Int,List}>
+  tmp1: compress[0] List. <elt Int | cons {Int,List}>
+Components for compress:
+  cons [(Int*List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  max [Int,Int] -> Int 2
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+
+Components for align:
+  cons [(Int*List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  is_sorted [List. <elt Int | cons {Int,List}>] -> Bool 1
+  max [Int,Int] -> Int 2
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  maximum [List. <elt Int | cons {Int,List}>] -> Int 3
+
+Components for comb:
+  cons [(Int*List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  max [Int,Int] -> Int 2
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+
+align term #0: compress[0] List
+align@0 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  w: Int
+  (0) {xs: elt 1,w: 1} @ {} -> compress elt 1
+  (0) {xs: elt 5,w: 5} @ {} -> compress elt 5
+align term #1: compress[0] List
+align@1 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  h: Int
+align term #2: Int
+align@2 maximum (unlabel tmp1)
+  xs: List. <elt Int | cons {Int,List}>
+  tmp1: compress[0] List. <elt Int | cons {Int,List}>
+  (2) {xs: elt 1,tmp1: compress elt 1} @ {} -> 1
+  (2) {xs: elt 5,tmp1: compress elt 5} @ {} -> 5
+
+
+
+
+
+
+
+
+
+  [] maximum(Param0)
+  [0] Param1
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [] maximum(Param0)
+  [0] Param1
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+  [] null
+  [0] Param1 -> maximum(Param0)
+Academic license - for non-commercial use only - expires 2023-10-17
+Academic license - for non-commercial use only - expires 2023-10-17
+compress #0: Int
+pass #0: 
+w
+pass #1: 
+h
+pass #2: 
+tmp1
+
+Inductive List;
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt x -> >= pre x
+    | cons {h, t} -> and (>= pre h) (f h t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt x -> true
+        | cons {h, t} -> aux h t
+        end
+;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+maximum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt w -> w
+    | cons {h, t} -> max h (f t)
+    end
+);
+
+target = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt w -> w
+    | cons {h, _} -> h
+    end
+);
+
+main = \xs: List. 
+    if (is_sorted xs) then let tmp1 = (target xs) in 
+        tmp1
+    else 0;
+syn-comb: 0.336489
+collect: 15.76
+label: 0.011369
+extend-component: 0
+execute: 0.044781
+syn-align: 15.8162
+16.1701
+Success

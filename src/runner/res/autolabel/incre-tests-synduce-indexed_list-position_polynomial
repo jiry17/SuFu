@@ -1,0 +1,35 @@
+
+Inductive List;
+
+Inductive IndexedList;
+
+length = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+repr = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let tmp2 = (length t) in 
+            let tmp3 = (f t) in 
+                + tmp3 (* h tmp2)
+    end
+);
+
+spec = fix (
+    \f: IndexedList -> Int. \xs: IndexedList. 
+    match xs with
+      inil _ -> 0
+    | icons {h, i, t} -> + (* h i) (f t)
+    end
+);
+
+main = \xs: List. 
+    let tmp4 = (repr xs) in 
+        tmp4;

@@ -1,0 +1,40 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+Graph :: Graph. <gnil Unit | gcons {List,Graph}>
+gnil : Unit -> Graph'. <gnil Unit | gcons {List,Graph'}>
+gcons : {List,Graph} -> Graph'. <gnil Unit | gcons {List,Graph'}>
+Choice :: Choice. <cnil Unit | ccons {Int,Int,Choice}>
+cnil : Unit -> Choice'. <cnil Unit | ccons {Int,Int,Choice'}>
+ccons : {Int,Int,Choice} ->
+        Choice'. <cnil Unit | ccons {Int,Int,Choice'}>
+Plan :: Choice
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+cost1 : Int
+cost2 : Int
+head : Choice -> {Int, Int}
+merge : PlanList -> PlanList -> PlanList
+snoc : Int ->
+       Int ->
+       Choice -> Choice'. <cnil Unit | ccons {Int,Int,Choice'}>
+extend : Int ->
+         Int ->
+         PlanList ->
+         PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+take_last : Graph -> {List'. <nil Unit | cons {Int,List'}>, Graph}
+generate_paths : Graph ->
+                 PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+eval : Choice -> Int
+max : Int -> Int -> Int
+get_best : PlanList -> Int
+main : Graph -> Int
+
+size: 318
+compress-num: 1
+label-num: 7
+rewrite-size: 11
+0.027562

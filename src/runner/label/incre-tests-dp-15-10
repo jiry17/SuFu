@@ -1,0 +1,104 @@
+
+Inductive List;
+
+Inductive Graph;
+
+Inductive Choice;
+
+Plan = Compress Choice;
+
+Inductive PlanList;
+
+@Input cost1 = Int;
+
+@Input cost2 = Int;
+
+head = \xs: Choice. 
+    match xs with
+      cnil _ -> {-1, -1}
+    | ccons {a, b, t} -> {a, b}
+    end
+;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+snoc = \pos: Int. \w: Int. 
+    fix (
+    \f: Choice -> Choice. \xs: Choice. 
+    match xs with
+      cnil _ -> ccons {pos, w, cnil Unit}
+    | ccons {a, b, t} -> ccons {a, b, f t}
+    end
+);
+
+extend = \pos: Int. \w: Int. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> pnil Unit
+    | pcons {h, t} -> pcons {let tmp1 = (snoc pos w) in 
+            align (label (tmp1 (unlabel h )) ) , f t}
+    end
+);
+
+take_last = fix (
+    \f: Graph -> {List, Graph}. \g: Graph. 
+    match g with
+      gnil _ -> {nil Unit, g}
+    | gcons {h, gnil _} -> {h, gnil Unit}
+    | gcons {h, t} -> 
+        let res = (f t) in 
+            {res.1, gcons {h, res.2}}
+    end
+);
+
+generate_paths = fix (
+    \f: Graph -> PlanList. \graph: Graph. 
+    match graph with
+      gnil _ -> pcons {let tmp2 = (cnil Unit) in 
+            align (label tmp2 ) , pnil Unit}
+    | _ -> 
+        let split = (take_last graph) in 
+            let sub_res = (f split.2) in 
+                fix (
+                \g: Int -> List -> PlanList. \pos: Int. \xs: List. 
+                match xs with
+                  nil _ -> pnil Unit
+                | cons {h, t} -> merge (extend pos h sub_res) (g (+ 1 pos) t)
+                end
+            ) 0 split.1
+    end
+);
+
+eval = fix (
+    \f: Int -> Int -> Choice -> Int. \pre: Int. \now: Int. \xs: Choice. 
+    match xs with
+      cnil _ -> now
+    | ccons {a, b, t} -> 
+        let now = (if (== pre -1) then * b now
+        else if (== a pre) then * b (- now cost1)
+        else * b (- now cost2)) in 
+            f a now t
+    end
+) -1 1;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {h, t} -> max (align (eval (unlabel h )) ) (f t)
+    end
+);
+
+main = \graph: Graph. 
+    get_best (generate_paths graph);

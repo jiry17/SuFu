@@ -1,0 +1,49 @@
+
+Inductive List;
+
+Inductive CList;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+@Input x = Int;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 1}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            {+ result.1 (* hd result.2), * x result.2}
+    end
+) xs).1;
+
+cat = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      nil _ -> ys
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> Compress List. \xs: CList. 
+    match xs with
+      cnil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | single a -> 
+        let tmp2 = (cons {a, nil Unit}) in 
+            align (label tmp2 ) 
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                align (label (cat (unlabel tmp3 ) (unlabel tmp4 )) ) 
+    end
+);
+
+main = \x: CList. 
+    let tmp5 = (repr x) in 
+        align (spec (unlabel tmp5 )) ;

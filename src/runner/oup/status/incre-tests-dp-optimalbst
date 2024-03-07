@@ -1,0 +1,27 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+Tree :: Tree. <leaf Unit | node {Int,Tree,Tree}>
+leaf : Unit -> Tree'. <leaf Unit | node {Int,Tree',Tree'}>
+node : {Int,Tree,Tree} ->
+       Tree'. <leaf Unit | node {Int,Tree',Tree'}>
+Plan :: Tree
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+merge : PlanList -> PlanList -> PlanList
+combine : Int -> PlanList -> PlanList -> PlanList
+snoc : Int -> List -> List'. <nil Unit | cons {Int,List'}>
+generate : List -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+eval : Tree -> Int
+min : Int -> Int -> Int
+get_best : PlanList -> Int
+main : List -> Int
+
+size: 275
+compress-num: 1
+label-num: 8
+rewrite-size: 15
+0.026823

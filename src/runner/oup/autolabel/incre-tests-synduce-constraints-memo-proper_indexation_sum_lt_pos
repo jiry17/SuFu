@@ -1,0 +1,286 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+ nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+ cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+ IDList :: IDList. <inil Unit | icons {Int,Int,IDList}>
+inil : Unit -> IDList'. <inil Unit | icons {Int,Int,IDList'}>
+icons : {Int,Int,IDList} ->
+        IDList'. <inil Unit | icons {Int,Int,IDList'}>
+length : IDList -> Int
+is_indexed : IDList -> Bool
+repr : IDList -> List'. <nil Unit | cons {Int,List'}>
+len : List -> Int
+spec : List -> Int
+target : IDList -> IDList
+main : IDList -> Int
+
+
+Inductive List;
+
+Inductive IDList;
+
+length = fix (
+    \f: IDList -> Int. \xs: IDList. 
+    match xs with
+      inil _ -> 0
+    | icons {_, _, t} -> + 1 (f t)
+    end
+);
+
+is_indexed = fix (
+    \f: IDList -> Bool. \xs: IDList. 
+    match xs with
+      inil _ -> true
+    | icons {_, id, t} -> and (f t) (== id (length t))
+    end
+);
+
+repr = fix (
+    \f: IDList -> List. \m: IDList. 
+    match m with
+      inil _ -> nil Unit
+    | icons {h, _, t} -> cons {h, f t}
+    end
+);
+
+len = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> if (> h (len t)) then + h (f t)
+        else f t
+    end
+);
+
+target = fix (
+    \f: IDList -> Compress IDList. \xs: IDList. 
+    match xs with
+      inil _ -> 
+        align (label xs ) 
+    | icons {h, id, t} -> 
+        let tmp1 = (f t) in 
+            align (label (icons {h, id, unlabel tmp1 }) ) 
+    end
+);
+
+main = \m: IDList. 
+    if (is_indexed m) then let tmp2 = (target m) in 
+        align (spec (repr (unlabel tmp2 ))) 
+    else 0;
+align term #0: compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>
+align@0 create@0 xs
+  xs: IDList. <inil Unit | icons {Int,Int,IDList}>
+align term #1: compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>
+align@1 create@0 icons ({h,id,unlabel tmp1})
+  t: IDList. <inil Unit | icons {Int,Int,IDList}>
+  tmp1: compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>
+  xs: IDList. <inil Unit | icons {Int,Int,IDList}>
+  id: Int
+  h: Int
+align term #2: Int
+align@2 spec (repr (unlabel tmp2))
+  m: IDList. <inil Unit | icons {Int,Int,IDList}>
+  tmp2: compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>
+Components for compress:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  inil [Bot] -> IDList. <inil Unit | icons {Int,Int,IDList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  icons [(Int * Int * IDList. <inil Unit | icons {Int,Int,IDList}>)] -> IDList. <inil Unit | icons {Int,Int,IDList}> 1
+
+Components for align:
+  len [List. <nil Unit | cons {Int,List}>] -> Int 5
+  is_indexed [IDList. <inil Unit | icons {Int,Int,IDList}>] -> Bool 3
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  inil [Bot] -> IDList. <inil Unit | icons {Int,Int,IDList}> 1
+  length [IDList. <inil Unit | icons {Int,Int,IDList}>] -> Int 2
+  spec [List. <nil Unit | cons {Int,List}>] -> Int 6
+  repr [IDList. <inil Unit | icons {Int,Int,IDList}>] -> List. <nil Unit | cons {Int,List}> 4
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  icons [(Int * Int * IDList. <inil Unit | icons {Int,Int,IDList}>)] -> IDList. <inil Unit | icons {Int,Int,IDList}> 1
+
+Components for comb:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  inil [Bot] -> IDList. <inil Unit | icons {Int,Int,IDList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  icons [(Int * Int * IDList. <inil Unit | icons {Int,Int,IDList}>)] -> IDList. <inil Unit | icons {Int,Int,IDList}> 1
+
+align term #0: compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>
+align@0 create@0 xs
+  xs: IDList. <inil Unit | icons {Int,Int,IDList}>
+align term #1: compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>
+align@1 create@0 icons ({h,id,unlabel tmp1})
+  t: IDList. <inil Unit | icons {Int,Int,IDList}>
+  tmp1: compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>
+  xs: IDList. <inil Unit | icons {Int,Int,IDList}>
+  id: Int
+  h: Int
+align term #2: Int
+align@2 spec (repr (unlabel tmp2))
+  m: IDList. <inil Unit | icons {Int,Int,IDList}>
+  tmp2: compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>
+  Param1
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param3
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>([Param0,Param1]@Compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] IDList. <inil Unit | icons {Int,Int,IDList}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  len([Param0]@List. <nil Unit | cons {Int,List}>)
+  length([Param0]@IDList. <inil Unit | icons {Int,Int,IDList}>)
+  spec([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@Bool
+  is_indexed([Param0]@IDList. <inil Unit | icons {Int,Int,IDList}>)
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  repr([Param0]@IDList. <inil Unit | icons {Int,Int,IDList}>)
+node: [Param0]@IDList. <inil Unit | icons {Int,Int,IDList}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(repr(Param0))
+  [1] length(Param0)
+  [0] spec(repr(Param0))
+  [1] length(Param0)
+  [0] Param4
+  [1] Param1 -> spec(repr(Param0))
+  [2] Param1 -> length(Param0)
+  [] null
+  [0] Param1 -> spec(repr(Param0))
+  [1] Param1 -> length(Param0)
+compress #0: {Int,Int}
+pass #0: 
+{0, 0}
+pass #1: 
+{if (<= h tmp1.2) then tmp1.1
+else + h tmp1.1, + tmp1.2 1}
+pass #2: 
+tmp2.1
+
+Inductive List;
+
+Inductive IDList;
+
+length = fix (
+    \f: IDList -> Int. \xs: IDList. 
+    match xs with
+      inil _ -> 0
+    | icons {_, _, t} -> + 1 (f t)
+    end
+);
+
+is_indexed = fix (
+    \f: IDList -> Bool. \xs: IDList. 
+    match xs with
+      inil _ -> true
+    | icons {_, id, t} -> and (f t) (== id (length t))
+    end
+);
+
+repr = fix (
+    \f: IDList -> List. \m: IDList. 
+    match m with
+      inil _ -> nil Unit
+    | icons {h, _, t} -> cons {h, f t}
+    end
+);
+
+len = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> if (> h (len t)) then + h (f t)
+        else f t
+    end
+);
+
+target = fix (
+    \f: IDList -> {Int, Int}. \xs: IDList. 
+    match xs with
+      inil _ -> {0, 0}
+    | icons {h, id, t} -> 
+        let tmp1 = (f t) in 
+            {if (<= h tmp1.2) then tmp1.1
+            else + h tmp1.1, + tmp1.2 1}
+    end
+);
+
+main = \m: IDList. 
+    if (is_indexed m) then let tmp2 = (target m) in 
+        tmp2.1
+    else 0;
+syn-comb: 1.19216
+collect: 12.5502
+label: 0.014258
+extend-component: 0.001747
+execute: 0.008255
+syn-align: 12.5628
+comb-size: 27
+align-size: 9
+extract-size: 4
+13.777
+Success

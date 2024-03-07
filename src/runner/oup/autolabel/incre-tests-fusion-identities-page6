@@ -1,0 +1,483 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+List2D :: List2D. <nil2D Unit | cons2D {List,List2D}>
+nil2D : Unit -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+cons2D : {List,List2D} ->
+         List2D'. <nil2D Unit | cons2D {List,List2D'}>
+List3D :: List3D. <nil3D Unit | cons3D {List2D,List3D}>
+nil3D : Unit -> List3D'. <nil3D Unit | cons3D {List2D,List3D'}>
+cons3D : {List2D,List3D} ->
+         List3D'. <nil3D Unit | cons3D {List2D,List3D'}>
+head : List2D -> List'. <nil Unit | cons {Int,List'}>
+tails : List -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+append : Int -> List -> List'. <nil Unit | cons {Int,List'}>
+scanl : (Int->List->List) ->
+        List ->
+        List -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+inits : List -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+map : (List->List2D) ->
+      List2D -> List3D'. <nil3D Unit | cons3D {List2D,List3D'}>
+concat : List3D -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+segs : List -> List2D'. <nil2D Unit | cons2D {List,List2D'}>
+mapL : (List->Int) ->
+       List2D -> List'. <nil Unit | cons {Int,List'}>
+sum : List -> Int
+max : Int -> Int -> Int
+maximum : List -> Int
+maxsum : List2D -> Int
+mss : List -> Int
+
+
+Inductive List;
+
+Inductive List2D;
+
+Inductive List3D;
+
+head = \xs: List2D. 
+    match xs with
+      nil2D _ -> nil Unit
+    | cons2D {h, t} -> h
+    end
+;
+
+tails = fix (
+    \f: List -> Compress List2D. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (cons2D {xs, nil2D Unit}) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            align (label (cons2D {xs, unlabel tmp2 }) ) 
+    end
+);
+
+append = \w: Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> cons {w, nil Unit}
+    | cons {h, t} -> cons {h, f t}
+    end
+);
+
+scanl = \f: Int -> List -> List. \init: List. 
+    fix (
+    \g: List -> List -> List2D. \now: List. \xs: List. 
+    match xs with
+      nil _ -> cons2D {now, nil2D Unit}
+    | cons {h, t} -> cons2D {now, g (f h now) t}
+    end
+) init;
+
+inits = scanl append (nil Unit);
+
+map = \g: List -> List2D. 
+    fix (
+    \f: List2D -> List3D. \xs: List2D. 
+    match xs with
+      nil2D _ -> nil3D Unit
+    | cons2D {h, t} -> cons3D {g h, f t}
+    end
+);
+
+concat = fix (
+    \f: List3D -> List2D. \xs: List3D. 
+    match xs with
+      nil3D _ -> nil2D Unit
+    | cons3D {h, t} -> fix (
+        \g: List2D -> List2D. \ys: List2D. 
+        match ys with
+          nil2D _ -> f t
+        | cons2D {h1, t1} -> cons2D {h1, g t1}
+        end
+    ) h
+    end
+);
+
+segs = \xs: List. 
+    let tmp3 = (map inits) in 
+        let tmp4 = (tails xs) in 
+            align (label (concat (tmp3 (unlabel tmp4 ))) ) ;
+
+mapL = \g: List -> Int. 
+    fix (
+    \f: List2D -> List. \xs: List2D. 
+    match xs with
+      nil2D _ -> nil Unit
+    | cons2D {h, t} -> cons {g h, f t}
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+maximum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> max h (f t)
+    end
+);
+
+maxsum = \xs: List2D. 
+    maximum (mapL sum xs);
+
+mss = \xs: List. 
+    let tmp5 = (segs xs) in 
+        align (maxsum (unlabel tmp5 )) ;
+align term #0: compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+align@0 create@0 tmp1
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp1: List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+align term #1: compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+align@1 create@0 cons2D ({xs,unlabel tmp2})
+  h: Int
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp2: compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  t: List. <nil Unit | cons {Int,List}>
+align term #2: compress[1] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+align@2 create@1 concat (tmp3 (unlabel tmp4))
+  tmp4: compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  xs: List. <nil Unit | cons {Int,List}>
+align term #3: Int
+align@3 maxsum (unlabel tmp5)
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp5: compress[1] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+Components for compress:
+  max [Int,Int] -> Int 13
+  nil3D [Bot] -> List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}> 2
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  cons3D [(List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> * List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}>)] -> List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}> 2
+  nil2D [Bot] -> List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> 1
+  head [List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>] -> List. <nil Unit | cons {Int,List}> 3
+  cons2D [(List. <nil Unit | cons {Int,List}> * List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)] -> List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+
+Components for align:
+  maxsum [List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>] -> Int 15
+  maximum [List. <nil Unit | cons {Int,List}>] -> Int 14
+  max [Int,Int] -> Int 13
+  mapL [[List. <nil Unit | cons {Int,List}>]->Int,List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>] -> List. <nil Unit | cons {Int,List}> 11
+  map [[List. <nil Unit | cons {Int,List}>]->List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>] -> List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}> 8
+  nil3D [Bot] -> List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}> 2
+  concat [List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}>] -> List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> 9
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  cons3D [(List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> * List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}>)] -> List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}> 2
+  nil2D [Bot] -> List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> 1
+  scanl [[Int]->[List. <nil Unit | cons {Int,List}>]->List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>] -> List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> 6
+  head [List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>] -> List. <nil Unit | cons {Int,List}> 3
+  sum [List. <nil Unit | cons {Int,List}>] -> Int 12
+  cons2D [(List. <nil Unit | cons {Int,List}> * List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)] -> List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> 1
+  append [Int,List. <nil Unit | cons {Int,List}>] -> List. <nil Unit | cons {Int,List}> 5
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  inits [List. <nil Unit | cons {Int,List}>] -> List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> 7
+
+Components for comb:
+  max [Int,Int] -> Int 13
+  nil3D [Bot] -> List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}> 2
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  cons3D [(List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> * List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}>)] -> List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}> 2
+  nil2D [Bot] -> List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> 1
+  head [List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>] -> List. <nil Unit | cons {Int,List}> 3
+  cons2D [(List. <nil Unit | cons {Int,List}> * List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)] -> List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+
+align term #0: compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+align@0 create@0 tmp1
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp1: List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+align term #1: compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+align@1 create@0 cons2D ({xs,unlabel tmp2})
+  h: Int
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp2: compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  t: List. <nil Unit | cons {Int,List}>
+align term #2: compress[1] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+align@2 create@1 concat (tmp3 (unlabel tmp4))
+  tmp4: compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  xs: List. <nil Unit | cons {Int,List}>
+align term #3: Int
+align@3 maxsum (unlabel tmp5)
+  xs: List. <nil Unit | cons {Int,List}>
+  tmp5: compress[1] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+  Compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>([Param0,Param1,Param2,Param3]@Compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+node: [Param0,Param1,Param2,Param3]@Compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  Param2
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>([Param0,Param1]@Compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+node: [Param0,Param1]@Compress[0] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  Param0
+num = 3
+start: start
+node: start
+  Compress[1] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>([Param0,Param1]@Compress[1] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[1] List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  maxsum([Param0]@List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+  maximum([Param0]@List. <nil Unit | cons {Int,List}>)
+  max([Param0]@Int [Param0]@Int)
+  sum([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@[List. <nil Unit | cons {Int,List}>]->Int
+  maximum
+  sum
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  mapL([Param0]@[List. <nil Unit | cons {Int,List}>]->Int [Param0]@List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+  head([Param0]@List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+  append([Param0]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}>
+  map([Param0]@[List. <nil Unit | cons {Int,List}>]->List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> [Param0]@List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+node: [Param0]@[List. <nil Unit | cons {Int,List}>]->List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  scanl([Param0]@[Int]->[List. <nil Unit | cons {Int,List}>]->List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}>)
+  inits
+node: [Param0]@[Int]->[List. <nil Unit | cons {Int,List}>]->List. <nil Unit | cons {Int,List}>
+  append
+node: [Param0]@List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  Param0
+  concat([Param0]@List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}>)
+  scanl([Param0]@[Int]->[List. <nil Unit | cons {Int,List}>]->List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}>)
+  inits([Param0]@List. <nil Unit | cons {Int,List}>)
+num = 1
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  maxsum([Param0]@List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+  maximum([Param0]@List. <nil Unit | cons {Int,List}>)
+  max([Param0]@Int [Param0]@Int)
+  sum([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@[List. <nil Unit | cons {Int,List}>]->Int
+  maximum
+  sum
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  mapL([Param0]@[List. <nil Unit | cons {Int,List}>]->Int [Param0]@List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+  head([Param0]@List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+  append([Param0]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}>
+  map([Param0]@[List. <nil Unit | cons {Int,List}>]->List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}> [Param0]@List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>)
+node: [Param0]@[List. <nil Unit | cons {Int,List}>]->List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  scanl([Param0]@[Int]->[List. <nil Unit | cons {Int,List}>]->List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}>)
+  inits
+node: [Param0]@[Int]->[List. <nil Unit | cons {Int,List}>]->List. <nil Unit | cons {Int,List}>
+  append
+node: [Param0]@List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>
+  Param0
+  concat([Param0]@List3D. <nil3D Unit | cons3D {List2D. <nil2D Unit | cons2D {List. <nil Unit | cons {Int,List}>,List2D}>,List3D}>)
+  scanl([Param0]@[Int]->[List. <nil Unit | cons {Int,List}>]->List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}>)
+  inits([Param0]@List. <nil Unit | cons {Int,List}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] maxsum(concat(map(inits(),Param0)))
+  [1] maxsum(inits(head(Param0)))
+  [0] maxsum(concat(map(inits(),Param0)))
+  [1] maxsum(inits(head(Param0)))
+  [0] Param0
+  [1] Param2 -> maxsum(concat(map(inits(),Param0)))
+  [2] Param2 -> maxsum(inits(head(Param0)))
+  [] maxsum(Param0)
+  [0] Param0 -> maxsum(concat(map(inits(),Param0)))
+  [1] Param0 -> maxsum(inits(head(Param0)))
+  [] null
+  [0] Param1 -> maxsum(Param0)
+compress #0: {Int,Int}
+compress #1: Int
+pass #0: 
+{0, 0}
+pass #1: 
+{if (< (+ h tmp2.2) tmp2.1) then tmp2.1
+else + h tmp2.2, if (< 0 (+ h tmp2.2)) then + h tmp2.2
+else 0}
+pass #2: 
+tmp4.1
+pass #3: 
+tmp5
+
+Inductive List;
+
+Inductive List2D;
+
+Inductive List3D;
+
+head = \xs: List2D. 
+    match xs with
+      nil2D _ -> nil Unit
+    | cons2D {h, t} -> h
+    end
+;
+
+tails = fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            {if (< (+ h tmp2.2) tmp2.1) then tmp2.1
+            else + h tmp2.2, if (< 0 (+ h tmp2.2)) then + h tmp2.2
+            else 0}
+    end
+);
+
+append = \w: Int. 
+    fix (
+    \f: List -> List. \xs: List. 
+    match xs with
+      nil _ -> cons {w, nil Unit}
+    | cons {h, t} -> cons {h, f t}
+    end
+);
+
+scanl = \f: Int -> List -> List. \init: List. 
+    fix (
+    \g: List -> List -> List2D. \now: List. \xs: List. 
+    match xs with
+      nil _ -> cons2D {now, nil2D Unit}
+    | cons {h, t} -> cons2D {now, g (f h now) t}
+    end
+) init;
+
+inits = scanl append (nil Unit);
+
+map = \g: List -> List2D. 
+    fix (
+    \f: List2D -> List3D. \xs: List2D. 
+    match xs with
+      nil2D _ -> nil3D Unit
+    | cons2D {h, t} -> cons3D {g h, f t}
+    end
+);
+
+concat = fix (
+    \f: List3D -> List2D. \xs: List3D. 
+    match xs with
+      nil3D _ -> nil2D Unit
+    | cons3D {h, t} -> fix (
+        \g: List2D -> List2D. \ys: List2D. 
+        match ys with
+          nil2D _ -> f t
+        | cons2D {h1, t1} -> cons2D {h1, g t1}
+        end
+    ) h
+    end
+);
+
+segs = \xs: List. 
+    let tmp4 = (tails xs) in 
+        tmp4.1;
+
+mapL = \g: List -> Int. 
+    fix (
+    \f: List2D -> List. \xs: List2D. 
+    match xs with
+      nil2D _ -> nil Unit
+    | cons2D {h, t} -> cons {g h, f t}
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+maximum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> max h (f t)
+    end
+);
+
+maxsum = \xs: List2D. 
+    maximum (mapL sum xs);
+
+mss = \xs: List. 
+    let tmp5 = (segs xs) in 
+        tmp5;
+syn-comb: 2.14268
+collect: 1.71401
+label: 0.016093
+extend-component: 0.078707
+execute: 10.4268
+syn-align: 12.035
+comb-size: 45
+align-size: 20
+extract-size: 5
+14.2444
+Success

@@ -1,0 +1,626 @@
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ head : List -> Int -> Int
+fold : (Int->Int->Int) -> List -> Int -> Int
+length : List -> Int
+sum : List -> Int
+fold_list : (Int->List->List) -> List -> List -> List
+rev : List -> List
+max : Int -> Int -> Int
+inf : Int
+lsp : (List->Bool) -> List -> Int
+min : Int -> Int -> Int
+minimum : List -> Int
+maximum : List -> Int
+cond1 : List -> Bool
+gap : Int
+cond2 : List -> Bool
+isval : List -> Bool
+run : List -> Int
+
+
+Inductive List;
+
+head = \x: List. \default: Int. 
+    match x with
+      cons {h, t} -> h
+    | _ -> default
+    end
+;
+
+fold = \f: Int -> Int -> Int. \x: List. \w0: Int. 
+    fix (
+    \g: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> f h (g t)
+    | _ -> w0
+    end
+) x;
+
+length = \x: List. 
+    fold (\a: Int. \b: Int. 
+    + b 1) x 0;
+
+sum = \x: List. 
+    fold (\a: Int. \b: Int. 
+    + a b) x 0;
+
+fold_list = \f: Int -> List -> List. \x: List. \w0: List. 
+    fix (
+    \g: List -> List. \x: List. 
+    match x with
+      cons {h, t} -> f h (g t)
+    | _ -> w0
+    end
+) x;
+
+rev = \x: List. 
+    fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> f t (cons {h, y})
+    | _ -> y
+    end
+) x (nil Unit);
+
+max = \x: Int. \y: Int. 
+    if (< x y) then y
+    else x;
+
+inf = 100;
+
+lsp = \b: List -> Bool. \x: List. 
+    (fix (
+    \f: List -> {Compress List, Int}. \x: List. 
+    match x with
+      cons {h, t} -> 
+        let res = (f t) in 
+            let ms = res.2 in 
+                let x = res.1 in 
+                    if (align (b (cons {h, unlabel x })) ) then {align (label (cons {h, unlabel x }) ) , max ms (+ 1 (align (length (unlabel x )) ))}
+                    else if (b (cons {h, nil Unit})) then {let tmp1 = (cons {h, nil Unit}) in 
+                        align (label tmp1 ) , max ms 1}
+                    else {let tmp2 = (nil Unit) in 
+                        align (label tmp2 ) , ms}
+    | _ -> {let tmp3 = (nil Unit) in 
+            align (label tmp3 ) , 0}
+    end
+) x).2;
+
+min = \x: Int. \y: Int. 
+    if (< x y) then x
+    else y;
+
+minimum = \x: List. 
+    fold (\h: Int. \t: Int. 
+    min h t) x inf;
+
+maximum = \x: List. 
+    fold (\h: Int. \t: Int. 
+    max h t) x (- 0 inf);
+
+cond1 = \x: List. 
+    match x with
+      cons {h, t} -> not (> h (minimum t))
+    | _ -> true
+    end
+;
+
+@Input gap = Int;
+
+cond2 = \x: List. 
+    let ma = (maximum x) in 
+        let mi = (minimum x) in 
+            not (< (+ mi gap) ma);
+
+isval = \x: List. 
+    and (cond1 x) (cond2 x);
+
+run = lsp isval;
+align term #0: Bool
+align@0 b (cons ({h,unlabel x}))
+  res: {compress[0] List. <cons {Int,List} | nil Unit>,Int}
+  h: Int
+  x: compress[0] List. <cons {Int,List} | nil Unit>
+  ms: Int
+  t: List. <cons {Int,List} | nil Unit>
+align term #1: compress[0] List. <cons {Int,List} | nil Unit>
+align@1 create@0 cons ({h,unlabel x})
+  res: {compress[0] List. <cons {Int,List} | nil Unit>,Int}
+  h: Int
+  x: compress[0] List. <cons {Int,List} | nil Unit>
+  ms: Int
+  t: List. <cons {Int,List} | nil Unit>
+align term #2: Int
+align@2 length (unlabel x)
+  res: {compress[0] List. <cons {Int,List} | nil Unit>,Int}
+  h: Int
+  x: compress[0] List. <cons {Int,List} | nil Unit>
+  ms: Int
+  t: List. <cons {Int,List} | nil Unit>
+align term #3: compress[0] List. <cons {Int,List} | nil Unit>
+align@3 create@0 tmp1
+  x: compress[0] List. <cons {Int,List} | nil Unit>
+  ms: Int
+  tmp1: List. <cons {Int,List} | nil Unit>
+  t: List. <cons {Int,List} | nil Unit>
+  h: Int
+  res: {compress[0] List. <cons {Int,List} | nil Unit>,Int}
+align term #4: compress[0] List. <cons {Int,List} | nil Unit>
+align@4 create@0 tmp2
+  x: compress[0] List. <cons {Int,List} | nil Unit>
+  ms: Int
+  tmp2: List. <cons {Int,List} | nil Unit>
+  t: List. <cons {Int,List} | nil Unit>
+  h: Int
+  res: {compress[0] List. <cons {Int,List} | nil Unit>,Int}
+align term #5: compress[0] List. <cons {Int,List} | nil Unit>
+align@5 create@0 tmp3
+  x: List. <cons {Int,List} | nil Unit>
+  tmp3: List. <cons {Int,List} | nil Unit>
+Components for compress:
+  min [Int,Int] -> Int 10
+  head [List. <cons {Int,List} | nil Unit>,Int] -> Int 1
+  max [Int,Int] -> Int 7
+  inf [] -> Int 8
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  cons [(Int * List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+
+Components for align:
+  isval [List. <cons {Int,List} | nil Unit>] -> Bool 16
+  cond2 [List. <cons {Int,List} | nil Unit>] -> Bool 15
+  maximum [List. <cons {Int,List} | nil Unit>] -> Int 12
+  min [Int,Int] -> Int 10
+  cond1 [List. <cons {Int,List} | nil Unit>] -> Bool 13
+  head [List. <cons {Int,List} | nil Unit>,Int] -> Int 1
+  length [List. <cons {Int,List} | nil Unit>] -> Int 3
+  minimum [List. <cons {Int,List} | nil Unit>] -> Int 11
+  max [Int,Int] -> Int 7
+  fold [[Int]->[Int]->Int,List. <cons {Int,List} | nil Unit>,Int] -> Int 2
+  inf [] -> Int 8
+  fold_list [[Int]->[List. <cons {Int,List} | nil Unit>]->List. <cons {Int,List} | nil Unit>,List. <cons {Int,List} | nil Unit>,List. <cons {Int,List} | nil Unit>] -> List. <cons {Int,List} | nil Unit> 5
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  sum [List. <cons {Int,List} | nil Unit>] -> Int 4
+  cons [(Int * List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+  rev [List. <cons {Int,List} | nil Unit>] -> List. <cons {Int,List} | nil Unit> 6
+
+Components for comb:
+  min [Int,Int] -> Int 10
+  head [List. <cons {Int,List} | nil Unit>,Int] -> Int 1
+  max [Int,Int] -> Int 7
+  inf [] -> Int 8
+  nil [Bot] -> List. <cons {Int,List} | nil Unit> 0
+  cons [(Int * List. <cons {Int,List} | nil Unit>)] -> List. <cons {Int,List} | nil Unit> 0
+
+align term #0: Bool
+align@0 b (cons ({h,unlabel x}))
+  res: {compress[0] List. <cons {Int,List} | nil Unit>,Int}
+  h: Int
+  x: compress[0] List. <cons {Int,List} | nil Unit>
+  ms: Int
+  t: List. <cons {Int,List} | nil Unit>
+align term #1: compress[0] List. <cons {Int,List} | nil Unit>
+align@1 create@0 cons ({h,unlabel x})
+  res: {compress[0] List. <cons {Int,List} | nil Unit>,Int}
+  h: Int
+  x: compress[0] List. <cons {Int,List} | nil Unit>
+  ms: Int
+  t: List. <cons {Int,List} | nil Unit>
+align term #2: Int
+align@2 length (unlabel x)
+  res: {compress[0] List. <cons {Int,List} | nil Unit>,Int}
+  h: Int
+  x: compress[0] List. <cons {Int,List} | nil Unit>
+  ms: Int
+  t: List. <cons {Int,List} | nil Unit>
+align term #3: compress[0] List. <cons {Int,List} | nil Unit>
+align@3 create@0 tmp1
+  x: compress[0] List. <cons {Int,List} | nil Unit>
+  ms: Int
+  tmp1: List. <cons {Int,List} | nil Unit>
+  t: List. <cons {Int,List} | nil Unit>
+  h: Int
+  res: {compress[0] List. <cons {Int,List} | nil Unit>,Int}
+align term #4: compress[0] List. <cons {Int,List} | nil Unit>
+align@4 create@0 tmp2
+  x: compress[0] List. <cons {Int,List} | nil Unit>
+  ms: Int
+  tmp2: List. <cons {Int,List} | nil Unit>
+  t: List. <cons {Int,List} | nil Unit>
+  h: Int
+  res: {compress[0] List. <cons {Int,List} | nil Unit>,Int}
+align term #5: compress[0] List. <cons {Int,List} | nil Unit>
+align@5 create@0 tmp3
+  x: List. <cons {Int,List} | nil Unit>
+  tmp3: List. <cons {Int,List} | nil Unit>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param1
+  Param3
+  Param5
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  access1([Param0,Param1,Param2,Param3,Param4,Param5]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int))
+  head([Param0,Param1,Param2,Param3,Param4,Param5]@List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  inf
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param2
+  access0([Param0,Param1,Param2,Param3,Param4,Param5]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int))
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@List. <cons {Int,List} | nil Unit>
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int)
+  Param0
+  prod([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param1
+  Param3
+  Param5
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  access1([Param0,Param1,Param2,Param3,Param4,Param5]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int))
+  head([Param0,Param1,Param2,Param3,Param4,Param5]@List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  inf
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param2
+  access0([Param0,Param1,Param2,Param3,Param4,Param5]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int))
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@List. <cons {Int,List} | nil Unit>
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int)
+  Param0
+  prod([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param1
+  Param3
+  Param5
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  access1([Param0,Param1,Param2,Param3,Param4,Param5]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int))
+  head([Param0,Param1,Param2,Param3,Param4,Param5]@List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  inf
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param2
+  access0([Param0,Param1,Param2,Param3,Param4,Param5]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int))
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@List. <cons {Int,List} | nil Unit>
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int)
+  Param0
+  prod([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+num = 3
+start: start
+node: start
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] List. <cons {Int,List} | nil Unit>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param1
+  Param4
+  Param6
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+  access1([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int))
+  head([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  max([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  inf
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@List. <cons {Int,List} | nil Unit>
+  Param2
+  Param3
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int)
+  Param5
+  prod([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param0
+  access0([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int))
+num = 4
+start: start
+node: start
+  Compress[0] List. <cons {Int,List} | nil Unit>([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] List. <cons {Int,List} | nil Unit>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int
+  Param1
+  Param4
+  Param6
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  0
+  1
+  access1([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int))
+  head([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  max([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+  inf
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@List. <cons {Int,List} | nil Unit>
+  Param2
+  Param3
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int)
+  Param5
+  prod([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6]@Compress[0] List. <cons {Int,List} | nil Unit>
+  Param0
+  access0([Param0,Param1,Param2,Param3,Param4,Param5,Param6]@(Compress[0] List. <cons {Int,List} | nil Unit> * Int))
+num = 5
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  head([Param0,Param1,Param2]@List. <cons {Int,List} | nil Unit> [Param0,Param1,Param2]@Int)
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  inf
+node: [Param0,Param1,Param2]@List. <cons {Int,List} | nil Unit>
+  Param0
+  Param1
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+  Bool([Param0,Param1]@Bool)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  ite([Param0,Param1]@Bool [Param0,Param1]@Int [Param0,Param1]@Int)
+  fold[List. <cons {Int,List} | nil Unit>->Int]([Int@0,Int@1,Param1]@Int [Param1]@Int [Param0,Param1]@List. <cons {Int,List} | nil Unit>)
+  maximum([Param0,Param1]@List. <cons {Int,List} | nil Unit>)
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+  head([Param0,Param1]@List. <cons {Int,List} | nil Unit> [Param0,Param1]@Int)
+  length([Param0,Param1]@List. <cons {Int,List} | nil Unit>)
+  minimum([Param0,Param1]@List. <cons {Int,List} | nil Unit>)
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+  fold([Param0,Param1]@[Int]->[Int]->Int [Param0,Param1]@List. <cons {Int,List} | nil Unit> [Param0,Param1]@Int)
+  inf
+  sum([Param0,Param1]@List. <cons {Int,List} | nil Unit>)
+node: [Int@0,Int@1,Param1]@Int
+  Param1
+  Int@0
+  Int@1
+  +([Int@0,Int@1,Param1]@Int [Int@0,Int@1,Param1]@Int)
+  -([Int@0,Int@1,Param1]@Int [Int@0,Int@1,Param1]@Int)
+  min([Int@0,Int@1,Param1]@Int [Int@0,Int@1,Param1]@Int)
+  max([Int@0,Int@1,Param1]@Int [Int@0,Int@1,Param1]@Int)
+  inf
+node: [Param1]@Int
+  Param1
+  +([Param1]@Int [Param1]@Int)
+  -([Param1]@Int [Param1]@Int)
+  min([Param1]@Int [Param1]@Int)
+  max([Param1]@Int [Param1]@Int)
+  inf
+node: [Param0,Param1]@Bool
+  isval([Param0,Param1]@List. <cons {Int,List} | nil Unit>)
+  cond2([Param0,Param1]@List. <cons {Int,List} | nil Unit>)
+  cond1([Param0,Param1]@List. <cons {Int,List} | nil Unit>)
+node: [Param0,Param1]@[Int]->[Int]->Int
+  min
+  max
+node: [Param0,Param1]@List. <cons {Int,List} | nil Unit>
+  Param0
+  rev([Param0,Param1]@List. <cons {Int,List} | nil Unit>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [] null
+  [0] +(Param1,Param5)
+  [1] Param2 -> maximum(Param0)
+  [2] Param2 -> +(Param1,minimum(Param0))
+  [3] Param2 -> length(Param0)
+  [0] maximum(Param0)
+  [1] +(Param1,minimum(Param0))
+  [2] length(Param0)
+  [0] Param1
+  [1] Param2 -> maximum(Param0)
+  [2] Param2 -> +(Param1,minimum(Param0))
+  [3] Param2 -> length(Param0)
+  [4] +(Param1,Param5)
+  [] null
+  [0] Param2 -> maximum(Param0)
+  [1] Param2 -> +(Param1,minimum(Param0))
+  [2] Param2 -> length(Param0)
+  [0] maximum(Param0)
+  [1] +(Param1,minimum(Param0))
+  [2] length(Param0)
+  [0] Param4
+  [1] +(Param4,Param6)
+  [0] maximum(Param0)
+  [1] +(Param1,minimum(Param0))
+  [2] length(Param0)
+  [0] Param0 -> maximum(Param0)
+  [1] Param0 -> +(Param1,minimum(Param0))
+  [2] Param0 -> length(Param0)
+  [0] maximum(Param0)
+  [1] +(Param1,minimum(Param0))
+  [2] length(Param0)
+  [0] Param2
+compress #0: {Int,Int,Int}
+pass #0: 
+let c0 = (+ h gap) in 
+    or (and (and (<= c0 x.2) (<= x.1 c0)) (< x.2 (+ x.1 inf))) (<= inf x.2)
+pass #1: 
+let c0 = (+ h gap) in 
+    {max h x.1, c0, + x.3 (max 0 1)}
+pass #2: 
+x.3
+pass #3: 
+let c0 = (+ h gap) in 
+    {h, c0, 1}
+pass #4: 
+{- 0 inf, x.2, 0}
+pass #5: 
+{-100, + gap inf, 0}
+
+Inductive List;
+
+head = \x: List. \default: Int. 
+    match x with
+      cons {h, t} -> h
+    | _ -> default
+    end
+;
+
+fold = \f: Int -> Int -> Int. \x: List. \w0: Int. 
+    fix (
+    \g: List -> Int. \x: List. 
+    match x with
+      cons {h, t} -> f h (g t)
+    | _ -> w0
+    end
+) x;
+
+length = \x: List. 
+    fold (\a: Int. \b: Int. 
+    + b 1) x 0;
+
+sum = \x: List. 
+    fold (\a: Int. \b: Int. 
+    + a b) x 0;
+
+fold_list = \f: Int -> List -> List. \x: List. \w0: List. 
+    fix (
+    \g: List -> List. \x: List. 
+    match x with
+      cons {h, t} -> f h (g t)
+    | _ -> w0
+    end
+) x;
+
+rev = \x: List. 
+    fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> f t (cons {h, y})
+    | _ -> y
+    end
+) x (nil Unit);
+
+max = \x: Int. \y: Int. 
+    if (< x y) then y
+    else x;
+
+inf = 100;
+
+lsp = \b: List -> Bool. \x: List. 
+    (fix (
+    \f: List -> {{Int, Int, Int}, Int}. \x: List. 
+    match x with
+      cons {h, t} -> 
+        let res = (f t) in 
+            let ms = res.2 in 
+                let x = res.1 in 
+                    if (let c0 = (+ h gap) in 
+                        or (and (and (<= c0 x.2) (<= x.1 c0)) (< x.2 (+ x.1 inf))) (<= inf x.2)) then {let c0 = (+ h gap) in 
+                        {max h x.1, c0, + x.3 (max 0 1)}, max ms (+ 1 x.3)}
+                    else if (b (cons {h, nil Unit})) then {let c0 = (+ h gap) in 
+                        {h, c0, 1}, max ms 1}
+                    else {{- 0 inf, x.2, 0}, ms}
+    | _ -> {{-100, + gap inf, 0}, 0}
+    end
+) x).2;
+
+min = \x: Int. \y: Int. 
+    if (< x y) then x
+    else y;
+
+minimum = \x: List. 
+    fold (\h: Int. \t: Int. 
+    min h t) x inf;
+
+maximum = \x: List. 
+    fold (\h: Int. \t: Int. 
+    max h t) x (- 0 inf);
+
+cond1 = \x: List. 
+    match x with
+      cons {h, t} -> not (> h (minimum t))
+    | _ -> true
+    end
+;
+
+@Input gap = Int;
+
+cond2 = \x: List. 
+    let ma = (maximum x) in 
+        let mi = (minimum x) in 
+            not (< (+ mi gap) ma);
+
+isval = \x: List. 
+    and (cond1 x) (cond2 x);
+
+run = lsp isval;
+syn-comb: 1.9519
+collect: 4.98105
+label: 0.026388
+extend-component: 0.321278
+execute: 2.14561
+syn-align: 7.12384
+comb-size: 97
+align-size: 14
+extract-size: 25
+9.11297
+Success

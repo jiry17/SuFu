@@ -1,0 +1,48 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/list_to_tree/mls.pmrs[0m with [36mpmrs[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (odot, s0) := ∀ x : [33mint tree[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): int list -> (int * int) [95m«[0m[95mensures[0m fun (x, y) -> ([34my[0m > [34mx[0m) && ([34my[0m > [36m0[0m)[95m»[0m =  
+[44m INFO :[0m  target⟨odot, s0⟩(): int tree -> (int * int)  =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(): int tree -> int list  =  
+
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0173s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m ... finished in 0.0168s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0157s
+[44m INFO :[0m Refinement step 3.
+[44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0152s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0102s
+[44m INFO :[0m Refinement step 4.
+[44m INFO :[0m [30m[102m		 segis Refinement step 4:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.3872s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  34 instances] 0.859s 
+        CVC-SyGuS  [  10 instances] 74.946s 
+        > TOTAL    [  44 instances]: 75.805s 
+[44m INFO :[0m Solution found in 19.5287s (2.4% verifying):
+
+[31mlet[0m [36modot[0m [34ma[0m ([34mb0[0m, [34mb1[0m) ([34mc0[0m, [34mc1[0m) [31m=[0m (([34ma[0m + [34mb0[0m) + [34mc0[0m, max [34mb1[0m ([34mb0[0m + (max [34mc1[0m ([34ma[0m + [34mc0[0m))))
+
+[31mlet[0m [36ms0[0m  [31m=[0m ([36m0[0m, [36m0[0m)
+
+ target⟨odot, s0⟩(): int tree -> (int * int)  = 
+{‣ search_tree  Empty  ⟹  [34ms0[0m
+ ‣ search_tree  [3mNode[0m(a, l, r)  ⟹  [34modot[0m [34ma[0m ([34msearch_tree[0m [34ml[0m) ([34msearch_tree[0m [34mr[0m) }
+

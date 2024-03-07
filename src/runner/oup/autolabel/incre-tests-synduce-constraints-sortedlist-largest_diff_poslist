@@ -1,0 +1,341 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ is_sorted : List -> Bool
+is_pos : List -> Bool
+max : Int -> Int -> Int
+min : Int -> Int -> Int
+spec : List -> Int
+last : List -> Int
+target : List -> List
+main : List -> Int
+
+
+Inductive List;
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt x -> <= pre x
+    | cons {h, t} -> and (<= pre h) (f h t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt x -> true
+        | cons {h, t} -> aux h t
+        end
+;
+
+is_pos = fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt x -> > x 0
+    | cons {h, t} -> and (> h 0) (f t)
+    end
+);
+
+max = \x: Int. \y: Int. 
+    if (< x y) then y
+    else x;
+
+min = \x: Int. \y: Int. 
+    if (> x y) then y
+    else x;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int, Int}. \xs: List. 
+    match xs with
+      elt x -> {0, x, x}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            let newmax = (max h res.2) in 
+                let newmin = (min h res.3) in 
+                    {max res.1 (- newmax newmin), newmax, newmin}
+    end
+) xs).1;
+
+last = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt a -> a
+    | cons {h, t} -> f t
+    end
+);
+
+target = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      elt w -> 
+        align (label xs ) 
+    | cons {h, t} -> 
+        let aux = (last t) in 
+            let tmp1 = (cons {h, t}) in 
+                align (label tmp1 ) 
+    end
+);
+
+main = \xs: List. 
+    if (and (is_sorted xs) (is_pos xs)) then let tmp2 = (target xs) in 
+        align (spec (unlabel tmp2 )) 
+    else 0;
+align term #0: compress[0] List. <elt Int | cons {Int,List}>
+align@0 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  w: Int
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 tmp1
+  t: List. <elt Int | cons {Int,List}>
+  xs: List. <elt Int | cons {Int,List}>
+  tmp1: List. <elt Int | cons {Int,List}>
+  aux: Int
+  h: Int
+align term #2: Int
+align@2 spec (unlabel tmp2)
+  xs: List. <elt Int | cons {Int,List}>
+  tmp2: compress[0] List. <elt Int | cons {Int,List}>
+Components for compress:
+  min [Int,Int] -> Int 4
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  max [Int,Int] -> Int 3
+
+Components for align:
+  last [List. <elt Int | cons {Int,List}>] -> Int 6
+  spec [List. <elt Int | cons {Int,List}>] -> Int 5
+  min [Int,Int] -> Int 4
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  is_sorted [List. <elt Int | cons {Int,List}>] -> Bool 1
+  is_pos [List. <elt Int | cons {Int,List}>] -> Bool 2
+  max [Int,Int] -> Int 3
+
+Components for comb:
+  min [Int,Int] -> Int 4
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  max [Int,Int] -> Int 3
+
+align term #0: compress[0] List. <elt Int | cons {Int,List}>
+align@0 create@0 xs
+  xs: List. <elt Int | cons {Int,List}>
+  w: Int
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 tmp1
+  t: List. <elt Int | cons {Int,List}>
+  xs: List. <elt Int | cons {Int,List}>
+  tmp1: List. <elt Int | cons {Int,List}>
+  aux: Int
+  h: Int
+align term #2: Int
+align@2 spec (unlabel tmp2)
+  xs: List. <elt Int | cons {Int,List}>
+  tmp2: compress[0] List. <elt Int | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param3
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  min([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] List. <elt Int | cons {Int,List}>([Param0,Param1]@Compress[0] List. <elt Int | cons {Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] List. <elt Int | cons {Int,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  ite([Int@0]@Bool [Int@0]@Int [Int@0]@Int)
+  last([Int@0]@List. <elt Int | cons {Int,List}>)
+  spec([Int@0]@List. <elt Int | cons {Int,List}>)
+  min([Int@0]@Int [Int@0]@Int)
+  max([Int@0]@Int [Int@0]@Int)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  ite([Int@0,Int@1]@Bool [Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  last([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  spec([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  min([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+node: [Bool@0,Int@0]@Int
+  Int@0
+  +([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  -([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  ite([Bool@0,Int@0]@Bool [Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  last([Bool@0,Int@0]@List. <elt Int | cons {Int,List}>)
+  spec([Bool@0,Int@0]@List. <elt Int | cons {Int,List}>)
+  min([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  max([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+node: [Bool@0,Int@0]@Bool
+  Bool@0
+  is_sorted([Bool@0,Int@0]@List. <elt Int | cons {Int,List}>)
+  is_pos([Bool@0,Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[List. <elt Int | cons {Int,List}>->Int]([Int@0]@Int [Int@0,Int@1]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+  last([Param0]@List. <elt Int | cons {Int,List}>)
+  spec([Param0]@List. <elt Int | cons {Int,List}>)
+  min([Param0]@Int [Param0]@Int)
+  max([Param0]@Int [Param0]@Int)
+node: [Param0]@Bool
+  fold[List. <elt Int | cons {Int,List}>->Bool]([Int@0]@Bool [Bool@0,Int@0]@Bool [Param0]@List. <elt Int | cons {Int,List}>)
+  is_sorted([Param0]@List. <elt Int | cons {Int,List}>)
+  is_pos([Param0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@Bool
+  is_sorted([Int@0]@List. <elt Int | cons {Int,List}>)
+  is_pos([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1]@Bool
+  is_sorted([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  is_pos([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0]@Int)
+node: [Int@0,Int@1]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1]@Int)
+node: [Bool@0,Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Bool@0,Int@0]@Int)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  Param0
+  elt([Param0]@Int)
+
+
+
+
+
+
+
+
+
+  [] spec(Param0)
+  [] spec(Param0)
+  [0] -(Param3,Param4)
+  [] null
+  [0] Param1 -> spec(Param0)
+compress #0: Int
+pass #0: 
+0
+pass #1: 
+let c0 = (- aux h) in 
+    c0
+pass #2: 
+tmp2
+
+Inductive List;
+
+is_sorted = let aux = (fix (
+    \f: Int -> List -> Bool. \pre: Int. \xs: List. 
+    match xs with
+      elt x -> <= pre x
+    | cons {h, t} -> and (<= pre h) (f h t)
+    end
+)) in 
+        \xs: List. 
+        match xs with
+          elt x -> true
+        | cons {h, t} -> aux h t
+        end
+;
+
+is_pos = fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt x -> > x 0
+    | cons {h, t} -> and (> h 0) (f t)
+    end
+);
+
+max = \x: Int. \y: Int. 
+    if (< x y) then y
+    else x;
+
+min = \x: Int. \y: Int. 
+    if (> x y) then y
+    else x;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int, Int}. \xs: List. 
+    match xs with
+      elt x -> {0, x, x}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            let newmax = (max h res.2) in 
+                let newmin = (min h res.3) in 
+                    {max res.1 (- newmax newmin), newmax, newmin}
+    end
+) xs).1;
+
+last = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt a -> a
+    | cons {h, t} -> f t
+    end
+);
+
+target = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt w -> 0
+    | cons {h, t} -> 
+        let aux = (last t) in 
+            let c0 = (- aux h) in 
+                c0
+    end
+);
+
+main = \xs: List. 
+    if (and (is_sorted xs) (is_pos xs)) then let tmp2 = (target xs) in 
+        tmp2
+    else 0;
+syn-comb: 0.072927
+collect: 3.96861
+label: 0.016827
+extend-component: 9.7e-05
+execute: 0.003685
+syn-align: 3.97496
+comb-size: 9
+align-size: 3
+extract-size: 6
+4.07214
+Success

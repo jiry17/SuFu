@@ -1,0 +1,390 @@
+
+Tree :: Tree. <leaf Int | node {Int,Tree,Tree}>
+ leaf : Int -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ List :: List. <elt Int | cons {Int,List}>
+elt : Int -> List'. <elt Int | cons {Int,List'}>
+cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+min : Int -> Int -> Int
+max : Int -> Int -> Int
+tmin : Tree -> Int
+tmax : Tree -> Int
+is_bst : Tree -> Bool
+cat : List -> List -> List'. <elt Int | cons {Int,List'}>
+repr : Tree -> List'. <elt Int | cons {Int,List'}>
+spec : List -> Int
+target : Tree -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+main : Tree -> Int
+
+
+Inductive Tree;
+
+Inductive List;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+tmin = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> w
+    | node {w, l, r} -> min w (min (f l) (f r))
+    end
+);
+
+tmax = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> w
+    | node {w, l, r} -> max w (max (f l) (f r))
+    end
+);
+
+is_bst = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      leaf w -> true
+    | node {w, l, r} -> and (and (>= w (tmax l)) (<= w (tmin r))) (and (f l) (f r))
+    end
+);
+
+cat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | elt w -> cons {w, y}
+    end
+);
+
+repr = fix (
+    \f: Tree -> List. \t: Tree. 
+    match t with
+      leaf x -> elt x
+    | node {x, l, r} -> cat (f l) (cons {x, f r})
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \t: List. 
+    match t with
+      elt x -> x
+    | cons {h, t} -> max h (f t)
+    end
+);
+
+target = fix (
+    \f: Tree -> Compress Tree. \t: Tree. 
+    match t with
+      leaf x -> 
+        let tmp1 = (leaf x) in 
+            align (label tmp1 ) 
+    | node {a, l, r} -> 
+        let tmp2 = (f r) in 
+            align (label (node {a, l, unlabel tmp2 }) ) 
+    end
+);
+
+main = \t: Tree. 
+    if (is_bst t) then let tmp3 = (target t) in 
+        align (spec (repr (unlabel tmp3 ))) 
+    else 0;
+align term #0: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  tmp1: Tree. <leaf Int | node {Int,Tree,Tree}>
+  x: Int
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@1 create@0 node ({a,l,unlabel tmp2})
+  r: Tree. <leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp2: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  a: Int
+  l: Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #2: Int
+align@2 spec (repr (unlabel tmp3))
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp3: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+Components for compress:
+  min [Int,Int] -> Int 2
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 1
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  max [Int,Int] -> Int 3
+
+Components for align:
+  min [Int,Int] -> Int 2
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  repr [Tree. <leaf Int | node {Int,Tree,Tree}>] -> List. <elt Int | cons {Int,List}> 8
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 1
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  max [Int,Int] -> Int 3
+  spec [List. <elt Int | cons {Int,List}>] -> Int 9
+  tmax [Tree. <leaf Int | node {Int,Tree,Tree}>] -> Int 5
+  tmin [Tree. <leaf Int | node {Int,Tree,Tree}>] -> Int 4
+  is_bst [Tree. <leaf Int | node {Int,Tree,Tree}>] -> Bool 6
+  cat [List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>] -> List. <elt Int | cons {Int,List}> 7
+
+Components for comb:
+  min [Int,Int] -> Int 2
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 1
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  max [Int,Int] -> Int 3
+
+align term #0: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  tmp1: Tree. <leaf Int | node {Int,Tree,Tree}>
+  x: Int
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@1 create@0 node ({a,l,unlabel tmp2})
+  r: Tree. <leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp2: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  a: Int
+  l: Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #2: Int
+align@2 spec (repr (unlabel tmp3))
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp3: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param1
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  min([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  Param2
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param3
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  min([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>([Param0,Param1]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  ite([Int@0]@Bool [Int@0]@Int [Int@0]@Int)
+  min([Int@0]@Int [Int@0]@Int)
+  max([Int@0]@Int [Int@0]@Int)
+  spec([Int@0]@List. <elt Int | cons {Int,List}>)
+  tmax([Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  tmin([Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  ite([Int@0,Int@1,Int@2]@Bool [Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  min([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  max([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  spec([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  tmax([Int@0,Int@1,Int@2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  tmin([Int@0,Int@1,Int@2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Bool@0,Bool@1,Int@0]@Int
+  Int@0
+  +([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  -([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  ite([Bool@0,Bool@1,Int@0]@Bool [Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  min([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  max([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  spec([Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+  tmax([Bool@0,Bool@1,Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  tmin([Bool@0,Bool@1,Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Bool@0,Bool@1,Int@0]@Bool
+  Bool@0
+  Bool@1
+  is_bst([Bool@0,Bool@1,Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[Tree. <leaf Int | node {Int,Tree,Tree}>->Int]([Int@0]@Int [Int@0,Int@1,Int@2]@Int [Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  min([Param0]@Int [Param0]@Int)
+  max([Param0]@Int [Param0]@Int)
+  spec([Param0]@List. <elt Int | cons {Int,List}>)
+  tmax([Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  tmin([Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0]@Bool
+  fold[Tree. <leaf Int | node {Int,Tree,Tree}>->Bool]([Int@0]@Bool [Bool@0,Bool@1,Int@0]@Bool [Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  is_bst([Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0]@Bool
+  is_bst([Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Int@2]@Bool
+  is_bst([Int@0,Int@1,Int@2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Int@0]@Int)
+node: [Int@0,Int@1,Int@2]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Int@0,Int@1,Int@2]@Int)
+node: [Bool@0,Bool@1,Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Bool@0,Bool@1,Int@0]@Int)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  repr([Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  elt([Param0]@Int)
+  cat([Param0]@List. <elt Int | cons {Int,List}> [Param0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  repr([Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  elt([Int@0]@Int)
+  cat([Int@0]@List. <elt Int | cons {Int,List}> [Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>
+  repr([Int@0,Int@1,Int@2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  elt([Int@0,Int@1,Int@2]@Int)
+  cat([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}> [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+node: [Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>
+  repr([Bool@0,Bool@1,Int@0]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  elt([Bool@0,Bool@1,Int@0]@Int)
+  cat([Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}> [Bool@0,Bool@1,Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  Param0
+  leaf([Param0]@Int)
+
+
+
+
+
+
+
+
+
+  [] tmax(Param0)
+  [0] Param1
+  [] tmax(Param0)
+  [0] Param2 -> tmax(Param0)
+  [] null
+  [0] Param1 -> tmax(Param0)
+compress #0: Int
+pass #0: 
+x
+pass #1: 
+tmp2
+pass #2: 
+tmp3
+
+Inductive Tree;
+
+Inductive List;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+tmin = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> w
+    | node {w, l, r} -> min w (min (f l) (f r))
+    end
+);
+
+tmax = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> w
+    | node {w, l, r} -> max w (max (f l) (f r))
+    end
+);
+
+is_bst = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      leaf w -> true
+    | node {w, l, r} -> and (and (>= w (tmax l)) (<= w (tmin r))) (and (f l) (f r))
+    end
+);
+
+cat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | elt w -> cons {w, y}
+    end
+);
+
+repr = fix (
+    \f: Tree -> List. \t: Tree. 
+    match t with
+      leaf x -> elt x
+    | node {x, l, r} -> cat (f l) (cons {x, f r})
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \t: List. 
+    match t with
+      elt x -> x
+    | cons {h, t} -> max h (f t)
+    end
+);
+
+target = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf x -> x
+    | node {a, l, r} -> 
+        let tmp2 = (f r) in 
+            tmp2
+    end
+);
+
+main = \t: Tree. 
+    if (is_bst t) then let tmp3 = (target t) in 
+        tmp3
+    else 0;
+syn-comb: 0.309988
+collect: 14.8693
+label: 0.015942
+extend-component: 1e-06
+execute: 0.054181
+syn-align: 14.9354
+comb-size: 3
+align-size: 3
+extract-size: 3
+15.2704
+Success

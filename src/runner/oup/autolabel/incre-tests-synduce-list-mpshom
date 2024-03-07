@@ -1,0 +1,433 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+CList :: CList. <cnil Unit | single Int | concat {CList,CList}>
+cnil : Unit ->
+       CList'. <cnil Unit | single Int | concat {CList',CList'}>
+single : Int ->
+         CList'. <cnil Unit | single Int | concat {CList',CList'}>
+concat : {CList,CList} ->
+         CList'. <cnil Unit | single Int | concat {CList',CList'}>
+max : Int -> Int -> Int
+spec : List -> Int
+cat : List -> List -> List
+repr : CList -> List'. <nil Unit | cons {Int,List'}>
+main : CList -> Int
+
+
+Inductive List;
+
+Inductive CList;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let new_mps = (max 0 (+ hd result.1)) in 
+                let new_sum = (+ hd result.2) in 
+                    {new_mps, new_sum}
+    end
+) xs).1;
+
+cat = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      nil _ -> ys
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> Compress List. \xs: CList. 
+    match xs with
+      cnil _ -> 
+        let tmp1 = (nil Unit) in 
+            align (label tmp1 ) 
+    | single a -> 
+        let tmp2 = (cons {a, nil Unit}) in 
+            align (label tmp2 ) 
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                align (label (cat (unlabel tmp3 ) (unlabel tmp4 )) ) 
+    end
+);
+
+main = \x: CList. 
+    let tmp5 = (repr x) in 
+        align (spec (unlabel tmp5 )) ;
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: CList. <cnil Unit | single Int | concat {CList,CList}>
+  tmp1: List. <nil Unit | cons {Int,List}>
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 tmp2
+  a: Int
+  tmp2: List. <nil Unit | cons {Int,List}>
+  xs: CList. <cnil Unit | single Int | concat {CList,CList}>
+align term #2: compress[0] List. <nil Unit | cons {Int,List}>
+align@2 create@0 cat (unlabel tmp3) (unlabel tmp4)
+  b: CList. <cnil Unit | single Int | concat {CList,CList}>
+  tmp4: compress[0] List. <nil Unit | cons {Int,List}>
+  xs: CList. <cnil Unit | single Int | concat {CList,CList}>
+  a: CList. <cnil Unit | single Int | concat {CList,CList}>
+  tmp3: compress[0] List. <nil Unit | cons {Int,List}>
+align term #3: Int
+align@3 spec (unlabel tmp5)
+  x: CList. <cnil Unit | single Int | concat {CList,CList}>
+  tmp5: compress[0] List. <nil Unit | cons {Int,List}>
+Components for compress:
+  max [Int,Int] -> Int 2
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  cnil [Bot] -> CList. <cnil Unit | single Int | concat {CList,CList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  single [Int] -> CList. <cnil Unit | single Int | concat {CList,CList}> 1
+  concat [(CList. <cnil Unit | single Int | concat {CList,CList}> * CList. <cnil Unit | single Int | concat {CList,CList}>)] -> CList. <cnil Unit | single Int | concat {CList,CList}> 1
+
+Components for align:
+  cat [List. <nil Unit | cons {Int,List}>,List. <nil Unit | cons {Int,List}>] -> List. <nil Unit | cons {Int,List}> 4
+  max [Int,Int] -> Int 2
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  cnil [Bot] -> CList. <cnil Unit | single Int | concat {CList,CList}> 1
+  spec [List. <nil Unit | cons {Int,List}>] -> Int 3
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  single [Int] -> CList. <cnil Unit | single Int | concat {CList,CList}> 1
+  concat [(CList. <cnil Unit | single Int | concat {CList,CList}> * CList. <cnil Unit | single Int | concat {CList,CList}>)] -> CList. <cnil Unit | single Int | concat {CList,CList}> 1
+
+Components for comb:
+  max [Int,Int] -> Int 2
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  cnil [Bot] -> CList. <cnil Unit | single Int | concat {CList,CList}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  single [Int] -> CList. <cnil Unit | single Int | concat {CList,CList}> 1
+  concat [(CList. <cnil Unit | single Int | concat {CList,CList}> * CList. <cnil Unit | single Int | concat {CList,CList}>)] -> CList. <cnil Unit | single Int | concat {CList,CList}> 1
+
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ al_fold : (Int->Int->Int) -> Int -> List -> Int
+al_error : Int
+al_inf : Int
+al_plus : Int -> Int -> Int
+al_minus : Int -> Int -> Int
+al_times : Int -> Int -> Int
+al_min : Int -> Int -> Int
+al_max : Int -> Int -> Int
+al_maximum : List -> Int
+al_minimum : List -> Int
+al_sum : List -> Int
+al_length : List -> Int
+al_head : List -> Int
+al_inc : Int -> Int
+al_dec : Int -> Int
+al_neg : Int -> Int
+al_last : List -> Int
+al_access : Int -> List -> Int
+al_count : (Int->Bool) -> List -> Int
+al_take : Int -> List -> List
+al_drop : Int -> List -> List
+al_rev : List -> List
+al_map : (Int->Int) -> List -> List
+al_filter : (Int->Bool) -> List -> List
+al_zip : (Int->Int->Int) ->
+         List -> List -> List'. <cons {Int,List'} | nil Unit>
+al_concat : List -> List -> List
+al_sort : List -> List
+al_scanl : (Int->Int->Int) -> List -> List
+al_scanr : (Int->Int->Int) -> List -> List
+al_isneg : Int -> Bool
+al_ispos : Int -> Bool
+al_iseven : Int -> Bool
+al_isodd : Int -> Bool
+one : Int
+none : Int
+al_error : Int -> Bool
+
+
+List :: List. <cons {Int,List} | nil Unit>
+ cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+ nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+ al_fold : (Int->Int->Int) -> Int -> List -> Int
+al_error : Int
+al_inf : Int
+al_plus : Int -> Int -> Int
+al_minus : Int -> Int -> Int
+al_times : Int -> Int -> Int
+al_min : Int -> Int -> Int
+al_max : Int -> Int -> Int
+al_maximum : List -> Int
+al_minimum : List -> Int
+al_sum : List -> Int
+al_length : List -> Int
+al_head : List -> Int
+al_inc : Int -> Int
+al_dec : Int -> Int
+al_neg : Int -> Int
+al_last : List -> Int
+al_access : Int -> List -> Int
+al_count : (Int->Bool) -> List -> Int
+al_take : Int -> List -> List
+al_drop : Int -> List -> List
+al_rev : List -> List
+al_map : (Int->Int) -> List -> List
+al_filter : (Int->Bool) -> List -> List
+al_zip : (Int->Int->Int) ->
+         List -> List -> List'. <cons {Int,List'} | nil Unit>
+al_concat : List -> List -> List
+al_sort : List -> List
+al_scanl : (Int->Int->Int) -> List -> List
+al_scanr : (Int->Int->Int) -> List -> List
+al_isneg : Int -> Bool
+al_ispos : Int -> Bool
+al_iseven : Int -> Bool
+al_isodd : Int -> Bool
+one : Int
+none : Int
+al_error : Int -> Bool
+
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: CList. <cnil Unit | single Int | concat {CList,CList}>
+  tmp1: List. <nil Unit | cons {Int,List}>
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 tmp2
+  a: Int
+  tmp2: List. <nil Unit | cons {Int,List}>
+  xs: CList. <cnil Unit | single Int | concat {CList,CList}>
+align term #2: compress[0] List. <nil Unit | cons {Int,List}>
+align@2 create@0 cat (unlabel tmp3) (unlabel tmp4)
+  b: CList. <cnil Unit | single Int | concat {CList,CList}>
+  tmp4: compress[0] List. <nil Unit | cons {Int,List}>
+  xs: CList. <cnil Unit | single Int | concat {CList,CList}>
+  a: CList. <cnil Unit | single Int | concat {CList,CList}>
+  tmp3: compress[0] List. <nil Unit | cons {Int,List}>
+align term #3: Int
+align@3 spec (unlabel tmp5)
+  x: CList. <cnil Unit | single Int | concat {CList,CList}>
+  tmp5: compress[0] List. <nil Unit | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@List. <nil Unit | cons {Int,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  al_head([Param0,Param1]@List. <nil Unit | cons {Int,List}>)
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@List. <nil Unit | cons {Int,List}>
+  Param1
+node: [Param0,Param1,Param2]@Int
+  Param0
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  al_head([Param0,Param1,Param2]@List. <nil Unit | cons {Int,List}>)
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param1
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+num = 3
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  al_plus([Param0]@Int [Param0]@Int)
+  al_minus([Param0]@Int [Param0]@Int)
+  al_times([Param0]@Int [Param0]@Int)
+  al_min([Param0]@Int [Param0]@Int)
+  al_max([Param0]@Int [Param0]@Int)
+  al_maximum([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_minimum([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_sum([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_length([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_head([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_inc([Param0]@Int)
+  al_dec([Param0]@Int)
+  al_neg([Param0]@Int)
+  al_last([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_access([Param0]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_count([Param0]@[Int]->Bool [Param0]@List. <nil Unit | cons {Int,List}>)
+  one
+  none
+  max([Param0]@Int [Param0]@Int)
+  spec([Param0]@List. <nil Unit | cons {Int,List}>)
+node: [Param0]@Bool
+  al_isneg([Param0]@Int)
+  al_ispos([Param0]@Int)
+  al_iseven([Param0]@Int)
+  al_isodd([Param0]@Int)
+node: [Param0]@[Int]->[Int]->Int
+  al_plus
+  al_minus
+  al_times
+  al_min
+  al_max
+  max
+node: [Param0]@[Int]->Int
+  al_inc
+  al_dec
+  al_neg
+  max([Param0]@Int)
+node: [Param0]@[Int]->Bool
+  al_isneg
+  al_ispos
+  al_iseven
+  al_isodd
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  Param0
+  al_take([Param0]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_drop([Param0]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_rev([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_map([Param0]@[Int]->Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_filter([Param0]@[Int]->Bool [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_zip([Param0]@[Int]->[Int]->Int [Param0]@List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_sort([Param0]@List. <nil Unit | cons {Int,List}>)
+  al_scanl([Param0]@[Int]->[Int]->Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  al_scanr([Param0]@[Int]->[Int]->Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  cat([Param0]@List. <nil Unit | cons {Int,List}> [Param0]@List. <nil Unit | cons {Int,List}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(Param0)
+  [1] al_sum(Param0)
+  [0] spec(Param0)
+  [1] al_sum(Param0)
+  [0] Param0
+  [0] spec(Param0)
+  [1] al_sum(Param0)
+  [0] Param1 -> spec(Param0)
+  [1] Param1 -> al_sum(Param0)
+  [2] Param4 -> spec(Param0)
+  [3] Param4 -> al_sum(Param0)
+  [] null
+  [0] Param1 -> spec(Param0)
+  [1] Param1 -> al_sum(Param0)
+compress #0: {Int,Int}
+pass #0: 
+{0, 0}
+pass #1: 
+{max a 0, a}
+pass #2: 
+{+ tmp3.2 (max tmp4.1 (- tmp3.1 tmp3.2)), + tmp4.2 tmp3.2}
+pass #3: 
+tmp5.1
+
+Inductive List;
+
+Inductive CList;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, 0}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let new_mps = (max 0 (+ hd result.1)) in 
+                let new_sum = (+ hd result.2) in 
+                    {new_mps, new_sum}
+    end
+) xs).1;
+
+cat = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      nil _ -> ys
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> {Int, Int}. \xs: CList. 
+    match xs with
+      cnil _ -> {0, 0}
+    | single a -> {max a 0, a}
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                {+ tmp3.2 (max tmp4.1 (- tmp3.1 tmp3.2)), + tmp4.2 tmp3.2}
+    end
+);
+
+main = \x: CList. 
+    let tmp5 = (repr x) in 
+        tmp5.1;
+syn-comb: 0.337362
+collect: 2.53833
+label: 0.014318
+extend-component: 0.002619
+execute: 1.30325
+syn-align: 3.95972
+comb-size: 37
+align-size: 7
+extract-size: 5
+4.33907
+Success

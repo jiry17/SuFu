@@ -1,0 +1,510 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ Pos :: Pos. <one Unit | s Pos>
+one : Unit -> Pos'. <one Unit | s Pos'>
+s : Pos -> Pos'. <one Unit | s Pos'>
+Map :: Map. <value {Int,Pos} | node {Int,Map,Map}>
+value : {Int,Pos} ->
+        Map'. <value {Int,Pos} | node {Int,Map',Map'}>
+node : {Int,Map,Map} ->
+       Map'. <value {Int,Pos} | node {Int,Map',Map'}>
+min : Int -> Int -> Int
+max : Int -> Int -> Int
+min_key : Map -> Int
+max_key : Map -> Int
+is_map : Map -> Bool
+cat : List -> List -> List'. <elt Int | cons {Int,List'}>
+repeat : Int -> Pos -> List'. <elt Int | cons {Int,List'}>
+repr : Map -> List'. <elt Int | cons {Int,List'}>
+count : Int -> List -> Int
+spec : List -> Int
+p2i : Pos -> Int
+target : Map -> Map'. <value {Int,Pos} | node {Int,Map',Map'}>
+main : Map -> Int
+
+
+Inductive List;
+
+Inductive Pos;
+
+Inductive Map;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+max = \a: Int. \b: Int. 
+    if (> a b) then a
+    else b;
+
+min_key = fix (
+    \f: Map -> Int. \m: Map. 
+    match m with
+      value {k, v} -> k
+    | node {a, l, r} -> min (f l) (f r)
+    end
+);
+
+max_key = fix (
+    \f: Map -> Int. \m: Map. 
+    match m with
+      value {k, v} -> k
+    | node {a, l, r} -> max (f l) (f r)
+    end
+);
+
+is_map = fix (
+    \f: Map -> Bool. \m: Map. 
+    match m with
+      value {k, v} -> true
+    | node {a, l, r} -> and (and (< (max_key l) a) (<= a (min_key r))) (and (f l) (f r))
+    end
+);
+
+cat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | elt w -> cons {w, y}
+    end
+);
+
+repeat = \w: Int. 
+    fix (
+    \f: Pos -> List. \n: Pos. 
+    match n with
+      one _ -> elt w
+    | s n' -> cons {w, f n'}
+    end
+);
+
+repr = fix (
+    \f: Map -> List. \m: Map. 
+    match m with
+      value {k, v} -> repeat k v
+    | node {a, l, r} -> cat (f l) (f r)
+    end
+);
+
+count = \w: Int. 
+    fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt h -> if (== h w) then 1
+        else 0
+    | cons {h, t} -> + (if (== h w) then 1
+        else 0) (f t)
+    end
+);
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \l: List. 
+    match l with
+      elt v -> {1, v}
+    | cons {h, t} -> 
+        let cnt = (count h l) in 
+            let res = (f t) in 
+                if (> cnt res.1) then {cnt, h}
+                else res
+    end
+) xs).2;
+
+p2i = fix (
+    \f: Pos -> Int. \n: Pos. 
+    match n with
+      one _ -> 1
+    | s m -> + 1 (f m)
+    end
+);
+
+target = fix (
+    \f: Map -> Compress Map. \m: Map. 
+    match m with
+      value {k, v} -> 
+        let cnt = (p2i v) in 
+            let tmp1 = (value {k, v}) in 
+                align (label tmp1 ) 
+    | node {a, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (node {a, unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+main = \m: Map. 
+    if (is_map m) then let tmp4 = (target m) in 
+        align (spec (repr (unlabel tmp4 ))) 
+    else 0;
+align term #0: compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+align@0 create@0 tmp1
+  cnt: Int
+  v: Pos. <one Unit | s Pos>
+  m: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  tmp1: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  k: Int
+align term #1: compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+align@1 create@0 node ({a,unlabel tmp2,unlabel tmp3})
+  r: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  l: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  a: Int
+  tmp3: compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  tmp2: compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  m: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+align term #2: Int
+align@2 spec (repr (unlabel tmp4))
+  m: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  tmp4: compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+Components for compress:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  one [Bot] -> Pos. <one Unit | s Pos> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  node [(Int * Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}> * Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>)] -> Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}> 2
+  value [(Int * Pos. <one Unit | s Pos>)] -> Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}> 2
+  min [Int,Int] -> Int 3
+  max [Int,Int] -> Int 4
+  s [Pos. <one Unit | s Pos>] -> Pos. <one Unit | s Pos> 1
+
+Components for align:
+  spec [List. <elt Int | cons {Int,List}>] -> Int 12
+  count [Int,List. <elt Int | cons {Int,List}>] -> Int 11
+  repr [Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>] -> List. <elt Int | cons {Int,List}> 10
+  repeat [Int,Pos. <one Unit | s Pos>] -> List. <elt Int | cons {Int,List}> 9
+  cat [List. <elt Int | cons {Int,List}>,List. <elt Int | cons {Int,List}>] -> List. <elt Int | cons {Int,List}> 8
+  p2i [Pos. <one Unit | s Pos>] -> Int 13
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  min_key [Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>] -> Int 5
+  one [Bot] -> Pos. <one Unit | s Pos> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  node [(Int * Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}> * Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>)] -> Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}> 2
+  value [(Int * Pos. <one Unit | s Pos>)] -> Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}> 2
+  min [Int,Int] -> Int 3
+  max [Int,Int] -> Int 4
+  s [Pos. <one Unit | s Pos>] -> Pos. <one Unit | s Pos> 1
+  max_key [Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>] -> Int 6
+  is_map [Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>] -> Bool 7
+
+Components for comb:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  one [Bot] -> Pos. <one Unit | s Pos> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  node [(Int * Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}> * Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>)] -> Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}> 2
+  value [(Int * Pos. <one Unit | s Pos>)] -> Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}> 2
+  min [Int,Int] -> Int 3
+  max [Int,Int] -> Int 4
+  s [Pos. <one Unit | s Pos>] -> Pos. <one Unit | s Pos> 1
+
+align term #0: compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+align@0 create@0 tmp1
+  cnt: Int
+  v: Pos. <one Unit | s Pos>
+  m: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  tmp1: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  k: Int
+align term #1: compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+align@1 create@0 node ({a,unlabel tmp2,unlabel tmp3})
+  r: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  l: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  a: Int
+  tmp3: compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  tmp2: compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  m: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+align term #2: Int
+align@2 spec (repr (unlabel tmp4))
+  m: Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  tmp4: compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param0
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  min([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param2
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  1
+  min([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  Param3
+  Param4
+num = 2
+start: start
+node: start
+  Compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>([Param0,Param1]@Compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  min([Param0,Param1]@Int [Param0,Param1]@Int)
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0,Pos. <one Unit | s Pos>@0]@Int
+  Int@0
+  +([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Pos. <one Unit | s Pos>@0]@Int)
+  -([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Pos. <one Unit | s Pos>@0]@Int)
+  fold[Pos. <one Unit | s Pos>->Int]([Int@0]@Int [Int@0,Int@1]@Int [Int@0,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>)
+  spec([Int@0,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}>)
+  count([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}>)
+  p2i([Int@0,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>)
+  min([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Pos. <one Unit | s Pos>@0]@Int)
+  max([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Pos. <one Unit | s Pos>@0]@Int)
+node: [Int@0,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>
+  Pos. <one Unit | s Pos>@0
+  s([Int@0,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  spec([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  count([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  min([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  max([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  fold[List. <elt Int | cons {Int,List}>->Int]([Int@0,Int@1]@Int [Int@0,Int@1,Int@2]@Int [Int@0]@List. <elt Int | cons {Int,List}>)
+  spec([Int@0]@List. <elt Int | cons {Int,List}>)
+  count([Int@0]@Int [Int@0]@List. <elt Int | cons {Int,List}>)
+  min([Int@0]@Int [Int@0]@Int)
+  max([Int@0]@Int [Int@0]@Int)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  spec([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  count([Int@0,Int@1]@Int [Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  min([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>->Int]([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Int@1,Int@2]@Int [Param0]@Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>)
+  spec([Param0]@List. <elt Int | cons {Int,List}>)
+  count([Param0]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+  min_key([Param0]@Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>)
+  min([Param0]@Int [Param0]@Int)
+  max([Param0]@Int [Param0]@Int)
+  max_key([Param0]@Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>)
+node: [Param0]@Bool
+  is_map([Param0]@Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  repr([Param0]@Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>)
+  cat([Param0]@List. <elt Int | cons {Int,List}> [Param0]@List. <elt Int | cons {Int,List}>)
+  elt([Param0]@Int)
+node: [Int@0,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}>
+  repeat([Int@0,Pos. <one Unit | s Pos>@0]@Int [Int@0,Pos. <one Unit | s Pos>@0]@Pos. <one Unit | s Pos>)
+  cat([Int@0,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}> [Int@0,Pos. <one Unit | s Pos>@0]@List. <elt Int | cons {Int,List}>)
+  elt([Int@0,Pos. <one Unit | s Pos>@0]@Int)
+node: [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>
+  cat([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}> [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  elt([Int@0,Int@1,Int@2]@Int)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  cat([Int@0]@List. <elt Int | cons {Int,List}> [Int@0]@List. <elt Int | cons {Int,List}>)
+  elt([Int@0]@Int)
+node: [Int@0,Int@1]@List. <elt Int | cons {Int,List}>
+  cat([Int@0,Int@1]@List. <elt Int | cons {Int,List}> [Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  elt([Int@0,Int@1]@Int)
+node: [Param0]@Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>
+  Param0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(repr(Param0))
+  [1] max_key(Param0)
+  [2] fold[Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>->Int](p2i(Pos. <one Unit | s Pos>@0()),Int@2(),Param0)
+  [0] Param4
+  [1] Param0
+  [0] spec(repr(Param0))
+  [1] max_key(Param0)
+  [2] fold[Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>->Int](p2i(Pos. <one Unit | s Pos>@0()),Int@2(),Param0)
+  [0] Param3 -> spec(repr(Param0))
+  [1] Param3 -> max_key(Param0)
+  [2] Param3 -> fold[Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>->Int](p2i(Pos. <one Unit | s Pos>@0()),Int@2(),Param0)
+  [3] Param4 -> spec(repr(Param0))
+  [4] Param4 -> max_key(Param0)
+  [5] Param4 -> fold[Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>->Int](p2i(Pos. <one Unit | s Pos>@0()),Int@2(),Param0)
+  [] null
+  [0] Param1 -> spec(repr(Param0))
+  [1] Param1 -> max_key(Param0)
+  [2] Param1 -> fold[Map. <value {Int,Pos. <one Unit | s Pos>} | node {Int,Map,Map}>->Int](p2i(Pos. <one Unit | s Pos>@0()),Int@2(),Param0)
+compress #0: {Int,Int,Int}
+pass #0: 
+{k, k, cnt}
+pass #1: 
+{if (or (and (< tmp3.3 tmp2.3) (== tmp3.1 tmp3.2)) (and (< tmp2.1 tmp2.2) (== tmp3.3 tmp2.3))) then tmp2.1
+else tmp3.1, tmp3.2, tmp3.3}
+pass #2: 
+tmp4.1
+
+Inductive List;
+
+Inductive Pos;
+
+Inductive Map;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+max = \a: Int. \b: Int. 
+    if (> a b) then a
+    else b;
+
+min_key = fix (
+    \f: Map -> Int. \m: Map. 
+    match m with
+      value {k, v} -> k
+    | node {a, l, r} -> min (f l) (f r)
+    end
+);
+
+max_key = fix (
+    \f: Map -> Int. \m: Map. 
+    match m with
+      value {k, v} -> k
+    | node {a, l, r} -> max (f l) (f r)
+    end
+);
+
+is_map = fix (
+    \f: Map -> Bool. \m: Map. 
+    match m with
+      value {k, v} -> true
+    | node {a, l, r} -> and (and (< (max_key l) a) (<= a (min_key r))) (and (f l) (f r))
+    end
+);
+
+cat = fix (
+    \f: List -> List -> List. \x: List. \y: List. 
+    match x with
+      cons {h, t} -> cons {h, f t y}
+    | elt w -> cons {w, y}
+    end
+);
+
+repeat = \w: Int. 
+    fix (
+    \f: Pos -> List. \n: Pos. 
+    match n with
+      one _ -> elt w
+    | s n' -> cons {w, f n'}
+    end
+);
+
+repr = fix (
+    \f: Map -> List. \m: Map. 
+    match m with
+      value {k, v} -> repeat k v
+    | node {a, l, r} -> cat (f l) (f r)
+    end
+);
+
+count = \w: Int. 
+    fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt h -> if (== h w) then 1
+        else 0
+    | cons {h, t} -> + (if (== h w) then 1
+        else 0) (f t)
+    end
+);
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \l: List. 
+    match l with
+      elt v -> {1, v}
+    | cons {h, t} -> 
+        let cnt = (count h l) in 
+            let res = (f t) in 
+                if (> cnt res.1) then {cnt, h}
+                else res
+    end
+) xs).2;
+
+p2i = fix (
+    \f: Pos -> Int. \n: Pos. 
+    match n with
+      one _ -> 1
+    | s m -> + 1 (f m)
+    end
+);
+
+target = fix (
+    \f: Map -> {Int, Int, Int}. \m: Map. 
+    match m with
+      value {k, v} -> 
+        let cnt = (p2i v) in 
+            {k, k, cnt}
+    | node {a, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                {if (or (and (< tmp3.3 tmp2.3) (== tmp3.1 tmp3.2)) (and (< tmp2.1 tmp2.2) (== tmp3.3 tmp2.3))) then tmp2.1
+                else tmp3.1, tmp3.2, tmp3.3}
+    end
+);
+
+main = \m: Map. 
+    if (is_map m) then let tmp4 = (target m) in 
+        tmp4.1
+    else 0;
+syn-comb: 0.807925
+collect: 15.7058
+label: 0.023083
+extend-component: 0.064302
+execute: 1.34745
+syn-align: 17.1862
+comb-size: 53
+align-size: 18
+extract-size: 7
+18.0347
+Success

@@ -1,0 +1,50 @@
+
+Inductive BTree;
+
+Inductive Zipper;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+mpath = fix (
+    \f: BTree -> Int. \t: BTree. 
+    match t with
+      empty _ -> 0
+    | node {a, l, r} -> + a (max (f l) (f r))
+    end
+);
+
+tree_repr = fix (
+    \f: BTree -> Compress BTree. \t: BTree. 
+    match t with
+      empty _ -> 
+        let tmp1 = (empty unit) in 
+            align (label tmp1 ) 
+    | node {a, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (node {a, unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+repr = fix (
+    \f: Zipper -> Compress BTree. \z: Zipper. 
+    match z with
+      top _ -> 
+        let tmp4 = (empty unit) in 
+            align (label tmp4 ) 
+    | left {w, tree, zz} -> 
+        let tmp5 = (tree_repr tree) in 
+            let tmp6 = (f zz) in 
+                align (label (node {w, unlabel tmp5 , unlabel tmp6 }) ) 
+    | right {w, tree, zz} -> 
+        let tmp7 = (f zz) in 
+            let tmp8 = (tree_repr tree) in 
+                align (label (node {w, unlabel tmp7 , unlabel tmp8 }) ) 
+    end
+);
+
+main = \z: Zipper. 
+    let tmp9 = (repr z) in 
+        align (mpath (unlabel tmp9 )) ;

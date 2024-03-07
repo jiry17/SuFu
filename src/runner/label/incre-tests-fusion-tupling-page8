@@ -1,0 +1,33 @@
+
+Inductive Nat;
+
+pred = \n: Nat. 
+    match n with
+      zero _ -> n
+    | succ m -> m
+    end
+;
+
+fib = fix (
+    \f: Nat -> Int. \n: Nat. 
+    match n with
+      zero _ -> 0
+    | succ zero _ -> 1
+    | succ succ m -> + (f m) (f (succ m))
+    end
+);
+
+repr = fix (
+    \f: Nat -> Compress Nat. \n: Nat. 
+    match n with
+      zero _ -> 
+        align (label n ) 
+    | succ m -> 
+        let tmp1 = (f m) in 
+            align (label (succ (unlabel tmp1 )) ) 
+    end
+);
+
+main = \n: Nat. 
+    let tmp2 = (repr n) in 
+        align (fib (unlabel tmp2 )) ;

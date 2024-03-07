@@ -1,0 +1,378 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+Graph :: Graph. <gnil Unit | gcons {List,Graph}>
+gnil : Unit -> Graph'. <gnil Unit | gcons {List,Graph'}>
+gcons : {List,Graph} -> Graph'. <gnil Unit | gcons {List,Graph'}>
+Path :: Path. <fin Unit | continue {Int,Int,Int,Path}>
+fin : Unit -> Path'. <fin Unit | continue {Int,Int,Int,Path'}>
+continue : {Int,Int,Int,Path} ->
+           Path'. <fin Unit | continue {Int,Int,Int,Path'}>
+Plan :: Path
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+graph_size : Graph -> Int
+length : List -> Int
+is_valid_graph : Graph -> Bool
+merge : PlanList -> PlanList -> PlanList
+generate : Graph ->
+           PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+min : Int -> Int -> Int
+inf : Int
+get_best : PlanList -> Int
+main : Graph -> Int
+
+
+Inductive List;
+
+Inductive Graph;
+
+Inductive Path;
+
+Plan = Compress Path;
+
+Inductive PlanList;
+
+graph_size = fix (
+    \f: Graph -> Int. \g: Graph. 
+    match g with
+      gnil _ -> 0
+    | gcons {h, t} -> + 1 (f t)
+    end
+);
+
+length = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+is_valid_graph = \g: Graph. 
+    let size = (graph_size g) in 
+        fix (
+        \f: Graph -> Bool. \g: Graph. 
+        match g with
+          gnil _ -> true
+        | gcons {h, t} -> if (== size (length h)) then true
+            else f t
+        end
+    ) g;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+generate = \g: Graph. 
+    let size = (graph_size g) in 
+        fix (
+        \f: Graph -> Int -> Int -> Plan -> PlanList. \graph: Graph. \now: Int. \next: Int. \path: Plan. 
+        match graph with
+          gnil _ -> pnil Unit
+        | gcons {edges, remain} -> if (< now next) then f remain (+ now 1) next path
+            else if (== now (- size 1)) then pcons {path, pnil Unit}
+            else fix (
+            \g: List -> Int -> PlanList. \xs: List. \i: Int. 
+            match xs with
+              nil _ -> pnil Unit
+            | cons {w, t} -> if (or (<= i now) (== w -1)) then g t (+ i 1)
+                else merge (g t (+ i 1)) (f remain (+ now 1) i (align (label (continue {now, i, w, unlabel path }) ) ))
+            end
+        ) edges 0
+        end
+    ) g 0 0 (let tmp1 = (fin Unit) in 
+            align (label tmp1 ) );
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+inf = 100;
+
+get_best = let eval = (fix (
+    \f: Path -> Int. \xs: Path. 
+    match xs with
+      fin _ -> 0
+    | continue {a, b, w, t} -> + w (f t)
+    end
+)) in 
+        fix (
+        \f: PlanList -> Int. \xs: PlanList. 
+        match xs with
+          pnil _ -> inf
+        | pcons {h, t} -> min (align (eval (unlabel h )) ) (f t)
+        end
+    );
+
+main = \g: Graph. 
+    if (is_valid_graph g) then get_best (generate g)
+    else 0;
+align term #0: compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>
+align@0 create@0 continue ({now,i,w,unlabel path})
+  next: Int
+  now: Int
+  size: Int
+  i: Int
+  w: Int
+  xs: List. <nil Unit | cons {Int,List}>
+  t: List. <nil Unit | cons {Int,List}>
+  graph: Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>
+  edges: List. <nil Unit | cons {Int,List}>
+  remain: Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>
+  path: compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>
+align term #1: compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>
+align@1 create@0 tmp1
+  size: Int
+  tmp1: Path. <fin Unit | continue {Int,Int,Int,Path}>
+  g: Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>
+align term #2: Int
+align@2 eval (unlabel h)
+  xs: PlanList. <pnil Unit | pcons {compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>,PlanList}>
+  h: compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>
+Components for compress:
+  inf [] -> Int 11
+  fin [Bot] -> Path. <fin Unit | continue {Int,Int,Int,Path}> 2
+  min [Int,Int] -> Int 10
+  gcons [(List. <nil Unit | cons {Int,List}> * Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>)] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  gnil [Bot] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  continue [(Int * Int * Int * Path. <fin Unit | continue {Int,Int,Int,Path}>)] -> Path. <fin Unit | continue {Int,Int,Int,Path}> 2
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+
+Components for align:
+  inf [] -> Int 11
+  fin [Bot] -> Path. <fin Unit | continue {Int,Int,Int,Path}> 2
+  min [Int,Int] -> Int 10
+  gcons [(List. <nil Unit | cons {Int,List}> * Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>)] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  gnil [Bot] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  is_valid_graph [Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>] -> Bool 7
+  continue [(Int * Int * Int * Path. <fin Unit | continue {Int,Int,Int,Path}>)] -> Path. <fin Unit | continue {Int,Int,Int,Path}> 2
+  length [List. <nil Unit | cons {Int,List}>] -> Int 6
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  graph_size [Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>] -> Int 5
+
+Components for comb:
+  inf [] -> Int 11
+  fin [Bot] -> Path. <fin Unit | continue {Int,Int,Int,Path}> 2
+  min [Int,Int] -> Int 10
+  gcons [(List. <nil Unit | cons {Int,List}> * Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>)] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  gnil [Bot] -> Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}> 1
+  continue [(Int * Int * Int * Path. <fin Unit | continue {Int,Int,Int,Path}>)] -> Path. <fin Unit | continue {Int,Int,Int,Path}> 2
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+
+align term #0: compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>
+align@0 create@0 continue ({now,i,w,unlabel path})
+  next: Int
+  now: Int
+  size: Int
+  i: Int
+  w: Int
+  xs: List. <nil Unit | cons {Int,List}>
+  t: List. <nil Unit | cons {Int,List}>
+  graph: Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>
+  edges: List. <nil Unit | cons {Int,List}>
+  remain: Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>
+  path: compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>
+align term #1: compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>
+align@1 create@0 tmp1
+  size: Int
+  tmp1: Path. <fin Unit | continue {Int,Int,Int,Path}>
+  g: Graph. <gnil Unit | gcons {List. <nil Unit | cons {Int,List}>,Graph}>
+align term #2: Int
+align@2 eval (unlabel h)
+  xs: PlanList. <pnil Unit | pcons {compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>,PlanList}>
+  h: compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int)
+  Compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>)
+node: [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>
+  Param10
+node: [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int
+  Param0
+  Param1
+  Param2
+  Param3
+  Param4
+  +([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int)
+  -([Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int [Param0,Param1,Param10,Param2,Param3,Param4,Param5,Param6,Param7,Param8,Param9]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param0
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>([Param0,Param1,Param2]@Compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] Path. <fin Unit | continue {Int,Int,Int,Path}>
+  Param2
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  inf
+  min([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Int@0,Int@1,Int@2,Int@3]@Int
+  Int@0
+  Int@1
+  Int@2
+  Int@3
+  +([Int@0,Int@1,Int@2,Int@3]@Int [Int@0,Int@1,Int@2,Int@3]@Int)
+  -([Int@0,Int@1,Int@2,Int@3]@Int [Int@0,Int@1,Int@2,Int@3]@Int)
+  inf
+  min([Int@0,Int@1,Int@2,Int@3]@Int [Int@0,Int@1,Int@2,Int@3]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  fold[Path. <fin Unit | continue {Int,Int,Int,Path}>->Int]([]@Int [Int@0,Int@1,Int@2,Int@3]@Int [Param0]@Path. <fin Unit | continue {Int,Int,Int,Path}>)
+  inf
+  min([Param0]@Int [Param0]@Int)
+node: []@Int
+  +([]@Int []@Int)
+  -([]@Int []@Int)
+  inf
+  min([]@Int []@Int)
+node: [Param0]@Path. <fin Unit | continue {Int,Int,Int,Path}>
+  Param0
+
+
+
+
+
+
+
+
+
+  [] fold[Path. <fin Unit | continue {Int,Int,Int,Path}>->Int](inf(),+(Int@2(),Int@3()),Param0)
+  [0] Param4
+  [1] Param10 -> fold[Path. <fin Unit | continue {Int,Int,Int,Path}>->Int](inf(),+(Int@2(),Int@3()),Param0)
+  [] fold[Path. <fin Unit | continue {Int,Int,Int,Path}>->Int](inf(),+(Int@2(),Int@3()),Param0)
+  [] null
+  [0] Param2 -> fold[Path. <fin Unit | continue {Int,Int,Int,Path}>->Int](inf(),+(Int@2(),Int@3()),Param0)
+compress #0: Int
+pass #0: 
++ w path
+pass #1: 
++ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 1))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+pass #2: 
+- h inf
+
+Inductive List;
+
+Inductive Graph;
+
+Inductive Path;
+
+Plan = Int;
+
+Inductive PlanList;
+
+graph_size = fix (
+    \f: Graph -> Int. \g: Graph. 
+    match g with
+      gnil _ -> 0
+    | gcons {h, t} -> + 1 (f t)
+    end
+);
+
+length = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+is_valid_graph = \g: Graph. 
+    let size = (graph_size g) in 
+        fix (
+        \f: Graph -> Bool. \g: Graph. 
+        match g with
+          gnil _ -> true
+        | gcons {h, t} -> if (== size (length h)) then true
+            else f t
+        end
+    ) g;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+generate = \g: Graph. 
+    let size = (graph_size g) in 
+        fix (
+        \f: Graph -> Int -> Int -> Plan -> PlanList. \graph: Graph. \now: Int. \next: Int. \path: Plan. 
+        match graph with
+          gnil _ -> pnil Unit
+        | gcons {edges, remain} -> if (< now next) then f remain (+ now 1) next path
+            else if (== now (- size 1)) then pcons {path, pnil Unit}
+            else fix (
+            \g: List -> Int -> PlanList. \xs: List. \i: Int. 
+            match xs with
+              nil _ -> pnil Unit
+            | cons {w, t} -> if (or (<= i now) (== w -1)) then g t (+ i 1)
+                else merge (g t (+ i 1)) (f remain (+ now 1) i (+ w path))
+            end
+        ) edges 0
+        end
+    ) g 0 0 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 (+ 1 1)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+inf = 100;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> inf
+    | pcons {h, t} -> min (- h inf) (f t)
+    end
+);
+
+main = \g: Graph. 
+    if (is_valid_graph g) then get_best (generate g)
+    else 0;
+syn-comb: 1.17556
+collect: 3.23525
+label: 0.021585
+extend-component: 0.015213
+execute: 0.087151
+syn-align: 3.44051
+comb-size: 407
+align-size: 11
+extract-size: 4
+4.64887
+Success

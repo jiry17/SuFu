@@ -1,0 +1,37 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {1, al_inf}
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            {if (< (* h tmp1.2) tmp1.1) then tmp1.1
+            else if (al_error tmp1.2) then * h tmp1.1
+            else * h tmp1.2, if (al_error tmp1.2) then h
+            else * h tmp1.2}
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2.1;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+mtp = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \l: List. 
+    match l with
+      nil _ -> {1, 1}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            let tot = (* h res.2) in 
+                {max res.1 tot, tot}
+    end
+) xs).1;
+
+main = single_pass mtp;

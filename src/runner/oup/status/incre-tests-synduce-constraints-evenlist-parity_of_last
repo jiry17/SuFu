@@ -1,0 +1,15 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ mod2 : Int -> Int
+is_even : List -> Bool
+spec : List -> Int
+target : List -> List'. <elt Int | cons {Int,List'}>
+main : List -> Int
+
+size: 110
+compress-num: 1
+label-num: 6
+rewrite-size: 8
+0.012742

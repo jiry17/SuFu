@@ -1,0 +1,17 @@
+
+List :: List. <cons {Int,List} | nil Unit>
+cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+length : List -> Int
+concat : List -> List -> List'. <cons {Int,List'} | nil Unit>
+split : List -> {List'. <cons {Int,List'} | nil Unit>, List}
+dac : (List->Bool) -> List -> Bool
+inf : Int
+zsos : List -> Bool
+main : List -> Bool
+
+size: 194
+compress-num: 1
+label-num: 10
+rewrite-size: 16
+0.022388

@@ -1,0 +1,17 @@
+
+OpList :: OpList. <onil Unit | oadd {Int,OpList} | odel OpList>
+onil : Unit ->
+       OpList'. <onil Unit | oadd {Int,OpList'} | odel OpList'>
+oadd : {Int,OpList} ->
+       OpList'. <onil Unit | oadd {Int,OpList'} | odel OpList'>
+odel : OpList ->
+       OpList'. <onil Unit | oadd {Int,OpList'} | odel OpList'>
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+max : Int -> Int -> Int
+maximize : List -> Int
+tails : List -> List
+eval : List -> OpList -> List'. <nil Unit | cons {Int,List'}>
+main : OpList -> List'. <nil Unit | cons {Int,List'}>
+

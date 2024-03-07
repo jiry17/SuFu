@@ -1,0 +1,406 @@
+
+Tree :: Tree. <leaf Int | node {Int,Tree,Tree}>
+ leaf : Int -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <leaf Int | node {Int,Tree',Tree'}>
+ max : Int -> Int -> Int
+min : Int -> Int -> Int
+tmin : Tree -> Int
+tmax : Tree -> Int
+lo : Int
+hi : Int
+repr : Tree -> Tree'. <leaf Int | node {Int,Tree',Tree'}>
+spec : Tree -> Bool
+main : Tree -> Bool
+
+
+Inductive Tree;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+tmin = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> w
+    | node {w, l, r} -> min w (min (f l) (f r))
+    end
+);
+
+tmax = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> w
+    | node {w, l, r} -> max w (max (f l) (f r))
+    end
+);
+
+@Input lo = Int;
+
+@Input hi = Int;
+
+repr = fix (
+    \f: Tree -> Compress Tree. \t: Tree. 
+    match t with
+      leaf w -> 
+        let tmp1 = (leaf w) in 
+            align (label tmp1 ) 
+    | node {w, l, r} -> if (>= w hi) then let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (node {w, unlabel tmp2 , unlabel tmp3 }) ) 
+        else let tmp4 = (f l) in 
+            let tmp5 = (f r) in 
+                align (label (node {w, unlabel tmp4 , unlabel tmp5 }) ) 
+    end
+);
+
+spec = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      leaf w -> and (< lo w) (< w hi)
+    | node {w, l, r} -> or (or (and (< lo w) (< w hi)) (f l)) (f r)
+    end
+);
+
+main = \t: Tree. 
+    if (< lo hi) then let tmp6 = (repr t) in 
+        align (spec (unlabel tmp6 )) 
+    else false;
+align term #0: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp1: Tree. <leaf Int | node {Int,Tree,Tree}>
+  w: Int
+align term #1: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@1 create@0 node ({w,unlabel tmp2,unlabel tmp3})
+  l: Tree. <leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  w: Int
+  tmp3: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp2: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  r: Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #2: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@2 create@0 node ({w,unlabel tmp4,unlabel tmp5})
+  r: Tree. <leaf Int | node {Int,Tree,Tree}>
+  l: Tree. <leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  w: Int
+  tmp5: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp4: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #3: Bool
+align@3 spec (unlabel tmp6)
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp6: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+Components for compress:
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  max [Int,Int] -> Int 1
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  min [Int,Int] -> Int 2
+
+Components for align:
+  tmax [Tree. <leaf Int | node {Int,Tree,Tree}>] -> Int 4
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  max [Int,Int] -> Int 1
+  spec [Tree. <leaf Int | node {Int,Tree,Tree}>] -> Bool 8
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  min [Int,Int] -> Int 2
+  tmin [Tree. <leaf Int | node {Int,Tree,Tree}>] -> Int 3
+
+Components for comb:
+  leaf [Int] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  max [Int,Int] -> Int 1
+  node [(Int * Tree. <leaf Int | node {Int,Tree,Tree}> * Tree. <leaf Int | node {Int,Tree,Tree}>)] -> Tree. <leaf Int | node {Int,Tree,Tree}> 0
+  min [Int,Int] -> Int 2
+
+align term #0: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp1: Tree. <leaf Int | node {Int,Tree,Tree}>
+  w: Int
+align term #1: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@1 create@0 node ({w,unlabel tmp2,unlabel tmp3})
+  l: Tree. <leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  w: Int
+  tmp3: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp2: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  r: Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #2: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align@2 create@0 node ({w,unlabel tmp4,unlabel tmp5})
+  r: Tree. <leaf Int | node {Int,Tree,Tree}>
+  l: Tree. <leaf Int | node {Int,Tree,Tree}>
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  w: Int
+  tmp5: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp4: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+align term #3: Bool
+align@3 spec (unlabel tmp6)
+  t: Tree. <leaf Int | node {Int,Tree,Tree}>
+  tmp6: compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param2
+  Param3
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  min([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int
+  Param2
+  Param6
+  Param7
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  min([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  Param3
+  Param4
+num = 2
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int
+  Param3
+  Param6
+  Param7
+  +([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+  min([Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5,Param6,Param7]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  Param4
+  Param5
+num = 3
+start: start
+node: start
+  Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>([Param0,Param1,Param2,Param3]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>)
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Compress[0] Tree. <leaf Int | node {Int,Tree,Tree}>
+  Param1
+node: [Param0,Param1,Param2,Param3]@Int
+  Param2
+  Param3
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  min([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+  Bool([Param0,Param1,Param2]@Bool)
+node: [Param0,Param1,Param2]@Int
+  Param1
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  ite([Param0,Param1,Param2]@Bool [Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  fold[Tree. <leaf Int | node {Int,Tree,Tree}>->Int]([Int@0,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int [Param0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  tmax([Param0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  min([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  tmin([Param0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Param1,Param2]@Int
+  Param1
+  Param2
+  Int@0
+  +([Int@0,Param1,Param2]@Int [Int@0,Param1,Param2]@Int)
+  -([Int@0,Param1,Param2]@Int [Int@0,Param1,Param2]@Int)
+  ite([Int@0,Param1,Param2]@Bool [Int@0,Param1,Param2]@Int [Int@0,Param1,Param2]@Int)
+  tmax([Int@0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  max([Int@0,Param1,Param2]@Int [Int@0,Param1,Param2]@Int)
+  min([Int@0,Param1,Param2]@Int [Int@0,Param1,Param2]@Int)
+  tmin([Int@0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Int@2,Param1,Param2]@Int
+  Param1
+  Param2
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+  -([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+  ite([Int@0,Int@1,Int@2,Param1,Param2]@Bool [Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+  tmax([Int@0,Int@1,Int@2,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  max([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+  min([Int@0,Int@1,Int@2,Param1,Param2]@Int [Int@0,Int@1,Int@2,Param1,Param2]@Int)
+  tmin([Int@0,Int@1,Int@2,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Bool@0,Bool@1,Int@0,Param1,Param2]@Int
+  Param1
+  Param2
+  Int@0
+  +([Bool@0,Bool@1,Int@0,Param1,Param2]@Int [Bool@0,Bool@1,Int@0,Param1,Param2]@Int)
+  -([Bool@0,Bool@1,Int@0,Param1,Param2]@Int [Bool@0,Bool@1,Int@0,Param1,Param2]@Int)
+  ite([Bool@0,Bool@1,Int@0,Param1,Param2]@Bool [Bool@0,Bool@1,Int@0,Param1,Param2]@Int [Bool@0,Bool@1,Int@0,Param1,Param2]@Int)
+  tmax([Bool@0,Bool@1,Int@0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  max([Bool@0,Bool@1,Int@0,Param1,Param2]@Int [Bool@0,Bool@1,Int@0,Param1,Param2]@Int)
+  min([Bool@0,Bool@1,Int@0,Param1,Param2]@Int [Bool@0,Bool@1,Int@0,Param1,Param2]@Int)
+  tmin([Bool@0,Bool@1,Int@0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Bool@0,Bool@1,Int@0,Param1,Param2]@Bool
+  Bool@0
+  Bool@1
+  spec([Bool@0,Bool@1,Int@0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Param0,Param1,Param2]@Bool
+  fold[Tree. <leaf Int | node {Int,Tree,Tree}>->Bool]([Int@0,Param1,Param2]@Bool [Bool@0,Bool@1,Int@0,Param1,Param2]@Bool [Param0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+  spec([Param0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Param1,Param2]@Bool
+  spec([Int@0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Int@2,Param1,Param2]@Bool
+  spec([Int@0,Int@1,Int@2,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>)
+node: [Int@0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Int@0,Param1,Param2]@Int)
+node: [Int@0,Int@1,Int@2,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Int@0,Int@1,Int@2,Param1,Param2]@Int)
+node: [Bool@0,Bool@1,Int@0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  leaf([Bool@0,Bool@1,Int@0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Tree. <leaf Int | node {Int,Tree,Tree}>
+  Param0
+  leaf([Param0,Param1,Param2]@Int)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(Param0)
+  [1] Param1
+  [0] -(Param2,Param3)
+  [1] -(Param2,Param4)
+  [2] Param3
+  [0] spec(Param0)
+  [1] Param1
+  [0] Param3 -> spec(Param0)
+  [1] Param3 -> Param1
+  [2] Param4 -> spec(Param0)
+  [3] Param4 -> Param1
+  [4] Param6
+  [0] spec(Param0)
+  [1] Param1
+  [0] Param3
+  [1] Param4 -> spec(Param0)
+  [2] Param4 -> Param1
+  [3] Param5 -> spec(Param0)
+  [4] Param5 -> Param1
+  [5] Param6
+  [] null
+  [0] Param1 -> spec(Param0)
+  [1] Param1 -> Param1
+compress #0: {Bool,Int}
+pass #0: 
+let c0 = (- w lo) in 
+    let c1 = (- w hi) in 
+        {and (< c1 0) (< 0 c0), lo}
+pass #1: 
+{or tmp3.1 tmp2.1, lo}
+pass #2: 
+{or (or (< tmp4.2 w) tmp5.1) tmp4.1, lo}
+pass #3: 
+tmp6.1
+
+Inductive Tree;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+min = \a: Int. \b: Int. 
+    if (< a b) then a
+    else b;
+
+tmin = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> w
+    | node {w, l, r} -> min w (min (f l) (f r))
+    end
+);
+
+tmax = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      leaf w -> w
+    | node {w, l, r} -> max w (max (f l) (f r))
+    end
+);
+
+@Input lo = Int;
+
+@Input hi = Int;
+
+repr = fix (
+    \f: Tree -> {Bool, Int}. \t: Tree. 
+    match t with
+      leaf w -> 
+        let c0 = (- w lo) in 
+            let c1 = (- w hi) in 
+                {and (< c1 0) (< 0 c0), lo}
+    | node {w, l, r} -> if (>= w hi) then let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                {or tmp3.1 tmp2.1, lo}
+        else let tmp4 = (f l) in 
+            let tmp5 = (f r) in 
+                {or (or (< tmp4.2 w) tmp5.1) tmp4.1, lo}
+    end
+);
+
+spec = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      leaf w -> and (< lo w) (< w hi)
+    | node {w, l, r} -> or (or (and (< lo w) (< w hi)) (f l)) (f r)
+    end
+);
+
+main = \t: Tree. 
+    if (< lo hi) then let tmp6 = (repr t) in 
+        tmp6.1
+    else false;
+syn-comb: 0.372095
+collect: 1.102
+label: 0.016504
+extend-component: 0.071769
+execute: 1.92703
+syn-align: 3.31818
+comb-size: 56
+align-size: 5
+extract-size: 22
+3.71485
+Success

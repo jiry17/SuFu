@@ -1,0 +1,31 @@
+
+Inductive Tree;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = fix (
+    \f: Int -> Tree -> Int. \w: Int. \t: Tree. 
+    match t with
+      nil _ -> w
+    | node {a, l, r} -> f (max (f w l) a) r
+    end
+) 0;
+
+repr = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      nil _ -> 0
+    | node {a, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                if (and (< tmp2 a) (< tmp3 a)) then a
+                else if (< tmp2 tmp3) then tmp3
+                else tmp2
+    end
+);
+
+main = \t: Tree. 
+    let tmp4 = (repr t) in 
+        tmp4;

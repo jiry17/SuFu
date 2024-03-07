@@ -1,0 +1,46 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/list/hamming.pmrs[0m with [36mpmrs[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (odot, f0, s0) := ∀ x : [33mparam1 zipclist[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(l): param2 ziplist -> int  =  
+[44m INFO :[0m  target⟨odot, f0, s0⟩(l): param1 zipclist -> int  =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(l): param41 zipclist -> param41 ziplist  =  
+
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0190s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0215s
+[44m INFO :[0m Refinement step 3.
+[44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.1333s
+[44m INFO :[0m ... finished in 0.0500s
+[44m INFO :[0m Refinement step 4.
+[44m INFO :[0m [30m[102m		 segis Refinement step 4:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.2951s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  16 instances] 0.696s 
+        CVC-SyGuS  [   4 instances] 0.104s 
+        > TOTAL    [  20 instances]: 0.800s 
+[44m INFO :[0m Solution found in 0.4674s (111.0% verifying):
+
+[31mlet[0m [36mf0[0m [34mx18[0m [34mx19[0m [31m=[0m [34mx18[0m = [34mx19[0m ? [36m0[0m : [36m1[0m
+
+[31mlet[0m [36modot[0m [34m_auto5[0m [34m_auto6[0m [31m=[0m [34m_auto5[0m + [34m_auto6[0m
+
+[31mlet[0m [36ms0[0m  [31m=[0m [36m0[0m
+
+ target⟨odot, f0, s0⟩(l): param1 zipclist -> int  = 
+{‣ target t   ⟹  [34mh[0m [34mt[0m   h  CNil  ⟹  [34ms0[0m   h  [3mSingle[0m(a1, a2)  ⟹  [34mf0[0m [34ma1[0m [34ma2[0m
+   h  [3mConcat[0m(x, y)  ⟹  [34modot[0m ([34mh[0m [34mx[0m) ([34mh[0m [34my[0m) }
+

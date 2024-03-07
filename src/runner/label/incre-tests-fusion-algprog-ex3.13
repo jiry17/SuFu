@@ -1,0 +1,37 @@
+
+Inductive List;
+
+Inductive PList;
+
+tri = fix (
+    \f: List -> Compress PList. \xs: List. 
+    match xs with
+      nil _ -> 
+        let tmp1 = (pnil Unit) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tail = (let tmp2 = (fix (
+        \g: PList -> PList. \ys: PList. 
+        match ys with
+          pnil _ -> pnil Unit
+        | pcons {n, h, t} -> pcons {+ n 1, h, g t}
+        end
+    )) in 
+            let tmp3 = (f t) in 
+                align (label (tmp2 (unlabel tmp3 )) ) ) in 
+            let tmp4 = 0 in 
+                align (label (pcons {tmp4, h, unlabel tail }) ) 
+    end
+);
+
+tsum = fix (
+    \f: PList -> Int. \xs: PList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {n, h, t} -> + (* n h) (f t)
+    end
+);
+
+main = \xs: List. 
+    let tmp5 = (tri xs) in 
+        align (tsum (unlabel tmp5 )) ;

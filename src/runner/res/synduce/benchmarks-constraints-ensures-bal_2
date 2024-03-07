@@ -1,0 +1,155 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/constraints/ensures/bal_2.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (f2, f1, f0) := ∀ x : [33mbool clist[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): bool list -> bool  =  
+[44m INFO :[0m  target⟨f2, f1, f0⟩(): bool clist -> bool  =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(): bool clist -> bool list  =  
+
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0159s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0159s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0155s
+[44m INFO :[0m Refinement step 3.
+[44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
+[44m INFO :[0m ... finished in 0.0137s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 3:0 [0;30m[0m
+[41m[ERROR][0m Solver CVC-SyGuS (pid : 11063) exited with code 1.
+[41m[ERROR][0m Solver CVC-SyGuS (pid : 11062) exited with code 1.
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m All counterexamples are non-spurious: nothing to refine.
+[44m INFO :[0m Lifting with components bool
+[44m INFO :[0m [30m[101mLifting ... [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 3:1 [0;30m[0m
+[41m[ERROR][0m Solver CVC-SyGuS (pid : 11079) exited with code 1.
+[41m[ERROR][0m Solver CVC-SyGuS (pid : 11078) exited with code 1.
+[41m[ERROR][0m Solver CVC-SyGuS (pid : 11077) exited with code 1.
+[41m[ERROR][0m Z3-SMT error: "line 65 column 38: Sorts Bool and Int are incompatible"
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m All counterexamples are non-spurious: nothing to refine.
+[44m INFO :[0m Lifting with components bool, bool
+[44m INFO :[0m [30m[101mLifting ... [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 3:2 [0;30m[0m
+[41m[ERROR][0m Term {(fun x65 (x66, x67, x68) ->  (x65, x66, x67, x68)) true
+        (_L_17, _L_2, _L_3),
+(fun x65 (x66, x67, x68) ->  (x65, x66, x67, x68)) true (_L_17, _L_2, _L_3)} true is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x73 (x74, x75, x76) ->  (x73, x74, x75, x76)) true
+        (_L_19, _L_21, _L_31),
+(fun x73 (x74, x75, x76) ->  (x73, x74, x75, x76)) ((b3 ? 1 : -1) ≥ 0)
+  (_L_110, _L_22, _L_32)} (b3 ? 1 : -1) ≥ 0 is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x77 (x78, x79, x80) ->  (x77, x78, x79, x80))
+        ((b1 ? 1 : -1) ≥ 0) (_L_111, _L_23, _L_33),
+(fun x77 (x78, x79, x80) ->  (x77, x78, x79, x80)) true
+  (_L_112, _L_24, _L_34)} (b1 ? 1 : -1) ≥ 0 is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x81 (x82, x83, x84) ->  (x81, x82, x83, x84))
+        ((b1 ? 1 : -1) ≥ 0) (_L_113, _L_25, _L_35),
+(fun x81 (x82, x83, x84) ->  (x81, x82, x83, x84)) ((b4 ? 1 : -1) ≥ 0)
+  (_L_114, _L_26, _L_36)} ((b4 ? 1 : -1) ≥ 0) &&
+                            ((b1 ? (b4 ? 1 : -1) + 1 : (b4 ? 1 : -1) - 1) ≥
+                              0) is not a function-free expression, cannot deduce.
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0111s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 4:0 [0;30m[0m
+[41m[ERROR][0m Term {(fun x157 (x158, x159, x160) ->  (x157, x158, x159, x160)) true
+        (_L_115, _L_27, _L_37),
+(fun x157 (x158, x159, x160) ->  (x157, x158, x159, x160)) true
+  (_L_115, _L_27, _L_37)} true is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x165 (x166, x167, x168) ->  (x165, x166, x167, x168)) true
+        (_L_117, _L_29, _L_39),
+(fun x165 (x166, x167, x168) ->  (x165, x166, x167, x168)) true
+  (_L_118, _L_210, _L_310)} true is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x169 (x170, x171, x172) ->  (x169, x170, x171, x172)) true
+        (_L_119, _L_211, _L_311),
+(fun x169 (x170, x171, x172) ->  (x169, x170, x171, x172))
+  ((b3 ? 1 : -1) ≥ 0) (_L_120, _L_212, _L_312)} (b3 ? 1 : -1) ≥ 0 is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x173 (x174, x175, x176) ->  (x173, x174, x175, x176))
+        ((b1 ? 1 : -1) ≥ 0) (_L_121, _L_213, _L_313),
+(fun x173 (x174, x175, x176) ->  (x173, x174, x175, x176)) true
+  (_L_122, _L_214, _L_314)} (b1 ? 1 : -1) ≥ 0 is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x177 (x178, x179, x180) ->  (x177, x178, x179, x180)) true
+        (_L_123, _L_215, _L_315),
+(fun x177 (x178, x179, x180) ->  (x177, x178, x179, x180))
+  ((b7 ? 1 : -1) ≥ 0) (_L_124, _L_216, _L_316)} (b7 ? 1 : -1) ≥ 0 is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x181 (x182, x183, x184) ->  (x181, x182, x183, x184))
+        ((b1 ? 1 : -1) ≥ 0) (_L_125, _L_217, _L_317),
+(fun x181 (x182, x183, x184) ->  (x181, x182, x183, x184))
+  ((b4 ? 1 : -1) ≥ 0) (_L_126, _L_218, _L_318)} ((b4 ? 1 : -1) ≥ 0) &&
+                                                    ((b1 ? (b4 ? 1 : -1) + 1
+                                                       : (b4 ? 1 : -1) - 1)
+                                                      ≥ 0) is not a function-free expression, cannot deduce.
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0318s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 5:0 [0;30m[0m
+[41m[ERROR][0m Term {(fun x298 (x299, x300, x301) ->  (x298, x299, x300, x301)) true
+        (_L_127, _L_219, _L_319),
+(fun x298 (x299, x300, x301) ->  (x298, x299, x300, x301)) true
+  (_L_127, _L_219, _L_319)} true is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x306 (x307, x308, x309) ->  (x306, x307, x308, x309)) true
+        (_L_129, _L_221, _L_321),
+(fun x306 (x307, x308, x309) ->  (x306, x307, x308, x309)) true
+  (_L_130, _L_222, _L_322)} true is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x310 (x311, x312, x313) ->  (x310, x311, x312, x313)) true
+        (_L_131, _L_223, _L_323),
+(fun x310 (x311, x312, x313) ->  (x310, x311, x312, x313))
+  ((b3 ? 1 : -1) ≥ 0) (_L_132, _L_224, _L_324)} (b3 ? 1 : -1) ≥ 0 is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x314 (x315, x316, x317) ->  (x314, x315, x316, x317))
+        ((b1 ? 1 : -1) ≥ 0) (_L_133, _L_225, _L_325),
+(fun x314 (x315, x316, x317) ->  (x314, x315, x316, x317)) true
+  (_L_134, _L_226, _L_326)} (b1 ? 1 : -1) ≥ 0 is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x318 (x319, x320, x321) ->  (x318, x319, x320, x321)) true
+        (_L_135, _L_227, _L_327),
+(fun x318 (x319, x320, x321) ->  (x318, x319, x320, x321))
+  ((b7 ? 1 : -1) ≥ 0) (_L_136, _L_228, _L_328)} (b7 ? 1 : -1) ≥ 0 is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x322 (x323, x324, x325) ->  (x322, x323, x324, x325))
+        ((b1 ? 1 : -1) ≥ 0) (_L_137, _L_229, _L_329),
+(fun x322 (x323, x324, x325) ->  (x322, x323, x324, x325))
+  ((b4 ? 1 : -1) ≥ 0) (_L_138, _L_230, _L_330)} ((b4 ? 1 : -1) ≥ 0) &&
+                                                    ((b1 ? (b4 ? 1 : -1) + 1
+                                                       : (b4 ? 1 : -1) - 1)
+                                                      ≥ 0) is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x326 (x327, x328, x329) ->  (x326, x327, x328, x329))
+        (((b28 ? 1 : -1) ≥ 0) &&
+          ((b2 ? (b28 ? 1 : -1) + 1 : (b28 ? 1 : -1) - 1) ≥ 0))
+        (_L_139, _L_231, _L_331),
+(fun x326 (x327, x328, x329) ->  (x326, x327, x328, x329)) true
+  (_L_140, _L_232, _L_332)} ((b28 ? 1 : -1) ≥ 0) &&
+                              ((b2 ? (b28 ? 1 : -1) + 1 : (b28 ? 1 : -1) - 1)
+                                ≥ 0) is not a function-free expression, cannot deduce.
+[41m[ERROR][0m Term {(fun x330 (x331, x332, x333) ->  (x330, x331, x332, x333))
+        (((b28 ? 1 : -1) ≥ 0) &&
+          ((b2 ? (b28 ? 1 : -1) + 1 : (b28 ? 1 : -1) - 1) ≥ 0))
+        (_L_141, _L_233, _L_333),
+(fun x330 (x331, x332, x333) ->  (x330, x331, x332, x333))
+  ((b32 ? 1 : -1) ≥ 0) (_L_142, _L_234, _L_334)} (((b32 ? 1 : -1) ≥ 0) &&
+                                                     ((b28 ?
+                                                        (b32 ? 1 : -1) + 1 :
+                                                        (b32 ? 1 : -1) - 1)
+                                                       ≥ 0)) &&
+                                                     ((b2 ?
+                                                        (b28 ?
+                                                          (b32 ? 1 : -1) + 1
+                                                          :
+                                                          (b32 ? 1 : -1) - 1)
+                                                          + 1 :
+                                                        (b28 ?
+                                                          (b32 ? 1 : -1) + 1
+                                                          :
+                                                          (b32 ? 1 : -1) - 1)
+                                                          - 1) ≥ 0) is not a function-free expression, cannot deduce.
+[41m[ERROR][0m <SEGIS> SyGuS solver failed to find a solution.
+
+------------------------------------------------------------------------------------------------[0]-
+[41m[ERROR][0m Failed to find a solution or a witness of unrealizability
+[44m INFO :[0m Failed to find solution 1.0688s (9.7% verifying):
+[31mlet rec[0m [36mtarget[0m [31m=[0m [33mfunction[0m CNil -> [34mf0[0m [33m| [0m[3mSingle[0m(a) -> [34mf1[0m [34ma[0m [33m| [0m[3mConcat[0m(x, y) -> [34mf2[0m ([34mtarget[0m [34mx[0m) ([34mtarget[0m [34my[0m)
+

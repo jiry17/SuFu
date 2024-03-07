@@ -1,0 +1,265 @@
+
+List :: List. <elt Bool | cons {Bool,List}>
+ elt : Bool -> List'. <elt Bool | cons {Bool,List'}>
+ cons : {Bool,List} -> List'. <elt Bool | cons {Bool,List'}>
+ CList :: CList. <single Bool | concat {CList,CList}>
+single : Bool -> CList'. <single Bool | concat {CList',CList'}>
+concat : {CList,CList} ->
+         CList'. <single Bool | concat {CList',CList'}>
+cat_list : List -> List -> List'. <elt Bool | cons {Bool,List'}>
+repr : CList -> List'. <elt Bool | cons {Bool,List'}>
+spec : List -> Bool
+main : CList -> Bool
+
+
+Inductive List;
+
+Inductive CList;
+
+cat_list = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      elt a -> cons {a, ys}
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> Compress List. \xs: CList. 
+    match xs with
+      single a -> 
+        let tmp1 = (elt a) in 
+            align (label tmp1 ) 
+    | concat {a, b} -> 
+        let tmp2 = (f a) in 
+            let tmp3 = (f b) in 
+                align (label (cat_list (unlabel tmp2 ) (unlabel tmp3 )) ) 
+    end
+);
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Bool, Bool, Bool}. \xs: List. 
+    match xs with
+      elt a -> {a, true, a}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let new_an = (and result.1 hd) in 
+                let new_bn = (and result.2 (or result.1 (not hd))) in 
+                    {new_an, new_bn, result.3}
+    end
+) xs).2;
+
+main = \xs: CList. 
+    let tmp4 = (repr xs) in 
+        align (spec (unlabel tmp4 )) ;
+align term #0: compress[0] List. <elt Bool | cons {Bool,List}>
+align@0 create@0 tmp1
+  a: Bool
+  xs: CList. <single Bool | concat {CList,CList}>
+  tmp1: List. <elt Bool | cons {Bool,List}>
+align term #1: compress[0] List. <elt Bool | cons {Bool,List}>
+align@1 create@0 cat_list (unlabel tmp2) (unlabel tmp3)
+  a: CList. <single Bool | concat {CList,CList}>
+  tmp3: compress[0] List. <elt Bool | cons {Bool,List}>
+  b: CList. <single Bool | concat {CList,CList}>
+  tmp2: compress[0] List. <elt Bool | cons {Bool,List}>
+  xs: CList. <single Bool | concat {CList,CList}>
+align term #2: Bool
+align@2 spec (unlabel tmp4)
+  xs: CList. <single Bool | concat {CList,CList}>
+  tmp4: compress[0] List. <elt Bool | cons {Bool,List}>
+Components for compress:
+  cons [(Bool * List. <elt Bool | cons {Bool,List}>)] -> List. <elt Bool | cons {Bool,List}> 0
+  elt [Bool] -> List. <elt Bool | cons {Bool,List}> 0
+  single [Bool] -> CList. <single Bool | concat {CList,CList}> 1
+  concat [(CList. <single Bool | concat {CList,CList}> * CList. <single Bool | concat {CList,CList}>)] -> CList. <single Bool | concat {CList,CList}> 1
+
+Components for align:
+  spec [List. <elt Bool | cons {Bool,List}>] -> Bool 4
+  cons [(Bool * List. <elt Bool | cons {Bool,List}>)] -> List. <elt Bool | cons {Bool,List}> 0
+  elt [Bool] -> List. <elt Bool | cons {Bool,List}> 0
+  single [Bool] -> CList. <single Bool | concat {CList,CList}> 1
+  concat [(CList. <single Bool | concat {CList,CList}> * CList. <single Bool | concat {CList,CList}>)] -> CList. <single Bool | concat {CList,CList}> 1
+  cat_list [List. <elt Bool | cons {Bool,List}>,List. <elt Bool | cons {Bool,List}>] -> List. <elt Bool | cons {Bool,List}> 2
+
+Components for comb:
+  cons [(Bool * List. <elt Bool | cons {Bool,List}>)] -> List. <elt Bool | cons {Bool,List}> 0
+  elt [Bool] -> List. <elt Bool | cons {Bool,List}> 0
+  single [Bool] -> CList. <single Bool | concat {CList,CList}> 1
+  concat [(CList. <single Bool | concat {CList,CList}> * CList. <single Bool | concat {CList,CList}>)] -> CList. <single Bool | concat {CList,CList}> 1
+
+align term #0: compress[0] List. <elt Bool | cons {Bool,List}>
+align@0 create@0 tmp1
+  a: Bool
+  xs: CList. <single Bool | concat {CList,CList}>
+  tmp1: List. <elt Bool | cons {Bool,List}>
+align term #1: compress[0] List. <elt Bool | cons {Bool,List}>
+align@1 create@0 cat_list (unlabel tmp2) (unlabel tmp3)
+  a: CList. <single Bool | concat {CList,CList}>
+  tmp3: compress[0] List. <elt Bool | cons {Bool,List}>
+  b: CList. <single Bool | concat {CList,CList}>
+  tmp2: compress[0] List. <elt Bool | cons {Bool,List}>
+  xs: CList. <single Bool | concat {CList,CList}>
+align term #2: Bool
+align@2 spec (unlabel tmp4)
+  xs: CList. <single Bool | concat {CList,CList}>
+  tmp4: compress[0] List. <elt Bool | cons {Bool,List}>
+num = 0
+start: start
+node: start
+  Bool([Param0,Param1,Param2]@Bool)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  ite([Param0,Param1,Param2]@Bool [Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Bool
+  Param0
+num = 1
+start: start
+node: start
+  Compress[0] List. <elt Bool | cons {Bool,List}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <elt Bool | cons {Bool,List}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <elt Bool | cons {Bool,List}>
+  Param1
+  Param3
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] List. <elt Bool | cons {Bool,List}>([Param0,Param1]@Compress[0] List. <elt Bool | cons {Bool,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] List. <elt Bool | cons {Bool,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Bool([Param0]@Bool)
+node: [Bool@0]@Bool
+  Bool@0
+  spec([Bool@0]@List. <elt Bool | cons {Bool,List}>)
+node: [Bool@0,Bool@1]@Bool
+  Bool@0
+  Bool@1
+  spec([Bool@0,Bool@1]@List. <elt Bool | cons {Bool,List}>)
+node: [Param0]@Bool
+  fold[List. <elt Bool | cons {Bool,List}>->Bool]([Bool@0]@Bool [Bool@0,Bool@1]@Bool [Param0]@List. <elt Bool | cons {Bool,List}>)
+  spec([Param0]@List. <elt Bool | cons {Bool,List}>)
+node: [Bool@0]@List. <elt Bool | cons {Bool,List}>
+  elt([Bool@0]@Bool)
+  cat_list([Bool@0]@List. <elt Bool | cons {Bool,List}> [Bool@0]@List. <elt Bool | cons {Bool,List}>)
+node: [Bool@0,Bool@1]@List. <elt Bool | cons {Bool,List}>
+  elt([Bool@0,Bool@1]@Bool)
+  cat_list([Bool@0,Bool@1]@List. <elt Bool | cons {Bool,List}> [Bool@0,Bool@1]@List. <elt Bool | cons {Bool,List}>)
+node: [Param0]@List. <elt Bool | cons {Bool,List}>
+  Param0
+  elt([Param0]@Bool)
+  cat_list([Param0]@List. <elt Bool | cons {Bool,List}> [Param0]@List. <elt Bool | cons {Bool,List}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(Param0)
+  [1] fold[List. <elt Bool | cons {Bool,List}>->Bool](Bool@0(),Bool@0(),Param0)
+  [2] fold[List. <elt Bool | cons {Bool,List}>->Bool](Bool@0(),Bool@1(),Param0)
+  [0] Param0
+  [0] spec(Param0)
+  [1] fold[List. <elt Bool | cons {Bool,List}>->Bool](Bool@0(),Bool@0(),Param0)
+  [2] fold[List. <elt Bool | cons {Bool,List}>->Bool](Bool@0(),Bool@1(),Param0)
+  [0] Param1 -> spec(Param0)
+  [1] Param1 -> fold[List. <elt Bool | cons {Bool,List}>->Bool](Bool@0(),Bool@0(),Param0)
+  [2] Param1 -> fold[List. <elt Bool | cons {Bool,List}>->Bool](Bool@0(),Bool@1(),Param0)
+  [3] Param3 -> spec(Param0)
+  [4] Param3 -> fold[List. <elt Bool | cons {Bool,List}>->Bool](Bool@0(),Bool@0(),Param0)
+  [5] Param3 -> fold[List. <elt Bool | cons {Bool,List}>->Bool](Bool@0(),Bool@1(),Param0)
+  [] null
+  [0] Param1 -> spec(Param0)
+  [1] Param1 -> fold[List. <elt Bool | cons {Bool,List}>->Bool](Bool@0(),Bool@0(),Param0)
+  [2] Param1 -> fold[List. <elt Bool | cons {Bool,List}>->Bool](Bool@0(),Bool@1(),Param0)
+compress #0: {Bool,Bool,Bool}
+pass #0: 
+{true, a, a}
+pass #1: 
+{or (and (and tmp3.1 tmp3.2) tmp2.1) (and (and tmp3.1 tmp2.1) (not tmp2.3)), tmp2.2, tmp3.3}
+pass #2: 
+tmp4.1
+
+Inductive List;
+
+Inductive CList;
+
+cat_list = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      elt a -> cons {a, ys}
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> {Bool, Bool, Bool}. \xs: CList. 
+    match xs with
+      single a -> {true, a, a}
+    | concat {a, b} -> 
+        let tmp2 = (f a) in 
+            let tmp3 = (f b) in 
+                {or (and (and tmp3.1 tmp3.2) tmp2.1) (and (and tmp3.1 tmp2.1) (not tmp2.3)), tmp2.2, tmp3.3}
+    end
+);
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Bool, Bool, Bool}. \xs: List. 
+    match xs with
+      elt a -> {a, true, a}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let new_an = (and result.1 hd) in 
+                let new_bn = (and result.2 (or result.1 (not hd))) in 
+                    {new_an, new_bn, result.3}
+    end
+) xs).2;
+
+main = \xs: CList. 
+    let tmp4 = (repr xs) in 
+        tmp4.1;
+syn-comb: 0.010273
+collect: 0.460524
+label: 0.013165
+extend-component: 0.000584
+execute: 0.054126
+syn-align: 0.519784
+comb-size: 40
+align-size: 18
+extract-size: 5
+0.55045
+Success

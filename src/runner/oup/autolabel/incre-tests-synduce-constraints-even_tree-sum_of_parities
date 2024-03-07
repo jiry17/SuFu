@@ -1,0 +1,241 @@
+
+Tree :: Tree. <elt Int | node {Int,Tree,Tree}>
+ elt : Int -> Tree'. <elt Int | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <elt Int | node {Int,Tree',Tree'}>
+ mod2 : Int -> Int
+is_even : Tree -> Bool
+spec : Tree -> Int
+target : Tree -> Tree'. <elt Int | node {Int,Tree',Tree'}>
+main : Tree -> Int
+
+
+Inductive Tree;
+
+mod2 = \x: Int. 
+    - x (* (/ x 2) 2);
+
+is_even = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      elt a -> == (mod2 a) 0
+    | node {a, l, r} -> and (and (== (mod2 a) 0) (f l)) (f r)
+    end
+);
+
+spec = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      elt a -> mod2 a
+    | node {a, l, r} -> + (mod2 a) (+ (f l) (f r))
+    end
+);
+
+target = fix (
+    \f: Tree -> Compress Tree. \t: Tree. 
+    match t with
+      elt a -> 
+        let tmp1 = (elt a) in 
+            align (label tmp1 ) 
+    | node {a, l, r} -> 
+        let tmp2 = (node {a, l, r}) in 
+            align (label tmp2 ) 
+    end
+);
+
+main = \t: Tree. 
+    if (is_even t) then let tmp3 = (target t) in 
+        align (spec (unlabel tmp3 )) 
+    else 0;
+align term #0: compress[0] Tree. <elt Int | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  a: Int
+  t: Tree. <elt Int | node {Int,Tree,Tree}>
+  tmp1: Tree. <elt Int | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <elt Int | node {Int,Tree,Tree}>
+align@1 create@0 tmp2
+  r: Tree. <elt Int | node {Int,Tree,Tree}>
+  l: Tree. <elt Int | node {Int,Tree,Tree}>
+  a: Int
+  tmp2: Tree. <elt Int | node {Int,Tree,Tree}>
+  t: Tree. <elt Int | node {Int,Tree,Tree}>
+align term #2: Int
+align@2 spec (unlabel tmp3)
+  t: Tree. <elt Int | node {Int,Tree,Tree}>
+  tmp3: compress[0] Tree. <elt Int | node {Int,Tree,Tree}>
+Components for compress:
+  node [(Int * Tree. <elt Int | node {Int,Tree,Tree}> * Tree. <elt Int | node {Int,Tree,Tree}>)] -> Tree. <elt Int | node {Int,Tree,Tree}> 0
+  elt [Int] -> Tree. <elt Int | node {Int,Tree,Tree}> 0
+  mod2 [Int] -> Int 1
+
+Components for align:
+  node [(Int * Tree. <elt Int | node {Int,Tree,Tree}> * Tree. <elt Int | node {Int,Tree,Tree}>)] -> Tree. <elt Int | node {Int,Tree,Tree}> 0
+  spec [Tree. <elt Int | node {Int,Tree,Tree}>] -> Int 3
+  elt [Int] -> Tree. <elt Int | node {Int,Tree,Tree}> 0
+  mod2 [Int] -> Int 1
+  is_even [Tree. <elt Int | node {Int,Tree,Tree}>] -> Bool 2
+
+Components for comb:
+  node [(Int * Tree. <elt Int | node {Int,Tree,Tree}> * Tree. <elt Int | node {Int,Tree,Tree}>)] -> Tree. <elt Int | node {Int,Tree,Tree}> 0
+  elt [Int] -> Tree. <elt Int | node {Int,Tree,Tree}> 0
+  mod2 [Int] -> Int 1
+
+align term #0: compress[0] Tree. <elt Int | node {Int,Tree,Tree}>
+align@0 create@0 tmp1
+  a: Int
+  t: Tree. <elt Int | node {Int,Tree,Tree}>
+  tmp1: Tree. <elt Int | node {Int,Tree,Tree}>
+align term #1: compress[0] Tree. <elt Int | node {Int,Tree,Tree}>
+align@1 create@0 tmp2
+  r: Tree. <elt Int | node {Int,Tree,Tree}>
+  l: Tree. <elt Int | node {Int,Tree,Tree}>
+  a: Int
+  tmp2: Tree. <elt Int | node {Int,Tree,Tree}>
+  t: Tree. <elt Int | node {Int,Tree,Tree}>
+align term #2: Int
+align@2 spec (unlabel tmp3)
+  t: Tree. <elt Int | node {Int,Tree,Tree}>
+  tmp3: compress[0] Tree. <elt Int | node {Int,Tree,Tree}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param0
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  mod2([Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param2
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  mod2([Param0,Param1,Param2,Param3,Param4]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] Tree. <elt Int | node {Int,Tree,Tree}>([Param0,Param1]@Compress[0] Tree. <elt Int | node {Int,Tree,Tree}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] Tree. <elt Int | node {Int,Tree,Tree}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  mod2([Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  ite([Int@0]@Bool [Int@0]@Int [Int@0]@Int)
+  spec([Int@0]@Tree. <elt Int | node {Int,Tree,Tree}>)
+  mod2([Int@0]@Int)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  ite([Int@0,Int@1,Int@2]@Bool [Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  spec([Int@0,Int@1,Int@2]@Tree. <elt Int | node {Int,Tree,Tree}>)
+  mod2([Int@0,Int@1,Int@2]@Int)
+node: [Bool@0,Bool@1,Int@0]@Int
+  Int@0
+  +([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  -([Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  ite([Bool@0,Bool@1,Int@0]@Bool [Bool@0,Bool@1,Int@0]@Int [Bool@0,Bool@1,Int@0]@Int)
+  spec([Bool@0,Bool@1,Int@0]@Tree. <elt Int | node {Int,Tree,Tree}>)
+  mod2([Bool@0,Bool@1,Int@0]@Int)
+node: [Bool@0,Bool@1,Int@0]@Bool
+  Bool@0
+  Bool@1
+  is_even([Bool@0,Bool@1,Int@0]@Tree. <elt Int | node {Int,Tree,Tree}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[Tree. <elt Int | node {Int,Tree,Tree}>->Int]([Int@0]@Int [Int@0,Int@1,Int@2]@Int [Param0]@Tree. <elt Int | node {Int,Tree,Tree}>)
+  spec([Param0]@Tree. <elt Int | node {Int,Tree,Tree}>)
+  mod2([Param0]@Int)
+node: [Param0]@Bool
+  fold[Tree. <elt Int | node {Int,Tree,Tree}>->Bool]([Int@0]@Bool [Bool@0,Bool@1,Int@0]@Bool [Param0]@Tree. <elt Int | node {Int,Tree,Tree}>)
+  is_even([Param0]@Tree. <elt Int | node {Int,Tree,Tree}>)
+node: [Int@0]@Bool
+  is_even([Int@0]@Tree. <elt Int | node {Int,Tree,Tree}>)
+node: [Int@0,Int@1,Int@2]@Bool
+  is_even([Int@0,Int@1,Int@2]@Tree. <elt Int | node {Int,Tree,Tree}>)
+node: [Int@0]@Tree. <elt Int | node {Int,Tree,Tree}>
+  elt([Int@0]@Int)
+node: [Int@0,Int@1,Int@2]@Tree. <elt Int | node {Int,Tree,Tree}>
+  elt([Int@0,Int@1,Int@2]@Int)
+node: [Bool@0,Bool@1,Int@0]@Tree. <elt Int | node {Int,Tree,Tree}>
+  elt([Bool@0,Bool@1,Int@0]@Int)
+node: [Param0]@Tree. <elt Int | node {Int,Tree,Tree}>
+  Param0
+  elt([Param0]@Int)
+
+
+
+  [] null
+compress #0: Unit
+pass #0: 
+Unit
+pass #1: 
+Unit
+pass #2: 
+0
+
+Inductive Tree;
+
+mod2 = \x: Int. 
+    - x (* (/ x 2) 2);
+
+is_even = fix (
+    \f: Tree -> Bool. \t: Tree. 
+    match t with
+      elt a -> == (mod2 a) 0
+    | node {a, l, r} -> and (and (== (mod2 a) 0) (f l)) (f r)
+    end
+);
+
+spec = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      elt a -> mod2 a
+    | node {a, l, r} -> + (mod2 a) (+ (f l) (f r))
+    end
+);
+
+target = fix (
+    \f: Tree -> Unit. \t: Tree. 
+    match t with
+      elt a -> Unit
+    | node {a, l, r} -> Unit
+    end
+);
+
+main = \t: Tree. 
+    if (is_even t) then 0
+    else 0;
+syn-comb: 0.012969
+syn-align: 5.24012
+label: 0.011213
+collect: 5.23836
+comb-size: 3
+align-size: 0
+extract-size: 0
+5.27086
+Success

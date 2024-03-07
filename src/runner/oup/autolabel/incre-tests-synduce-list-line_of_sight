@@ -1,0 +1,290 @@
+
+List :: List. <single Int | cons {Int,List}>
+ single : Int -> List'. <single Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <single Int | cons {Int,List'}>
+ CList :: CList. <elt Int | cat {CList,CList}>
+elt : Int -> CList'. <elt Int | cat {CList',CList'}>
+cat : {CList,CList} -> CList'. <elt Int | cat {CList',CList'}>
+max : Int -> Int -> Int
+spec : List -> Bool
+cat_list : List -> List -> List'. <single Int | cons {Int,List'}>
+repr : CList -> List'. <single Int | cons {Int,List'}>
+main : CList -> Bool
+
+
+Inductive List;
+
+Inductive CList;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int, Bool}. \xs: List. 
+    match xs with
+      single a -> {a, a, true}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            {hd, max result.2 hd, > hd result.2}
+    end
+) xs).3;
+
+cat_list = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      single a -> cons {a, ys}
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> Compress List. \xs: CList. 
+    match xs with
+      elt a -> 
+        let tmp1 = (single a) in 
+            align (label tmp1 ) 
+    | cat {a, b} -> 
+        let tmp2 = (f a) in 
+            let tmp3 = (f b) in 
+                align (label (cat_list (unlabel tmp2 ) (unlabel tmp3 )) ) 
+    end
+);
+
+main = \x: CList. 
+    let tmp4 = (repr x) in 
+        align (spec (unlabel tmp4 )) ;
+align term #0: compress[0] List. <single Int | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: CList. <elt Int | cat {CList,CList}>
+  tmp1: List. <single Int | cons {Int,List}>
+  a: Int
+align term #1: compress[0] List. <single Int | cons {Int,List}>
+align@1 create@0 cat_list (unlabel tmp2) (unlabel tmp3)
+  b: CList. <elt Int | cat {CList,CList}>
+  xs: CList. <elt Int | cat {CList,CList}>
+  tmp2: compress[0] List. <single Int | cons {Int,List}>
+  a: CList. <elt Int | cat {CList,CList}>
+  tmp3: compress[0] List. <single Int | cons {Int,List}>
+align term #2: Bool
+align@2 spec (unlabel tmp4)
+  tmp4: compress[0] List. <single Int | cons {Int,List}>
+  x: CList. <elt Int | cat {CList,CList}>
+Components for compress:
+  cons [(Int * List. <single Int | cons {Int,List}>)] -> List. <single Int | cons {Int,List}> 0
+  single [Int] -> List. <single Int | cons {Int,List}> 0
+  elt [Int] -> CList. <elt Int | cat {CList,CList}> 1
+  cat [(CList. <elt Int | cat {CList,CList}> * CList. <elt Int | cat {CList,CList}>)] -> CList. <elt Int | cat {CList,CList}> 1
+  max [Int,Int] -> Int 2
+
+Components for align:
+  spec [List. <single Int | cons {Int,List}>] -> Bool 3
+  cons [(Int * List. <single Int | cons {Int,List}>)] -> List. <single Int | cons {Int,List}> 0
+  single [Int] -> List. <single Int | cons {Int,List}> 0
+  elt [Int] -> CList. <elt Int | cat {CList,CList}> 1
+  cat_list [List. <single Int | cons {Int,List}>,List. <single Int | cons {Int,List}>] -> List. <single Int | cons {Int,List}> 4
+  cat [(CList. <elt Int | cat {CList,CList}> * CList. <elt Int | cat {CList,CList}>)] -> CList. <elt Int | cat {CList,CList}> 1
+  max [Int,Int] -> Int 2
+
+Components for comb:
+  cons [(Int * List. <single Int | cons {Int,List}>)] -> List. <single Int | cons {Int,List}> 0
+  single [Int] -> List. <single Int | cons {Int,List}> 0
+  elt [Int] -> CList. <elt Int | cat {CList,CList}> 1
+  cat [(CList. <elt Int | cat {CList,CList}> * CList. <elt Int | cat {CList,CList}>)] -> CList. <elt Int | cat {CList,CList}> 1
+  max [Int,Int] -> Int 2
+
+align term #0: compress[0] List. <single Int | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: CList. <elt Int | cat {CList,CList}>
+  tmp1: List. <single Int | cons {Int,List}>
+  a: Int
+align term #1: compress[0] List. <single Int | cons {Int,List}>
+align@1 create@0 cat_list (unlabel tmp2) (unlabel tmp3)
+  b: CList. <elt Int | cat {CList,CList}>
+  xs: CList. <elt Int | cat {CList,CList}>
+  tmp2: compress[0] List. <single Int | cons {Int,List}>
+  a: CList. <elt Int | cat {CList,CList}>
+  tmp3: compress[0] List. <single Int | cons {Int,List}>
+align term #2: Bool
+align@2 spec (unlabel tmp4)
+  tmp4: compress[0] List. <single Int | cons {Int,List}>
+  x: CList. <elt Int | cat {CList,CList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param2
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Compress[0] List. <single Int | cons {Int,List}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <single Int | cons {Int,List}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <single Int | cons {Int,List}>
+  Param2
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] List. <single Int | cons {Int,List}>([Param0,Param1]@Compress[0] List. <single Int | cons {Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] List. <single Int | cons {Int,List}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  ite([Int@0]@Bool [Int@0]@Int [Int@0]@Int)
+  max([Int@0]@Int [Int@0]@Int)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  ite([Int@0,Int@1]@Bool [Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+node: [Bool@0,Int@0]@Int
+  Int@0
+  +([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  -([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  ite([Bool@0,Int@0]@Bool [Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  max([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+node: [Bool@0,Int@0]@Bool
+  Bool@0
+  spec([Bool@0,Int@0]@List. <single Int | cons {Int,List}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[List. <single Int | cons {Int,List}>->Int]([Int@0]@Int [Int@0,Int@1]@Int [Param0]@List. <single Int | cons {Int,List}>)
+  max([Param0]@Int [Param0]@Int)
+node: [Param0]@Bool
+  fold[List. <single Int | cons {Int,List}>->Bool]([Int@0]@Bool [Bool@0,Int@0]@Bool [Param0]@List. <single Int | cons {Int,List}>)
+  spec([Param0]@List. <single Int | cons {Int,List}>)
+node: [Int@0]@Bool
+  spec([Int@0]@List. <single Int | cons {Int,List}>)
+node: [Int@0,Int@1]@Bool
+  spec([Int@0,Int@1]@List. <single Int | cons {Int,List}>)
+node: [Int@0]@List. <single Int | cons {Int,List}>
+  single([Int@0]@Int)
+  cat_list([Int@0]@List. <single Int | cons {Int,List}> [Int@0]@List. <single Int | cons {Int,List}>)
+node: [Int@0,Int@1]@List. <single Int | cons {Int,List}>
+  single([Int@0,Int@1]@Int)
+  cat_list([Int@0,Int@1]@List. <single Int | cons {Int,List}> [Int@0,Int@1]@List. <single Int | cons {Int,List}>)
+node: [Bool@0,Int@0]@List. <single Int | cons {Int,List}>
+  single([Bool@0,Int@0]@Int)
+  cat_list([Bool@0,Int@0]@List. <single Int | cons {Int,List}> [Bool@0,Int@0]@List. <single Int | cons {Int,List}>)
+node: [Param0]@List. <single Int | cons {Int,List}>
+  Param0
+  single([Param0]@Int)
+  cat_list([Param0]@List. <single Int | cons {Int,List}> [Param0]@List. <single Int | cons {Int,List}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(Param0)
+  [1] fold[List. <single Int | cons {Int,List}>->Int](Int@0(),max(Int@0(),Int@1()),Param0)
+  [0] Param2
+  [0] spec(Param0)
+  [1] fold[List. <single Int | cons {Int,List}>->Int](Int@0(),max(Int@0(),Int@1()),Param0)
+  [0] Param2 -> spec(Param0)
+  [1] Param2 -> fold[List. <single Int | cons {Int,List}>->Int](Int@0(),max(Int@0(),Int@1()),Param0)
+  [2] Param4 -> spec(Param0)
+  [3] Param4 -> fold[List. <single Int | cons {Int,List}>->Int](Int@0(),max(Int@0(),Int@1()),Param0)
+  [] null
+  [0] Param0 -> spec(Param0)
+  [1] Param0 -> fold[List. <single Int | cons {Int,List}>->Int](Int@0(),max(Int@0(),Int@1()),Param0)
+compress #0: {Bool,Int}
+pass #0: 
+{true, a}
+pass #1: 
+{and tmp2.1 (< tmp3.2 tmp2.2), max tmp2.2 tmp3.2}
+pass #2: 
+tmp4.1
+
+Inductive List;
+
+Inductive CList;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int, Bool}. \xs: List. 
+    match xs with
+      single a -> {a, a, true}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            {hd, max result.2 hd, > hd result.2}
+    end
+) xs).3;
+
+cat_list = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      single a -> cons {a, ys}
+    | cons {a, b} -> cons {a, f b ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> {Bool, Int}. \xs: CList. 
+    match xs with
+      elt a -> {true, a}
+    | cat {a, b} -> 
+        let tmp2 = (f a) in 
+            let tmp3 = (f b) in 
+                {and tmp2.1 (< tmp3.2 tmp2.2), max tmp2.2 tmp3.2}
+    end
+);
+
+main = \x: CList. 
+    let tmp4 = (repr x) in 
+        tmp4.1;
+syn-comb: 0.402511
+collect: 3.14167
+label: 0.013272
+extend-component: 0.00211
+execute: 1.86913
+syn-align: 5.19883
+comb-size: 25
+align-size: 15
+extract-size: 5
+5.62176
+Success

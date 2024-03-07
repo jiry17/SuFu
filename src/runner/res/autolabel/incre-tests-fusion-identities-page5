@@ -1,0 +1,50 @@
+
+Inductive List;
+
+Inductive NList;
+
+head = \xs: NList. 
+    match xs with
+      single w -> w
+    | ncons {h, t} -> h
+    end
+;
+
+map = \f: List -> Int. 
+    fix (
+    \g: NList -> List. \xs: NList. 
+    match xs with
+      single w -> cons {f w, nil Unit}
+    | ncons {h, t} -> cons {f h, g t}
+    end
+);
+
+sum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+product = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 1
+    | cons {h, t} -> * h (f t)
+    end
+);
+
+tails = fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {1, 1}
+    | cons {h, t} -> 
+        let tmp2 = (f t) in 
+            {+ (* h tmp2.2) tmp2.1, * h tmp2.2}
+    end
+);
+
+main = \xs: List. 
+    let tmp4 = (tails xs) in 
+        tmp4.1;

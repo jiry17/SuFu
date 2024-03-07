@@ -1,0 +1,404 @@
+
+BTree :: BTree. <empty Unit | node {Int,BTree,BTree}>
+ empty : Unit -> BTree'. <empty Unit | node {Int,BTree',BTree'}>
+ node : {Int,BTree,BTree} ->
+        BTree'. <empty Unit | node {Int,BTree',BTree'}>
+ Zipper :: Zipper. <top Unit | left {Int,BTree,Zipper} | right {
+Int,BTree,Zipper}>
+top : Unit ->
+      Zipper'. <top Unit | left {Int,BTree,Zipper'} | right {
+      Int,BTree,Zipper'}>
+left : {Int,BTree,Zipper} ->
+       Zipper'. <top Unit | left {Int,BTree,Zipper'} | right {
+       Int,BTree,Zipper'}>
+right : {Int,BTree,Zipper} ->
+        Zipper'. <top Unit | left {Int,BTree,Zipper'} | right {
+        Int,BTree,Zipper'}>
+max : Int -> Int -> Int
+mod2 : Int -> Int
+spec : BTree -> Int
+repr : Zipper -> BTree'. <empty Unit | node {Int,BTree',BTree'}>
+tree_rec : BTree ->
+           BTree'. <empty Unit | node {Int,BTree',BTree'}>
+zip_rec : Zipper ->
+          Zipper'. <top Unit | left {Int,BTree,Zipper'} | right {
+          Int,BTree,Zipper'}>
+main : Zipper -> Int
+
+
+Inductive BTree;
+
+Inductive Zipper;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+mod2 = \x: Int. 
+    - x (* (/ x 2) 2);
+
+spec = \t: BTree. 
+    (fix (
+    \f: BTree -> {Bool, Int}. \t: BTree. 
+    match t with
+      empty _ -> {false, 1}
+    | node {a, l, r} -> 
+        let result = (f l) in 
+            if (result.1) then result
+            else if (== 1 (mod2 a)) then {true, a}
+            else f r
+    end
+) t).2;
+
+repr = fix (
+    \f: Zipper -> BTree. \z: Zipper. 
+    match z with
+      top _ -> empty Unit
+    | left {w, tree, zz} -> node {w, tree, f zz}
+    | right {w, tree, zz} -> node {w, f zz, tree}
+    end
+);
+
+tree_rec = fix (
+    \f: BTree -> Compress BTree. \t: BTree. 
+    match t with
+      empty _ -> 
+        let tmp1 = (empty Unit) in 
+            align (label tmp1 ) 
+    | node {a, l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                align (label (node {a, unlabel tmp2 , unlabel tmp3 }) ) 
+    end
+);
+
+zip_rec = fix (
+    \f: Zipper -> Compress Zipper. \z: Zipper. 
+    match z with
+      top _ -> 
+        let tmp4 = (top Unit) in 
+            align (label tmp4 ) 
+    | left {w, tree, zz} -> 
+        let tmp5 = (tree_rec tree) in 
+            let tmp6 = (f zz) in 
+                align (label (left {w, unlabel tmp5 , unlabel tmp6 }) ) 
+    | right {w, tree, zz} -> 
+        let tmp7 = (tree_rec tree) in 
+            let tmp8 = (f zz) in 
+                align (label (right {w, unlabel tmp7 , unlabel tmp8 }) ) 
+    end
+);
+
+main = \z: Zipper. 
+    let tmp9 = (zip_rec z) in 
+        align (spec (repr (unlabel tmp9 ))) ;
+align term #0: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+align@0 create@0 tmp1
+  tmp1: BTree. <empty Unit | node {Int,BTree,BTree}>
+  t: BTree. <empty Unit | node {Int,BTree,BTree}>
+align term #1: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+align@1 create@0 node ({a,unlabel tmp2,unlabel tmp3})
+  r: BTree. <empty Unit | node {Int,BTree,BTree}>
+  tmp3: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+  a: Int
+  l: BTree. <empty Unit | node {Int,BTree,BTree}>
+  tmp2: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+  t: BTree. <empty Unit | node {Int,BTree,BTree}>
+align term #2: compress[1] Zipper. <top Unit | left {Int,BTree,Zipper} | right {Int,BTree,Zipper}>
+align@2 create@1 tmp4
+  tmp4: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  z: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+align term #3: compress[1] Zipper. <top Unit | left {Int,BTree,Zipper} | right {Int,BTree,Zipper}>
+align@3 create@1 left ({w,unlabel tmp5,unlabel tmp6})
+  z: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  zz: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  w: Int
+  tmp6: compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  tree: BTree. <empty Unit | node {Int,BTree,BTree}>
+  tmp5: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+align term #4: compress[1] Zipper. <top Unit | left {Int,BTree,Zipper} | right {Int,BTree,Zipper}>
+align@4 create@1 right ({w,unlabel tmp7,unlabel tmp8})
+  z: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  tmp8: compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  zz: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  w: Int
+  tree: BTree. <empty Unit | node {Int,BTree,BTree}>
+  tmp7: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+align term #5: Int
+align@5 spec (repr (unlabel tmp9))
+  z: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  tmp9: compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+Components for compress:
+  max [Int,Int] -> Int 2
+  top [Bot] -> Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}> 1
+  empty [Bot] -> BTree. <empty Unit | node {Int,BTree,BTree}> 0
+  left [(Int * BTree. <empty Unit | node {Int,BTree,BTree}> * Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)] -> Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}> 1
+  right [(Int * BTree. <empty Unit | node {Int,BTree,BTree}> * Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)] -> Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}> 1
+  node [(Int * BTree. <empty Unit | node {Int,BTree,BTree}> * BTree. <empty Unit | node {Int,BTree,BTree}>)] -> BTree. <empty Unit | node {Int,BTree,BTree}> 0
+  mod2 [Int] -> Int 3
+
+Components for align:
+  max [Int,Int] -> Int 2
+  top [Bot] -> Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}> 1
+  empty [Bot] -> BTree. <empty Unit | node {Int,BTree,BTree}> 0
+  left [(Int * BTree. <empty Unit | node {Int,BTree,BTree}> * Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)] -> Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}> 1
+  right [(Int * BTree. <empty Unit | node {Int,BTree,BTree}> * Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)] -> Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}> 1
+  node [(Int * BTree. <empty Unit | node {Int,BTree,BTree}> * BTree. <empty Unit | node {Int,BTree,BTree}>)] -> BTree. <empty Unit | node {Int,BTree,BTree}> 0
+  spec [BTree. <empty Unit | node {Int,BTree,BTree}>] -> Int 4
+  repr [Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>] -> BTree. <empty Unit | node {Int,BTree,BTree}> 5
+  mod2 [Int] -> Int 3
+
+Components for comb:
+  max [Int,Int] -> Int 2
+  top [Bot] -> Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}> 1
+  empty [Bot] -> BTree. <empty Unit | node {Int,BTree,BTree}> 0
+  left [(Int * BTree. <empty Unit | node {Int,BTree,BTree}> * Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)] -> Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}> 1
+  right [(Int * BTree. <empty Unit | node {Int,BTree,BTree}> * Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)] -> Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}> 1
+  node [(Int * BTree. <empty Unit | node {Int,BTree,BTree}> * BTree. <empty Unit | node {Int,BTree,BTree}>)] -> BTree. <empty Unit | node {Int,BTree,BTree}> 0
+  mod2 [Int] -> Int 3
+
+align term #0: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+align@0 create@0 tmp1
+  tmp1: BTree. <empty Unit | node {Int,BTree,BTree}>
+  t: BTree. <empty Unit | node {Int,BTree,BTree}>
+  (0) {tmp1: Empty Unit,t: Empty Unit} @ {} -> compress[0] Empty Unit
+align term #1: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+align@1 create@0 node ({a,unlabel tmp2,unlabel tmp3})
+  r: BTree. <empty Unit | node {Int,BTree,BTree}>
+  tmp3: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+  a: Int
+  l: BTree. <empty Unit | node {Int,BTree,BTree}>
+  tmp2: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+  t: BTree. <empty Unit | node {Int,BTree,BTree}>
+  (1) {tmp2: compress[0] Empty Unit,tmp3: compress[0] Empty Unit,a: -3,l: Empty Unit,t: Node (-3) (Empty Unit) (Empty Unit),r: Empty Unit} @ {} -> compress[0] Node (-3) (Empty Unit) (Empty Unit)
+  (1) {tmp2: compress[0] Empty Unit,tmp3: compress[0] Empty Unit,a: 3,l: Empty Unit,t: Node (3) (Empty Unit) (Empty Unit),r: Empty Unit} @ {} -> compress[0] Node (3) (Empty Unit) (Empty Unit)
+  (1) {tmp2: compress[0] Empty Unit,tmp3: compress[0] Node (3) (Empty Unit) (Empty Unit),a: -2,l: Empty Unit,t: Node (-2) (Empty Unit) (Node (3) (Empty Unit) (Empty Unit)),r: Node (3) (Empty Unit) (Empty Unit)} @ {} -> compress[0] Node (-2) (Empty Unit) (Node (3) (Empty Unit) (Empty Unit))
+  (1) {tmp2: compress[0] Empty Unit,tmp3: compress[0] Empty Unit,a: -4,l: Empty Unit,t: Node (-4) (Empty Unit) (Empty Unit),r: Empty Unit} @ {} -> compress[0] Node (-4) (Empty Unit) (Empty Unit)
+  (1) {tmp2: compress[0] Empty Unit,tmp3: compress[0] Node (-4) (Empty Unit) (Empty Unit),a: -3,l: Empty Unit,t: Node (-3) (Empty Unit) (Node (-4) (Empty Unit) (Empty Unit)),r: Node (-4) (Empty Unit) (Empty Unit)} @ {} -> compress[0] Node (-3) (Empty Unit) (Node (-4) (Empty Unit) (Empty Unit))
+align term #2: compress[1] Zipper. <top Unit | left {Int,BTree,Zipper} | right {Int,BTree,Zipper}>
+align@2 create@1 tmp4
+  tmp4: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  z: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  (2) {tmp4: Top Unit,z: Top Unit} @ {} -> compress[1] Top Unit
+align term #3: compress[1] Zipper. <top Unit | left {Int,BTree,Zipper} | right {Int,BTree,Zipper}>
+align@3 create@1 left ({w,unlabel tmp5,unlabel tmp6})
+  z: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  zz: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  w: Int
+  tmp6: compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  tree: BTree. <empty Unit | node {Int,BTree,BTree}>
+  tmp5: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+  (3) {zz: Right (1) (Empty Unit) (Right (0) (Empty Unit) (Top Unit)),tmp5: compress[0] Node (-3) (Empty Unit) (Empty Unit),z: Left (0) (Node (-3) (Empty Unit) (Empty Unit)) (Right (1) (Empty Unit) (Right (0) (Empty Unit) (Top Unit))),tmp6: compress[1] Right (1) (Empty Unit) (Right (0) (Empty Unit) (Top Unit)),tree: Node (-3) (Empty Unit) (Empty Unit),w: 0} @ {} -> compress[1] Left (0) (Node (-3) (Empty Unit) (Empty Unit)) (Right (1) (Empty Unit) (Right (0) (Empty Unit) (Top Unit)))
+  (3) {zz: Right (-4) (Empty Unit) (Top Unit),tmp5: compress[0] Node (-2) (Empty Unit) (Node (3) (Empty Unit) (Empty Unit)),z: Left (5) (Node (-2) (Empty Unit) (Node (3) (Empty Unit) (Empty Unit))) (Right (-4) (Empty Unit) (Top Unit)),tmp6: compress[1] Right (-4) (Empty Unit) (Top Unit),tree: Node (-2) (Empty Unit) (Node (3) (Empty Unit) (Empty Unit)),w: 5} @ {} -> compress[1] Left (5) (Node (-2) (Empty Unit) (Node (3) (Empty Unit) (Empty Unit))) (Right (-4) (Empty Unit) (Top Unit))
+  (3) {zz: Top Unit,tmp5: compress[0] Empty Unit,z: Left (4) (Empty Unit) (Top Unit),tmp6: compress[1] Top Unit,tree: Empty Unit,w: 4} @ {} -> compress[1] Left (4) (Empty Unit) (Top Unit)
+  (3) {zz: Right (0) (Empty Unit) (Top Unit),tmp5: compress[0] Empty Unit,z: Left (-4) (Empty Unit) (Right (0) (Empty Unit) (Top Unit)),tmp6: compress[1] Right (0) (Empty Unit) (Top Unit),tree: Empty Unit,w: -4} @ {} -> compress[1] Left (-4) (Empty Unit) (Right (0) (Empty Unit) (Top Unit))
+  (3) {zz: Left (-4) (Empty Unit) (Right (0) (Empty Unit) (Top Unit)),tmp5: compress[0] Node (-4) (Empty Unit) (Empty Unit),z: Left (-3) (Node (-4) (Empty Unit) (Empty Unit)) (Left (-4) (Empty Unit) (Right (0) (Empty Unit) (Top Unit))),tmp6: compress[1] Left (-4) (Empty Unit) (Right (0) (Empty Unit) (Top Unit)),tree: Node (-4) (Empty Unit) (Empty Unit),w: -3} @ {} -> compress[1] Left (-3) (Node (-4) (Empty Unit) (Empty Unit)) (Left (-4) (Empty Unit) (Right (0) (Empty Unit) (Top Unit)))
+align term #4: compress[1] Zipper. <top Unit | left {Int,BTree,Zipper} | right {Int,BTree,Zipper}>
+align@4 create@1 right ({w,unlabel tmp7,unlabel tmp8})
+  z: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  tmp8: compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  zz: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  w: Int
+  tree: BTree. <empty Unit | node {Int,BTree,BTree}>
+  tmp7: compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+  (4) {tmp8: compress[1] Top Unit,z: Right (0) (Empty Unit) (Top Unit),tree: Empty Unit,w: 0,tmp7: compress[0] Empty Unit,zz: Top Unit} @ {} -> compress[1] Right (0) (Empty Unit) (Top Unit)
+  (4) {tmp8: compress[1] Right (0) (Empty Unit) (Top Unit),z: Right (1) (Empty Unit) (Right (0) (Empty Unit) (Top Unit)),tree: Empty Unit,w: 1,tmp7: compress[0] Empty Unit,zz: Right (0) (Empty Unit) (Top Unit)} @ {} -> compress[1] Right (1) (Empty Unit) (Right (0) (Empty Unit) (Top Unit))
+  (4) {tmp8: compress[1] Top Unit,z: Right (2) (Empty Unit) (Top Unit),tree: Empty Unit,w: 2,tmp7: compress[0] Empty Unit,zz: Top Unit} @ {} -> compress[1] Right (2) (Empty Unit) (Top Unit)
+  (4) {tmp8: compress[1] Top Unit,z: Right (-4) (Empty Unit) (Top Unit),tree: Empty Unit,w: -4,tmp7: compress[0] Empty Unit,zz: Top Unit} @ {} -> compress[1] Right (-4) (Empty Unit) (Top Unit)
+  (4) {tmp8: compress[1] Top Unit,z: Right (-2) (Empty Unit) (Top Unit),tree: Empty Unit,w: -2,tmp7: compress[0] Empty Unit,zz: Top Unit} @ {} -> compress[1] Right (-2) (Empty Unit) (Top Unit)
+  (4) {tmp8: compress[1] Right (-2) (Empty Unit) (Top Unit),z: Right (-5) (Node (-3) (Empty Unit) (Node (-4) (Empty Unit) (Empty Unit))) (Right (-2) (Empty Unit) (Top Unit)),tree: Node (-3) (Empty Unit) (Node (-4) (Empty Unit) (Empty Unit)),w: -5,tmp7: compress[0] Node (-3) (Empty Unit) (Node (-4) (Empty Unit) (Empty Unit)),zz: Right (-2) (Empty Unit) (Top Unit)} @ {} -> compress[1] Right (-5) (Node (-3) (Empty Unit) (Node (-4) (Empty Unit) (Empty Unit))) (Right (-2) (Empty Unit) (Top Unit))
+  (4) {tmp8: compress[1] Left (4) (Empty Unit) (Top Unit),z: Right (2) (Empty Unit) (Left (4) (Empty Unit) (Top Unit)),tree: Empty Unit,w: 2,tmp7: compress[0] Empty Unit,zz: Left (4) (Empty Unit) (Top Unit)} @ {} -> compress[1] Right (2) (Empty Unit) (Left (4) (Empty Unit) (Top Unit))
+align term #5: Int
+align@5 spec (repr (unlabel tmp9))
+  z: Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  tmp9: compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  (5) {z: Left (0) (Node (-3) (Empty Unit) (Empty Unit)) (Right (1) (Empty Unit) (Right (0) (Empty Unit) (Top Unit))),tmp9: compress[1] Left (0) (Node (-3) (Empty Unit) (Empty Unit)) (Right (1) (Empty Unit) (Right (0) (Empty Unit) (Top Unit)))} @ {} -> 1
+  (5) {z: Right (2) (Empty Unit) (Top Unit),tmp9: compress[1] Right (2) (Empty Unit) (Top Unit)} @ {} -> 1
+  (5) {z: Left (5) (Node (-2) (Empty Unit) (Node (3) (Empty Unit) (Empty Unit))) (Right (-4) (Empty Unit) (Top Unit)),tmp9: compress[1] Left (5) (Node (-2) (Empty Unit) (Node (3) (Empty Unit) (Empty Unit))) (Right (-4) (Empty Unit) (Top Unit))} @ {} -> 3
+  (5) {z: Right (-5) (Node (-3) (Empty Unit) (Node (-4) (Empty Unit) (Empty Unit))) (Right (-2) (Empty Unit) (Top Unit)),tmp9: compress[1] Right (-5) (Node (-3) (Empty Unit) (Node (-4) (Empty Unit) (Empty Unit))) (Right (-2) (Empty Unit) (Top Unit))} @ {} -> 1
+  (5) {z: Top Unit,tmp9: compress[1] Top Unit} @ {} -> 1
+  (5) {z: Right (2) (Empty Unit) (Left (4) (Empty Unit) (Top Unit)),tmp9: compress[1] Right (2) (Empty Unit) (Left (4) (Empty Unit) (Top Unit))} @ {} -> 1
+  (5) {z: Left (-3) (Node (-4) (Empty Unit) (Empty Unit)) (Left (-4) (Empty Unit) (Right (0) (Empty Unit) (Top Unit))),tmp9: compress[1] Left (-3) (Node (-4) (Empty Unit) (Empty Unit)) (Left (-4) (Empty Unit) (Right (0) (Empty Unit) (Top Unit)))} @ {} -> 1
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+  mod2([Param0,Param1]@Int)
+num = 1
+start: start
+node: start
+  Compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+  Param1
+  Param4
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param2
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  mod2([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+num = 2
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+  mod2([Param0,Param1]@Int)
+num = 3
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)
+  Compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param2
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  mod2([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  Param3
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+  Param5
+num = 4
+start: start
+node: start
+  Compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)
+  Int([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  Compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>([Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  Param1
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Int
+  Param3
+  +([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  -([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  0
+  max([Param0,Param1,Param2,Param3,Param4,Param5]@Int [Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+  mod2([Param0,Param1,Param2,Param3,Param4,Param5]@Int)
+node: [Param0,Param1,Param2,Param3,Param4,Param5]@Compress[0] BTree. <empty Unit | node {Int,BTree,BTree}>
+  Param5
+num = 5
+start: start
+node: start
+  Compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>([Param0,Param1]@Compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[1] Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+  mod2([Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  0
+  max([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  mod2([Int@0,Int@1,Int@2]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  fold[BTree. <empty Unit | node {Int,BTree,BTree}>->Int]([]@Int [Int@0,Int@1,Int@2]@Int [Param0]@BTree. <empty Unit | node {Int,BTree,BTree}>)
+  max([Param0]@Int [Param0]@Int)
+  spec([Param0]@BTree. <empty Unit | node {Int,BTree,BTree}>)
+  mod2([Param0]@Int)
+node: []@Int
+  +([]@Int []@Int)
+  -([]@Int []@Int)
+  0
+  max([]@Int []@Int)
+  mod2([]@Int)
+node: [Param0]@BTree. <empty Unit | node {Int,BTree,BTree}>
+  Param0
+num = 1
+start: start
+node: start
+  Int([Param0]@Int)
+node: [BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@Int [BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@Int)
+  -([BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@Int [BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@Int)
+  0
+  fold[BTree. <empty Unit | node {Int,BTree,BTree}>->Int]([Int@0,Int@1]@Int [Int@0,Int@1,Int@2,Int@3,Int@4]@Int [BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@BTree. <empty Unit | node {Int,BTree,BTree}>)
+  max([BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@Int [BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@Int)
+  spec([BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@BTree. <empty Unit | node {Int,BTree,BTree}>)
+  mod2([BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@Int)
+node: [BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@BTree. <empty Unit | node {Int,BTree,BTree}>
+  BTree. <empty Unit | node {Int,BTree,BTree}>@0
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  0
+  max([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  mod2([Int@0,Int@1,Int@2]@Int)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  0
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  mod2([Int@0,Int@1]@Int)
+node: [Int@0,Int@1,Int@2,Int@3,Int@4]@Int
+  Int@0
+  Int@1
+  Int@2
+  Int@3
+  Int@4
+  +([Int@0,Int@1,Int@2,Int@3,Int@4]@Int [Int@0,Int@1,Int@2,Int@3,Int@4]@Int)
+  -([Int@0,Int@1,Int@2,Int@3,Int@4]@Int [Int@0,Int@1,Int@2,Int@3,Int@4]@Int)
+  0
+  max([Int@0,Int@1,Int@2,Int@3,Int@4]@Int [Int@0,Int@1,Int@2,Int@3,Int@4]@Int)
+  mod2([Int@0,Int@1,Int@2,Int@3,Int@4]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  fold[Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>->Int]([]@Int [BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@Int [BTree. <empty Unit | node {Int,BTree,BTree}>@0,Int@0,Int@1]@Int [Param0]@Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)
+  fold[BTree. <empty Unit | node {Int,BTree,BTree}>->Int]([]@Int [Int@0,Int@1,Int@2]@Int [Param0]@BTree. <empty Unit | node {Int,BTree,BTree}>)
+  max([Param0]@Int [Param0]@Int)
+  spec([Param0]@BTree. <empty Unit | node {Int,BTree,BTree}>)
+  mod2([Param0]@Int)
+node: []@Int
+  +([]@Int []@Int)
+  -([]@Int []@Int)
+  0
+  max([]@Int []@Int)
+  mod2([]@Int)
+node: [Param0]@BTree. <empty Unit | node {Int,BTree,BTree}>
+  repr([Param0]@Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>)
+node: [Param0]@Zipper. <top Unit | left {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper} | right {Int,BTree. <empty Unit | node {Int,BTree,BTree}>,Zipper}>
+  Param0
+
+
+
+
+
+
+
+
+

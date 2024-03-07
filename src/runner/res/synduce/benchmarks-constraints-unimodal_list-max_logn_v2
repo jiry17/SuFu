@@ -1,0 +1,50 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/constraints/unimodal_list/max_logn_v2.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (joina, joinb, f0) := ∀ x : [33mulist[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): list -> int  =  
+[44m INFO :[0m  target⟨joina, joinb, f0⟩(): ulist -> int [95m«[0m[95mrequires[0m [34mis_unimodal_ulist[0m[95m»[0m =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(): ulist -> list  =  
+
+[44m INFO :[0m  is_unimodal_ulist⟨⟩(): ulist -> bool  =  
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m Classify counterexamples...
+	[44m INFO :[0m ... finished in 0.0114s
+	[44m INFO :[0m Refinement step 2.
+	[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+	[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m 2 counterexamples violate requires.
+[44m INFO :[0m Lemma [32mUSplit[0m([32mUElt[0m([34mi7[0m), [34mi[0m, [34mi0[0m, [34ml1[0m): "lemma i i0 i7 i8 = ¬ ([34mi[0m > [34mi0[0m) => [34mi[0m > [34mi7[0m" is correct, memorizing.
+[44m INFO :[0m Lemma [32mUSplit[0m([32mUElt[0m([34mi7[0m), [34mi[0m, [34mi0[0m, [34ml1[0m): "lemma i i0 i7 i8 = ¬ ([34mi[0m > [34mi0[0m) => [34mi[0m > [34mi7[0m" is correct, memorizing.
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:1 [0;30m[0m
+[44m INFO :[0m Classify counterexamples...
+	[44m INFO :[0m ... finished in 0.3144s
+[44m INFO :[0m 2 counterexamples violate requires.
+[44m INFO :[0m Lemma [32mUSplit[0m([32mUElt[0m([34mi7[0m), [34mi[0m, [34mi0[0m, [34ml1[0m): "lemma i i0 i7 i8 = [34mi[0m > [34mi0[0m => [34mi[0m > [34mi8[0m" is correct, memorizing.
+[44m INFO :[0m Lemma [32mUSplit[0m([32mUElt[0m([34mi7[0m), [34mi[0m, [34mi0[0m, [34ml1[0m): "lemma i i0 i7 i8 = [34mi[0m > [34mi0[0m => [34mi0[0m > [34mi8[0m" is correct, memorizing.
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:2 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0660s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [  24 instances] 0.989s 
+        CVC4-SMT   [  12 instances] 0.514s 
+        CVC-SyGuS  [  26 instances] 0.259s 
+        > TOTAL    [  62 instances]: 1.761s 
+[44m INFO :[0m Solution found in 0.7424s (52.8% verifying):
+
+[31mlet[0m [36mf0[0m [34ma[0m [31m=[0m [34ma[0m
+
+[31mlet[0m [36mjoina[0m [34mb[0m [34mc[0m [31m=[0m max [34mb[0m [34mc[0m
+
+[31mlet[0m [36mjoinb[0m [34mx[0m [34my[0m [31m=[0m max [34mx[0m [34my[0m
+
+[31mlet rec[0m [36mtarget[0m [31m=[0m
+  [33mfunction[0m [3mUElt[0m(a) -> [34mf0[0m [34ma[0m [33m| [0m[3mUSplit[0m(l, a, b, r) -> [34ma[0m > [34mb[0m ? [34mjoina[0m [34ma[0m ([34mtarget[0m [34ml[0m) : [34mjoinb[0m [34mb[0m ([34mtarget[0m [34mr[0m)
+
+

@@ -1,0 +1,98 @@
+
+Item = {Int, Int};
+
+Inductive ItemList;
+
+Inductive List;
+
+Plan = Compress ItemList;
+
+Inductive PlanList;
+
+max = \x: Int. \y: Int. 
+    if (< x y) then y
+    else x;
+
+sumw = fix (
+    \f: Plan -> Int. \xs: Plan. 
+    let tmp1 = 0 in 
+        align (match unlabel xs  with
+          nil _ -> tmp1
+        | cons {h, t} -> + h.1 (f (label t ))
+        end
+) );
+
+sumv = fix (
+    \f: Plan -> Int. \xs: Plan. 
+    let tmp2 = 0 in 
+        align (match unlabel xs  with
+          nil _ -> tmp2
+        | cons {h, t} -> + h.2 (f (label t ))
+        end
+) );
+
+mapP = \g: Plan -> Plan. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      nilPlan _ -> nilPlan Unit
+    | consPlan {h, t} -> consPlan {g h, f t}
+    end
+);
+
+mapI = \g: Plan -> Int. 
+    fix (
+    \f: PlanList -> List. \xs: PlanList. 
+    match xs with
+      nilPlan _ -> inil Unit
+    | consPlan {h, t} -> icons {g h, f t}
+    end
+);
+
+filter = \g: Plan -> Bool. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      nilPlan _ -> nilPlan Unit
+    | consPlan {h, t} -> if (g h) then consPlan {h, f t}
+        else f t
+    end
+);
+
+concat = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      nilPlan _ -> ys
+    | consPlan {h, t} -> consPlan {h, f t ys}
+    end
+);
+
+maximum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      inil _ -> 0
+    | icons {h, t} -> max h (f t)
+    end
+);
+
+extend = \x: Item. \ys: Plan. 
+    align (label (cons {x, unlabel ys }) ) ;
+
+valid = \c: Int. \xs: Plan. 
+    <= (sumw xs) c;
+
+gen = fix (
+    \f: ItemList -> PlanList. \xs: ItemList. 
+    match xs with
+      nil _ -> consPlan {let tmp3 = (nil Unit) in 
+            align (label tmp3 ) , nilPlan Unit}
+    | cons {h, t} -> 
+        let res = (f t) in 
+            concat res (mapP (extend h) res)
+    end
+);
+
+knapsack = \cap: Int. \items: ItemList. 
+    let sols = (gen items) in 
+        let valid_sols = (filter (valid cap) sols) in 
+            maximum (mapI sumv valid_sols);

@@ -1,0 +1,52 @@
+
+Inductive BList;
+
+Inductive CList;
+
+const_true = true;
+
+const_false = false;
+
+op_and = \x: Bool. \y: Bool. 
+    and x y;
+
+op_or = \x: Bool. \y: Bool. 
+    or x y;
+
+cat_list = fix (
+    \f: BList -> BList -> BList. \xs: BList. \ys: BList. 
+    match xs with
+      nil _ -> ys
+    | cons {hd, tl} -> cons {hd, f tl ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> {Bool, Bool, Bool, Bool}. \xs: CList. 
+    match xs with
+      emp _ -> {false, true, true, false}
+    | single a -> {false, a, false, false}
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                {or (or (and (and (not tmp3.2) (not tmp4.3)) (op_or tmp4.1 tmp4.2)) (and (and (op_or tmp4.1 tmp3.4) (not tmp4.3)) (op_or tmp4.1 tmp4.2))) (op_or tmp4.1 tmp3.1), or (and tmp4.2 tmp3.2) (and tmp3.2 (not tmp3.3)), and tmp4.3 tmp3.3, or (or (and (and (not tmp4.2) (not tmp3.3)) (op_or tmp4.2 tmp3.2)) (and (and (not tmp3.2) (not tmp4.3)) (op_or tmp4.2 tmp4.4))) (op_or tmp4.4 tmp3.4)}
+    end
+);
+
+spec = \xs: BList. 
+    (fix (
+    \f: BList -> {Bool, Bool, Bool}. \xs: BList. 
+    match xs with
+      nil _ -> {false, false, false}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let new_seen1 = (or result.1 hd) in 
+                let new_res = (or result.2 (and result.1 (not hd))) in 
+                    let new_aux = (or result.3 (not hd)) in 
+                        {new_seen1, new_res, new_aux}
+    end
+) xs).2;
+
+main = \xs: CList. 
+    let tmp5 = (repr xs) in 
+        tmp5.1;

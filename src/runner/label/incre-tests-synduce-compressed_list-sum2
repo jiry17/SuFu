@@ -1,0 +1,61 @@
+
+Inductive Nat;
+
+Inductive List;
+
+Inductive CList;
+
+repeat = \w: Int. \xs: List. 
+    fix (
+    \f: Nat -> List. \n: Nat. 
+    match n with
+      z _ -> xs
+    | s m -> cons {w, f m}
+    end
+);
+
+value = fix (
+    \f: Nat -> Int. \n: Nat. 
+    match n with
+      z _ -> 0
+    | s m -> + 1 (f m)
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+);
+
+nat_repr = fix (
+    \f: Nat -> Compress Nat. \n: Nat. 
+    match n with
+      z _ -> 
+        let tmp1 = (z unit) in 
+            align (label tmp1 ) 
+    | s m -> 
+        let tmp2 = (f m) in 
+            align (label (s (unlabel tmp2 )) ) 
+    end
+);
+
+repr = fix (
+    \f: CList -> Compress List. \xs: CList. 
+    match xs with
+      cnil _ -> 
+        let tmp3 = (nil unit) in 
+            align (label tmp3 ) 
+    | ccons {n, h, t} -> 
+        let tmp4 = (repeat h) in 
+            let tmp5 = (f t) in 
+                let tmp6 = (nat_repr n) in 
+                    align (label (tmp4 (unlabel tmp5 ) (unlabel tmp6 )) ) 
+    end
+);
+
+main = \xs: CList. 
+    let tmp7 = (repr xs) in 
+        align (spec (unlabel tmp7 )) ;

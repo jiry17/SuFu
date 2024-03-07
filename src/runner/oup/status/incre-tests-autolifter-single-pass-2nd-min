@@ -1,0 +1,16 @@
+
+List :: List. <cons {Int,List} | nil Unit>
+cons : {Int,List} -> List'. <cons {Int,List'} | nil Unit>
+nil : Unit -> List'. <cons {Int,List'} | nil Unit>
+single_pass : (List->Int) -> List -> Int
+inf : Int
+min : Int -> Int -> Int
+max : Int -> Int -> Int
+sndmin : List -> Int
+main : List -> Int
+
+size: 104
+compress-num: 1
+label-num: 7
+rewrite-size: 13
+0.014402

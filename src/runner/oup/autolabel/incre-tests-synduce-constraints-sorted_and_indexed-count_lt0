@@ -1,0 +1,420 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ IDList :: IDList. <ielt Int | icons {Int,Int,IDList}>
+ielt : Int -> IDList'. <ielt Int | icons {Int,Int,IDList'}>
+icons : {Int,Int,IDList} ->
+        IDList'. <ielt Int | icons {Int,Int,IDList'}>
+is_sorted : IDList -> Bool
+len : IDList -> Int
+len_raw : List -> Int
+is_indexed : IDList -> Bool
+add_index : List -> IDList'. <ielt Int | icons {Int,Int,IDList'}>
+drop_index : IDList -> List'. <elt Int | cons {Int,List'}>
+spec : List -> Int
+target : IDList -> IDList
+main : IDList -> Int
+
+
+Inductive List;
+
+Inductive IDList;
+
+is_sorted = let aux = (fix (
+    \f: Int -> IDList -> Bool. \pre: Int. \xs: IDList. 
+    match xs with
+      ielt x -> > pre x
+    | icons {h, _, t} -> and (> pre h) (f h t)
+    end
+)) in 
+        \xs: IDList. 
+        match xs with
+          ielt x -> true
+        | icons {h, _, t} -> aux h t
+        end
+;
+
+len = fix (
+    \f: IDList -> Int. \xs: IDList. 
+    match xs with
+      ielt _ -> 1
+    | icons {_, _, t} -> + 1 (f t)
+    end
+);
+
+len_raw = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt _ -> 1
+    | cons {_, t} -> + 1 (f t)
+    end
+);
+
+is_indexed = fix (
+    \f: IDList -> Bool. \xs: IDList. 
+    match xs with
+      ielt _ -> true
+    | icons {_, id, t} -> and (== id (len xs)) (f t)
+    end
+);
+
+add_index = fix (
+    \f: List -> IDList. \xs: List. 
+    match xs with
+      elt a -> ielt a
+    | cons {h, t} -> icons {h, len_raw xs, f t}
+    end
+);
+
+drop_index = fix (
+    \f: IDList -> List. \xs: IDList. 
+    match xs with
+      ielt a -> elt a
+    | icons {h, _, t} -> cons {h, f t}
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> if (< x 0) then 1
+        else 0
+    | cons {h, t} -> + (f t) (if (< h 0) then 1
+        else -1)
+    end
+);
+
+target = fix (
+    \f: IDList -> Compress IDList. \xs: IDList. 
+    match xs with
+      ielt x -> 
+        align (label xs ) 
+    | icons {h, idx, t} -> if (< h 0) then align (label xs ) 
+        else let tmp1 = (f t) in 
+            align (label (icons {h, idx, unlabel tmp1 }) ) 
+    end
+);
+
+main = \inp: IDList. 
+    if (and (is_sorted inp) (is_indexed inp)) then let tmp2 = (target inp) in 
+        align (spec (drop_index (unlabel tmp2 ))) 
+    else 0;
+align term #0: compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+align@0 create@0 xs
+  xs: IDList. <ielt Int | icons {Int,Int,IDList}>
+  x: Int
+align term #1: compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+align@1 create@0 xs
+  t: IDList. <ielt Int | icons {Int,Int,IDList}>
+  xs: IDList. <ielt Int | icons {Int,Int,IDList}>
+  idx: Int
+  h: Int
+align term #2: compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+align@2 create@0 icons ({h,idx,unlabel tmp1})
+  t: IDList. <ielt Int | icons {Int,Int,IDList}>
+  xs: IDList. <ielt Int | icons {Int,Int,IDList}>
+  tmp1: compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+  idx: Int
+  h: Int
+align term #3: Int
+align@3 spec (drop_index (unlabel tmp2))
+  inp: IDList. <ielt Int | icons {Int,Int,IDList}>
+  tmp2: compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+Components for compress:
+  icons [(Int * Int * IDList. <ielt Int | icons {Int,Int,IDList}>)] -> IDList. <ielt Int | icons {Int,Int,IDList}> 1
+  ielt [Int] -> IDList. <ielt Int | icons {Int,Int,IDList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+
+Components for align:
+  icons [(Int * Int * IDList. <ielt Int | icons {Int,Int,IDList}>)] -> IDList. <ielt Int | icons {Int,Int,IDList}> 1
+  drop_index [IDList. <ielt Int | icons {Int,Int,IDList}>] -> List. <elt Int | cons {Int,List}> 7
+  ielt [Int] -> IDList. <ielt Int | icons {Int,Int,IDList}> 1
+  is_sorted [IDList. <ielt Int | icons {Int,Int,IDList}>] -> Bool 2
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  add_index [List. <elt Int | cons {Int,List}>] -> IDList. <ielt Int | icons {Int,Int,IDList}> 6
+  len_raw [List. <elt Int | cons {Int,List}>] -> Int 4
+  is_indexed [IDList. <ielt Int | icons {Int,Int,IDList}>] -> Bool 5
+  len [IDList. <ielt Int | icons {Int,Int,IDList}>] -> Int 3
+  spec [List. <elt Int | cons {Int,List}>] -> Int 8
+
+Components for comb:
+  icons [(Int * Int * IDList. <ielt Int | icons {Int,Int,IDList}>)] -> IDList. <ielt Int | icons {Int,Int,IDList}> 1
+  ielt [Int] -> IDList. <ielt Int | icons {Int,Int,IDList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+
+align term #0: compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+align@0 create@0 xs
+  xs: IDList. <ielt Int | icons {Int,Int,IDList}>
+  x: Int
+align term #1: compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+align@1 create@0 xs
+  t: IDList. <ielt Int | icons {Int,Int,IDList}>
+  xs: IDList. <ielt Int | icons {Int,Int,IDList}>
+  idx: Int
+  h: Int
+align term #2: compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+align@2 create@0 icons ({h,idx,unlabel tmp1})
+  t: IDList. <ielt Int | icons {Int,Int,IDList}>
+  xs: IDList. <ielt Int | icons {Int,Int,IDList}>
+  tmp1: compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+  idx: Int
+  h: Int
+align term #3: Int
+align@3 spec (drop_index (unlabel tmp2))
+  inp: IDList. <ielt Int | icons {Int,Int,IDList}>
+  tmp2: compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Int
+  Param1
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param2
+  Param3
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>)
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+  Param2
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param3
+  Param4
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+num = 3
+start: start
+node: start
+  Compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>([Param0,Param1]@Compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] IDList. <ielt Int | icons {Int,Int,IDList}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  ite([Int@0]@Bool [Int@0]@Int [Int@0]@Int)
+  len_raw([Int@0]@List. <elt Int | cons {Int,List}>)
+  len([Int@0]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  spec([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1,Int@2]@Int
+  Int@0
+  Int@1
+  Int@2
+  +([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  -([Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  ite([Int@0,Int@1,Int@2]@Bool [Int@0,Int@1,Int@2]@Int [Int@0,Int@1,Int@2]@Int)
+  len_raw([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+  len([Int@0,Int@1,Int@2]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  spec([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+node: [Bool@0,Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Bool@0,Int@0,Int@1]@Int [Bool@0,Int@0,Int@1]@Int)
+  -([Bool@0,Int@0,Int@1]@Int [Bool@0,Int@0,Int@1]@Int)
+  ite([Bool@0,Int@0,Int@1]@Bool [Bool@0,Int@0,Int@1]@Int [Bool@0,Int@0,Int@1]@Int)
+  len_raw([Bool@0,Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  len([Bool@0,Int@0,Int@1]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  spec([Bool@0,Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Bool@0,Int@0,Int@1]@Bool
+  Bool@0
+  is_sorted([Bool@0,Int@0,Int@1]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  is_indexed([Bool@0,Int@0,Int@1]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[IDList. <ielt Int | icons {Int,Int,IDList}>->Int]([Int@0]@Int [Int@0,Int@1,Int@2]@Int [Param0]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  len_raw([Param0]@List. <elt Int | cons {Int,List}>)
+  len([Param0]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  spec([Param0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Bool
+  fold[IDList. <ielt Int | icons {Int,Int,IDList}>->Bool]([Int@0]@Bool [Bool@0,Int@0,Int@1]@Bool [Param0]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  is_sorted([Param0]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  is_indexed([Param0]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+node: [Int@0]@Bool
+  is_sorted([Int@0]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  is_indexed([Int@0]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+node: [Int@0,Int@1,Int@2]@Bool
+  is_sorted([Int@0,Int@1,Int@2]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  is_indexed([Int@0,Int@1,Int@2]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+node: [Int@0]@IDList. <ielt Int | icons {Int,Int,IDList}>
+  ielt([Int@0]@Int)
+  add_index([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1,Int@2]@IDList. <ielt Int | icons {Int,Int,IDList}>
+  ielt([Int@0,Int@1,Int@2]@Int)
+  add_index([Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>)
+node: [Bool@0,Int@0,Int@1]@IDList. <ielt Int | icons {Int,Int,IDList}>
+  ielt([Bool@0,Int@0,Int@1]@Int)
+  add_index([Bool@0,Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  drop_index([Param0]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  elt([Param0]@Int)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  drop_index([Int@0]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  elt([Int@0]@Int)
+node: [Int@0,Int@1,Int@2]@List. <elt Int | cons {Int,List}>
+  drop_index([Int@0,Int@1,Int@2]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  elt([Int@0,Int@1,Int@2]@Int)
+node: [Bool@0,Int@0,Int@1]@List. <elt Int | cons {Int,List}>
+  drop_index([Bool@0,Int@0,Int@1]@IDList. <ielt Int | icons {Int,Int,IDList}>)
+  elt([Bool@0,Int@0,Int@1]@Int)
+node: [Param0]@IDList. <ielt Int | icons {Int,Int,IDList}>
+  Param0
+  ielt([Param0]@Int)
+  add_index([Param0]@List. <elt Int | cons {Int,List}>)
+
+
+
+
+
+
+
+
+
+
+
+
+  [] spec(drop_index(Param0))
+  [0] Param1
+  [] spec(drop_index(Param0))
+  [0] Param2
+  [] spec(drop_index(Param0))
+  [0] Param2 -> spec(drop_index(Param0))
+  [] null
+  [0] Param1 -> spec(drop_index(Param0))
+compress #0: Int
+pass #0: 
+if (< x 0) then 1
+else 0
+pass #1: 
+idx
+pass #2: 
+- tmp1 1
+pass #3: 
+tmp2
+
+Inductive List;
+
+Inductive IDList;
+
+is_sorted = let aux = (fix (
+    \f: Int -> IDList -> Bool. \pre: Int. \xs: IDList. 
+    match xs with
+      ielt x -> > pre x
+    | icons {h, _, t} -> and (> pre h) (f h t)
+    end
+)) in 
+        \xs: IDList. 
+        match xs with
+          ielt x -> true
+        | icons {h, _, t} -> aux h t
+        end
+;
+
+len = fix (
+    \f: IDList -> Int. \xs: IDList. 
+    match xs with
+      ielt _ -> 1
+    | icons {_, _, t} -> + 1 (f t)
+    end
+);
+
+len_raw = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt _ -> 1
+    | cons {_, t} -> + 1 (f t)
+    end
+);
+
+is_indexed = fix (
+    \f: IDList -> Bool. \xs: IDList. 
+    match xs with
+      ielt _ -> true
+    | icons {_, id, t} -> and (== id (len xs)) (f t)
+    end
+);
+
+add_index = fix (
+    \f: List -> IDList. \xs: List. 
+    match xs with
+      elt a -> ielt a
+    | cons {h, t} -> icons {h, len_raw xs, f t}
+    end
+);
+
+drop_index = fix (
+    \f: IDList -> List. \xs: IDList. 
+    match xs with
+      ielt a -> elt a
+    | icons {h, _, t} -> cons {h, f t}
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> if (< x 0) then 1
+        else 0
+    | cons {h, t} -> + (f t) (if (< h 0) then 1
+        else -1)
+    end
+);
+
+target = fix (
+    \f: IDList -> Int. \xs: IDList. 
+    match xs with
+      ielt x -> if (< x 0) then 1
+        else 0
+    | icons {h, idx, t} -> if (< h 0) then idx
+        else let tmp1 = (f t) in 
+            - tmp1 1
+    end
+);
+
+main = \inp: IDList. 
+    if (and (is_sorted inp) (is_indexed inp)) then let tmp2 = (target inp) in 
+        tmp2
+    else 0;
+syn-comb: 1.26004
+collect: 24.0976
+label: 0.018051
+extend-component: 0
+execute: 0.002349
+syn-align: 24.1039
+comb-size: 15
+align-size: 5
+extract-size: 4
+25.3914
+Success

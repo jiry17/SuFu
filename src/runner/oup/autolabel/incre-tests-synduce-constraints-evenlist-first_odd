@@ -1,0 +1,240 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ mod2 : Int -> Int
+is_even_pos : List -> Bool
+spec : List -> Int
+target : List -> List'. <elt Int | cons {Int,List'}>
+main : List -> Int
+
+
+Inductive List;
+
+mod2 = \x: Int. 
+    - x (* (/ x 2) 2);
+
+is_even_pos = fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt x -> and (> x 0) (== (mod2 x) 0)
+    | cons {h, t} -> and (and (> h 0) (== (mod2 h) 0)) (f t)
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> if (== (mod2 x) 1) then x
+        else 0
+    | cons {h, t} -> if (== (mod2 h) 1) then h
+        else f t
+    end
+);
+
+target = fix (
+    \f: List -> Compress List. \xs: List. 
+    match xs with
+      elt x -> 
+        let tmp1 = (elt x) in 
+            align (label tmp1 ) 
+    | cons {h, t} -> 
+        let tmp2 = (cons {h, t}) in 
+            align (label tmp2 ) 
+    end
+);
+
+main = \xs: List. 
+    if (is_even_pos xs) then let tmp3 = (target xs) in 
+        align (spec (unlabel tmp3 )) 
+    else 0;
+align term #0: compress[0] List. <elt Int | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: List. <elt Int | cons {Int,List}>
+  x: Int
+  tmp1: List. <elt Int | cons {Int,List}>
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 tmp2
+  h: Int
+  xs: List. <elt Int | cons {Int,List}>
+  t: List. <elt Int | cons {Int,List}>
+  tmp2: List. <elt Int | cons {Int,List}>
+align term #2: Int
+align@2 spec (unlabel tmp3)
+  xs: List. <elt Int | cons {Int,List}>
+  tmp3: compress[0] List. <elt Int | cons {Int,List}>
+Components for compress:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  mod2 [Int] -> Int 1
+
+Components for align:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  spec [List. <elt Int | cons {Int,List}>] -> Int 3
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  mod2 [Int] -> Int 1
+  is_even_pos [List. <elt Int | cons {Int,List}>] -> Bool 2
+
+Components for comb:
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  mod2 [Int] -> Int 1
+
+align term #0: compress[0] List. <elt Int | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: List. <elt Int | cons {Int,List}>
+  x: Int
+  tmp1: List. <elt Int | cons {Int,List}>
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 tmp2
+  h: Int
+  xs: List. <elt Int | cons {Int,List}>
+  t: List. <elt Int | cons {Int,List}>
+  tmp2: List. <elt Int | cons {Int,List}>
+align term #2: Int
+align@2 spec (unlabel tmp3)
+  xs: List. <elt Int | cons {Int,List}>
+  tmp3: compress[0] List. <elt Int | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param1
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  mod2([Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+  mod2([Param0,Param1,Param2,Param3]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] List. <elt Int | cons {Int,List}>([Param0,Param1]@Compress[0] List. <elt Int | cons {Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] List. <elt Int | cons {Int,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  mod2([Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+  Bool([Param0]@Bool)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  ite([Int@0]@Bool [Int@0]@Int [Int@0]@Int)
+  spec([Int@0]@List. <elt Int | cons {Int,List}>)
+  mod2([Int@0]@Int)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  ite([Int@0,Int@1]@Bool [Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  spec([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  mod2([Int@0,Int@1]@Int)
+node: [Bool@0,Int@0]@Int
+  Int@0
+  +([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  -([Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  ite([Bool@0,Int@0]@Bool [Bool@0,Int@0]@Int [Bool@0,Int@0]@Int)
+  spec([Bool@0,Int@0]@List. <elt Int | cons {Int,List}>)
+  mod2([Bool@0,Int@0]@Int)
+node: [Bool@0,Int@0]@Bool
+  Bool@0
+  is_even_pos([Bool@0,Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  ite([Param0]@Bool [Param0]@Int [Param0]@Int)
+  fold[List. <elt Int | cons {Int,List}>->Int]([Int@0]@Int [Int@0,Int@1]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+  spec([Param0]@List. <elt Int | cons {Int,List}>)
+  mod2([Param0]@Int)
+node: [Param0]@Bool
+  fold[List. <elt Int | cons {Int,List}>->Bool]([Int@0]@Bool [Bool@0,Int@0]@Bool [Param0]@List. <elt Int | cons {Int,List}>)
+  is_even_pos([Param0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@Bool
+  is_even_pos([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1]@Bool
+  is_even_pos([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0]@Int)
+node: [Int@0,Int@1]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1]@Int)
+node: [Bool@0,Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Bool@0,Int@0]@Int)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  Param0
+  elt([Param0]@Int)
+
+
+
+  [] null
+compress #0: Unit
+pass #0: 
+Unit
+pass #1: 
+Unit
+pass #2: 
+0
+
+Inductive List;
+
+mod2 = \x: Int. 
+    - x (* (/ x 2) 2);
+
+is_even_pos = fix (
+    \f: List -> Bool. \xs: List. 
+    match xs with
+      elt x -> and (> x 0) (== (mod2 x) 0)
+    | cons {h, t} -> and (and (> h 0) (== (mod2 h) 0)) (f t)
+    end
+);
+
+spec = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt x -> if (== (mod2 x) 1) then x
+        else 0
+    | cons {h, t} -> if (== (mod2 h) 1) then h
+        else f t
+    end
+);
+
+target = fix (
+    \f: List -> Unit. \xs: List. 
+    match xs with
+      elt x -> Unit
+    | cons {h, t} -> Unit
+    end
+);
+
+main = \xs: List. 
+    if (is_even_pos xs) then 0
+    else 0;
+syn-comb: 0.017327
+syn-align: 1.04509
+label: 0.012252
+collect: 1.04451
+comb-size: 3
+align-size: 0
+extract-size: 0
+1.08086
+Success

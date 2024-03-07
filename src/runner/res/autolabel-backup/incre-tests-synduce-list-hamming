@@ -1,0 +1,40 @@
+
+Inductive ZipCList;
+
+Inductive ZipList;
+
+cat = fix (
+    \f: ZipList -> ZipList -> ZipList. \xs: ZipList. \ys: ZipList. 
+    match xs with
+      nil _ -> ys
+    | cons {a, b, t} -> cons {a, b, f t ys}
+    end
+);
+
+repr = fix (
+    \f: ZipCList -> Int. \xs: ZipCList. 
+    match xs with
+      cnil _ -> 0
+    | single {a, b} -> 
+        let c0 = (- b a) in 
+            if (or (< 0 c0) (< c0 0)) then 0
+            else 1
+    | concat {a, b} -> 
+        let tmp3 = (f a) in 
+            let tmp4 = (f b) in 
+                + tmp3 tmp4
+    end
+);
+
+spec = fix (
+    \f: ZipList -> Int. \xs: ZipList. 
+    match xs with
+      nil _ -> 0
+    | cons {a, b, t} -> if (== a b) then + 1 (f t)
+        else f t
+    end
+);
+
+main = \xs: ZipCList. 
+    let tmp5 = (repr xs) in 
+        tmp5;

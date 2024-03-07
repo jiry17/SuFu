@@ -1,0 +1,20 @@
+
+Tree :: Tree. <empty Unit | node {Int,Tree,Tree}>
+ empty : Unit -> Tree'. <empty Unit | node {Int,Tree',Tree'}>
+ node : {Int,Tree,Tree} ->
+        Tree'. <empty Unit | node {Int,Tree',Tree'}>
+ List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+cat : List -> List -> List'. <nil Unit | cons {Int,List'}>
+repr : Tree -> List'. <nil Unit | cons {Int,List'}>
+target : Tree -> Tree'. <empty Unit | node {Int,Tree',Tree'}>
+x : Int
+spec : List -> Bool
+main : Tree -> Bool
+
+size: 137
+compress-num: 1
+label-num: 8
+rewrite-size: 17
+0.014577

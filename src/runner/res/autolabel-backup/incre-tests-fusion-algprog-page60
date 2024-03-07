@@ -1,0 +1,34 @@
+
+Inductive Tree;
+
+tri = \op: Int -> Int. 
+    fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      tip _ -> 0
+    | bin {l, r} -> 
+        let tmp2 = (f l) in 
+            let tmp3 = (f r) in 
+                if (< tmp2 tmp3) then + 1 tmp3
+                else + 1 tmp2
+    end
+);
+
+op = \x: Int. 
+    + 1 x;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+maximum = fix (
+    \f: Tree -> Int. \t: Tree. 
+    match t with
+      tip w -> w
+    | bin {l, r} -> max (f l) (f r)
+    end
+);
+
+main = \t: Tree. 
+    let tmp4 = (tri op t) in 
+        tmp4;

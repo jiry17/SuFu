@@ -1,0 +1,188 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/constraints/symmetric_tree/min.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (f0, s0) := ∀ x : [33mitree[0m. ([34mamin[0m o [34mrepr[0m)(x) = [34mamin2[0m(x)
+[44m INFO :[0m  amin⟨⟩(): itree -> int  =  
+[44m INFO :[0m  amin2⟨f0, s0⟩(): itree -> int [95m«[0m[95mrequires[0m [34mis_symmetric[0m[95m»[0m =  
+[44m INFO :[0m repr(x) = [34mx[0m
+[44m INFO :[0m  is_symmetric⟨⟩(): itree -> bool  =  
+[44m INFO :[0m 16 configurations possible.
+
+------------------------------------------------------------------------------------------------[1]-
+[44m INFO :[0m New target: [31mlet rec[0m [36mamin2[0m [31m=[0m
+                      [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m) ([34mamin2[0m [34mr[0m)
+
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0087s
+[44m INFO :[0m 
+[31mlet[0m [36mf0[0m [34ma[0m [34mb[0m [34mc[0m [31m=[0m min (min [34ma[0m [34mb[0m) [34mc[0m
+
+[31mlet[0m [36ms0[0m [34mx[0m [31m=[0m [34mx[0m
+
+[31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m) ([34mamin2[0m [34mr[0m)
+
+
+
+------------------------------------------------------------------------------------------------[2]-
+[44m INFO :[0m New target: [31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m)
+
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m 1 counterexamples violate requires.
+[44m INFO :[0m Lemma [32mNode[0m([34mi[0m, [34ml0[0m, [34ml1[0m): "lemma i i3 i4 = [34mi3[0m = [34mi4[0m" is correct, memorizing.
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:1 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0088s
+[44m INFO :[0m 
+[31mlet[0m [36mf0[0m [34my[0m [34mz[0m [31m=[0m min [34my[0m [34mz[0m
+
+[31mlet[0m [36ms0[0m [34mw[0m [31m=[0m [34mw[0m
+
+[31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m)
+
+
+
+------------------------------------------------------------------------------------------------[3]-
+[44m INFO :[0m New target: [31mlet rec[0m [36mamin2[0m [31m=[0m
+                      [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m  [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m) ([34mamin2[0m [34mr[0m)
+
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m All counterexamples are non-spurious: nothing to refine.
+[44m INFO :[0m Unrealizable.
+[44m INFO :[0m Possible repair: add recursive call
+
+------------------------------------------------------------------------------------------------[4]-
+[44m INFO :[0m New target: [31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34mr[0m)
+
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0082s
+[44m INFO :[0m 
+[31mlet[0m [36mf0[0m [34mu[0m [34mv[0m [31m=[0m min [34mu[0m [34mv[0m
+
+[31mlet[0m [36ms0[0m [34ma[0m [31m=[0m [34ma[0m
+
+[31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34mr[0m)
+
+
+
+------------------------------------------------------------------------------------------------[5]-
+[44m INFO :[0m New target: [31mlet rec[0m [36mamin2[0m [31m=[0m
+                      [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m ([34mamin2[0m [34ml[0m) ([34mamin2[0m [34mr[0m)
+
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m All counterexamples are non-spurious: nothing to refine.
+[44m INFO :[0m Unrealizable.
+[44m INFO :[0m Possible repair: add recursive call
+
+------------------------------------------------------------------------------------------------[6]-
+[44m INFO :[0m New target: [31mlet rec[0m [36mamin2[0m [31m=[0m
+                      [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m) ([34mamin2[0m [34mr[0m)
+
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0081s
+[44m INFO :[0m 
+[31mlet[0m [36mf0[0m [34mb1[0m [34mc1[0m [34mx1[0m [31m=[0m min (min [34mb1[0m [34mc1[0m) [34mx1[0m
+
+[31mlet[0m [36ms0[0m [34my1[0m [31m=[0m [34my1[0m
+
+[31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m) ([34mamin2[0m [34mr[0m)
+
+
+
+------------------------------------------------------------------------------------------------[7]-
+[44m INFO :[0m New target: [31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m
+
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Classify counterexamples...
+[44m INFO :[0m All counterexamples are non-spurious: nothing to refine.
+[44m INFO :[0m Unrealizable.
+[44m INFO :[0m Possible repair: add recursive call
+
+------------------------------------------------------------------------------------------------[7]-
+------------------------------------------------------------------------------------------------[6]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [   1 instances] 0.008s 
+        > TOTAL    [   1 instances]: 0.008s 
+[44m INFO :[0m Solution found in 0.0090s (90.0% verifying):
+
+[31mlet[0m [36mf0[0m [34mb1[0m [34mc1[0m [34mx1[0m [31m=[0m min (min [34mb1[0m [34mc1[0m) [34mx1[0m
+
+[31mlet[0m [36ms0[0m [34my1[0m [31m=[0m [34my1[0m
+
+[31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m) ([34mamin2[0m [34mr[0m)
+
+
+
+------------------------------------------------------------------------------------------------[5]-
+------------------------------------------------------------------------------------------------[4]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [   2 instances] 0.016s 
+        CVC-SyGuS  [   2 instances] 0.017s 
+        > TOTAL    [   4 instances]: 0.032s 
+[44m INFO :[0m Solution found in 0.0180s (45.4% verifying):
+
+[31mlet[0m [36mf0[0m [34mu[0m [34mv[0m [31m=[0m min [34mu[0m [34mv[0m
+
+[31mlet[0m [36ms0[0m [34ma[0m [31m=[0m [34ma[0m
+
+[31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34mr[0m)
+
+
+
+------------------------------------------------------------------------------------------------[3]-
+------------------------------------------------------------------------------------------------[2]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [   7 instances] 0.134s 
+        CVC4-SMT   [   4 instances] 0.109s 
+        CVC-SyGuS  [   6 instances] 0.055s 
+        > TOTAL    [  17 instances]: 0.298s 
+[44m INFO :[0m Solution found in 0.1596s (5.5% verifying):
+
+[31mlet[0m [36mf0[0m [34my[0m [34mz[0m [31m=[0m min [34my[0m [34mz[0m
+
+[31mlet[0m [36ms0[0m [34mw[0m [31m=[0m [34mw[0m
+
+[31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m)
+
+
+
+------------------------------------------------------------------------------------------------[1]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [   1 instances] 0.008s 
+        > TOTAL    [   1 instances]: 0.008s 
+[44m INFO :[0m Solution found in 0.0102s (85.4% verifying):
+
+[31mlet[0m [36mf0[0m [34ma[0m [34mb[0m [34mc[0m [31m=[0m min (min [34ma[0m [34mb[0m) [34mc[0m
+
+[31mlet[0m [36ms0[0m [34mx[0m [31m=[0m [34mx[0m
+
+[31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m) ([34mamin2[0m [34mr[0m)
+
+
+[44m INFO :[0m Best solution:
+
+------------------------------------------------------------------------------------------------[2]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [   7 instances] 0.134s 
+        CVC4-SMT   [   4 instances] 0.109s 
+        CVC-SyGuS  [   6 instances] 0.055s 
+        > TOTAL    [  17 instances]: 0.298s 
+[44m INFO :[0m Solution found in 0.1596s (5.5% verifying):
+
+[31mlet[0m [36mf0[0m [34my[0m [34mz[0m [31m=[0m min [34my[0m [34mz[0m
+
+[31mlet[0m [36ms0[0m [34mw[0m [31m=[0m [34mw[0m
+
+[31mlet rec[0m [36mamin2[0m [31m=[0m [33mfunction[0m [3mLeaf[0m(x) -> [34ms0[0m [34mx[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mf0[0m [34ma[0m ([34mamin2[0m [34ml[0m)
+
+
+[44m INFO :[0m 7 configurations inspected (16 possible configs)
+[44m INFO :[0m Found best known solution: true
+[44m INFO :[0m 4 solutions | 3 unrealizable  | 0 failed
+[44m INFO :[0m R* cache hits: 0 | Orig. config solved: true | Reused lemmas: 9

@@ -1,0 +1,34 @@
+
+Inductive List;
+
+Inductive CList;
+
+spec = fix (
+    \f: List -> Int. \x: List. 
+    match x with
+      elt a -> a
+    | cons {h, t} -> f t
+    end
+);
+
+cat = fix (
+    \f: List -> List -> List. \a: List. \b: List. 
+    match a with
+      elt a -> cons {a, b}
+    | cons {h, t} -> cons {h, f t b}
+    end
+);
+
+repr = fix (
+    \f: CList -> Int. \xs: CList. 
+    match xs with
+      single a -> a
+    | concat {a, b} -> 
+        let tmp3 = (f b) in 
+            tmp3
+    end
+);
+
+main = \x: CList. 
+    let tmp4 = (repr x) in 
+        tmp4;

@@ -1,0 +1,51 @@
+
+Inductive List;
+
+Inductive CList;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+min = \a: Int. \b: Int. 
+    if (> a b) then b
+    else a;
+
+cat_list = fix (
+    \f: List -> List -> List. \xs: List. \ys: List. 
+    match xs with
+      two {a, b} -> cons {a, cons {b, ys}}
+    | cons {hd, tl} -> cons {hd, f tl ys}
+    end
+);
+
+repr = fix (
+    \f: CList -> {Int, Int}. \xs: CList. 
+    match xs with
+      ctwo {a, b} -> 
+        let c0 = (max b a) in 
+            let c1 = (min b a) in 
+                {c0, c1}
+    | concat {a, b} -> 
+        let tmp2 = (f a) in 
+            let tmp3 = (f b) in 
+                {- (+ (min tmp3.1 tmp2.2) (min tmp3.2 tmp2.1)) (min tmp3.2 tmp2.2), min tmp3.2 tmp2.2}
+    end
+);
+
+spec = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      two {a, b} -> {min a b, max a b}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let new_min = (min hd result.1) in 
+                let new_snd = (min result.2 (max hd result.1)) in 
+                    {new_min, new_snd}
+    end
+) xs).2;
+
+main = \x: CList. 
+    let tmp4 = (repr x) in 
+        tmp4.1;

@@ -1,0 +1,18 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ is_sorted : List -> Bool
+is_pos : List -> Bool
+max : Int -> Int -> Int
+min : Int -> Int -> Int
+spec : List -> Int
+last : List -> Int
+target : List -> List
+main : List -> Int
+
+size: 199
+compress-num: 1
+label-num: 6
+rewrite-size: 8
+0.019389

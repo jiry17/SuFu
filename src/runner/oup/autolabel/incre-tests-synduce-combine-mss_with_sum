@@ -1,0 +1,346 @@
+
+List :: List. <elt Int | cons {Int,List}>
+ elt : Int -> List'. <elt Int | cons {Int,List'}>
+ cons : {Int,List} -> List'. <elt Int | cons {Int,List'}>
+ IdxList :: IdxList. <ielt Int | icons {Int,Int,IdxList}>
+ielt : Int -> IdxList'. <ielt Int | icons {Int,Int,IdxList'}>
+icons : {Int,Int,IdxList} ->
+        IdxList'. <ielt Int | icons {Int,Int,IdxList'}>
+max : Int -> Int -> Int
+sum : IdxList -> Int
+hsum : List -> Int
+drop_sum_list : IdxList -> List'. <elt Int | cons {Int,List'}>
+mss : List -> Int
+spec : List -> Int
+repr : IdxList -> List'. <elt Int | cons {Int,List'}>
+main : IdxList -> Int
+
+
+Inductive List;
+
+Inductive IdxList;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+sum = fix (
+    \f: IdxList -> Int. \xs: IdxList. 
+    match xs with
+      ielt t -> t
+    | icons {hd, idx, tl} -> + hd (f tl)
+    end
+);
+
+hsum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt t -> t
+    | cons {hd, tl} -> + hd (f tl)
+    end
+);
+
+drop_sum_list = fix (
+    \f: IdxList -> List. \xs: IdxList. 
+    match xs with
+      ielt t -> elt t
+    | icons {hd, idx, tl} -> cons {hd, f tl}
+    end
+);
+
+mss = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int, Int}. \xs: List. 
+    match xs with
+      elt t -> if (> t 0) then {t, t, t}
+        else {0, 0, 0}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let mts_tl = result.1 in 
+                let mps_tl = result.2 in 
+                    let mss_tl = result.3 in 
+                        let sum_tl = (hsum tl) in 
+                            let new_mps = (max (+ hd mps_tl) 0) in 
+                                let new_mts = (max (+ hd sum_tl) mts_tl) in 
+                                    {new_mts, new_mps, max new_mps mss_tl}
+    end
+) xs).3;
+
+spec = \xs: List. 
+    mss xs;
+
+repr = fix (
+    \f: IdxList -> Compress List. \xs: IdxList. 
+    match xs with
+      ielt t -> 
+        let tmp1 = (elt t) in 
+            align (label tmp1 ) 
+    | icons {hd, idx, tl} -> 
+        let tmp2 = (f tl) in 
+            align (label (cons {hd, unlabel tmp2 }) ) 
+    end
+);
+
+main = \xs: IdxList. 
+    let tmp3 = (repr xs) in 
+        align (spec (unlabel tmp3 )) ;
+align term #0: compress[0] List. <elt Int | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: IdxList. <ielt Int | icons {Int,Int,IdxList}>
+  t: Int
+  tmp1: List. <elt Int | cons {Int,List}>
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 cons ({hd,unlabel tmp2})
+  idx: Int
+  hd: Int
+  xs: IdxList. <ielt Int | icons {Int,Int,IdxList}>
+  tmp2: compress[0] List. <elt Int | cons {Int,List}>
+  tl: IdxList. <ielt Int | icons {Int,Int,IdxList}>
+align term #2: Int
+align@2 spec (unlabel tmp3)
+  xs: IdxList. <ielt Int | icons {Int,Int,IdxList}>
+  tmp3: compress[0] List. <elt Int | cons {Int,List}>
+Components for compress:
+  max [Int,Int] -> Int 2
+  icons [(Int * Int * IdxList. <ielt Int | icons {Int,Int,IdxList}>)] -> IdxList. <ielt Int | icons {Int,Int,IdxList}> 1
+  ielt [Int] -> IdxList. <ielt Int | icons {Int,Int,IdxList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+
+Components for align:
+  max [Int,Int] -> Int 2
+  hsum [List. <elt Int | cons {Int,List}>] -> Int 4
+  icons [(Int * Int * IdxList. <ielt Int | icons {Int,Int,IdxList}>)] -> IdxList. <ielt Int | icons {Int,Int,IdxList}> 1
+  ielt [Int] -> IdxList. <ielt Int | icons {Int,Int,IdxList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+  sum [IdxList. <ielt Int | icons {Int,Int,IdxList}>] -> Int 3
+  drop_sum_list [IdxList. <ielt Int | icons {Int,Int,IdxList}>] -> List. <elt Int | cons {Int,List}> 5
+  spec [List. <elt Int | cons {Int,List}>] -> Int 7
+  mss [List. <elt Int | cons {Int,List}>] -> Int 6
+
+Components for comb:
+  max [Int,Int] -> Int 2
+  icons [(Int * Int * IdxList. <ielt Int | icons {Int,Int,IdxList}>)] -> IdxList. <ielt Int | icons {Int,Int,IdxList}> 1
+  ielt [Int] -> IdxList. <ielt Int | icons {Int,Int,IdxList}> 1
+  elt [Int] -> List. <elt Int | cons {Int,List}> 0
+  cons [(Int * List. <elt Int | cons {Int,List}>)] -> List. <elt Int | cons {Int,List}> 0
+
+align term #0: compress[0] List. <elt Int | cons {Int,List}>
+align@0 create@0 tmp1
+  xs: IdxList. <ielt Int | icons {Int,Int,IdxList}>
+  t: Int
+  tmp1: List. <elt Int | cons {Int,List}>
+align term #1: compress[0] List. <elt Int | cons {Int,List}>
+align@1 create@0 cons ({hd,unlabel tmp2})
+  idx: Int
+  hd: Int
+  xs: IdxList. <ielt Int | icons {Int,Int,IdxList}>
+  tmp2: compress[0] List. <elt Int | cons {Int,List}>
+  tl: IdxList. <ielt Int | icons {Int,Int,IdxList}>
+align term #2: Int
+align@2 spec (unlabel tmp3)
+  xs: IdxList. <ielt Int | icons {Int,Int,IdxList}>
+  tmp3: compress[0] List. <elt Int | cons {Int,List}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param1
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3,Param4]@Int)
+  Compress[0] List. <elt Int | cons {Int,List}>([Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <elt Int | cons {Int,List}>)
+node: [Param0,Param1,Param2,Param3,Param4]@Compress[0] List. <elt Int | cons {Int,List}>
+  Param3
+node: [Param0,Param1,Param2,Param3,Param4]@Int
+  Param0
+  Param1
+  +([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  -([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+  0
+  1
+  max([Param0,Param1,Param2,Param3,Param4]@Int [Param0,Param1,Param2,Param3,Param4]@Int)
+num = 2
+start: start
+node: start
+  Compress[0] List. <elt Int | cons {Int,List}>([Param0,Param1]@Compress[0] List. <elt Int | cons {Int,List}>)
+  Int([Param0,Param1]@Int)
+node: [Param0,Param1]@Compress[0] List. <elt Int | cons {Int,List}>
+  Param1
+node: [Param0,Param1]@Int
+  +([Param0,Param1]@Int [Param0,Param1]@Int)
+  -([Param0,Param1]@Int [Param0,Param1]@Int)
+  0
+  1
+  max([Param0,Param1]@Int [Param0,Param1]@Int)
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Int@0]@Int
+  Int@0
+  +([Int@0]@Int [Int@0]@Int)
+  -([Int@0]@Int [Int@0]@Int)
+  max([Int@0]@Int [Int@0]@Int)
+  hsum([Int@0]@List. <elt Int | cons {Int,List}>)
+  sum([Int@0]@IdxList. <ielt Int | icons {Int,Int,IdxList}>)
+  spec([Int@0]@List. <elt Int | cons {Int,List}>)
+  mss([Int@0]@List. <elt Int | cons {Int,List}>)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  hsum([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  sum([Int@0,Int@1]@IdxList. <ielt Int | icons {Int,Int,IdxList}>)
+  spec([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+  mss([Int@0,Int@1]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  fold[List. <elt Int | cons {Int,List}>->Int]([Int@0]@Int [Int@0,Int@1]@Int [Param0]@List. <elt Int | cons {Int,List}>)
+  max([Param0]@Int [Param0]@Int)
+  hsum([Param0]@List. <elt Int | cons {Int,List}>)
+  sum([Param0]@IdxList. <ielt Int | icons {Int,Int,IdxList}>)
+  spec([Param0]@List. <elt Int | cons {Int,List}>)
+  mss([Param0]@List. <elt Int | cons {Int,List}>)
+node: [Param0]@IdxList. <ielt Int | icons {Int,Int,IdxList}>
+  ielt([Param0]@Int)
+node: [Int@0]@IdxList. <ielt Int | icons {Int,Int,IdxList}>
+  ielt([Int@0]@Int)
+node: [Int@0,Int@1]@IdxList. <ielt Int | icons {Int,Int,IdxList}>
+  ielt([Int@0,Int@1]@Int)
+node: [Int@0]@List. <elt Int | cons {Int,List}>
+  elt([Int@0]@Int)
+  drop_sum_list([Int@0]@IdxList. <ielt Int | icons {Int,Int,IdxList}>)
+node: [Int@0,Int@1]@List. <elt Int | cons {Int,List}>
+  elt([Int@0,Int@1]@Int)
+  drop_sum_list([Int@0,Int@1]@IdxList. <ielt Int | icons {Int,Int,IdxList}>)
+node: [Param0]@List. <elt Int | cons {Int,List}>
+  Param0
+  elt([Param0]@Int)
+  drop_sum_list([Param0]@IdxList. <ielt Int | icons {Int,Int,IdxList}>)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  [0] spec(Param0)
+  [1] fold[List. <elt Int | cons {Int,List}>->Int](Int@0(),+(Int@0(),spec(elt(Int@1()))),Param0)
+  [0] Param1
+  [0] spec(Param0)
+  [1] fold[List. <elt Int | cons {Int,List}>->Int](Int@0(),+(Int@0(),spec(elt(Int@1()))),Param0)
+  [0] Param1
+  [1] Param3 -> spec(Param0)
+  [2] Param3 -> fold[List. <elt Int | cons {Int,List}>->Int](Int@0(),+(Int@0(),spec(elt(Int@1()))),Param0)
+  [] null
+  [0] Param1 -> spec(Param0)
+  [1] Param1 -> fold[List. <elt Int | cons {Int,List}>->Int](Int@0(),+(Int@0(),spec(elt(Int@1()))),Param0)
+compress #0: {Int,Int}
+pass #0: 
+{max t 0, t}
+pass #1: 
+{if (and (< hd tmp2.1) (< (+ hd tmp2.2) tmp2.1)) then tmp2.1
+else if (< tmp2.2 0) then hd
+else + hd tmp2.2, max hd (+ hd tmp2.2)}
+pass #2: 
+tmp3.1
+
+Inductive List;
+
+Inductive IdxList;
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+sum = fix (
+    \f: IdxList -> Int. \xs: IdxList. 
+    match xs with
+      ielt t -> t
+    | icons {hd, idx, tl} -> + hd (f tl)
+    end
+);
+
+hsum = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      elt t -> t
+    | cons {hd, tl} -> + hd (f tl)
+    end
+);
+
+drop_sum_list = fix (
+    \f: IdxList -> List. \xs: IdxList. 
+    match xs with
+      ielt t -> elt t
+    | icons {hd, idx, tl} -> cons {hd, f tl}
+    end
+);
+
+mss = \xs: List. 
+    (fix (
+    \f: List -> {Int, Int, Int}. \xs: List. 
+    match xs with
+      elt t -> if (> t 0) then {t, t, t}
+        else {0, 0, 0}
+    | cons {hd, tl} -> 
+        let result = (f tl) in 
+            let mts_tl = result.1 in 
+                let mps_tl = result.2 in 
+                    let mss_tl = result.3 in 
+                        let sum_tl = (hsum tl) in 
+                            let new_mps = (max (+ hd mps_tl) 0) in 
+                                let new_mts = (max (+ hd sum_tl) mts_tl) in 
+                                    {new_mts, new_mps, max new_mps mss_tl}
+    end
+) xs).3;
+
+spec = \xs: List. 
+    mss xs;
+
+repr = fix (
+    \f: IdxList -> {Int, Int}. \xs: IdxList. 
+    match xs with
+      ielt t -> {max t 0, t}
+    | icons {hd, idx, tl} -> 
+        let tmp2 = (f tl) in 
+            {if (and (< hd tmp2.1) (< (+ hd tmp2.2) tmp2.1)) then tmp2.1
+            else if (< tmp2.2 0) then hd
+            else + hd tmp2.2, max hd (+ hd tmp2.2)}
+    end
+);
+
+main = \xs: IdxList. 
+    let tmp3 = (repr xs) in 
+        tmp3.1;
+syn-comb: 1.47474
+collect: 0.747858
+label: 0.015543
+extend-component: 37.7118
+execute: 108.588
+syn-align: 132.082
+comb-size: 57
+align-size: 19
+extract-size: 5
+133.586
+Success

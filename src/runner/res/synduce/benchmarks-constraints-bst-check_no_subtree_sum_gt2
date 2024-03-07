@@ -1,0 +1,39 @@
+
+📢 Solving problem in file [36m/home/jiry/2023S/Synduce/benchmarks/constraints/bst/check_no_subtree_sum_gt2.ml[0m with [36mCaml[0m syntax.
+
+----------------------------------------------------------------------------------------------------
+[44m INFO :[0m  Ψ (c0, xi_1, xi_0) := ∀ x : [33mmtree[0m. ([34mspec[0m o [34mrepr[0m)(x) = [34mtarget[0m(x)
+[44m INFO :[0m  spec⟨⟩(): tree -> bool  =  
+[44m INFO :[0m  target⟨c0, xi_1, xi_0⟩(): mtree -> bool [95m«[0m[95mrequires[0m [34mis_bst[0m[95m»[0m =  
+[44m INFO :[0m [44m INFO :[0m  repr⟨⟩(): mtree -> tree  =  
+
+[44m INFO :[0m  is_bst⟨⟩(): mtree -> bool  =  
+[44m INFO :[0m Refinement step 1.
+[44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0105s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 4.2323s
+[44m INFO :[0m ... finished in 4.4020s
+
+------------------------------------------------------------------------------------------------[0]-
+[44m INFO :[0m Total time spent in solvers:
+        Z3-SMT     [   9 instances] 8.744s 
+        CVC-SyGuS  [  12 instances] 0.200s 
+        > TOTAL    [  21 instances]: 8.944s 
+[44m INFO :[0m Solution found in 4.4651s (193.6% verifying):
+
+[31mlet[0m [36mc0[0m  [31m=[0m [36mfalse[0m
+
+[31mlet[0m [36mxi_0[0m [34ma[0m [31m=[0m [36m4[0m > [34ma[0m
+
+[31mlet[0m [36mxi_1[0m [34mb[0m [34mc[0m [34mx[0m [34my[0m [31m=[0m [34my[0m && ([34mb[0m = [34mc[0m)
+
+[31mlet rec[0m [36mtarget[0m [31m=[0m
+  [33mfunction[0m [3mMLeaf[0m(a) -> [34mxi_0[0m [34ma[0m [33m| [0m[3mMNode[0m(a, s, l, r) -> [34ma[0m > [36m2[0m ? [34mc0[0m : [34mxi_1[0m [34ms[0m [34ma[0m ([34mtarget[0m [34ml[0m) ([34mtarget[0m [34mr[0m)
+
+

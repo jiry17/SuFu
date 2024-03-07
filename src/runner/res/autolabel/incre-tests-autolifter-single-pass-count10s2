@@ -1,0 +1,34 @@
+
+Inductive List;
+
+single_pass = \v: List -> Int. 
+    let run = (fix (
+    \f: List -> {Int, Int}. \xs: List. 
+    match xs with
+      nil _ -> {0, al_inf}
+    | cons {h, t} -> 
+        let tmp1 = (f t) in 
+            {if (or (< 1 (- tmp1.2 1)) (< tmp1.2 (+ h h))) then tmp1.1
+            else + h tmp1.1, if (== h 0) then tmp1.2
+            else h}
+    end
+)) in 
+        \xs: List. 
+        let tmp2 = (run xs) in 
+            tmp2.1;
+
+inf = 100;
+
+count10s2 = fix (
+    \f: Bool -> List -> Int. \s0: Bool. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> 
+        let upd = (if (and s0 (== h 2)) then 1
+        else 0) in 
+            let s0 = (or (== h 1) (and s0 (== h 0))) in 
+                + upd (f s0 t)
+    end
+) false;
+
+main = single_pass count10s2;

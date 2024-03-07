@@ -1,0 +1,289 @@
+
+List :: List. <nil Unit | cons {Int,List}>
+nil : Unit -> List'. <nil Unit | cons {Int,List'}>
+cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
+Plan :: List
+PlanList :: PlanList. <pnil Unit | pcons {Plan,PlanList}>
+pnil : Unit -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+pcons : {Plan,PlanList} ->
+        PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+merge : PlanList -> PlanList -> PlanList
+extend : Int -> PlanList -> PlanList
+size : List -> Int
+generate : List -> PlanList'. <pnil Unit | pcons {Plan,PlanList'}>
+max : Int -> Int -> Int
+get_best : PlanList -> Int
+main : List -> Int
+
+
+Inductive List;
+
+Plan = Compress List;
+
+Inductive PlanList;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+extend = \w: Int. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> xs
+    | pcons {h, t} -> pcons {align (label (cons {w, unlabel h }) ) , f t}
+    end
+);
+
+size = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+generate = \full_xs: List. 
+    fix (
+    \f: Int -> PlanList. \n: Int. 
+    if (== n 0) then pcons {let tmp1 = (nil Unit) in 
+        align (label tmp1 ) , pnil Unit}
+    else fix (
+    \g: Int -> List -> PlanList. \m: Int. \xs: List. 
+    match xs with
+      nil _ -> pnil Unit
+    | cons {h, t} -> 
+        let take = (extend h (f (- n m))) in 
+            if (< m n) then merge take (g (+ m 1) t)
+            else take
+    end
+) 1 full_xs) (size full_xs);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = let eval = (fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + h (f t)
+    end
+)) in 
+        fix (
+        \f: PlanList -> Int. \xs: PlanList. 
+        match xs with
+          pnil _ -> 0
+        | pcons {h, t} -> max (align (eval (unlabel h )) ) (f t)
+        end
+    );
+
+main = \xs: List. 
+    get_best (generate xs);
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 cons ({w,unlabel h})
+  w: Int
+  xs: PlanList. <pnil Unit | pcons {compress[0] List. <nil Unit | cons {Int,List}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] List. <nil Unit | cons {Int,List}>,PlanList}>
+  h: compress[0] List. <nil Unit | cons {Int,List}>
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 tmp1
+  tmp1: List. <nil Unit | cons {Int,List}>
+  n: Int
+  full_xs: List. <nil Unit | cons {Int,List}>
+align term #2: Int
+align@2 eval (unlabel h)
+  h: compress[0] List. <nil Unit | cons {Int,List}>
+  t: PlanList. <pnil Unit | pcons {compress[0] List. <nil Unit | cons {Int,List}>,PlanList}>
+  xs: PlanList. <pnil Unit | pcons {compress[0] List. <nil Unit | cons {Int,List}>,PlanList}>
+Components for compress:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  max [Int,Int] -> Int 7
+
+Components for align:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  size [List. <nil Unit | cons {Int,List}>] -> Int 5
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  max [Int,Int] -> Int 7
+
+Components for comb:
+  cons [(Int * List. <nil Unit | cons {Int,List}>)] -> List. <nil Unit | cons {Int,List}> 0
+  nil [Bot] -> List. <nil Unit | cons {Int,List}> 0
+  max [Int,Int] -> Int 7
+
+align term #0: compress[0] List. <nil Unit | cons {Int,List}>
+align@0 create@0 cons ({w,unlabel h})
+  w: Int
+  xs: PlanList. <pnil Unit | pcons {compress[0] List. <nil Unit | cons {Int,List}>,PlanList}>
+  t: PlanList. <pnil Unit | pcons {compress[0] List. <nil Unit | cons {Int,List}>,PlanList}>
+  h: compress[0] List. <nil Unit | cons {Int,List}>
+align term #1: compress[0] List. <nil Unit | cons {Int,List}>
+align@1 create@0 tmp1
+  tmp1: List. <nil Unit | cons {Int,List}>
+  n: Int
+  full_xs: List. <nil Unit | cons {Int,List}>
+align term #2: Int
+align@2 eval (unlabel h)
+  h: compress[0] List. <nil Unit | cons {Int,List}>
+  t: PlanList. <pnil Unit | pcons {compress[0] List. <nil Unit | cons {Int,List}>,PlanList}>
+  xs: PlanList. <pnil Unit | pcons {compress[0] List. <nil Unit | cons {Int,List}>,PlanList}>
+num = 0
+start: start
+node: start
+  Int([Param0,Param1,Param2,Param3]@Int)
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2,Param3]@Compress[0] List. <nil Unit | cons {Int,List}>)
+node: [Param0,Param1,Param2,Param3]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param3
+node: [Param0,Param1,Param2,Param3]@Int
+  Param0
+  +([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  -([Param0,Param1,Param2,Param3]@Int [Param0,Param1,Param2,Param3]@Int)
+  0
+  1
+num = 1
+start: start
+node: start
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  Param1
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+num = 2
+start: start
+node: start
+  Compress[0] List. <nil Unit | cons {Int,List}>([Param0,Param1,Param2]@Compress[0] List. <nil Unit | cons {Int,List}>)
+  Int([Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Int
+  +([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  -([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+  0
+  1
+  max([Param0,Param1,Param2]@Int [Param0,Param1,Param2]@Int)
+node: [Param0,Param1,Param2]@Compress[0] List. <nil Unit | cons {Int,List}>
+  Param0
+num = 0
+start: start
+node: start
+  Int([Param0]@Int)
+node: [Int@0,Int@1]@Int
+  Int@0
+  Int@1
+  +([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  -([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+  0
+  max([Int@0,Int@1]@Int [Int@0,Int@1]@Int)
+node: [Param0]@Int
+  +([Param0]@Int [Param0]@Int)
+  -([Param0]@Int [Param0]@Int)
+  0
+  fold[List. <nil Unit | cons {Int,List}>->Int]([]@Int [Int@0,Int@1]@Int [Param0]@List. <nil Unit | cons {Int,List}>)
+  size([Param0]@List. <nil Unit | cons {Int,List}>)
+  max([Param0]@Int [Param0]@Int)
+node: []@Int
+  +([]@Int []@Int)
+  -([]@Int []@Int)
+  0
+  max([]@Int []@Int)
+node: [Param0]@List. <nil Unit | cons {Int,List}>
+  Param0
+
+
+
+
+
+
+
+
+
+  [] fold[List. <nil Unit | cons {Int,List}>->Int](0,+(Int@0(),Int@1()),Param0)
+  [0] Param0
+  [1] Param3 -> fold[List. <nil Unit | cons {Int,List}>->Int](0,+(Int@0(),Int@1()),Param0)
+  [] fold[List. <nil Unit | cons {Int,List}>->Int](0,+(Int@0(),Int@1()),Param0)
+  [] null
+  [0] Param0 -> fold[List. <nil Unit | cons {Int,List}>->Int](0,+(Int@0(),Int@1()),Param0)
+compress #0: Int
+pass #0: 
++ w h
+pass #1: 
+0
+pass #2: 
+h
+
+Inductive List;
+
+Plan = Int;
+
+Inductive PlanList;
+
+merge = fix (
+    \f: PlanList -> PlanList -> PlanList. \xs: PlanList. \ys: PlanList. 
+    match xs with
+      pnil _ -> ys
+    | pcons {h, t} -> pcons {h, f t ys}
+    end
+);
+
+extend = \w: Int. 
+    fix (
+    \f: PlanList -> PlanList. \xs: PlanList. 
+    match xs with
+      pnil _ -> xs
+    | pcons {h, t} -> pcons {+ w h, f t}
+    end
+);
+
+size = fix (
+    \f: List -> Int. \xs: List. 
+    match xs with
+      nil _ -> 0
+    | cons {h, t} -> + 1 (f t)
+    end
+);
+
+generate = \full_xs: List. 
+    fix (
+    \f: Int -> PlanList. \n: Int. 
+    if (== n 0) then pcons {0, pnil Unit}
+    else fix (
+    \g: Int -> List -> PlanList. \m: Int. \xs: List. 
+    match xs with
+      nil _ -> pnil Unit
+    | cons {h, t} -> 
+        let take = (extend h (f (- n m))) in 
+            if (< m n) then merge take (g (+ m 1) t)
+            else take
+    end
+) 1 full_xs) (size full_xs);
+
+max = \a: Int. \b: Int. 
+    if (< a b) then b
+    else a;
+
+get_best = fix (
+    \f: PlanList -> Int. \xs: PlanList. 
+    match xs with
+      pnil _ -> 0
+    | pcons {h, t} -> max h (f t)
+    end
+);
+
+main = \xs: List. 
+    get_best (generate xs);
+syn-comb: 0.327413
+collect: 71.1433
+label: 0.018008
+extend-component: 3.6e-05
+execute: 0.227136
+syn-align: 71.4359
+comb-size: 7
+align-size: 11
+extract-size: 4
+71.7886
+Success
