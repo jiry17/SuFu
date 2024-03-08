@@ -14,7 +14,7 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
    $ apt-get update
    $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev libboost-all-dev libgoogle-perftools-dev
    $ pip install --upgrade pip==9.0.1
-   $ pip3 install pyparsing z3-solver
+   $ pip3 install pyparsing
    ```
 
 
@@ -29,13 +29,14 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 
    ```bash
    $ cd SuFu
+   $ chmod +x install
    $ ./install
    ```
 
 4. *SuFu* can use *gurobi* as the underlying ILP solver. Therefore, if you want to use *gurobi*, then a license of *gurobi* is required. You can get an academic license of gurobi via the following steps. Otherwise, you can skip this part.
 
    1. Register or login at the [webside](https://www.gurobi.com/) of gurobi.
-2. Visit the [Free Academic License page](https://www.gurobi.com/downloads/end-user-license-agreement-academic/).
+   2. Visit the [Free Academic License page](https://www.gurobi.com/downloads/end-user-license-agreement-academic/).
    3. Click ***I Accept These Conditions***.
    4. Get a command like  `grbgetkey x...x` at the bottom of the webpage.
    5. Replace `grbgetkey` with `gurobi912/linux64/bin/grbgetkey` and execute this command under the root directory of the project.
