@@ -14,13 +14,17 @@ make
 popd
 
 # make and configure z3
-pushd thirdparty/z3
+pushd thirdparty
+wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.13.0.tar.gz
+tar xvfz z3-z3-4.13.0.tar.gz
+pushd z3-z3-4.13.0
 python3 scripts/mk_make.py
 cd build
 make
 sudo make install
 z3path=`pwd`
 echo ${z3path}
+popd
 popd
 sz3path=${z3path//\//\\\/}
 sed -i "s/Z3PATH/${sz3path}/g" src/CMakeLists.txt
