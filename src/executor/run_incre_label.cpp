@@ -19,23 +19,25 @@
 
 using namespace incre;
 
-DEFINE_string(benchmark, "/home/jiry/zyw/AutoElim/artifact/SuFu/benchmark/autolifter/single-pass/mts.f", "The absolute path of the benchmark file (.sl)");
-DEFINE_string(output, "", "The absolute path of the output file");
-DEFINE_bool(is_gurobi, false, "Is use gurobi to synthesize sketch holes.");
+DEFINE_string(benchmark, config::KSourcePath + "../benchmark/autolifter/single-pass/sum.f", "The absolute path of the benchmark file (.sl)");
+DEFINE_string(output, config::KSourcePath + "../build/res.f", "The absolute path of the output file");
+DEFINE_bool(use_gurobi, false, "Is use gurobi to synthesize sketch holes.");
 DEFINE_string(stage_output_file, "", "Only used in online demo");
 
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
 
-    std::string path = FLAGS_benchmark, target = FLAGS_output;
-    bool is_gurobi = FLAGS_is_gurobi;
+    std::string path = config::KSourcePath + "../" + FLAGS_benchmark;
+    std::string target = config::KSourcePath + "../" + FLAGS_output;
+    bool use_gurobi = FLAGS_use_gurobi;
     global::KStageInfoPath = FLAGS_stage_output_file;
+    std::cout << path << std::endl << target << std::endl << use_gurobi << std::endl;
 
     TimeGuard* global_guard = new TimeGuard(1e9);
 
     auto env = std::make_shared<Env>();
     incre::prepareEnv(env.get());
-    env->setConst(solver::lia::KIsGurobiName, BuildData(Bool, is_gurobi));
+    env->setConst(solver::lia::KIsGurobiName, BuildData(Bool, use_gurobi));
 
     auto input_program = incre::parseFromF(path, true);
     // init_program = incre::removeGlobal(init_program.get());

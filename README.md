@@ -15,9 +15,6 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
    $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev libboost-all-dev libgoogle-perftools-dev
    $ pip install --upgrade pip==9.0.1
    $ pip3 install pyparsing z3-solver
-    
-    以下没有运行成功
-   $ pip3 install matplotlib==2
    ```
 
 
@@ -35,71 +32,25 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
    $ ./install
    ```
 
-4. *SuFu* takes *gurobi* as the underlying ILP solver. Therefore, a license of *gurobi* is required. You can get an academic license of gurobi via the following steps.
+4. *SuFu* can use *gurobi* as the underlying ILP solver. Therefore, if you want to use *gurobi*, then a license of *gurobi* is required. You can get an academic license of gurobi via the following steps. Otherwise, you can skip this part.
 
    1. Register or login at the [webside](https://www.gurobi.com/) of gurobi.
    2. Visit the [Free Academic License page](https://www.gurobi.com/downloads/end-user-license-agreement-academic/).
    3. Click ***I Accept These Conditions***.
    4. Get a command like  `grbgetkey x...x` at the bottom of the webpage.
    5. Replace `grbgetkey` with `gurobi912/linux64/bin/grbgetkey` and execute this command under the root directory of the project.
-   6. Test whether the license woirks normally by executing `gurobi912/linux64/bin/gurobi.sh` under the root directory of the project. 
+   6. Test whether the license works normally by executing `gurobi912/linux64/bin/gurobi.sh` under the root directory of the project. 
 
 #### Run tests
 
-1. Test whether *Euphony* is successfully installed :
-
-   ```bash
-   $ cd recommend/my-euphony
-   $ . bin/setenv  
-   $ ./bin/run_int ../../benchmark/cross ../../benchmark/CLIA_benchmark/max3.sl
-   ```
-
-   The expected output is a program that returns the maximum of three:
-
-   ```
-   (define-fun max3 ((x Int) (y Int) (z Int)) Int (ite (<= z x) (ite (<= y x) x y) (ite (<= z y) y z)))
-   ```
-
-2. Test whether *Eusolver* is successfully installed :
-
-   ```bash
-   $ cd recommend/my-euphony
-   $ . bin/setenv  
-   $ ./bin/run_int_eusolver ../../benchmark/CLIA_benchmark/max3.sl
-   ```
-
-   The  expected output is the same as 1.
-
-
-
-3.   Test whether *Esolver* is successfully installed :
-
-   ```bash
-   $ cd recommend/esolver
-   $ ./eusolver benchmarks/max/max_2.sl
-   ```
-   The expected output is a program that takes two integers as the input and returns the larger one:
-
-   ```
-   (define-fun max2 ((a0 Int) (a1 Int)) Int
-        (ite (<= a1 a0) a0 a1))
-   ```
-
-4. Test whether the project is successfully built:
+1. Test whether the project is successfully built:
 
    ```bash
    $ cd build
-   $ ./run ../benchmark/CLIA_benchmark/sum.sl res cegis
+   $ executor/run
    ```
 
-   The expected output in file `res` is
-
-   ```
-   1
-   (+ Param0 Param1)
-   ```
-
-    Number 1 indicates the synthesis process takes 1 example in total.
+   The last line of output in command line should be "Success". And the optimized program is in file `build/res.f`.
 
 ### Run synthesizers
 
@@ -107,21 +58,16 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 
 ```bash
 $ cd build
-# Run Polygen 
-$ ./run INPUT OUTPUT DOMAIN
-# Run Polygen for ablation test
-$ ./run INPUT OUTPUT DOMAIN ABLATION
+# Run SuFu
+$ executor/run INPUT OUTPUT USE_GUROBI
 ```
-
-1. DOMAIN is `cegis` for oracle model $O_V$ and `random` for oracle model $O_R$.
-2. ABLATION is 1 for $ \text{ PolyGen }_{-T}$  and 2 for $\text { PolyGen }_{-U}$
 
 Some examples are listed below:
 
-```$bash
+```bash
 $ cd build
-# Run original Polygen with cegis
-$ ./run max5.sl res cegis
+# Run SuFu for benchmark autolifter/single-pass/mts.f, output the result into "build/res.f" and don't use gurobi as underlying ILP solver.
+$ executor/run -benchmark="benchmark/autolifter/single-pass/mts.f" -output="build/res.f" -use_gurobi=false
 ```
 
 #### Run experiments 
@@ -177,4 +123,4 @@ For (e) ~ (h) of Figure 2, the script will redraw them respectively.
 
 For data listed in Table 3, `run_exp` will recalculate them and print them to the standard output.
 
-**Note**: There may be some small differences between the results listed in our paper and the reproduced ones because there exists randomness.
+**Note**: If you don't use *gurobi*, there may be some differences between the results listed in our paper and the reproduced ones because of the performance differences between ILP solvers. However, this does not affect the significance of our experimental results. If you use *gurobi*, there can also be some small differences due to randomness.

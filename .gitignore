@@ -6,7 +6,7 @@ tests*
 tmp*
 cmake-build-*
 runner/cache/* 
-src/build*
+build*
 .clion.source.upload.marker
 src/surface/f
 *.cmi

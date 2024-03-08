@@ -1,7 +1,5 @@
 #!/bin/bash
 
-mkdir build
-
 # install opam and yojson
 apt-get update
 apt-get install ocaml ocaml-nox camlp4-extra opam
@@ -28,11 +26,13 @@ sz3path=${z3path//\//\\\/}
 sed -i "s/Z3PATH/${sz3path}/g" src/CMakeLists.txt
 
 # install gurobi
+pushd thirdparty
 wget https://packages.gurobi.com/9.1/gurobi9.1.2_linux64.tar.gz
 tar xvfz gurobi9.1.2_linux64.tar.gz
 pushd gurobi912/linux64
 gurobipath=`pwd`
 sgurobipath=${gurobipath//\//\\\/}
+popd
 popd
 sed -i "s/GUROBIPATH/${sgurobipath}/g" src/CMakeLists.txt
 # select the static library of gurobi
@@ -51,7 +51,9 @@ spath=${path//\//\\\/}
 sed -i "s/SOURCEPATH/\"${spath}\"/g" basic/config.cpp
 popd
 
+mkdir build
 pushd build
-cmake ../src
-make
+cmake -G Ninja ../src
+ninja
+popd
 
