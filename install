@@ -9,6 +9,9 @@ opam install yojson ocamlfind
 eval $(opam env)
 
 # make surface language
+path=`pwd`
+spath=${path//\//\\\/}
+sed -i "s/SUFUPATH/\"${spath}\"/g" exp/python/runner.py
 pushd src/surface
 make
 popd

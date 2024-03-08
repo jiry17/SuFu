@@ -6,15 +6,15 @@
 #include "glog/logging.h"
 
 #ifdef LINUX
-const std::string config::KSourcePath = "/home/jiry/zyw/AutoElim/artifact/SuFu/src/";
+const std::string config::KSourcePath = SOURCEPATH + "/";
 #else
-const std::string config::KSourcePath = "/root/SuFu/src/";
+const std::string config::KSourcePath = SOURCEPATH + "/";
 #endif
 
 #ifdef LINUX
-const std::string config::KIncreParserPath = "/home/jiry/zyw/AutoElim/artifact/SuFu/src/surface/";
+const std::string config::KIncreParserPath = SOURCEPATH + "/surface/";
 #else
-const std::string config::KIncreParserPath = "/root/SuFu/src/surface/";
+const std::string config::KIncreParserPath = SOURCEPATH + "/surface/";
 #endif
 
 const bool config::KIsDefaultSelf = true;

@@ -19,8 +19,8 @@
 
 using namespace incre;
 
-DEFINE_string(benchmark, config::KSourcePath + "../benchmark/autolifter/single-pass/sum.f", "The absolute path of the benchmark file (.sl)");
-DEFINE_string(output, config::KSourcePath + "../build/res.f", "The absolute path of the output file");
+DEFINE_string(benchmark, "benchmark/autolifter/single-pass/sum.f", "The absolute path of the benchmark file (.sl)");
+DEFINE_string(output, "build/res.f", "The absolute path of the output file");
 DEFINE_bool(use_gurobi, false, "Is use gurobi to synthesize sketch holes.");
 DEFINE_string(stage_output_file, "", "Only used in online demo");
 

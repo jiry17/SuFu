@@ -35,7 +35,7 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 4. *SuFu* can use *gurobi* as the underlying ILP solver. Therefore, if you want to use *gurobi*, then a license of *gurobi* is required. You can get an academic license of gurobi via the following steps. Otherwise, you can skip this part.
 
    1. Register or login at the [webside](https://www.gurobi.com/) of gurobi.
-   2. Visit the [Free Academic License page](https://www.gurobi.com/downloads/end-user-license-agreement-academic/).
+2. Visit the [Free Academic License page](https://www.gurobi.com/downloads/end-user-license-agreement-academic/).
    3. Click ***I Accept These Conditions***.
    4. Get a command like  `grbgetkey x...x` at the bottom of the webpage.
    5. Replace `grbgetkey` with `gurobi912/linux64/bin/grbgetkey` and execute this command under the root directory of the project.
@@ -73,25 +73,14 @@ $ executor/run -benchmark="benchmark/autolifter/single-pass/mts.f" -output="buil
 #### Run experiments 
 
 ```bash
-$ cd exp
-$ ./run_exp  [-exp {1,2}]  [-c {R <Restart>,C <Clear>}] [-s {0,1}]
+$ cd exp/python
+$ python3 run_exp.py [-exp {"attribute", "synduce", "autolifter", "grisette", "total"}]  [-c {R <Restart>,C <Continue>}]
 # For example, to reproduce all results:
-$ ./run_exp -c R
+$ python3 run_exp.py -exp=autolifter -c=R
 ```
 
-1. `-exp`: the id of the experiment you want to run. All experiments will be executed by default.
+1. `-exp`: the name of the experiment you want to run. All experiments will be executed by default.
 2. `-c`: whether to clear the cache: `R` represents yes while `C` represents no, and the default value is `C`. 
-3. `-s`: whether to skip random test when the same benchmark fails in cegis test:  `1` represents yes while  `0`  represents no. The default value is `1`. 
-4. `-d`: whether to draw the figures: `1` represents yes while `0` represents no. The default value is `0`.
-
-Some parameters can be set in config.py
-
-1. `KMemoryLimit`: the memory limit. The default value is 8 GB
-2. `KTimeLimit`: the time limit. The default value is 120 seconds.
-3. `KIntMin `: lower bound of the input. The default value is -20.
-4. `KIntMax `: upper bound of the input. The default value is 20.
-5. `KExampleLimit `: The limit of examples involves in the synthesizing process. The default value is 10000.
-6. `KRepeatNum `: the number of repetitions of each execution. The default value is 1 for efficiency. Note that all the algorithms are random, the smaller this value is, the more volatile the result will be. Our experiment set this value as 5.
 
 The result of each single execution is cached in `exp/result_cache` . 
 
@@ -101,26 +90,40 @@ These results are expected to be consistent with results presented in `run`.
 
 ### Reproduce results in the paper 
 
-#### Reproduce results of experiment 1
+#### Reproduce results of experiment on the details of SuFu performance
 
 ```bash
-$ cd exp
-$ ./run_exp -exp 1
+$ cd exp/python
+$ python3 run_exp.py -exp=attribute -c=R
 ```
 
-For (a) ~ (d) of Figure 2, the script will redraw them respectively.
+For results of comparing SuFu and Synduce listed in Table 7, `run_exp.py` will recalculate them and print them to the standard output.
 
-For data listed in Table 2, `run_exp` will recalculate them and print them to the standard output.
+#### Reproduce results of experiment with Synduce
 
-#### Reproduce results of experiment 2
+```bash
+$ cd exp/python
+$ python3 run_exp.py -exp=synduce -c=R
+```
+
+For results of details on the performance of SuFu listed in Table 6, `run_exp.py` will recalculate them and print them to the standard output.
+
+#### Reproduce results of experiment with AutoLifter
 
 ````bash
-$ cd exp
-$ ./run_exp -exp 2
+$ cd exp/python
+$ python3 run_exp.py -exp=autolifter -c=R
 ````
 
-For (e) ~ (h) of Figure 2, the script will redraw them respectively.
+For results of comparing SuFu and AutoLifter listed in Table 7, `run_exp.py` will recalculate them and print them to the standard output.
 
-For data listed in Table 3, `run_exp` will recalculate them and print them to the standard output.
+#### Reproduce results of experiment with Grisette
+
+````bash
+$ cd exp/python
+$ python3 run_exp.py -exp=grisette -c=R
+````
+
+For results of comparing SuFu and Grisette listed in Section 7.4, `run_exp.py` will recalculate them and print them to the standard output.
 
 **Note**: If you don't use *gurobi*, there may be some differences between the results listed in our paper and the reproduced ones because of the performance differences between ILP solvers. However, this does not affect the significance of our experimental results. If you use *gurobi*, there can also be some small differences due to randomness.
