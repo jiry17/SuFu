@@ -74,7 +74,7 @@ $ executor/run -benchmark="benchmark/autolifter/single-pass/mts.f" -output="buil
 
 ```bash
 $ cd exp
-$ ./run_exp  [-exp {1,2}]  [-r {R <Restart>,C <Clear>}] [-s {0,1}]
+$ ./run_exp  [-exp {1,2}]  [-c {R <Restart>,C <Clear>}] [-s {0,1}]
 # For example, to reproduce all results:
 $ ./run_exp -c R
 ```

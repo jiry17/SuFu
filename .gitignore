@@ -12,3 +12,4 @@ src/surface/f
 *.cmi
 *.cmo
 gurobi*
+exp/result_cache/autolabel_*

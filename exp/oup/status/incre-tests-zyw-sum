@@ -1,9 +1,0 @@
-
-List :: List. <nil Unit | cons {Int,List}>
- nil : Unit -> List'. <nil Unit | cons {Int,List'}>
- cons : {Int,List} -> List'. <nil Unit | cons {Int,List'}>
- sum : List -> Int
-spec : List -> Int
-repr : List -> List'. <nil Unit | cons {Int,List'}>
-main : List -> Int
-

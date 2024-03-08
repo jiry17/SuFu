@@ -107,7 +107,7 @@ def execute(config: RunnerConfig, benchmark_list: list, cache_path: str, thread_
     return cache
 
 
-def get_all_benchmark(path: str, valid = lambda f: ".sl" in f):
+def get_all_benchmark(path: str, valid = lambda f: ".f" in f):
     path_list = os.listdir(path)
     benchmark_list = []
     for file in path_list:
@@ -115,7 +115,7 @@ def get_all_benchmark(path: str, valid = lambda f: ".sl" in f):
             benchmark_list.append(os.path.join(path, file))
     return benchmark_list
 
-def get_all_benchmark_rec(root: str, valid = lambda f: ".sl" in f):
+def get_all_benchmark_rec(root: str, valid = lambda f: ".f" in f):
     benchmark_list = []
     for path, _, files in os.walk(root):
         for file in files:
