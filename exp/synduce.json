@@ -667,11 +667,11 @@
         "status": "success",
         "time": 1.1919150352478027
     },
-    "benchmarks-nested_lists-pyramid_intervals": {
+    "benchmarks-nested_list-pyramid_intervals": {
         "status": "unrealizable",
         "time": 1.0534887313842773
     },
-    "benchmarks-nested_lists-mtss": {
+    "benchmarks-nested_list-mtss": {
         "status": "unrealizable",
         "time": 0.0644693374633789
     },

@@ -14,6 +14,7 @@ make
 popd
 
 # make and configure z3
+mkdir thirdparty
 pushd thirdparty
 wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.13.0.tar.gz
 tar xvfz z3-z3-4.13.0.tar.gz

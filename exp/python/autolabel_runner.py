@@ -14,6 +14,7 @@ label_dir = run_dir + "label/"
 cache_path = run_dir + "autolabel.json"
 time_out = 1200
 
+# result of SuFu
 cache = load_cache(cache_path)
 is_cover = False
 
@@ -113,7 +114,7 @@ def _get_all(cache, batch_name, attr):
         if "dp" in name: continue
         total += get_attribute(cache, name, attr)
         ma = max(ma, get_attribute(cache, name, attr))
-    print(batch_name, attr, ma)
+    # print(batch_name, attr, ma)
     return total 
 
 extract_info = {
@@ -136,35 +137,39 @@ for batch_name in ["fusion", "synduce", "autolifter", "total"]:
         print("batch:", batch_name, "attr:", attr, "value:", get_all(cache, batch_name, attr, True))
 
 
-
 def print_synduce_compare():
+    print("---compare with Synduce---")
     synduce_res = load_cache(run_dir + "synduce.json")
-    print(len(synduce_res))
-
-    print("num autoelim", get_all(cache, "synduce", "num", True))
-    print("num synduce", get_all(synduce_res, "total", "num", False))
+    print("total task num:", len(synduce_res))
+    print("SuFu solved:", get_all(cache, "synduce", "num", True))
+    print("Synduce solved:", get_all(synduce_res, "total", "num", False))
 
     num, asum, ssum = 0, 0, 0
-
     for name in synduce_res.keys():
+        # print(name)
         if synduce_res[name]["status"] != "success": continue
         task_name = "incre-tests-synduce-" + "-".join(name.split("-")[1:])
+        # print(task_name)
         
         full_name = None
         for my_name in cache.keys():
             if task_name == my_name:
                 assert full_name is None 
-                full_name = my_name 
+                full_name = my_name
+                break
         assert full_name is not None 
         if cache[full_name]["status"] != "success": continue
         num += 1
-        ssum += synduce_res[name]["time"]
         asum += cache[full_name]["time"]
+        ssum += synduce_res[name]["time"]
 
-    print("compare with synduce")
-    print(num, asum / num, ssum / num)
+    print("the number of tasks solved by SuFu and Synduce:", num)
+    print("average time of SuFu in both solved tasks:", asum / num)
+    print("average time of Synduce in both solved tasks:", ssum / num)
+    print("\n")
 
 def print_autolifter_compare():
+    print("---compare with AutoLifter---")
     case_name = {"dad": "dac", "listr": "single-pass", "seg": "lsp", "ds": "segment-tree"}
     autolifter_res = load_cache(run_dir + "AutoLifter.json")
 
@@ -179,10 +184,14 @@ def print_autolifter_compare():
             num += 1
             atime += cache[full_name]["time"]
             btime += task_result["time"]["total"]
-    print("compare with autolifter")
-    print(num, atime / num, btime / num)
+    
+    print("the number of tasks solved by SuFu and AutoLifter:", num)
+    print("average time of SuFu:", atime / num)
+    print("average time of AutoLifter:", btime / num)
+    print("\n")
 
 def print_sketch_compare():
+    print("---compare with Grisette---")
     sketch_res = load_cache(run_dir + "sketch.json")
 
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
@@ -198,10 +207,9 @@ def print_sketch_compare():
             num += 1
             atime += cache[name]["time"]
             stime += sketch_res[name]["time"]
-        print("batch:", batch_name, "sketch-num:", snum, "autoelim:", atime / num, "sketch:", stime / num)
-print("compare with synduce")
+        print("batch:", batch_name, ", sketch-num:", snum, ", average time of SuFu:", atime / num, ", average time of Grisette:", stime / num)
+
+print("\n")
 print_synduce_compare()
-print("compare with autolifter")
 print_autolifter_compare()
-print("compare with sktech")
 print_sketch_compare()
