@@ -14,21 +14,17 @@ fileutil.cmo : \
     support.cmi \
     parser.cmi \
     lexer.cmo \
+    core.cmi \
     fileutil.cmi
 fileutil.cmx : \
     syntax.cmx \
     support.cmx \
     parser.cmx \
     lexer.cmx \
+    core.cmx \
     fileutil.cmi
 fileutil.cmi : \
     syntax.cmi
-lexer.cmo : \
-    support.cmi \
-    parser.cmi
-lexer.cmx : \
-    support.cmx \
-    parser.cmx
 json.cmo : \
     syntax.cmi \
     support.cmi \
@@ -42,15 +38,24 @@ json.cmx : \
 json.cmi : \
     syntax.cmi \
     support.cmi
+lexer.cmo : \
+    support.cmi \
+    parser.cmi
+lexer.cmx : \
+    support.cmx \
+    parser.cmx
 main.cmo : \
     syntax.cmi \
     support.cmi \
-    fileutil.cmi
+    json.cmi \
+    fileutil.cmi \
+    core.cmi
 main.cmx : \
     syntax.cmx \
     support.cmx \
+    json.cmx \
     fileutil.cmx \
-    json.cmx
+    core.cmx
 parser.cmo : \
     syntax.cmi \
     support.cmi \
