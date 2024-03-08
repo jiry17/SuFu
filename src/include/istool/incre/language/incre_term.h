@@ -9,6 +9,7 @@
 #include "incre_pattern.h"
 #include "istool/basic/data.h"
 #include "istool/basic/env.h"
+#include <functional>
 
 namespace incre {
     enum class TermType {

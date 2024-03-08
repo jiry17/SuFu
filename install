@@ -2,7 +2,32 @@
 
 mkdir build
 
-#install gurobi
+# install opam and yojson
+apt-get update
+apt-get install ocaml ocaml-nox camlp4-extra opam
+opam init
+opam update
+opam install yojson ocamlfind
+eval $(opam env)
+
+# make surface language
+pushd src/surface
+make
+popd
+
+# make and configure z3
+pushd thirdparty/z3
+python3 scripts/mk_make.py
+cd build
+make
+sudo make install
+z3path=`pwd`
+echo ${z3path}
+popd
+sz3path=${z3path//\//\\\/}
+sed -i "s/Z3PATH/${sz3path}/g" src/CMakeLists.txt
+
+# install gurobi
 wget https://packages.gurobi.com/9.1/gurobi9.1.2_linux64.tar.gz
 tar xvfz gurobi9.1.2_linux64.tar.gz
 pushd gurobi912/linux64
@@ -10,7 +35,7 @@ gurobipath=`pwd`
 sgurobipath=${gurobipath//\//\\\/}
 popd
 sed -i "s/GUROBIPATH/${sgurobipath}/g" src/CMakeLists.txt
-#select the static library of gurobi
+# select the static library of gurobi
 gcc_major_version=`echo __GNUC__ | gcc -E -xc - | tail -n 1`
 gcc_minor_version=`echo __GNUC_MINOR__ | gcc -E -xc - | tail -n 1`
 gcc_version=$gcc_major_version.$gcc_minor_version
@@ -19,15 +44,7 @@ then
     sed -i "s/5.2.a/4.2.a/g" src/CMakeLists.txt
 fi
 
-#configure z3
-pushd recommend/my-euphony/thirdparty/z3
-z3path=`pwd`
-echo ${z3path}
-popd
-sz3path=${z3path//\//\\\/}
-sed -i "s/Z3PATH/${sz3path}/g" src/CMakeLists.txt
-
-#build source
+# build source
 pushd src
 path=`pwd`
 spath=${path//\//\\\/}

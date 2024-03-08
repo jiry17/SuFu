@@ -12,7 +12,7 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 
    ```bash
    $ apt-get update
-   $ apt-get install cmake git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev libboost-all-dev libgoogle-perftools-dev
+   $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev libboost-all-dev libgoogle-perftools-dev
    $ pip install --upgrade pip==9.0.1
    $ pip3 install pyparsing z3-solver
     

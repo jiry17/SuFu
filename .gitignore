@@ -3,7 +3,12 @@
 *__pycache__
 *.vscode
 tests*
+tmp*
 cmake-build-*
 runner/cache/* 
 src/build*
 .clion.source.upload.marker
+src/surface/f
+*.cmi
+*.cmo
+gurobi*

@@ -6,6 +6,7 @@
 #define ISTOOL_PROGRAM_H
 
 #include "semantics.h"
+#include <functional>
 
 class Program;
 typedef std::shared_ptr<Program> PProgram;

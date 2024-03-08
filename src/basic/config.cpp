@@ -6,17 +6,15 @@
 #include "glog/logging.h"
 
 #ifdef LINUX
-const std::string config::KSourcePath = "/home/jiry/zyw/AutoElim/artifact/SuFu/";
+const std::string config::KSourcePath = "/root/SuFu/src/";
 #else
-const std::string config::KSourcePath = "/Users/pro/Desktop/work/2023S/ISTool/";
+const std::string config::KSourcePath = "/root/SuFu/src/";
 #endif
-const std::string config::KEuSolverPath = "/home/jiry/my-euphony";
-const std::string config::KCVC5Path = "/home/jiry/2021A/cvc5";
 
 #ifdef LINUX
-const std::string config::KIncreParserPath = "/home/jiry/zyw/AutoElim/artifact/SuFu/src/surface/";
+const std::string config::KIncreParserPath = "/root/SuFu/src/surface/";
 #else
-const std::string config::KIncreParserPath = "/home/jiry/zyw/AutoElim/artifact/SuFu/src/surface/";
+const std::string config::KIncreParserPath = "/root/SuFu/src/surface/";
 #endif
 
 const bool config::KIsDefaultSelf = true;

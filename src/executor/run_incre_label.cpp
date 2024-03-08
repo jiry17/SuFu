@@ -19,7 +19,7 @@
 
 using namespace incre;
 
-DEFINE_string(benchmark, "/home/jiry/2023A/ISTool/incre-tests/synduce/constraints/sorted_and_indexed/count_lt0.f", "The absolute path of the benchmark file (.sl)");
+DEFINE_string(benchmark, "/root/SuFu/benchmark/autolifter/single-pass/mts.f", "The absolute path of the benchmark file (.sl)");
 DEFINE_string(output, "", "The absolute path of the output file");
 DEFINE_bool(is_gurobi, false, "Is use gurobi to synthesize sketch holes.");
 DEFINE_string(stage_output_file, "", "Only used in online demo");
