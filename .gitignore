@@ -11,4 +11,5 @@ build*
 *.cmi
 *.cmo
 gurobi*
+thirdparty/z3*
 exp/result_cache/autolabel_*
