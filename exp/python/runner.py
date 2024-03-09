@@ -3,7 +3,7 @@ from cache import *
 from tqdm import tqdm
 from executor import get_all_benchmark_rec
 
-src_path = "SUFUPATH" + "/"
+src_path = SUFUPATH + "/"
 benchmark_root = src_path + "benchmark"
 executor = src_path + "src/build/executor/run"
 run_dir = src_path + "exp/"

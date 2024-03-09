@@ -26,9 +26,9 @@ python3 scripts/mk_make.py
 cd build
 make
 sudo make install
+popd
 z3path=`pwd`
 echo ${z3path}
-popd
 popd
 sz3path=${z3path//\//\\\/}
 sed -i "s/Z3PATH/${sz3path}/g" src/CMakeLists.txt
