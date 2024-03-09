@@ -1,0 +1,10 @@
+
+let oplus (x40, x41) x5 = (x40 + x5, x41 + (max x5 (- x41)))
+
+ target⟨oplus⟩(l): int list -> (int * int)  = 
+{
+  ‣ main l   ⟹  f (0, 0) l
+    f s Nil  ⟹  s
+    f s Cons(hd, tl)  ⟹  f (oplus s hd) tl
+  
+  }

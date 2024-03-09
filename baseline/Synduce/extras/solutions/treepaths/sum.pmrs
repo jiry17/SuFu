@@ -1,0 +1,11 @@
+
+let s0  = 0
+
+let join x12 x13 x14 = x12 + (x13 + x14)
+
+ target⟨s0, join⟩(): int zipper -> int  = 
+{
+  ‣ main  Top  ⟹  s0
+  ‣ main  Zip(x, a, child, z)  ⟹  join a (spec child) (main z)
+  
+  }

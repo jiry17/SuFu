@@ -1,0 +1,16 @@
+
+let odot (x120, x121, x122) (x130, x131, x132) =
+  (x120 + x130, max x121 (x120 + x131), max x132 (x122 + x130))
+
+let f0 x9 = (x9, max x9 0, max 0 x9)
+
+let s0  = (0, 0, 0)
+
+ target⟨odot, f0, s0⟩(): int clist -> (int * int * int)  = 
+{
+  ‣ main t   ⟹  h t
+    h  CNil  ⟹  s0
+    h  Single(a)  ⟹  f0 a
+    h  Concat(y, z)  ⟹  odot (h y) (h z)
+  
+  }

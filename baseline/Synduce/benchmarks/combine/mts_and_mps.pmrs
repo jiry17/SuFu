@@ -1,0 +1,16 @@
+type 'a list = Nil | Cons of 'a * 'a list
+
+pmrs spec l {fun (x,y,z) -> y >= 0 && z >= 0 }=
+    f l -> mts 0 l, mps l
+    | mts s Nil -> s
+    | mts s Cons(hd,tl) -> mts (max (s + hd) 0) tl
+    | sum Nil -> 0
+    | sum Cons(hd, tl) -> hd + (sum tl)
+    | mps Nil -> 0
+    | mps Cons(hd, tl) -> max ((mps tl) + hd) 0
+
+
+pmrs (oplus, s0) target t =
+    g Nil -> s0
+    | g Cons(hd, tl) -> oplus hd (g tl)
+

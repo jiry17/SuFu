@@ -1,0 +1,13 @@
+
+let jleft x0 x1 x2 = x0 + (max x1 x2)
+
+let jright x3 x4 x5 = x3 + (max x5 x4)
+
+ target⟨jleft, jright⟩(): int zipper -> int  = 
+{
+  ‣ main  Top  ⟹  0
+  ‣ main  Zip(x, a, child, z)  ⟹  deci a child z x
+    deci a child z Left  ⟹  jleft a (spec child) (main z)
+    deci a child z Right  ⟹  jright a (spec child) (main z)
+  
+  }

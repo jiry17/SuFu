@@ -1,0 +1,14 @@
+type 'a tree = Nil | Node of 'a * 'a tree * 'a tree
+
+pmrs spec  =
+    main t -> f 0 t
+    | f s Nil -> s
+    | f s (Node(a,l,r)) ->
+    (fun m1 -> f (max (m1 + a) 0) r) (f s l)
+
+pmrs (join1, s0) target =
+    main_mips t1 -> mips t1
+    | mips Nil -> s0
+    | mips Node(a,l,r) -> join1 a (mips l) (mips r)
+
+let repr x = x

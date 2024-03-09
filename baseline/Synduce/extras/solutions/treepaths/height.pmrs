@@ -1,0 +1,11 @@
+
+let s0  = 0
+
+let join x12 x13 x14 = (max x13 x14) + 1
+
+ target⟨s0, join⟩(): param30 zipper -> int  = 
+{
+  ‣ main  Top  ⟹  0
+  ‣ main  Zip(x, a, child, z)  ⟹  join a (spec child) (main z)
+  
+  }
