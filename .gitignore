@@ -5,6 +5,7 @@
 *.metals
 *.stack-work
 tests*
+test*
 tmp*
 cmake-build-*
 runner/cache/* 
@@ -14,7 +15,7 @@ src/surface/f
 *.cmi
 *.cmo
 gurobi*
-thirdparty/z3*
+thirdparty*
 exp/result_cache/autolabel_*
 exp/result_cache/synduce_*
 exp/result_cache/grisette_*
