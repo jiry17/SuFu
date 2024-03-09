@@ -11,163 +11,128 @@
 [44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0105s
+[44m INFO :[0m ... finished in 0.0159s
 [44m INFO :[0m Refinement step 2.
 [44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
 [44m INFO :[0m Checking solution...
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0146s
-[44m INFO :[0m ... finished in 0.0108s
+[44m INFO :[0m ... finished in 0.0218s
+[44m INFO :[0m ... finished in 0.0174s
 [44m INFO :[0m Refinement step 3.
 [44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0115s
+[44m INFO :[0m ... finished in 0.0169s
 [44m INFO :[0m Refinement step 4.
 [44m INFO :[0m [30m[102m		 segis Refinement step 4:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0109s
+[44m INFO :[0m ... finished in 0.0169s
 [44m INFO :[0m Refinement step 5.
 [44m INFO :[0m [30m[102m		 segis Refinement step 5:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0125s
+[44m INFO :[0m ... finished in 0.0185s
 [44m INFO :[0m Refinement step 6.
 [44m INFO :[0m [30m[102m		 segis Refinement step 6:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0111s
+[44m INFO :[0m ... finished in 0.0167s
 [44m INFO :[0m Refinement step 7.
 [44m INFO :[0m [30m[102m		 segis Refinement step 7:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0110s
+[44m INFO :[0m ... finished in 0.0171s
 [44m INFO :[0m Refinement step 8.
 [44m INFO :[0m [30m[102m		 segis Refinement step 8:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0114s
+[44m INFO :[0m ... finished in 0.0175s
 [44m INFO :[0m Refinement step 9.
 [44m INFO :[0m [30m[102m		 segis Refinement step 9:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0113s
+[44m INFO :[0m ... finished in 0.0165s
 [44m INFO :[0m Refinement step 10.
 [44m INFO :[0m [30m[102m		 segis Refinement step 10:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0117s
+[44m INFO :[0m ... finished in 0.0179s
 [44m INFO :[0m Refinement step 11.
 [44m INFO :[0m [30m[102m		 segis Refinement step 11:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0113s
+[44m INFO :[0m ... finished in 0.0169s
 [44m INFO :[0m Refinement step 12.
 [44m INFO :[0m [30m[102m		 segis Refinement step 12:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0115s
+[44m INFO :[0m ... finished in 0.0171s
 [44m INFO :[0m Refinement step 13.
 [44m INFO :[0m [30m[102m		 segis Refinement step 13:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0111s
+[44m INFO :[0m ... finished in 0.0172s
 [44m INFO :[0m Refinement step 14.
 [44m INFO :[0m [30m[102m		 segis Refinement step 14:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0115s
+[44m INFO :[0m ... finished in 0.0172s
 [44m INFO :[0m Refinement step 15.
 [44m INFO :[0m [30m[102m		 segis Refinement step 15:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0113s
+[44m INFO :[0m ... finished in 0.0168s
 [44m INFO :[0m Refinement step 16.
 [44m INFO :[0m [30m[102m		 segis Refinement step 16:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0121s
+[44m INFO :[0m ... finished in 0.0181s
 [44m INFO :[0m Refinement step 17.
 [44m INFO :[0m [30m[102m		 segis Refinement step 17:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0117s
+[44m INFO :[0m ... finished in 0.0173s
 [44m INFO :[0m Refinement step 18.
 [44m INFO :[0m [30m[102m		 segis Refinement step 18:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0115s
+[44m INFO :[0m ... finished in 0.0171s
 [44m INFO :[0m Refinement step 19.
 [44m INFO :[0m [30m[102m		 segis Refinement step 19:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0111s
+[44m INFO :[0m ... finished in 0.0172s
 [44m INFO :[0m Refinement step 20.
 [44m INFO :[0m [30m[102m		 segis Refinement step 20:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0121s
+[44m INFO :[0m ... finished in 0.0179s
 [44m INFO :[0m Turning off eager optimizations after 21 rounds.
 [44m INFO :[0m Refinement step 21.
 [44m INFO :[0m [30m[102m		 segis Refinement step 21:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0142s
+[44m INFO :[0m ... finished in 0.0174s
 [44m INFO :[0m Refinement step 22.
 [44m INFO :[0m [30m[102m		 segis Refinement step 22:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0119s
+[44m INFO :[0m ... finished in 0.0175s
 [44m INFO :[0m Refinement step 23.
 [44m INFO :[0m [30m[102m		 segis Refinement step 23:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0114s
+[44m INFO :[0m ... finished in 0.0172s
 [44m INFO :[0m Refinement step 24.
 [44m INFO :[0m [30m[102m		 segis Refinement step 24:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0111s
+[44m INFO :[0m ... finished in 0.0172s
 [44m INFO :[0m Refinement step 25.
 [44m INFO :[0m [30m[102m		 segis Refinement step 25:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0118s
+[44m INFO :[0m ... finished in 0.0178s
 [44m INFO :[0m Refinement step 26.
 [44m INFO :[0m [30m[102m		 segis Refinement step 26:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0119s
+[44m INFO :[0m ... finished in 0.0173s
 [44m INFO :[0m Refinement step 27.
 [44m INFO :[0m [30m[102m		 segis Refinement step 27:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0115s
+[44m INFO :[0m ... finished in 0.0179s
 [44m INFO :[0m Refinement step 28.
 [44m INFO :[0m [30m[102m		 segis Refinement step 28:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0116s
+[44m INFO :[0m ... finished in 0.0179s
 [44m INFO :[0m Refinement step 29.
 [44m INFO :[0m [30m[102m		 segis Refinement step 29:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0125s
-[44m INFO :[0m Refinement step 30.
-[44m INFO :[0m [30m[102m		 segis Refinement step 30:0 [0;30m[0m
-[44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0114s
-[44m INFO :[0m Refinement step 31.
-[44m INFO :[0m [30m[102m		 segis Refinement step 31:0 [0;30m[0m
-[44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0113s
-[44m INFO :[0m Refinement step 32.
-[44m INFO :[0m [30m[102m		 segis Refinement step 32:0 [0;30m[0m
-[44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0117s
-[44m INFO :[0m Refinement step 33.
-[44m INFO :[0m [30m[102m		 segis Refinement step 33:0 [0;30m[0m
-[44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0117s
-[44m INFO :[0m Refinement step 34.
-[44m INFO :[0m [30m[102m		 segis Refinement step 34:0 [0;30m[0m
-[44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0117s
-[44m INFO :[0m Refinement step 35.
-[44m INFO :[0m [30m[102m		 segis Refinement step 35:0 [0;30m[0m
-[44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0119s
-[44m INFO :[0m Refinement step 36.
-[44m INFO :[0m [30m[102m		 segis Refinement step 36:0 [0;30m[0m
-[44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0117s
-[44m INFO :[0m Refinement step 37.
-[44m INFO :[0m [30m[102m		 segis Refinement step 37:0 [0;30m[0m
-[44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0117s
-[44m INFO :[0m Refinement step 38.
-[44m INFO :[0m [30m[102m		 segis Refinement step 38:0 [0;30m[0m
 
 ------------------------------------------------------------------------------------------------[0]-
 [44m INFO :[0m Total time spent in solvers:
-        Z3-SMT     [ 135 instances] 1.093s 
-        CVC-SyGuS  [ 156 instances] 1.028s 
-        > TOTAL    [ 291 instances]: 2.121s 
-[44m INFO :[0m Solution found in 1.0580s (41.9% verifying):
+        Z3-SMT     [ 100 instances] 1.067s 
+        CVC-SyGuS  [ 120 instances] 1.001s 
+        > TOTAL    [ 220 instances]: 2.068s 
+[44m INFO :[0m Solution found in 1.0789s (46.9% verifying):
 
 [31mlet[0m [36mbase_case[0m [34ma[0m [34mb[0m [31m=[0m [34ma[0m = [34mb[0m
 

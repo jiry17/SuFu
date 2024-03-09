@@ -1,0 +1,112 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.2.
+--
+-- see: https://github.com/sol/hpack
+
+name:           Autolabel-baseline
+version:        0.0.0
+build-type:     Simple
+
+flag fast
+  description: Compile with O2 optimization
+  manual: False
+  default: True
+
+library
+  exposed-modules:
+      Utils.Timing
+  other-modules:
+      Paths_Autolabel_baseline
+  hs-source-dirs:
+      utils
+  default-extensions:
+      BangPatterns
+      ConstraintKinds
+      DataKinds
+      DefaultSignatures
+      DeriveAnyClass
+      DeriveGeneric
+      DeriveLift
+      DerivingStrategies
+      DerivingVia
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      GADTs
+      KindSignatures
+      LambdaCase
+      MultiParamTypeClasses
+      RankNTypes
+      ScopedTypeVariables
+      TupleSections
+      TypeApplications
+      TypeFamilies
+      TypeOperators
+  ghc-options: -Wall -ferror-spans
+  build-depends:
+      base >4.14 && <5
+    , bytestring >=0.10.12
+    , clock >=0.7.1
+    , deepseq >=1.4.4
+    , formatting >=6.3.1
+    , grisette ==0.2.*
+    , hashable >=1.3
+    , mtl >=2.2.2
+    , text >=1.2.4.1
+    , time >=1.11.1.1
+    , transformers >=0.5.6.2
+  default-language: Haskell2010
+  if flag(fast)
+    ghc-options: -O2
+  else
+    ghc-options: -O0
+
+executable run_test
+  main-is: Main.hs
+  other-modules:
+      Paths_Autolabel_baseline
+  hs-source-dirs:
+      run_test
+  default-extensions:
+      BangPatterns
+      ConstraintKinds
+      DataKinds
+      DefaultSignatures
+      DeriveAnyClass
+      DeriveGeneric
+      DeriveLift
+      DerivingStrategies
+      DerivingVia
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      GADTs
+      KindSignatures
+      LambdaCase
+      MultiParamTypeClasses
+      RankNTypes
+      ScopedTypeVariables
+      TupleSections
+      TypeApplications
+      TypeFamilies
+      TypeOperators
+  ghc-options: -Wall -ferror-spans
+  build-depends:
+      Autolabel-baseline
+    , base >4.14 && <5
+    , bytestring >=0.10.12
+    , clock >=0.7.1
+    , deepseq >=1.4.4
+    , formatting >=6.3.1
+    , grisette ==0.2.*
+    , hashable >=1.3
+    , mtl >=2.2.2
+    , text >=1.2.4.1
+    , time >=1.11.1.1
+    , transformers >=0.5.6.2
+  default-language: Haskell2010
+  if flag(fast)
+    ghc-options: -O2
+  else
+    ghc-options: -O0

@@ -11,7 +11,7 @@ eval $(opam env)
 # make surface language
 path=`pwd`
 spath=${path//\//\\\/}
-sed -i "s/SUFUPATH/\"${spath}\"/g" exp/python/runner.py
+sed -i "s/SUFUPATH/\"${spath}\"/g" exp/python/config.py
 pushd src/surface
 make
 popd
@@ -19,23 +19,24 @@ popd
 # make and configure z3
 mkdir thirdparty
 pushd thirdparty
-wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.13.0.tar.gz
+# wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.13.0.tar.gz
 tar xvfz z3-z3-4.13.0.tar.gz
 pushd z3-z3-4.13.0
 python3 scripts/mk_make.py
-cd build
+pushd build
 make
 sudo make install
 popd
 z3path=`pwd`
 echo ${z3path}
 popd
+popd
 sz3path=${z3path//\//\\\/}
 sed -i "s/Z3PATH/${sz3path}/g" src/CMakeLists.txt
 
 # install gurobi
 pushd thirdparty
-wget https://packages.gurobi.com/9.1/gurobi9.1.2_linux64.tar.gz
+# wget https://packages.gurobi.com/9.1/gurobi9.1.2_linux64.tar.gz
 tar xvfz gurobi9.1.2_linux64.tar.gz
 pushd gurobi912/linux64
 gurobipath=`pwd`

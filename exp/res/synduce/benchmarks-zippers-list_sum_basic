@@ -12,26 +12,26 @@
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m Checking solution...
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0091s
+[44m INFO :[0m ... finished in 0.0108s
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
-[44m INFO :[0m ... finished in 0.0094s
+[44m INFO :[0m ... finished in 0.0108s
 [44m INFO :[0m Refinement step 2.
 [44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m Checking solution...
-[44m INFO :[0m ... finished in 0.0110s
+[44m INFO :[0m ... finished in 0.0134s
 [44m INFO :[0m Refinement step 3.
 [44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
-[44m INFO :[0m ... finished in 0.0115s
+[44m INFO :[0m Checking solution...
+[44m INFO :[0m ... finished in 0.0125s
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0086s
+[44m INFO :[0m ... finished in 0.0126s
 
 ------------------------------------------------------------------------------------------------[0]-
 [44m INFO :[0m Total time spent in solvers:
-        Z3-SMT     [  14 instances] 0.160s 
-        CVC-SyGuS  [   4 instances] 0.028s 
-        > TOTAL    [  18 instances]: 0.188s 
-[44m INFO :[0m Solution found in 0.0574s (86.5% verifying):
+        Z3-SMT     [  14 instances] 0.224s 
+        CVC-SyGuS  [   4 instances] 0.025s 
+        > TOTAL    [  18 instances]: 0.250s 
+[44m INFO :[0m Solution found in 0.0711s (84.5% verifying):
 
 [31mlet[0m [36mjoin[0m [34mx8[0m [34mx9[0m [31m=[0m [34mx8[0m + [34mx9[0m
 

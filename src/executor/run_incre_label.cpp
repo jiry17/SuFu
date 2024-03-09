@@ -14,24 +14,29 @@
 #include "istool/sygus/theory/basic/clia/clia.h"
 #include "istool/sygus/theory/basic/string/string_value.h"
 #include <iostream>
+#include <fstream>
 #include <glog/logging.h>
 #include <gflags/gflags.h>
 
 using namespace incre;
+using namespace std::literals;
 
-DEFINE_string(benchmark, "benchmark/autolifter/single-pass/sum.f", "The absolute path of the benchmark file (.sl)");
-DEFINE_string(output, "build/res.f", "The absolute path of the output file");
+DEFINE_string(benchmark, config::KSourcePath + "../" + "benchmark/autolifter/single-pass/sum.f"s, "The absolute path of the benchmark file (.sl)");
+DEFINE_string(output, config::KSourcePath + "../" + "build/res.f"s, "The absolute path of the output file");
 DEFINE_bool(use_gurobi, false, "Is use gurobi to synthesize sketch holes.");
 DEFINE_string(stage_output_file, "", "Only used in online demo");
 
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
 
-    std::string path = config::KSourcePath + "../" + FLAGS_benchmark;
-    std::string target = config::KSourcePath + "../" + FLAGS_output;
+    std::string path = FLAGS_benchmark;
+    std::string target = FLAGS_output;
     bool use_gurobi = FLAGS_use_gurobi;
     global::KStageInfoPath = FLAGS_stage_output_file;
-    std::cout << path << std::endl << target << std::endl << use_gurobi << std::endl;
+    // std::cout << path << std::endl << target << std::endl << use_gurobi << std::endl;
+    std::ofstream out(target);
+    std::streambuf *coutbuf = std::cout.rdbuf();
+    std::cout.rdbuf(out.rdbuf());
 
     TimeGuard* global_guard = new TimeGuard(1e9);
 
@@ -111,8 +116,11 @@ int main(int argc, char** argv) {
         }
     }
 
-    if (!target.empty()) incre::printProgram(full_res, target, false);
-    incre::printProgram(full_res, {}, false);
+    if (!target.empty()) {
+        incre::printProgram(full_res, target, false);
+    } else {
+        incre::printProgram(full_res, {}, false);
+    }
     auto [start_name, params] = info->example_pool->start_list[0];
     auto possible_inputs = incre::constructAllPossibleInput(info->example_pool->input_list, params, start_name, input_program->config_map);
 
@@ -142,4 +150,6 @@ int main(int argc, char** argv) {
     global::recorder.printAll();
     std::cout << global_guard->getPeriod() << std::endl;
     std::cout << "Success" << std::endl;
+
+    std::cout.rdbuf(coutbuf);
 }

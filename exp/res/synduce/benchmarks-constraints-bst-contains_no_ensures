@@ -11,32 +11,30 @@
 [44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
+[44m INFO :[0m ... finished in 0.0113s
+[44m INFO :[0m Refinement step 2.
+[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
 [44m INFO :[0m Classify counterexamples...
-	[44m INFO :[0m ... finished in 0.0113s
-	[44m INFO :[0m Refinement step 2.
-	[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
 	[44m INFO :[0m Checking solution (bounded check)...
 [44m INFO :[0m 2 counterexamples violate requires.
 [44m INFO :[0m Lemma [32mNode[0m([34mi[0m, [34mp[0m, [34mp0[0m): "lemma x i i3 i4 = [34mx[0m < [34mi[0m => [34mi4[0m = [36m0[0m" is correct, memorizing.
 [44m INFO :[0m Lemma [32mNode[0m([34mi[0m, [34mp[0m, [34mp0[0m): "lemma x i i3 i4 = [34mx[0m < [34mi[0m => [34mi4[0m = [36m0[0m" is correct, memorizing.
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 1:1 [0;30m[0m
-[44m INFO :[0m ... finished in 0.1658s
-[44m INFO :[0m Checking solution...
-[44m INFO :[0m ... finished in 0.0098s
+[44m INFO :[0m ... finished in 0.2670s
 
 ------------------------------------------------------------------------------------------------[0]-
 [44m INFO :[0m Total time spent in solvers:
-        Z3-SMT     [  15 instances] 0.320s 
-        CVC4-SMT   [   6 instances] 0.076s 
-        CVC-SyGuS  [  14 instances] 1.950s 
-        > TOTAL    [  35 instances]: 2.347s 
-[44m INFO :[0m Solution found in 1.0728s (17.4% verifying):
+        Z3-SMT     [  14 instances] 0.470s 
+        CVC4-SMT   [   6 instances] 0.109s 
+        CVC-SyGuS  [  14 instances] 2.376s 
+        > TOTAL    [  34 instances]: 2.955s 
+[44m INFO :[0m Solution found in 1.3183s (21.1% verifying):
 
-[31mlet[0m [36mxi_0[0m [34ma[0m [34mb[0m [31m=[0m [34ma[0m = [34mb[0m ? [36m1[0m : [36m0[0m
+[31mlet[0m [36mxi_0[0m [34mx12[0m [34mx13[0m [31m=[0m [34mx13[0m = [34mx12[0m ? [36m1[0m : [36m0[0m
 
-[31mlet[0m [36mxi_1[0m [34mc[0m [31m=[0m [36m1[0m = [34mc[0m ? [34mc[0m : [36m0[0m
+[31mlet[0m [36mxi_1[0m [34mx14[0m [31m=[0m [34mx14[0m = [34mx14[0m ? [34mx14[0m : [34mx14[0m
 
-[31mlet[0m [36mxi_2[0m [34mx[0m [34my[0m [34mz[0m [34mw[0m [31m=[0m [34mx[0m = [34my[0m ? [36m1[0m : [36m1[0m = [34mz[0m ? [36m1[0m : [36m1[0m = [34mw[0m ? [36m1[0m : [36m0[0m
+[31mlet[0m [36mxi_2[0m [34m_auto3[0m [34m_auto4[0m [34m_auto5[0m [34m_auto6[0m [31m=[0m [34m_auto3[0m = [34m_auto4[0m ? [36m1[0m : [36m1[0m = [34m_auto5[0m ? [36m1[0m : [36m1[0m = [34m_auto6[0m ? [36m1[0m : [36m0[0m
 
 [31mlet rec[0m [36mg[0m [31m=[0m
   [33mfunction[0m [3mLeaf[0m(a) -> [34mxi_0[0m [34mx[0m [34ma[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mx[0m < [34ma[0m ? [34mxi_1[0m ([34mg[0m [34ml[0m) : [34mxi_2[0m [34mx[0m [34ma[0m ([34mg[0m [34ml[0m) ([34mg[0m [34mr[0m)

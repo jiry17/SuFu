@@ -12,11 +12,11 @@
 [44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0201s
-[44m INFO :[0m Refinement step 2.
-[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
-[44m INFO :[0m Checking solution (bounded check)...
 [44m INFO :[0m Classify counterexamples...
+	[44m INFO :[0m ... finished in 0.0468s
+	[44m INFO :[0m Refinement step 2.
+	[44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
+	[44m INFO :[0m Checking solution (bounded check)...
 [44m INFO :[0m 6 counterexamples violate requires.
 [44m INFO :[0m Lemma [32mUSplit[0m([32mUElt[0m([34mi7[0m), [34mi[0m, [34mi0[0m, [34ml1[0m): "lemma i i0 i7 i8 = [34mi[0m > [34mi0[0m =>
                                                                  ([34mi[0m > [34mi0[0m) &&
@@ -58,25 +58,22 @@
 [44m INFO :[0m Classify counterexamples...
 [44m INFO :[0m 3 counterexamples violate requires.
 [44m INFO :[0m Lemma [32mUSplit[0m([32mUElt[0m([34mi7[0m), [34mi[0m, [34mi0[0m, [34ml1[0m): "lemma i i0 i7 i8 = ¬ ([34mi[0m > [34mi0[0m) =>
-                                                                 ([34mi[0m > [34mi7[0m) &&
-                                                                   ([34mi[0m = [36m0[0m ? [34mi[0m = [36m0[0m : [34mi[0m > [34mi7[0m)" is correct, memorizing.
+                                                                 ([34mi[0m > [34mi7[0m) && ([34mi[0m = [36m0[0m ? [34mi[0m = [36m0[0m : [36mtrue[0m)" is correct, memorizing.
 [44m INFO :[0m Lemma [32mUSplit[0m([32mUElt[0m([34mi7[0m), [34mi[0m, [34mi0[0m, [34ml1[0m): "lemma i i0 i7 i8 = ¬ ([34mi[0m > [34mi0[0m) =>
-                                                                 ([34mi[0m > [34mi7[0m) &&
-                                                                   ([34mi[0m = [36m0[0m ? [34mi[0m = [36m0[0m : [34mi[0m > [34mi7[0m)" is correct, memorizing.
+                                                                 ([34mi[0m > [34mi7[0m) && ([34mi[0m = [36m0[0m ? [34mi[0m = [36m0[0m : [36mtrue[0m)" is correct, memorizing.
 [44m INFO :[0m Lemma [32mUSplit[0m([32mUElt[0m([34mi7[0m), [34mi[0m, [34mi0[0m, [34ml1[0m): "lemma i i0 i7 i8 = ¬ ([34mi[0m > [34mi0[0m) =>
-                                                                 ([34mi[0m > [34mi7[0m) &&
-                                                                   ([34mi[0m = [36m0[0m ? [34mi[0m = [36m0[0m : [34mi[0m > [34mi7[0m)" is correct, memorizing.
+                                                                 ([34mi[0m > [34mi7[0m) && ([34mi[0m = [36m0[0m ? [34mi[0m = [36m0[0m : [36mtrue[0m)" is correct, memorizing.
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 2:1 [0;30m[0m
 [44m INFO :[0m Checking solution...
-[44m INFO :[0m ... finished in 0.2946s
+[44m INFO :[0m ... finished in 0.4663s
 
 ------------------------------------------------------------------------------------------------[0]-
 [44m INFO :[0m Total time spent in solvers:
-        Z3-SMT     [  58 instances] 5.186s 
-        CVC4-SMT   [  37 instances] 0.823s 
-        CVC-SyGuS  [  58 instances] 3.022s 
-        > TOTAL    [ 153 instances]: 9.031s 
-[44m INFO :[0m Solution found in 3.7639s (8.4% verifying):
+        Z3-SMT     [  58 instances] 7.581s 
+        CVC4-SMT   [  37 instances] 1.498s 
+        CVC-SyGuS  [  58 instances] 3.948s 
+        > TOTAL    [ 153 instances]: 13.028s 
+[44m INFO :[0m Solution found in 5.1706s (9.9% verifying):
 
 [31mlet[0m [36mf0[0m [34ma[0m [31m=[0m max [34ma[0m [36m0[0m
 

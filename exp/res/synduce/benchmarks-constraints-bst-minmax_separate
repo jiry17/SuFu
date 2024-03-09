@@ -11,36 +11,36 @@
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m Checking solution...
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0139s
-[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
-[44m INFO :[0m ... finished in 0.0127s
+[44m INFO :[0m ... finished in 0.0142s
 [44m INFO :[0m Refinement step 2.
 [44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0131s
+[44m INFO :[0m ... finished in 0.0244s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m ... finished in 0.0215s
 [44m INFO :[0m Refinement step 3.
 [44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
 [44m INFO :[0m Checking solution...
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0205s
+[44m INFO :[0m ... finished in 0.0267s
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 3:0 [0;30m[0m
-[44m INFO :[0m ... finished in 0.0204s
+[44m INFO :[0m ... finished in 0.0285s
 [44m INFO :[0m Refinement step 4.
 [44m INFO :[0m [30m[102m		 segis Refinement step 4:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
 [44m INFO :[0m Checking solution...
-[44m INFO :[0m ... finished in 0.4223s
+[44m INFO :[0m ... finished in 0.6036s
 
 ------------------------------------------------------------------------------------------------[0]-
 [44m INFO :[0m Total time spent in solvers:
-        Z3-SMT     [  33 instances] 2.422s 
-        CVC-SyGuS  [  16 instances] 0.799s 
-        > TOTAL    [  49 instances]: 3.221s 
-[44m INFO :[0m Solution found in 1.7059s (29.5% verifying):
+        Z3-SMT     [  33 instances] 3.065s 
+        CVC-SyGuS  [  16 instances] 1.029s 
+        > TOTAL    [  49 instances]: 4.094s 
+[44m INFO :[0m Solution found in 1.9874s (36.2% verifying):
 
 [31mlet[0m [36mxi_0[0m [34mx66[0m [31m=[0m ([34mx66[0m, [34mx66[0m)
 
-[31mlet[0m [36mxi_2[0m [34mx78[0m [34mx79[0m [34mx80[0m [34mx81[0m [34mx82[0m [31m=[0m (max [34mx78[0m (max [34mx80[0m [34mx81[0m), min [34mx78[0m (min [34mx79[0m [34mx82[0m))
+[31mlet[0m [36mxi_2[0m [34mx83[0m [34mx84[0m [34mx85[0m [34mx86[0m [34mx87[0m [31m=[0m (max [34mx83[0m (max [34mx85[0m [34mx86[0m), min [34mx83[0m (min [34mx84[0m [34mx87[0m))
 
 [31mlet rec[0m [36mtarget[0m [31m=[0m
   [33mfunction[0m [3mLeaf[0m(a) -> [34mxi_0[0m [34ma[0m [33m| [0m[3mNode[0m(a, l, r) -> [34mxi_2[0m [34ma[0m ([34mamin[0m [34ml[0m) ([34mamax[0m [34mr[0m) ([34mamax[0m [34ml[0m) ([34mamin[0m [34mr[0m)

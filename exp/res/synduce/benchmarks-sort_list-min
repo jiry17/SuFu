@@ -12,19 +12,19 @@
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m Checking solution...
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0082s
+[44m INFO :[0m ... finished in 0.0118s
 [44m INFO :[0m Refinement step 2.
 [44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0174s
-[44m INFO :[0m ... finished in 0.0127s
+[44m INFO :[0m ... finished in 0.0277s
+[44m INFO :[0m ... finished in 0.0191s
 
 ------------------------------------------------------------------------------------------------[0]-
 [44m INFO :[0m Total time spent in solvers:
-        Z3-SMT     [   4 instances] 0.040s 
-        CVC-SyGuS  [   2 instances] 0.007s 
-        > TOTAL    [   6 instances]: 0.046s 
-[44m INFO :[0m Solution found in 0.0255s (150.1% verifying):
+        Z3-SMT     [   4 instances] 0.060s 
+        CVC-SyGuS  [   2 instances] 0.009s 
+        > TOTAL    [   6 instances]: 0.069s 
+[44m INFO :[0m Solution found in 0.0376s (155.9% verifying):
 
 [31mlet[0m [36mjoin[0m [34mx4[0m [34mx5[0m [31m=[0m [34mx4[0m < [34mx5[0m ? [34mx4[0m : [34mx5[0m
 

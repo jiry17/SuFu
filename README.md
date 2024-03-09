@@ -75,9 +75,9 @@ $ executor/run -benchmark="benchmark/autolifter/single-pass/mts.f" -output="buil
 
 ```bash
 $ cd exp/python
-$ python3 run_exp.py [-exp {"attribute", "synduce", "autolifter", "grisette", "total"}]  [-c {R <Restart>,C <Continue>}]
+$ python3 main.py [-exp {"attribute", "synduce", "autolifter", "grisette", "total"}]  [-c {R <Restart>,C <Continue>}]
 # For example, to reproduce all results:
-$ python3 run_exp.py -exp=autolifter -c=R
+$ python3 main.py -exp=autolifter -c=R
 ```
 
 1. `-exp`: the name of the experiment you want to run. All experiments will be executed by default.
@@ -95,36 +95,36 @@ These results are expected to be consistent with results presented in `run`.
 
 ```bash
 $ cd exp/python
-$ python3 run_exp.py -exp=attribute -c=R
+$ python3 main.py -exp=attribute -c=R
 ```
 
-For results of comparing SuFu and Synduce listed in Table 7, `run_exp.py` will recalculate them and print them to the standard output.
+For results of comparing SuFu and Synduce listed in Table 7, `main.py` will recalculate them and print them to the standard output.
 
 #### Reproduce results of experiment with Synduce
 
 ```bash
 $ cd exp/python
-$ python3 run_exp.py -exp=synduce -c=R
+$ python3 main.py -exp=synduce -c=R
 ```
 
-For results of details on the performance of SuFu listed in Table 6, `run_exp.py` will recalculate them and print them to the standard output.
+For results of details on the performance of SuFu listed in Table 6, `main.py` will recalculate them and print them to the standard output.
 
 #### Reproduce results of experiment with AutoLifter
 
 ````bash
 $ cd exp/python
-$ python3 run_exp.py -exp=autolifter -c=R
+$ python3 main.py -exp=autolifter -c=R
 ````
 
-For results of comparing SuFu and AutoLifter listed in Table 7, `run_exp.py` will recalculate them and print them to the standard output.
+For results of comparing SuFu and AutoLifter listed in Table 7, `main.py` will recalculate them and print them to the standard output.
 
 #### Reproduce results of experiment with Grisette
 
 ````bash
 $ cd exp/python
-$ python3 run_exp.py -exp=grisette -c=R
+$ python3 main.py -exp=grisette -c=R
 ````
 
-For results of comparing SuFu and Grisette listed in Section 7.4, `run_exp.py` will recalculate them and print them to the standard output.
+For results of comparing SuFu and Grisette listed in Section 7.4, `main.py` will recalculate them and print them to the standard output.
 
 **Note**: If you don't use *gurobi*, there may be some differences between the results listed in our paper and the reproduced ones because of the performance differences between ILP solvers. However, this does not affect the significance of our experimental results. If you use *gurobi*, there can also be some small differences due to randomness.

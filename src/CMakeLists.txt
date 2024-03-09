@@ -16,7 +16,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_definitions(-DLINUX)
 
     #Z3
-    set(Z3_PATH Z3PATH)
+    set(Z3_PATH /home/jiry/2021A/z3)
     link_directories(${Z3_PATH}/build)
     set(Z3_FILE libz3.so)
     include_directories(${Z3_PATH}/src/api/c++)
@@ -27,7 +27,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     include_directories(${Jsoncpp_INCLUDE_DIR})
 
     #gurobi
-    set(GUROBI_PATH GUROBIPATH)
+    set(GUROBI_PATH /home/jiry/2021A/gurobi912/linux64)
     include_directories(${GUROBI_PATH}/include)
     link_directories(${GUROBI_PATH}/lib)
     set(GUROBI_FILE libgurobi_g++5.2.a libgurobi91.so)

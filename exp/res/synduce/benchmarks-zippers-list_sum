@@ -12,33 +12,33 @@
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
 [44m INFO :[0m Checking solution...
-[44m INFO :[0m ... finished in 0.0082s
+[44m INFO :[0m ... finished in 0.0109s
 [44m INFO :[0m Refinement step 2.
 [44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
-[44m INFO :[0m ... finished in 0.0089s
-[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0088s
+[44m INFO :[0m ... finished in 0.0143s
+[44m INFO :[0m [30m[102m		 se2gis Refinement step 2:0 [0;30m[0m
+[44m INFO :[0m ... finished in 0.0114s
 [44m INFO :[0m Refinement step 3.
 [44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
 [44m INFO :[0m Checking solution...
-[44m INFO :[0m ... finished in 0.0090s
+[44m INFO :[0m ... finished in 0.0117s
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 3:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0121s
+[44m INFO :[0m ... finished in 0.0119s
 [44m INFO :[0m Refinement step 4.
 [44m INFO :[0m [30m[102m		 segis Refinement step 4:0 [0;30m[0m
 [44m INFO :[0m Checking solution...
-[44m INFO :[0m ... finished in 0.0102s
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0112s
+[44m INFO :[0m ... finished in 0.0156s
+[44m INFO :[0m ... finished in 0.0147s
 
 ------------------------------------------------------------------------------------------------[0]-
 [44m INFO :[0m Total time spent in solvers:
-        Z3-SMT     [  30 instances] 0.379s 
-        CVC-SyGuS  [  26 instances] 0.434s 
-        > TOTAL    [  56 instances]: 0.813s 
-[44m INFO :[0m Solution found in 0.1634s (41.9% verifying):
+        Z3-SMT     [  30 instances] 0.477s 
+        CVC-SyGuS  [  26 instances] 0.587s 
+        > TOTAL    [  56 instances]: 1.063s 
+[44m INFO :[0m Solution found in 0.2027s (44.7% verifying):
 
 [31mlet[0m [36mjoin[0m [34mx36[0m [34mx37[0m [31m=[0m [34mx36[0m + [34mx37[0m
 

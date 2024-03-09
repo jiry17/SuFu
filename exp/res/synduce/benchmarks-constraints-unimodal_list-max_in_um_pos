@@ -12,20 +12,20 @@
 [44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0190s
+[44m INFO :[0m ... finished in 0.0445s
 [44m INFO :[0m Refinement step 2.
 [44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
 [44m INFO :[0m Classify counterexamples...
-	[44m INFO :[0m ... finished in 0.0200s
+	[44m INFO :[0m ... finished in 0.0283s
 	[44m INFO :[0m Refinement step 3.
 	[44m INFO :[0m [30m[102m		 segis Refinement step 3:0 [0;30m[0m
 	[44m INFO :[0m Checking solution (bounded check)...
-	[44m INFO :[0m ... finished in 0.0186s
+	[44m INFO :[0m ... finished in 0.0441s
 	[44m INFO :[0m Refinement step 4.
 	[44m INFO :[0m [30m[102m		 segis Refinement step 4:0 [0;30m[0m
 	[44m INFO :[0m Checking solution (bounded check)...
-	[44m INFO :[0m ... finished in 0.0187s
+	[44m INFO :[0m ... finished in 0.0510s
 	[44m INFO :[0m Refinement step 5.
 	[44m INFO :[0m [30m[102m		 segis Refinement step 5:0 [0;30m[0m
 [44m INFO :[0m 4 counterexamples violate requires.
@@ -55,19 +55,19 @@
 [44m INFO :[0m Lemma [32mUSplit[0m([32mUElt[0m([34mi7[0m), [34mi[0m, [34mi0[0m, [34ml1[0m): "lemma i i0 i7 i8 = ([34mi[0m ≥ [34mi[0m) &&
                                                                  ([34mi[0m ≥ [34mi0[0m ? [34mi0[0m > [34mi8[0m : [34mi[0m > [34mi7[0m)" is correct, memorizing.
 [44m INFO :[0m Lemma [32mUSplit[0m([32mUNil[0m, [34mi[0m, [34mi0[0m, [34ml1[0m): "lemma0 i i0 i8 = ([34mi[0m ≥ [34mi[0m) && ([34mi[0m = [36m0[0m ? [34mi[0m = [36m0[0m : [34mi[0m > [36m0[0m)" is correct, memorizing.
-[44m INFO :[0m ... finished in 29.3662s
+[44m INFO :[0m ... finished in 42.9070s
 
 ------------------------------------------------------------------------------------------------[0]-
 [44m INFO :[0m Total time spent in solvers:
-        Z3-SMT     [  66 instances] 33.407s 
-        CVC4-SMT   [  41 instances] 3.553s 
-        CVC-SyGuS  [  74 instances] 54.338s 
-        > TOTAL    [ 181 instances]: 91.299s 
-[44m INFO :[0m Solution found in 30.7200s (95.8% verifying):
+        Z3-SMT     [  66 instances] 50.276s 
+        CVC4-SMT   [  41 instances] 6.485s 
+        CVC-SyGuS  [  74 instances] 75.781s 
+        > TOTAL    [ 181 instances]: 132.542s 
+[44m INFO :[0m Solution found in 44.4542s (96.9% verifying):
 
 [31mlet[0m [36mf0[0m [34mx36[0m [31m=[0m max [34mx36[0m [36m0[0m
 
-[31mlet[0m [36mjoin[0m [34mx41[0m [34mx42[0m [34mx43[0m [34mx44[0m [31m=[0m max [34mx41[0m (max [34mx42[0m (max [34mx43[0m [34mx44[0m))
+[31mlet[0m [36mjoin[0m [34mx37[0m [34mx38[0m [34mx39[0m [34mx40[0m [31m=[0m max [34mx37[0m (max [34mx38[0m (max [34mx39[0m [34mx40[0m))
 
 [31mlet[0m [36ms0[0m  [31m=[0m [36m0[0m
 

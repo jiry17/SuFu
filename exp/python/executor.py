@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 import time
-from config import RunnerConfig
+from config import *
 from cache import *
 from tqdm import tqdm
 import random
@@ -122,3 +122,43 @@ def get_all_benchmark_rec(root: str, valid = lambda f: ".f" in f):
             if valid(file):
                 benchmark_list.append(os.path.join(path, file))
     return benchmark_list
+
+extract_info = {
+  "autolifter": {'time': 0.026734187499999982},
+  "fusion": {'time': 0.015470187500000001},
+  "synduce": {'time': 0.018215449438202254},
+  "total": {'time': 0.02088398275862069}
+}
+
+def get_attribute(cache, name, attr):
+    if cache[name]["status"] != "success": return 0
+    if attr == "num": return 1
+    if attr == "time": return cache[name]["time"]
+    sufu_oup_dir = run_dir + "oup/autolabel/"
+    oup = sufu_oup_dir + name
+    with open(oup, "r") as inp:
+        lines = inp.readlines()
+    for line in lines[-15:]:
+        if attr + ":" in line:
+            l = line[:-1] if line[-1] == '\n' else line 
+            return float(l.split(" ")[-1])
+    print("attribute", attr, "not found in", name)
+    assert False
+
+def _get_all(cache, batch_name, attr):
+    total = 0
+    ma = 0
+    for name in cache.keys():
+        if batch_name != "total" and batch_name not in name: continue
+        if "dp" in name: continue
+        total += get_attribute(cache, name, attr)
+        ma = max(ma, get_attribute(cache, name, attr))
+    # print(batch_name, attr, ma)
+    return total 
+
+def get_all(cache, batch_name, attr, flag):
+    num = _get_all(cache, batch_name, "num")
+    if attr == "num": return num
+    v = _get_all(cache, batch_name, attr) / num
+    if attr == "time" and flag: v -= extract_info[batch_name]["time"]
+    return v

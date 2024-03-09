@@ -11,20 +11,20 @@
 [44m INFO :[0m [30m[102m		 segis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m [30m[102m		 se2gis Refinement step 1:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
-[44m INFO :[0m ... finished in 0.0085s
+[44m INFO :[0m ... finished in 0.0110s
 [44m INFO :[0m Refinement step 2.
 [44m INFO :[0m [30m[102m		 segis Refinement step 2:0 [0;30m[0m
 [44m INFO :[0m Checking solution (bounded check)...
 [44m INFO :[0m Checking solution...
-[44m INFO :[0m ... finished in 0.0443s
-[44m INFO :[0m ... finished in 0.3911s
+[44m INFO :[0m ... finished in 0.0582s
+[44m INFO :[0m ... finished in 0.5580s
 
 ------------------------------------------------------------------------------------------------[0]-
 [44m INFO :[0m Total time spent in solvers:
-        Z3-SMT     [   6 instances] 0.488s 
-        CVC-SyGuS  [   6 instances] 12.055s 
-        > TOTAL    [  12 instances]: 12.544s 
-[44m INFO :[0m Solution found in 3.4142s (13.0% verifying):
+        Z3-SMT     [   6 instances] 0.688s 
+        CVC-SyGuS  [   6 instances] 14.563s 
+        > TOTAL    [  12 instances]: 15.251s 
+[44m INFO :[0m Solution found in 4.2240s (14.8% verifying):
 
 [31mlet[0m [36mbase_case[0m [34ma[0m [31m=[0m max [34ma[0m [36m0[0m
 
