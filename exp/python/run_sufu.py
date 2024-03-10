@@ -10,6 +10,26 @@ oup_dir = run_dir + "oup/sufu/"
 label_dir = run_dir + "label/"
 sufu_cache_path = cache_dir + "sufu.json"
 
+def extractResult(oup_file):
+    if not os.path.exists(oup_file):
+        return {"status": "fail"}
+    with open(oup_file, "r") as inp:
+        lines = inp.readlines()
+    if "Success" not in "".join(lines):
+        return {"status": "fail"}
+
+    def extractTotalTime(lines):
+        for line in lines:
+            if "Total time cost" in line:
+                l, r = line.split(": ")
+                if r[-1] == '\n': r = r[:-1]
+                return float(r)
+        return None
+
+    total_time = extractTotalTime(lines)
+    if total_time is None: return {"status": "fail"}
+    return {"status": "success", "time": total_time}
+
 def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi):
     if sufu_cache is None or clear_cache: sufu_cache = {}
     is_cover = False
