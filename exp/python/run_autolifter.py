@@ -4,10 +4,12 @@ from config import *
 from tqdm import tqdm
 from executor import get_all_benchmark_rec
 
-def print_autolifter_compare(cache, clear_cache, use_gurobi, is_cover):
+def print_autolifter_compare(cache, clear_cache):
     print("---compare with AutoLifter---")
     case_name = {"dad": "dac", "listr": "single-pass", "seg": "lsp", "ds": "segment-tree"}
     autolifter_res = load_cache(cache_dir + "AutoLifter.json")
+
+    if autolifter_res == False: 
 
     num, atime, btime = 0, 0,0     
     for case, case_result in autolifter_res.items():

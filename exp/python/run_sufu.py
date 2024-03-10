@@ -10,16 +10,9 @@ oup_dir = run_dir + "oup/sufu/"
 label_dir = run_dir + "label/"
 sufu_cache_path = cache_dir + "sufu.json"
 
-def clearFail(cache):
-    new_cache = {}
-    for name, status in cache.items():
-        if status["status"] == "success":
-            new_cache[name] = status
-    return new_cache
-
-def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi, is_cover):
-    sufu_cache = clearFail(sufu_cache)
+def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi):
     if sufu_cache is None or clear_cache: sufu_cache = {}
+    is_cover = False
 
     for task_path in tqdm(get_all_benchmark_rec(benchmark_root, lambda x: ".f" in x and "autolifter-base" not in x)):
         tmp = task_path[len(src_path):-2].split("/")
@@ -30,6 +23,7 @@ def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi, is_cover):
             sufu_cache[name] = {"status": "fail"}
             print(sufu_cache[name])
             save_cache(cache_path, sufu_cache, is_cover)
+            is_cover = True
             continue
         label_path = label_dir + name
         res_path = res_dir + name

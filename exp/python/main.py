@@ -30,16 +30,15 @@ if __name__ == "__main__":
 
     # get result of SuFu
     sufu_cache = load_cache(sufu_cache_path)
-    is_cover = False
-    run_sufu_tasks(sufu_cache, clear_cache, use_gurobi, is_cover)
+    run_sufu_tasks(sufu_cache, clear_cache, use_gurobi)
     print_sufu_fail_task(sufu_cache)
 
     # print compare result
     if (args.experiment == "attribute" or args.experiment == "total"):
-        print_attr(sufu_cache, clear_cache, use_gurobi, is_cover)
+        print_attr(sufu_cache, clear_cache)
     if (args.experiment == "synduce" or args.experiment == "total"):
-        print_synduce_compare(sufu_cache, clear_cache, use_gurobi, is_cover)
+        print_synduce_compare(sufu_cache, clear_cache)
     if (args.experiment == "autolifter" or args.experiment == "total"):
-        print_autolifter_compare(sufu_cache, clear_cache, use_gurobi, is_cover)
+        print_autolifter_compare(sufu_cache, clear_cache)
     if (args.experiment == "grisette" or args.experiment == "total"):
-        print_grisette_compare(sufu_cache, clear_cache, use_gurobi, is_cover)
+        print_grisette_compare(sufu_cache, clear_cache)

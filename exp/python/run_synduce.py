@@ -11,8 +11,9 @@ def get_status(lines):
         if "problem is unrealizable" in line: return "unrealizable"
     return "fail"
 
-def run_synduce_tasks(synduce_cache, clear_cache, is_cover):
+def run_synduce_tasks(synduce_cache, clear_cache):
     if synduce_cache is None or clear_cache: synduce_cache = {}
+    is_cover = False
     
     for task_path in tqdm(get_all_benchmark_rec(synduce_benchmark_root, lambda x: ".ml" in x or ".pmrs" in x)):
         name = ".".join(task_path.split(".")[:-1])
@@ -44,12 +45,11 @@ def run_synduce_tasks(synduce_cache, clear_cache, is_cover):
             print(name)
     print("\n")
 
-def print_synduce_compare(sufu_cache, clear_cache, use_gurobi, is_cover):
+def print_synduce_compare(sufu_cache, clear_cache):
     print("---compare with Synduce---")
     synduce_cache = load_cache(synduce_cache_path)
-    is_cover = False
     if synduce_cache is None: print("None!")
-    run_synduce_tasks(synduce_cache, clear_cache, is_cover)
+    run_synduce_tasks(synduce_cache, clear_cache)
 
     print("total task num:", len(synduce_cache))
     print("SuFu solved:", get_all(sufu_cache, "synduce", "num", True))

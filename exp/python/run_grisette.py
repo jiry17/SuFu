@@ -7,8 +7,9 @@ import os
 from executor import get_all_benchmark_rec, get_all
 import subprocess
 
-def run_grisette_tasks(grisette_cache, clear_cache, is_cover):
+def run_grisette_tasks(grisette_cache, clear_cache):
     if grisette_cache is None or clear_cache: grisette_cache = {}
+    is_cover = False
 
     for task_path in tqdm(get_all_benchmark_rec(grisette_benchmark_root, lambda x: ".hs" in x)):
         name = "incre-tests-" + "-".join(task_path[len(src_path):-3].split("/")[3:])
@@ -47,12 +48,12 @@ def run_grisette_tasks(grisette_cache, clear_cache, is_cover):
         is_cover = True
 
 
-def print_grisette_compare(sufu_cache, clear_cache, use_gurobi, is_cover):
+def print_grisette_compare(sufu_cache, clear_cache):
     print("---compare with Grisette---")
     grisette_cache = load_cache(grisette_cache_path)
     is_cover = False
     if grisette_cache is None: print("None!")
-    run_grisette_tasks(grisette_cache, clear_cache, is_cover)
+    run_grisette_tasks(grisette_cache, clear_cache)
 
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
         num, snum, atime, stime = 0, 0, 0, 0
