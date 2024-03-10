@@ -37,21 +37,6 @@ then
     sed -i "s/5.2.a/4.2.a/g" src/CMakeLists.txt
 fi
 
-# install cvc4
-# pushd thirdparty
-# wget https://github.com/CVC4/CVC4-archived/archive/refs/tags/1.8.tar.gz
-# tar xvfz 1.8.tar.gz
-# pushd CVC4-archived-1.8
-# ./contrib/get-antlr-3.4  # download and build ANTLR
-# ./configure.sh   # use --prefix to specify a prefix (default: /usr/local)
-#                  # use --name=<PATH> for custom build directory
-# cd ./build       # default of <build_dir> is ./build
-# make             # use -jN for parallel build with N threads
-# make check       # to run default set of tests
-# make install     # to install into the prefix specified above
-# popd
-# popd
-
 
 # install opam and yojson
 apt-get update
@@ -60,6 +45,22 @@ opam init
 opam update
 opam install yojson ocamlfind
 eval $(opam env)
+
+# make surface language
+path=`pwd`
+spath=${path//\//\\\/}
+sed -i "s/SUFUPATH/\"${spath}\"/g" exp/python/config.py
+pushd src/surface
+make
+popd
+
+# install AutoLifter
+pushd thirdparty
+git clone https://github.com/jiry17/AutoLifter.git
+pushd AutoLifter 
+./install 
+popd 
+popd
 
 
 # get Synduce
@@ -78,14 +79,6 @@ apt-get install cabal-install
 echo 'export PATH="$HOME/.cabal/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 cabal install grisette
-
-# make surface language
-path=`pwd`
-spath=${path//\//\\\/}
-sed -i "s/SUFUPATH/\"${spath}\"/g" exp/python/config.py
-pushd src/surface
-make
-popd
 
 # build source
 pushd src
