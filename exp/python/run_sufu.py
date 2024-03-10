@@ -39,21 +39,14 @@ def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi):
         tmp[0] = "incre-tests"
         name = "-".join(tmp)
         if name in sufu_cache: continue
-        if name in failed_list:
-            sufu_cache[name] = {"status": "fail"}
-            print(sufu_cache[name])
-            save_cache(cache_path, sufu_cache, is_cover)
-            is_cover = True
-            continue
         label_path = label_dir + name
         res_path = res_dir + name
         oup_path = oup_dir + name
         os.system("touch " + oup_path)
 
         command = ["timeout " + str(time_out), executor, "-benchmark=" + task_path, "-output=" + oup_path, "-use_gurobi=" + use_gurobi]
-        command += ["2>/dev/null"]
+        command += [">/dev/null", "2>/dev/null"]
         command = " ".join(command)
-        print(command)
         os.system(command)
 
         with open(oup_path, "r") as inp:
@@ -62,8 +55,7 @@ def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi):
             sufu_cache[name] = {"status": "fail"}
         else:
             sufu_cache[name] = {"status": "success", "time": float(lines[-2][:-1])}
-        print(sufu_cache[name])
-        save_cache(cache_path, sufu_cache, is_cover)
+        save_cache(sufu_cache_path, sufu_cache, is_cover)
         is_cover = True
     print("\n")
 

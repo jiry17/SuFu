@@ -7,7 +7,7 @@ from executor import get_all_benchmark_rec
 autolifter_cache_path = cache_dir + "AutoLifter.json"
 autolifter_root = src_path + "thirdparty/AutoLifter/"
 autolifter_benchmark_path = autolifter_root + "run/benchmark.json"
-autolifter_runner = autolifter_root + "run/run"
+autolifter_runner = autolifter_root + "build/main"
 
 def from_autolifter_case_name(name):
     return "lsp" if name == "longest-segment" else name
@@ -31,16 +31,37 @@ def get_file(paths):
     if os.path.exists(final_path): os.remove(final_path)
     return final_path
 
+def extractResult(oup_file):
+    if not os.path.exists(oup_file):
+        return {"status": "fail"}
+    with open(oup_file, "r") as inp:
+        lines = inp.readlines()
+    if "Success" not in "".join(lines):
+        return {"status": "fail"}
+
+    def extractTotalTime(lines):
+        for line in lines:
+            if "Total time cost" in line:
+                l, r = line.split(": ")
+                if r[-1] == '\n': r = r[:-1]
+                return float(r)
+        return None
+
+    total_time = extractTotalTime(lines)
+    if total_time is None: return {"status": "fail"}
+    return {"status": "success", "time": total_time}
+
 def execute(problem_name, benchmark):
     solver_name = "AutoLifter"
     oup_file = get_file([src_path + "exp/oup/", "autolifter", problem_name, benchmark])
     runnable_file = get_file([autolifter_root + "run/runnable/", solver_name, problem_name, benchmark])
-    command = ["timeout " + str(time_out) + " " + exe_path,
+    command = ["timeout " + str(time_out) + " " + autolifter_runner,
                "--solver=\"" + solver_name + "\"",
                "--problem=\"" + problem_name + "\"", "--name=\"" + benchmark + "\"",
                "--oup=\"" + oup_file + "\"",
                "--runnable=\"" + runnable_file + "\"", ">/dev/null", "2>/dev/null"]
     command = " ".join(command)
+    os.system(command)
     res = extractResult(oup_file)
     return res
 
@@ -48,7 +69,7 @@ def run_autolifter_tasks(autolifter_cache, clear_cache):
     if autolifter_cache is None or clear_cache: autolifter_cache = {}
     is_cover = False
 
-    benchmark_info = load_cache("benchmark.json")
+    benchmark_info = load_cache(autolifter_benchmark_path)
     benchmarks = []
     for problem, track in benchmark_info.items():
         for benchmark in track:
@@ -80,7 +101,7 @@ def print_autolifter_compare(cache, clear_cache):
             num += 1
             atime += cache[full_name]["time"]
             btime += task_result["time"]
-    
+    print(anum, bnum)
     print("(SuFu) #solved tasks:", anum,  "averege time:", atime / num)
     print("(AutoLifter) #solved tasks:", bnum,  "averege time:", btime / num)
     print("\n")
