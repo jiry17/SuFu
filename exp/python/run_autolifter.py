@@ -9,6 +9,19 @@ autolifter_root = src_path + "thirdparty/AutoLifter/"
 autolifter_benchmark_path = autolifter_root + "run/benchmark.json"
 autolifter_runner = autolifter_root + "run/run"
 
+def from_autolifter_case_name(name):
+    return "lsp" if name == "longest-segment" else name
+
+def from_autolifter_task_name(name):
+    name_list = [('cnt1s', 'cnt_1s'), ('page10', 'page10-1'), ('sum@+', 'sum-plus'), ('sum@cover', 'sum-cover'), 
+                 ('sqrsum@+', 'sqrsum-plus'), ('sqrsum@cover', 'sqrsum-cover'), ('mts@-', 'mts-neg'), ('mts@cover', 'mts-cover'), 
+                 ('mss@-', 'mss-neg'), ('mss@cover', 'mss-cover'), ('min@-', 'min-neg'), ('2nd-min@-', 'second_min-neg'), 
+                 ('3rd-min@-', 'third_min-neg'), ('max-1s@cover', 'max1s-cover'), ('max-1s-p@cover', 'max1s_p-cover')]
+    for sufu_name, autolifter_name in name_list:
+        if autolifter_name == name: return sufu_name 
+    return name
+
+
 def get_file(paths):
     path = ""
     for name in paths[:-1]:
@@ -35,7 +48,7 @@ def run_autolifter_tasks(autolifter_cache, clear_cache):
     if autolifter_cache is None or clear_cache: autolifter_cache = {}
     is_cover = False
 
-    benchmark_info = load_json("benchmark.json", True)
+    benchmark_info = load_cache("benchmark.json")
     benchmarks = []
     for problem, track in benchmark_info.items():
         for benchmark in track:
@@ -51,24 +64,23 @@ def run_autolifter_tasks(autolifter_cache, clear_cache):
 
 def print_autolifter_compare(cache, clear_cache):
     print("---compare with AutoLifter---")
-    case_name = {"dad": "dac", "listr": "single-pass", "seg": "lsp", "ds": "segment-tree"}
     autolifter_res = load_cache(autolifter_cache_path)
+    autolifter_res = run_autolifter_tasks(autolifter_res, clear_cache)
 
-    if autolifter_res == False: 
-
-    num, atime, btime = 0, 0,0     
-    for case, case_result in autolifter_res.items():
-        for task_name, task_result in case_result.items():
-            full_name = "incre-tests-autolifter-" + case_name[case] + "-" + task_name
+    num, anum, bnum, atime, btime = 0, 0, 0, 0, 0
+    for autolifter_case, case_result in autolifter_res.items():
+        for autolifter_task_name, task_result in case_result.items():
+            full_name = "incre-tests-autolifter-" + from_autolifter_case_name(autolifter_case) + "-" + from_autolifter_task_name(autolifter_task_name)
             full_name = full_name.replace("@", "-").replace("+", "plus")
             if full_name[-1] == "-": full_name = full_name[:-1] + "neg"
             assert full_name in cache 
+            if cache[full_name]["status"] == "success": anum += 1
+            if task_result["status"] == "success": bnum += 1
             if task_result["status"] != "success" or cache[full_name]["status"] != "success": continue
             num += 1
             atime += cache[full_name]["time"]
-            btime += task_result["time"]["total"]
+            btime += task_result["time"]
     
-    print("the number of tasks solved by SuFu and AutoLifter:", num)
-    print("average time of SuFu:", atime / num)
-    print("average time of AutoLifter:", btime / num)
+    print("(SuFu) #solved tasks:", anum,  "averege time:", atime / num)
+    print("(AutoLifter) #solved tasks:", bnum,  "averege time:", btime / num)
     print("\n")

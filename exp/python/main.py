@@ -3,7 +3,7 @@ from cache import *
 from config import *
 from tqdm import tqdm
 from executor import get_all_benchmark_rec
-from run_sufu import sufu_cache_path, run_sufu_tasks, print_sufu_fail_task, print_attr
+from run_sufu import sufu_cache_path, run_sufu_tasks, print_attr
 from run_autolifter import print_autolifter_compare
 from run_grisette import print_grisette_compare
 from run_synduce import print_synduce_compare
@@ -31,7 +31,6 @@ if __name__ == "__main__":
     # get result of SuFu
     sufu_cache = load_cache(sufu_cache_path)
     run_sufu_tasks(sufu_cache, clear_cache, use_gurobi)
-    print_sufu_fail_task(sufu_cache)
 
     # print compare result
     if (args.experiment == "attribute" or args.experiment == "total"):
