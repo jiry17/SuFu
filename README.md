@@ -29,7 +29,6 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 
    ```bash
    $ cd SuFu
-   $ chmod +x install
    $ ./install
    ```
 
