@@ -3,13 +3,13 @@
 # install z3
 mkdir thirdparty
 pushd thirdparty
-# wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.13.0.tar.gz
-tar xvfz z3-z3-4.13.0.tar.gz
-pushd z3-z3-4.13.0
+wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.13.0.tar.gz
+tar xvfz z3-4.13.0.tar.gz
+pushd z3-4.13.0
 python3 scripts/mk_make.py
 pushd build
 make
-sudo make install
+sudo make install -j 8
 popd
 z3path=`pwd`
 echo ${z3path}
@@ -20,7 +20,7 @@ sed -i "s/Z3PATH/${sz3path}/g" src/CMakeLists.txt
 
 # install gurobi
 pushd thirdparty
-# wget https://packages.gurobi.com/9.1/gurobi9.1.2_linux64.tar.gz
+wget https://packages.gurobi.com/9.1/gurobi9.1.2_linux64.tar.gz
 tar xvfz gurobi9.1.2_linux64.tar.gz
 pushd gurobi912/linux64
 gurobipath=`pwd`
