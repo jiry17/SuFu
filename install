@@ -67,14 +67,16 @@ popd
 
 
 # get Synduce
-# export PATH="$HOME/.cabal/bin:$PATH"
-echo export PATH=\"$HOME/.cabal/bin:\$PATH\" >> ~/.bashrc
-echo export PATH=\"${z3path}/build:\$PATH\" >> ~/.bashrc
-source ~/.bashrc
+export PATH="$HOME/.cabal/bin:$PATH"
+export PATH="${z3path}/build:$PATH"
+# echo export PATH=\"$HOME/.cabal/bin:\$PATH\" >> ~/.bashrc
+# echo export PATH=\"${z3path}/build:\$PATH\" >> ~/.bashrc
+# source ~/.bashrc
 pushd thirdparty
 git clone https://github.com/synduce/Synduce.git
 pushd Synduce
 opam pin add dune 3.10.0
+eval $(opam env)
 make -j 8
 popd
 popd
@@ -88,11 +90,11 @@ popd
 # ghcup set ghc 9.2.5
 
 
-# get Grisette
-# cabal update
-# cabal install cabal-install
-# cabal install grisette
-# source ~/.bashrc
+# build Grisette test environment
+pushd Grisette/src/run_test
+stack ghci
+
+popd
 
 
 # make surface language
@@ -100,6 +102,7 @@ path=`pwd`
 spath=${path//\//\\\/}
 sed -i "s/SUFUPATH/\"${spath}\"/g" exp/python/config.py
 pushd src/surface
+eval $(opam env)
 make -j 8
 popd
 
@@ -116,4 +119,3 @@ pushd build
 cmake -G Ninja ../src
 ninja
 popd
-

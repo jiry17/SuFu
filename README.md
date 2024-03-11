@@ -20,13 +20,12 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
    $ opam install dune.3.10.0 ocamlfind base fmt getopt sexplib lwt fileutils stdio yojson ppx_let ppx_deriving ppx_sexp_conv ppx_hash lwt_ppx parsexp_io core_unix menhirLib ocamlgraph menhir
    $ eval $(opam env)
    $ curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh    # install ghcup
-   $ curl -sSL https://get.haskellstack.org/ | sh -s -- -f                      # install stack
+   $ curl -sSL https://get.haskellstack.org/ | sh -s -- -f  # install stack
    $ source ~/.bashrc
-   $ ghcup install ghc 9.2.5                                                    # install ghc
+   $ ghcup install ghc 9.2.5    # install ghc
    $ ghcup set ghc 9.2.5
    $ cabal update
-   $ cabal install cabal-install
-   $ cabal install grisette
+   $ cabal install cabal-install grisette
    $ source ~/.bashrc
    ```
 
