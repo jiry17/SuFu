@@ -11,8 +11,13 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 1. Install dependencies
 
    ```bash
-   $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev cbmc
+   $ apt-get update
+   $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev cbmc ocaml ocaml-nox camlp4-extra opam haskell-stack cabal-install
    $ pip3 install pyparsing tqdm argparse
+   $ opam init
+   $ opam update
+   $ opam install yojson ocamlfind
+   $ eval $(opam env)
    ```
 
 

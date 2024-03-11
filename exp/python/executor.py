@@ -134,7 +134,7 @@ def get_attribute(cache, name, attr):
     if cache[name]["status"] != "success": return 0
     if attr == "num": return 1
     if attr == "time": return cache[name]["time"]
-    sufu_oup_dir = run_dir + "oup/autolabel/"
+    sufu_oup_dir = run_dir + "oup/sufu/"
     oup = sufu_oup_dir + name
     with open(oup, "r") as inp:
         lines = inp.readlines()
@@ -142,6 +142,8 @@ def get_attribute(cache, name, attr):
         if attr + ":" in line:
             l = line[:-1] if line[-1] == '\n' else line 
             return float(l.split(" ")[-1])
+    print("sufu_oup_dir =", sufu_oup_dir)
+    print("oup =", oup)
     print("attribute", attr, "not found in", name)
     assert False
 

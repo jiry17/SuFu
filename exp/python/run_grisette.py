@@ -7,6 +7,13 @@ import os
 from executor import get_all_benchmark_rec, get_all
 import subprocess
 
+grisette_path = src_path + "thirdparty/Grisette/"
+grisette_benchmark_root = grisette_path + "benchmark/"
+grisette_execute_path = grisette_path + "src/"
+grisette_execute_file = grisette_execute_path + "run_test/Main.hs"
+grisette_program_name = "run_test/Main.hs"
+grisette_cache_path = cache_dir + "grisette.json"
+
 def run_grisette_tasks(grisette_cache, clear_cache):
     if grisette_cache is None or clear_cache: grisette_cache = {}
     is_cover = False
@@ -52,20 +59,24 @@ def print_grisette_compare(sufu_cache, clear_cache):
     print("---compare with Grisette---")
     grisette_cache = load_cache(grisette_cache_path)
     is_cover = False
-    if grisette_cache is None: print("None!")
     run_grisette_tasks(grisette_cache, clear_cache)
 
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
-        num, snum, atime, stime = 0, 0, 0, 0
+        num, anum, snum, atime, stime = 0, 0, 0, 0, 0
         for name in grisette_cache:
             if "incre-tests-" + batch_name not in name and batch_name != "total": continue
             if "incre-tests-dp" in name: continue
+            if sufu_cache[name]["status"] == "success": 
+                anum += 1
             if grisette_cache[name]["status"] == "success": 
-                #print(name)
                 snum += 1
             if grisette_cache[name]["status"] != "success" or sufu_cache[name]["status"] != "success":
                 continue
             num += 1
             atime += sufu_cache[name]["time"]
             stime += grisette_cache[name]["time"]
-        print("batch: ", batch_name, ", sketch-num: ", snum, ", average time of SuFu: ", atime / num, ", average time of Grisette: ", stime / num, sep="")
+        
+        print("batch:", batch_name)
+        print("(SuFu) #solved tasks:", anum,  "averege time:", atime / num)
+        print("(Grisette) #solved tasks:", snum,  "averege time:", stime / num)
+        print("\n")

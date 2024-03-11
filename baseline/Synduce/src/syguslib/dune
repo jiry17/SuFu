@@ -1,4 +1,0 @@
-(library
- (name syguslib)
- (public_name Synduce.Lib.SygusLib)
- (libraries fmt base stdio parsexp parsexp_io lwt lwt.unix))

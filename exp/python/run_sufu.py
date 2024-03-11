@@ -59,7 +59,7 @@ def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi):
         is_cover = True
     print("\n")
 
-def print_attr(sufu_cache, clear_cache, use_gurobi, is_cover):
+def print_attr(sufu_cache, clear_cache):
     print("---calculate attribute in each batch---")
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
         for attr in ["num", "time", "align-size", "extract-size", "comb-size"]:

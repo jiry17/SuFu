@@ -37,14 +37,6 @@ then
 fi
 
 
-# install opam and yojson
-apt-get update
-apt-get install ocaml ocaml-nox camlp4-extra opam
-opam init
-opam update
-opam install yojson ocamlfind
-eval $(opam env)
-
 # make surface language
 path=`pwd`
 spath=${path//\//\\\/}
@@ -72,9 +64,6 @@ popd
 # popd
 
 # get Grisette
-apt-get install haskell-stack
-apt-get update
-apt-get install cabal-install
 echo 'export PATH="$HOME/.cabal/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 cabal install grisette

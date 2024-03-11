@@ -1,9 +1,0 @@
-
-let join x12 x13 x14 = x12 + (max x13 x14)
-
- target⟨join⟩(): int zipper -> int  = 
-{
-  ‣ main  Top  ⟹  0
-  ‣ main  Zip(x, a, child, z)  ⟹  join a (spec child) (main z)
-  
-  }

@@ -5,6 +5,13 @@ from tqdm import tqdm
 from executor import get_all_benchmark_rec, get_all
 import time
 
+synduce_path = src_path + "thirdparty/Synduce/"
+synduce_benchmark_root = synduce_path + "benchmarks/"
+synduce_executor = synduce_path + "Synduce"
+synduce_res_dir = run_dir + "res/synduce/"
+# synduce_oup_dir = run_dir + "oup/synduce/"
+synduce_cache_path = cache_dir + "synduce.json"
+
 def get_status(lines):
     for line in lines:
         if "Solution found" in line: return "success"
@@ -21,6 +28,7 @@ def run_synduce_tasks(synduce_cache, clear_cache):
         if name in synduce_cache: 
             continue
         synduce_res_path = synduce_res_dir + name
+        os.system("mkdir -p " + synduce_res_dir)
         os.system("touch " + synduce_res_path)
 
         command = ["timeout " + str(time_out), synduce_executor, task_path]
@@ -39,23 +47,22 @@ def run_synduce_tasks(synduce_cache, clear_cache):
         save_cache(synduce_cache_path, synduce_cache, is_cover)
         is_cover = True
 
-    print("\nfail tasks in synduce:")
-    for name, result in synduce_cache.items():
-        if result["status"] == "fail":
-            print(name)
-    print("\n")
+    # print("\nfail tasks in synduce:")
+    # for name, result in synduce_cache.items():
+    #     if result["status"] == "fail":
+    #         print(name)
+    # print("\n")
 
 def print_synduce_compare(sufu_cache, clear_cache):
     print("---compare with Synduce---")
     synduce_cache = load_cache(synduce_cache_path)
-    if synduce_cache is None: print("None!")
     run_synduce_tasks(synduce_cache, clear_cache)
 
-    print("total task num:", len(synduce_cache))
-    print("SuFu solved:", get_all(sufu_cache, "synduce", "num", True))
-    print("Synduce solved:", get_all(synduce_cache, "total", "num", False))
+    # print("total task num:", len(synduce_cache))
+    # print("SuFu solved:", get_all(sufu_cache, "synduce", "num", True))
+    # print("Synduce solved:", get_all(synduce_cache, "total", "num", False))
 
-    num, asum, ssum = 0, 0, 0
+    num, atime, stime = 0, 0, 0
     for name in synduce_cache.keys():
         if synduce_cache[name]["status"] != "success": continue
         task_name = "incre-tests-synduce-" + "-".join(name.split("-")[1:])
@@ -69,10 +76,12 @@ def print_synduce_compare(sufu_cache, clear_cache):
         assert full_name is not None 
         if sufu_cache[full_name]["status"] != "success": continue
         num += 1
-        asum += sufu_cache[full_name]["time"]
-        ssum += synduce_cache[name]["time"]
+        atime += sufu_cache[full_name]["time"]
+        stime += synduce_cache[name]["time"]
 
-    print("the number of tasks solved by SuFu and Synduce:", num)
-    print("average time of SuFu in both solved tasks:", asum / num)
-    print("average time of Synduce in both solved tasks:", ssum / num)
+    anum = get_all(sufu_cache, "synduce", "num", True)
+    snum = get_all(synduce_cache, "total", "num", False)
+    # print(anum, snum)
+    print("(SuFu) #solved tasks:", anum,  "averege time:", atime / num)
+    print("(Synduce) #solved tasks:", snum,  "averege time:", stime / num)
     print("\n")

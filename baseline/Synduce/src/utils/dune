@@ -1,4 +1,0 @@
-(library
- (name utils)
- (public_name Synduce.Lib.Utils)
- (libraries base fmt getopt sexplib str lwt lwt.unix fileutils stdio yojson))

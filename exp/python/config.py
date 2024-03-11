@@ -1,24 +1,10 @@
 import os
 
-src_path = SUFUPATH + "/"
+src_path = "/home/jiry/zyw/AutoElim/artifact/SuFu" + "/"
 benchmark_root = src_path + "benchmark"
 run_dir = src_path + "exp/"
 cache_dir = run_dir + "result_cache/"
 time_out = 600
-
-synduce_path = src_path + "baseline/Synduce/"
-synduce_benchmark_root = synduce_path + "benchmarks/"
-synduce_executor = synduce_path + "Synduce"
-synduce_res_dir = run_dir + "res/synduce/"
-synduce_oup_dir = run_dir + "oup/synduce/"
-synduce_cache_path = cache_dir + "synduce.json"
-
-grisette_path = src_path + "baseline/Grisette/"
-grisette_benchmark_root = grisette_path + "benchmark/"
-grisette_execute_path = grisette_path + "src/"
-grisette_execute_file = grisette_execute_path + "run_test/Main.hs"
-grisette_program_name = "run_test/Main.hs"
-grisette_cache_path = cache_dir + "grisette.json"
 
 def _get_bin_name(bin_file):
     return os.path.basename(bin_file)
