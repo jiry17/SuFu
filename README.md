@@ -12,12 +12,22 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 
    ```bash
    $ apt-get update
-   $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev cbmc ocaml ocaml-nox camlp4-extra opam haskell-stack cabal-install openjdk-11-jre-headless
+   $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev cbmc ocaml ocaml-nox camlp4-extra opam cabal-install openjdk-11-jre-headless
+   $ apt-get install haskell-stack 
    $ pip3 install pyparsing tqdm argparse toml
    $ opam init
    $ opam update
-   $ opam install ocamlfind dune base fmt getopt sexplib lwt fileutils stdio yojson ppx_let ppx_deriving ppx_sexp_conv ppx_hash lwt_ppx parsexp_io core_unix menhirLib ocamlgraph menhir
+   $ opam install dune.3.10.0 ocamlfind base fmt getopt sexplib lwt fileutils stdio yojson ppx_let ppx_deriving ppx_sexp_conv ppx_hash lwt_ppx parsexp_io core_unix menhirLib ocamlgraph menhir
    $ eval $(opam env)
+   $ curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh    # install ghcup
+   $ curl -sSL https://get.haskellstack.org/ | sh -s -- -f                      # install stack
+   $ source ~/.bashrc
+   $ ghcup install ghc 9.2.5                                                    # install ghc
+   $ ghcup set ghc 9.2.5
+   $ cabal update
+   $ cabal install cabal-install
+   $ cabal install grisette
+   $ source ~/.bashrc
    ```
 
 
