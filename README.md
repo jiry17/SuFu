@@ -82,7 +82,7 @@ $ python3 main.py [-exp {"attribute", "synduce", "autolifter", "grisette", "tota
 $ python3 main.py -exp=autolifter -c=R
 ```
 
-1. `-exp`: the name of the experiment you want to run. All experiments will be executed by default.
+1. `-exp`: the name of the experiment you want to run: `attribute` represents sufu attribute experiment, `synduce` / `autolifter` / `grisette` represents comparative experiments between `SuFu` and each baseline, `total` represents all experiments. The default value is `total`.
 2. `-c`: whether to clear the cache: `R` represents yes while `C` represents no, and the default value is `C`. 
 
 The result of each single execution is cached in `exp/result_cache` . 
