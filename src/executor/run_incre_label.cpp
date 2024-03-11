@@ -24,7 +24,6 @@ using namespace std::literals;
 DEFINE_string(benchmark, config::KSourcePath + "../" + "benchmark/autolifter/single-pass/sum.f"s, "The absolute path of the benchmark file (.sl)");
 DEFINE_string(output, config::KSourcePath + "../" + "build/res.f"s, "The absolute path of the output file");
 DEFINE_bool(use_gurobi, false, "Is use gurobi to synthesize sketch holes.");
-DEFINE_string(stage_output_file, "", "Only used in online demo");
 
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
@@ -32,8 +31,6 @@ int main(int argc, char** argv) {
     std::string path = FLAGS_benchmark;
     std::string target = FLAGS_output;
     bool use_gurobi = FLAGS_use_gurobi;
-    global::KStageInfoPath = FLAGS_stage_output_file;
-    // std::cout << path << std::endl << target << std::endl << use_gurobi << std::endl;
     std::ofstream out(target);
     std::streambuf *coutbuf = std::cout.rdbuf();
     std::cout.rdbuf(out.rdbuf());

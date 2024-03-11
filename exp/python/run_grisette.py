@@ -48,7 +48,12 @@ def run_grisette_tasks(grisette_cache, clear_cache):
             grisette_cache[name] = {"status": "success", "time": ti}
         else:
             grisette_cache[name] = {"status": status}
-        os.system("killall z3")
+        
+        # os.system("killall z3")
+        # kill z3
+        z3_pid = subprocess.getoutput("pgrep z3")
+        if z3_pid:
+            subprocess.run(["kill", z3_pid], check=True)
 
         print(grisette_cache[name])
         save_cache(grisette_cache_path, grisette_cache, is_cover)
