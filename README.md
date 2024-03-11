@@ -13,7 +13,6 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
    ```bash
    $ apt-get update
    $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev cbmc ocaml ocaml-nox camlp4-extra opam haskell-stack cabal-install openjdk-11-jre-headless
-   $ apt-get install cvc4
    $ pip3 install pyparsing tqdm argparse toml
    $ opam init
    $ opam update
