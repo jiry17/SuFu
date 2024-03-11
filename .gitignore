@@ -10,7 +10,6 @@ tests*
 test*
 tmp*
 build*
-gurobi*
 *.cmi
 *.cmo
 src/surface/f
@@ -18,8 +17,14 @@ src/surface/lexer.ml
 src/surface/parser.ml
 src/surface/parser.mli
 src/surface/parser.output
+exp/python/gurobi*
+exp/res/synduce
 exp/result_cache/AutoLifter_*
 exp/result_cache/grisette_*
 exp/result_cache/sufu_*
 exp/result_cache/synduce_*
 thirdparty/Synduce
+thirdparty/z3*
+thirdparty/gurobi*
+thirdparty/1.8.tar.gz
+thirdparty/CVC4*

@@ -1,9 +1,10 @@
 #!/bin/bash
 
+mkdir -p thirdparty
+
 # install z3
-mkdir thirdparty
 pushd thirdparty
-wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.13.0.tar.gz
+# wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.13.0.tar.gz
 tar xvfz z3-4.13.0.tar.gz
 pushd z3-z3-4.13.0
 python3 scripts/mk_make.py
@@ -17,9 +18,27 @@ popd
 sz3path=${z3path//\//\\\/}
 sed -i "s/Z3PATH/${sz3path}/g" src/CMakeLists.txt
 
+
+# install cvc4
+pushd thirdparty
+# wget https://github.com/CVC4/CVC4-archived/archive/refs/tags/1.8.tar.gz
+tar xvfz 1.8.tar.gz
+pushd CVC4-archived-1.8
+./contrib/get-antlr-3.4
+./configure.sh
+mkdir build
+pushd build
+make -j 8
+make check
+make install
+cvc4path=`pwd`
+popd
+popd
+popd
+
 # install gurobi
 pushd thirdparty
-wget https://packages.gurobi.com/9.1/gurobi9.1.2_linux64.tar.gz
+# wget https://packages.gurobi.com/9.1/gurobi9.1.2_linux64.tar.gz
 tar xvfz gurobi9.1.2_linux64.tar.gz
 pushd gurobi912/linux64
 gurobipath=`pwd`
@@ -42,7 +61,7 @@ path=`pwd`
 spath=${path//\//\\\/}
 sed -i "s/SUFUPATH/\"${spath}\"/g" exp/python/config.py
 pushd src/surface
-make
+make -j 8
 popd
 
 # install AutoLifter
@@ -50,23 +69,43 @@ pushd thirdparty
 git clone https://github.com/jiry17/AutoLifter.git
 pushd AutoLifter 
 ./install 
-popd 
+popd
 popd
 
 
 # get Synduce
-# mkdir baseline
-# pushd baseline
-# git clone https://github.com/synduce/Synduce.git
-# pushd Synduce
-# ./setup.sh
+# export PATH="$HOME/.cabal/bin:$PATH"
+echo export PATH=\"$HOME/.cabal/bin:\$PATH\" >> ~/.bashrc
+echo export PATH=\"${z3path}/build:\$PATH\" >> ~/.bashrc
+source ~/.bashrc
+pushd thirdparty
+git clone https://github.com/synduce/Synduce.git
+pushd Synduce
+make -j 8
+popd
+popd
+
+# install cabal
+# pushd thirdparty
+# wget https://downloads.haskell.org/~cabal/Cabal-3.6.2.0/Cabal-3.6.2.0.tar.gz
+# tar xvfz Cabal-3.6.2.0.tar.gz
+# pushd Cabal-3.6.2.0
 # popd
 # popd
 
+
 # get Grisette
+# pushd thirdparty
+# curl -L https://hackage.haskell.org/packages/index.tar.gz -o index.tar.gz
+# mv index.tar.gz ~/.cabal/packages/hackage.haskell.org
+# pushd ~/.cabal/packages/hackage.haskell.org
+# tar -xzvf index.tar.gz -C ~/.cabal/packages/hackage.haskell.org
+# popd
+# popd
+cabal update
+cabal install grisette
 echo 'export PATH="$HOME/.cabal/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
-cabal install grisette
 
 # build source
 pushd src

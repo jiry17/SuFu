@@ -12,11 +12,12 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 
    ```bash
    $ apt-get update
-   $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev cbmc ocaml ocaml-nox camlp4-extra opam haskell-stack cabal-install
-   $ pip3 install pyparsing tqdm argparse
+   $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev cbmc ocaml ocaml-nox camlp4-extra opam haskell-stack cabal-install openjdk-11-jre-headless
+   $ apt-get install cvc4
+   $ pip3 install pyparsing tqdm argparse toml
    $ opam init
    $ opam update
-   $ opam install yojson ocamlfind
+   $ opam install ocamlfind dune base fmt getopt sexplib lwt fileutils stdio yojson ppx_let ppx_deriving ppx_sexp_conv ppx_hash lwt_ppx parsexp_io core_unix menhirLib ocamlgraph menhir
    $ eval $(opam env)
    ```
 
