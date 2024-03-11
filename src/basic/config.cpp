@@ -8,15 +8,15 @@
 using namespace std::literals;
 
 #ifdef LINUX
-const std::string config::KSourcePath = "/home/jiry/zyw/AutoElim/artifact/SuFu/src" + "/"s;
+const std::string config::KSourcePath = SOURCEPATH + "/"s;
 #else
-const std::string config::KSourcePath = "/home/jiry/zyw/AutoElim/artifact/SuFu/src" + "/"s;
+const std::string config::KSourcePath = SOURCEPATH + "/"s;
 #endif
 
 #ifdef LINUX
-const std::string config::KIncreParserPath = "/home/jiry/zyw/AutoElim/artifact/SuFu/src" + "/surface/"s;
+const std::string config::KIncreParserPath = SOURCEPATH + "/surface/"s;
 #else
-const std::string config::KIncreParserPath = "/home/jiry/zyw/AutoElim/artifact/SuFu/src" + "/surface/"s;
+const std::string config::KIncreParserPath = SOURCEPATH + "/surface/"s;
 #endif
 
 const bool config::KIsDefaultSelf = true;
