@@ -90,7 +90,6 @@ ghcup set ghc 9.2.5
 cabal update
 cabal install cabal-install
 cabal install grisette
-echo 'export PATH="$HOME/.cabal/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
 
