@@ -23,6 +23,7 @@ exp/result_cache/AutoLifter_*
 exp/result_cache/grisette_*
 exp/result_cache/sufu_*
 exp/result_cache/synduce_*
+thirdparty/AutoLifter*
 thirdparty/Synduce
 thirdparty/z3*
 thirdparty/gurobi*
