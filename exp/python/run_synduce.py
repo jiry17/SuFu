@@ -67,7 +67,8 @@ def print_synduce_compare(sufu_cache, clear_cache, timeout):
                 assert full_name is None 
                 full_name = my_name
                 break
-        assert full_name is not None 
+        if full_name is None:
+            continue
         if sufu_cache[full_name]["status"] != "success": continue
         num += 1
         atime += sufu_cache[full_name]["time"]
