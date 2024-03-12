@@ -21,9 +21,9 @@
 using namespace incre;
 using namespace std::literals;
 
-DEFINE_string(benchmark, config::KSourcePath + "../" + "benchmark/autolifter/single-pass/sum.f"s, "The absolute path of the benchmark file (.sl)");
-DEFINE_string(output, config::KSourcePath + "../" + "build/res.f"s, "The absolute path of the output file");
-DEFINE_bool(use_gurobi, false, "Is use gurobi to synthesize sketch holes.");
+DEFINE_string(benchmark, "", "The path of the benchmark file (.f)");
+DEFINE_string(output, "", "The path of the output file");
+DEFINE_bool(use_gurobi, false, "Whether use gurobi to synthesize sketch holes.");
 
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
@@ -31,9 +31,6 @@ int main(int argc, char** argv) {
     std::string path = FLAGS_benchmark;
     std::string target = FLAGS_output;
     bool use_gurobi = FLAGS_use_gurobi;
-    std::ofstream out(target);
-    std::streambuf *coutbuf = std::cout.rdbuf();
-    std::cout.rdbuf(out.rdbuf());
 
     TimeGuard* global_guard = new TimeGuard(1e9);
 
@@ -121,17 +118,8 @@ int main(int argc, char** argv) {
     auto [start_name, params] = info->example_pool->start_list[0];
     auto possible_inputs = incre::constructAllPossibleInput(info->example_pool->input_list, params, start_name, input_program->config_map);
 
-    LOG(INFO) << "Possible inputs " << possible_inputs.size();
-    for (int i = 0; i < 10 && i < possible_inputs.size(); ++i) {
-        std::cout << "#" << i << ": " << possible_inputs[i].first->toString() << std::endl;
-        for (auto& [name, v]: possible_inputs[i].second) std::cout << " " << name << "@" << v.toString();
-        std::cout << std::endl;
-    }
     auto ref_result = evaluateAll(possible_inputs, input_program);
     auto total_result = evaluateAll(possible_inputs, full_res);
-    for (int i = 0; i < 10 && i < possible_inputs.size(); ++i) {
-        std::cout << "#" << i << ": " << ref_result[i].toString() << " " << total_result[i].toString() << std::endl;
-    }
     for (int i = 0; i < ref_result.size(); ++i) {
         if (!(ref_result[i] == total_result[i])) {
             std::cout << "incorrect" << std::endl;
@@ -147,6 +135,4 @@ int main(int argc, char** argv) {
     global::recorder.printAll();
     std::cout << global_guard->getPeriod() << std::endl;
     std::cout << "Success" << std::endl;
-
-    std::cout.rdbuf(coutbuf);
 }

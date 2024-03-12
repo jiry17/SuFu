@@ -6,83 +6,89 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 
 ### Install 
 
-#### Build from source (Test on Ubuntu 20.04) 
+You can either build *SuFu* from the source or use it in a docker container.
 
-1. Install dependencies
+#### Build from source (Tested on Ubuntu 20.04) 
 
-   ```bash
-   $ apt-get update
-   $ apt-get install cmake ninja-build git wget libgoogle-glog-dev python3-tk python3-pip libboost-all-dev libjsoncpp-dev cbmc ocaml ocaml-nox camlp4-extra opam cabal-install openjdk-11-jre-headless
-   $ apt-get install haskell-stack 
-   $ pip3 install pyparsing tqdm argparse toml
-   $ opam init
-   $ opam update
-   $ opam install dune.3.10.0 ocamlfind base fmt getopt sexplib lwt fileutils stdio yojson ppx_let ppx_deriving ppx_sexp_conv ppx_hash lwt_ppx parsexp_io core_unix menhirLib ocamlgraph menhir
-   $ eval $(opam env)
-   $ curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh    # install ghcup
-   $ curl -sSL https://get.haskellstack.org/ | sh -s -- -f  # install stack
-   $ source ~/.bashrc
-   $ ghcup install ghc 9.2.5    # install ghc
-   $ ghcup set ghc 9.2.5
-   $ cabal update
-   $ cabal install cabal-install grisette
-   $ source ~/.bashrc
+1. Install dependencies. This project requires gcc $\geq 9$, CMake $\geq 3.13$, opam (tested on version 2.1.3 and switch ocaml.4.10.0), and python3. The other dependencies can be installed as follows.
+
+   ```
+   apt-get install libjsoncpp-dev libgoogle-glog-dev libgflags-dev pkg-config
+   pip3 install tqdm argparse
+   opam install ocamlfind yojson
    ```
 
 
 2. Clone *SuFu* 
 
    ```bash
-   $ git clone https://github.com/jiry17/SuFu
+   git clone https://github.com/jiry17/SuFu
    ```
 
 
 3. Build the whole project under the root directory of the project.
 
    ```bash
-   $ cd SuFu
-   $ ./install
+   cd SuFu; ./install
    ```
 
-4. *SuFu* can use *gurobi* as the underlying ILP solver. Therefore, if you want to use *gurobi*, then a license of *gurobi* is required. You can get an academic license of gurobi via the following steps. Otherwise, you can skip this part.
+4. (optional) *SuFu* will perform better when *Gurobi*, a commercial constraint solver, is available. You can get an academic license of *gurobi* via the following steps. 
 
-   1. Register or login at the [webside](https://www.gurobi.com/) of gurobi.
-   2. Visit the [Free Academic License page](https://www.gurobi.com/downloads/end-user-license-agreement-academic/).
-   3. Click ***I Accept These Conditions***.
-   4. Get a command like  `grbgetkey x...x` at the bottom of the webpage.
-   5. Replace `grbgetkey` with `gurobi912/linux64/bin/grbgetkey` and execute this command under the root directory of the project.
-   6. Test whether the license works normally by executing `gurobi912/linux64/bin/gurobi.sh` under the root directory of the project. 
+   1. Register or login at the [webside](https://www.gurobi.com/) of *Gurobi*.
+   2. Visit the [Free Academic License page](https://www.gurobi.com/downloads/end-user-license-agreement-academic/) and follow the instructions on it.
+   3. Get a command like  `grbgetkey x...x` at the bottom of the webpage.
+   4. Execute this command under directory `SuFu/thirdparty/gurobi912/linux64/bin/`.
+   5. Test your license by running `gurobi.sh` under the same directory as Step 4.
+
+#### Download docker image
+
+We also released a docker image where SuFu is already built at `~/SuFu`. You can download this image as follows.
+
+```
+docker pull takanashirikka/sufu
+```
+
+Note that *Gurobi* is unavailable in this docker image because the adademic license of *Gurobi* cannot be used on virtual machines. Therefore, we still recommend building this project from source.
 
 #### Run tests
 
 1. Test whether the project is successfully built:
 
-   ```bash
-   $ cd build
-   $ executor/run
+   ```
+   build/executor/run --benchmark=benchmark/autolifter/single-pass/sum.f --output=res.f --use_gurobi=false
    ```
 
-   The last line of output in command line should be "Success". And the optimized program is in file `build/res.f`.
+   The last line of the command-line output shoud be `Success`, and there should be an optimized program in file `res.f`.
 
-### Run synthesizers
+2. Test whether *SuFu* works normally with *gurobi*. Note that the docker version must fail on this task because it does not have a *gurobi* license.
 
-#### Run synthesizers on a single SyGuS file 
+   ```
+   build/executor/run --benchmark=benchmark/autolifter/single-pass/sum.f --output=res.f --use_gurobi=true
+   ```
+
+   Similar to the previous test, the last line of the command-line output should be `Success`, and there should be an optimized program in file `res.f`.
+
+### Run *SuFu* on a single task
+
+You can run *SuFu* using the binary file `build/executor/run`.
 
 ```bash
-$ cd build
-# Run SuFu
-$ executor/run INPUT OUTPUT USE_GUROBI
+build/executor/run --benchmark=BENCHMARK --output=OUTPUT --use_gurobi={true, false}
 ```
 
-Some examples are listed below:
+1. `--benchmark`: the file of the reference program.
+2. `--output`: the output file of the optimized program.
+3. `--gurobi`: whether use *Gurobi* as the underlying constraint solver.
+
+For example, the following command runs *SuFu* (without *Gurobi*) to optimize a reference program in file `benchmark/autolifter/single-pass/mts.f` and stores the optimized program to file `res.f`.
 
 ```bash
-$ cd build
-# Run SuFu for benchmark autolifter/single-pass/mts.f, output the result into "build/res.f" and don't use gurobi as underlying ILP solver.
-$ executor/run -benchmark="benchmark/autolifter/single-pass/mts.f" -output="build/res.f" -use_gurobi=false
+build/executor/run --benchmark=benchmark/autolifter/single-pass/mts.f -output=res.f -use_gurobi=false
 ```
 
-#### Run experiments 
+### Reproduce results in the paper
+
+
 
 ```bash
 $ cd exp/python

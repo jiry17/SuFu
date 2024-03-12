@@ -85,7 +85,7 @@ def run_autolifter_tasks(autolifter_cache, clear_cache):
     return autolifter_cache
 
 def print_autolifter_compare(cache, clear_cache):
-    print("---compare with AutoLifter---")
+    print("---compare with AutoLifter (RQ2)---")
     autolifter_res = load_cache(autolifter_cache_path)
     autolifter_res = run_autolifter_tasks(autolifter_res, clear_cache)
 

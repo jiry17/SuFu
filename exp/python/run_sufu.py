@@ -59,9 +59,14 @@ def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi):
         is_cover = True
     print("\n")
 
+def get_source_name(name):
+    if name == "synduce": return "recursion"
+    if name == "autolifter": return "D&C"
+    return name
+
 def print_attr(sufu_cache, clear_cache):
-    print("---calculate attribute in each batch---")
+    print("---The detailed performance of SuFu (RQ1)---")
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
         for attr in ["num", "time", "align-size", "extract-size", "comb-size"]:
-            print("batch: ", batch_name, ", attr: ", attr, ", value: ", get_all(sufu_cache, batch_name, attr, True), sep="")
+            print("source: ", get_source_name(batch_name), ", attr: ", attr, ", value: ", get_all(sufu_cache, batch_name, attr, True), sep="")
     print("\n")
