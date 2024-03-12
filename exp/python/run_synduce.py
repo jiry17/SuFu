@@ -53,6 +53,7 @@ def print_synduce_compare(sufu_cache, clear_cache, timeout):
     print("---compare with Synduce (RQ2)---")
     synduce_cache = load_cache(synduce_cache_path)
     run_synduce_tasks(synduce_cache, clear_cache, timeout)
+    synduce_cache = load_cache(synduce_cache_path)
 
     num, atime, stime = 0, 0, 0
     for name in synduce_cache.keys():
