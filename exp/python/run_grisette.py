@@ -27,9 +27,11 @@ def run_grisette_tasks(grisette_cache, clear_cache, time_out):
 
         commands = f":l {grisette_program_name}\nmain\n:q\n"
         
-        result = subprocess.run(["stack", "ghci"], input=commands, capture_output=True, text=True, cwd=grisette_execute_path, timeout=time_out)
-        result = result.stdout.split("\n")[-5:]
-        pprint.pprint(result)
+        try:
+            result = subprocess.run(["stack", "ghci"], input=commands, capture_output=True, text=True, cwd=grisette_execute_path, timeout=time_out)
+            result = result.stdout.split("\n")[-5:]
+        except:
+            result = []
         status, ti = None, None
         for line in result:
             if "success!" in line:
@@ -64,7 +66,6 @@ def ave(total, num):
 def print_grisette_compare(sufu_cache, clear_cache, time_out):
     print("---compare with Grisette (RQ3)---")
     grisette_cache = load_cache(grisette_cache_path)
-    is_cover = False
     run_grisette_tasks(grisette_cache, clear_cache, time_out)
     grisette_cache = load_cache(grisette_cache_path)
 
