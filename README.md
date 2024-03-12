@@ -68,7 +68,7 @@ Note that *Gurobi* is unavailable in this docker image because the adademic lice
 
    Similar to the previous test, the last line of the command-line output should be `Success`, and there should be an optimized program in file `res.f`.
 
-### Run *SuFu* on a single task
+### Run *SuFu* on a Single Task
 
 You can run *SuFu* using the binary file `build/executor/run`.
 
@@ -86,7 +86,7 @@ For example, the following command runs *SuFu* (without *Gurobi*) to optimize a 
 build/executor/run --benchmark=benchmark/autolifter/single-pass/mts.f --output=res.f --use_gurobi=false
 ```
 
-### Reproduce results in the paper
+### Reproduce Results in Our Paper
 
 We provide a script `exp/python/main.py` to reproduce the results in our paper. Its usage is as follows.
 
@@ -140,44 +140,9 @@ For the case of building from source, you need to install the baseline solvers (
 
    ```
 
-   ​
+3. 123
 
-### Reproduce results in the paper 
+#### Install *Grisette*
 
-#### Reproduce results of experiment on the details of SuFu performance
+### The Structure of This Repository
 
-```bash
-$ cd exp/python
-$ python3 main.py -exp=attribute -c=R
-```
-
-For results of comparing SuFu and Synduce listed in Table 7, `main.py` will recalculate them and print them to the standard output.
-
-#### Reproduce results of experiment with Synduce
-
-```bash
-$ cd exp/python
-$ python3 main.py -exp=synduce -c=R
-```
-
-For results of details on the performance of SuFu listed in Table 6, `main.py` will recalculate them and print them to the standard output.
-
-#### Reproduce results of experiment with AutoLifter
-
-````bash
-$ cd exp/python
-$ python3 main.py -exp=autolifter -c=R
-````
-
-For results of comparing SuFu and AutoLifter listed in Table 7, `main.py` will recalculate them and print them to the standard output.
-
-#### Reproduce results of experiment with Grisette
-
-````bash
-$ cd exp/python
-$ python3 main.py -exp=grisette -c=R
-````
-
-For results of comparing SuFu and Grisette listed in Section 7.4, `main.py` will recalculate them and print them to the standard output.
-
-**Note**: If you don't use *gurobi*, there may be some differences between the results listed in our paper and the reproduced ones because of the performance differences between ILP solvers. However, this does not affect the significance of our experimental results. If you use *gurobi*, there can also be some small differences due to randomness.
