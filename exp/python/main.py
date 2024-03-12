@@ -20,9 +20,6 @@ def parse_args():
 
 
 if __name__ == "__main__":
-    if not os.path.exists("result_cache"):
-        os.system("mkdir result_cache")
-
     # get args
     args = parse_args()
     if args.cache == "Restart" or args.cache == "R": clear_cache = True
