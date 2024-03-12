@@ -30,6 +30,7 @@ if __name__ == "__main__":
     # get result of SuFu
     sufu_cache = load_cache(sufu_cache_path)
     run_sufu_tasks(sufu_cache, clear_cache, use_gurobi, time_out)
+    sufu_cache = load_cache(sufu_cache_path)
 
     # print compare result
     if (args.experiment == "attribute" or args.experiment == "total"):

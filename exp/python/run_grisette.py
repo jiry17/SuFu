@@ -66,6 +66,7 @@ def print_grisette_compare(sufu_cache, clear_cache, time_out):
     grisette_cache = load_cache(grisette_cache_path)
     is_cover = False
     run_grisette_tasks(grisette_cache, clear_cache, time_out)
+    grisette_cache = load_cache(grisette_cache_path)
 
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
         num, anum, snum, atime, stime = 0, 0, 0, 0, 0
