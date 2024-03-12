@@ -6,7 +6,7 @@ from executor import get_all_benchmark_rec, get_all
 import time
 
 synduce_path = src_path + "thirdparty/Synduce/"
-synduce_benchmark_root = synduce_path + "benchmarks/"
+synduce_benchmark_root = src_path + "thirdparty/Synduce-benchmarks/"
 synduce_executor = synduce_path + "Synduce"
 synduce_res_dir = run_dir + "res/synduce/"
 # synduce_oup_dir = run_dir + "oup/synduce/"
