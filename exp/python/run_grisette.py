@@ -28,7 +28,7 @@ def run_grisette_tasks(grisette_cache, clear_cache, time_out):
 
         commands = f":l {grisette_program_name}\nmain\n:q\n"
         
-        result = subprocess.run(["stack", "ghci"], input=commands, capture_output=True, text=True, cwd=grisette_execute_path)
+        result = subprocess.run(["stack", "ghci"], input=commands, capture_output=True, text=True, cwd=grisette_execute_path, timeout=time_out)
         result = result.stdout.split("\n")[-5:]
         pprint.pprint(result)
         status, ti = None, None
