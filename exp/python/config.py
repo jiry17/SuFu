@@ -28,6 +28,5 @@ class RunnerConfig:
                    "timeout " + str(self.time_limit), self.bin_file,
                    task_file, result_file]
         command += self.flags + [">/dev/null", "2>/dev/null"]
-        print(" ".join(command))
         return " ".join(command)
     
