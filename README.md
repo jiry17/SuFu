@@ -147,11 +147,6 @@ For the case of building from source, you need to install the baseline solvers (
 
 1. Install dependencies. *Grisette* requires ghc $= 9.2.5$, cabal, and haskell-stack. 
 
-   ```bash
-   $ cd thirdparty/Grisette/src/run_test
-   $ stack ghci
-   ```
-
 2. Install *Grisette* and build the execution environment.
 
    ```bash
@@ -168,7 +163,7 @@ For the case of building from source, you need to install the baseline solvers (
    $ cd src; stack ghci; main
    ```
 
-   TODO: add expected outputs
+   The last few lines of the command-line outputs should be `"success!"` followed by some statistics.
 
 ### The Structure of This Repository
 

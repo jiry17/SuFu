@@ -29,7 +29,7 @@ namespace {
 }
 
 void incre::printTy(const std::shared_ptr<TyData> &ty) {
-    if (debug) std::cout << std::endl << "[zyw: printTy] ";
+    if (debug) std::cout << std::endl << "[printTy] ";
     if (ty->getType() == TyType::INT) {
         if (debug) std::cout << std::endl;
         std::cout << "Int";
@@ -96,7 +96,7 @@ void incre::printTy(const std::shared_ptr<TyData> &ty) {
 }
 
 void incre::printPattern(const std::shared_ptr<PatternData> &pattern) {
-    if (debug) std::cout << std::endl << "[zyw: printPattern]" << std::endl;
+    if (debug) std::cout << std::endl << "[printPattern]" << std::endl;
     if (pattern->getType() == PatternType::UNDER_SCORE) {
         if (debug) std::cout << std::endl;
         std::cout << "_";
@@ -130,7 +130,7 @@ void incre::printPattern(const std::shared_ptr<PatternData> &pattern) {
 }
 
 void incre::printTerm(const std::shared_ptr<TermData> &term) {
-    if (debug) std::cout << std::endl << "[zyw: printTerm]" << std::endl;
+    if (debug) std::cout << std::endl << "[printTerm]" << std::endl;
     if (term->getType() == TermType::VALUE) {
         if (debug) std::cout << "[VALUE]" << std::endl;
         auto* tm_value = dynamic_cast<TmValue*>(term.get());
@@ -302,7 +302,7 @@ void incre::printTerm(const std::shared_ptr<TermData> &term) {
 }
 
 void incre::printBinding(const std::shared_ptr<BindingData> &binding) {
-    if (debug) std::cout << std::endl << "[zyw: printBinding]" << std::endl;
+    if (debug) std::cout << std::endl << "[printBinding]" << std::endl;
     floor_num++;
     if (binding->getType() == BindingType::TYPE) {
         if (debug) std::cout << "[TYPE]" << std::endl;
@@ -336,7 +336,7 @@ void incre::printCommand(const std::shared_ptr<CommandData> &command) {
     for (auto deco: command->decorate_set) {
         std::cout << "@" << decorate2String(deco) << " ";
     }
-    if (debug) std::cout << std::endl << "[zyw: printCommand]" << std::endl;
+    if (debug) std::cout << std::endl << "[printCommand]" << std::endl;
     if (command->getType() == CommandType::IMPORT) {
         if (debug) std::cout << "[IMPORT]" << std::endl;
         auto* command_import = dynamic_cast<CommandImport*>(command.get());

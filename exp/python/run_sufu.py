@@ -30,7 +30,7 @@ def extractResult(oup_file):
     if total_time is None: return {"status": "fail"}
     return {"status": "success", "time": total_time}
 
-def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi):
+def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi, timeout):
     if sufu_cache is None or clear_cache: sufu_cache = {}
     is_cover = False
 
@@ -44,7 +44,7 @@ def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi):
         oup_path = oup_dir + name
         os.system("touch " + oup_path)
 
-        command = ["timeout " + str(time_out), executor, "-benchmark=" + task_path, "-output=" + res_path, "-use_gurobi=" + use_gurobi]
+        command = ["timeout " + str(timeout), executor, "-benchmark=" + task_path, "-output=" + res_path, "-use_gurobi=" + use_gurobi]
         command += [">" + oup_path, "2>/dev/null"]
         command = " ".join(command)
         os.system(command)

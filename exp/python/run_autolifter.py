@@ -55,7 +55,7 @@ def execute(problem_name, benchmark):
     solver_name = "AutoLifter"
     oup_file = get_file([src_path + "exp/oup/", "autolifter", problem_name, benchmark])
     runnable_file = get_file([autolifter_root + "run/runnable/", solver_name, problem_name, benchmark])
-    command = ["timeout " + str(time_out) + " " + autolifter_runner,
+    command = ["timeout " + str(timeout) + " " + autolifter_runner,
                "--solver=\"" + solver_name + "\"",
                "--problem=\"" + problem_name + "\"", "--name=\"" + benchmark + "\"",
                "--oup=\"" + oup_file + "\"",

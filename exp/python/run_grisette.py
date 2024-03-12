@@ -14,7 +14,7 @@ grisette_execute_file = grisette_execute_path + "run_test/Main.hs"
 grisette_program_name = "run_test/Main.hs"
 grisette_cache_path = cache_dir + "grisette.json"
 
-def run_grisette_tasks(grisette_cache, clear_cache):
+def run_grisette_tasks(grisette_cache, clear_cache, timeout):
     if grisette_cache is None or clear_cache: grisette_cache = {}
     is_cover = False
 

@@ -82,21 +82,6 @@ popd
 popd
 
 
-# install ghcup
-# curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
-# curl -sSL https://get.haskellstack.org/ | sh -s -- -f
-# source ~/.bashrc
-# ghcup install ghc 9.2.5
-# ghcup set ghc 9.2.5
-
-
-# build Grisette test environment
-pushd Grisette/src/run_test
-stack ghci
-
-popd
-
-
 # make surface language
 path=`pwd`
 spath=${path//\//\\\/}

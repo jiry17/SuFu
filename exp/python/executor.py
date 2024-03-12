@@ -161,6 +161,9 @@ def _get_all(cache, batch_name, attr):
 def get_all(cache, batch_name, attr, flag):
     num = _get_all(cache, batch_name, "num")
     if attr == "num": return num
-    v = _get_all(cache, batch_name, attr) / num
+    if num == 0:
+        return 0
+    else:
+        v = _get_all(cache, batch_name, attr) / num
     if attr == "time" and flag: v -= extract_info[batch_name]["time"]
     return v

@@ -18,7 +18,7 @@ def get_status(lines):
         if "problem is unrealizable" in line: return "unrealizable"
     return "fail"
 
-def run_synduce_tasks(synduce_cache, clear_cache):
+def run_synduce_tasks(synduce_cache, clear_cache, timeout):
     if synduce_cache is None or clear_cache: synduce_cache = {}
     is_cover = False
     
@@ -31,7 +31,7 @@ def run_synduce_tasks(synduce_cache, clear_cache):
         os.system("mkdir -p " + synduce_res_dir)
         os.system("touch " + synduce_res_path)
 
-        command = ["timeout " + str(time_out), synduce_executor, task_path]
+        command = ["timeout " + str(timeout), synduce_executor, task_path]
         command += [">", synduce_res_path, "2>/dev/null"]
         command = " ".join(command)
         print(command)

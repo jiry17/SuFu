@@ -4,7 +4,7 @@ src_path = SUFUPATH + "/"
 benchmark_root = src_path + "benchmark"
 run_dir = src_path + "exp/"
 cache_dir = run_dir + "result_cache/"
-time_out = 600
+# time_out = 600
 
 def _get_bin_name(bin_file):
     return os.path.basename(bin_file)
