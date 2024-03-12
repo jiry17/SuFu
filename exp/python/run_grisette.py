@@ -14,7 +14,7 @@ grisette_execute_file = grisette_execute_path + "run_test/Main.hs"
 grisette_program_name = "run_test/Main.hs"
 grisette_cache_path = cache_dir + "grisette.json"
 
-def run_grisette_tasks(grisette_cache, clear_cache, timeout):
+def run_grisette_tasks(grisette_cache, clear_cache, time_out):
     if grisette_cache is None or clear_cache: grisette_cache = {}
     is_cover = False
 
@@ -63,11 +63,11 @@ def ave(total, num):
     if num == 0: return "N/A"
     return total / num
 
-def print_grisette_compare(sufu_cache, clear_cache, timeout):
+def print_grisette_compare(sufu_cache, clear_cache, time_out):
     print("---compare with Grisette (RQ3)---")
     grisette_cache = load_cache(grisette_cache_path)
     is_cover = False
-    run_grisette_tasks(grisette_cache, clear_cache, timeout)
+    run_grisette_tasks(grisette_cache, clear_cache, time_out)
 
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
         num, anum, snum, atime, stime = 0, 0, 0, 0, 0

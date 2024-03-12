@@ -14,7 +14,7 @@ def parse_args():
     parser.add_argument('-exp', '--experiment', type=str, default="total", choices=["attribute", "synduce", "autolifter", "grisette", "total"])
     parser.add_argument('-c', '--cache', type=str, default="Continue", choices=["Restart", "Continue", "R", "C"])
     parser.add_argument('-g', '--use_gurobi', type=str, default="false", choices=["false", "true"])
-    parser.add_argument('-t', '--timeout', type=int, default=600)
+    parser.add_argument('-t', '--time_out', type=int, default=600)
     # parser.add_argument('-d', '--draw', type=int, choices=[0,1], default=0)
     return parser.parse_args()
 
@@ -28,18 +28,18 @@ if __name__ == "__main__":
     if args.cache == "Restart" or args.cache == "R": clear_cache = True
     else: clear_cache = False
     use_gurobi = args.use_gurobi
-    timeout = args.timeout
+    time_out = args.time_out
 
     # get result of SuFu
     sufu_cache = load_cache(sufu_cache_path)
-    run_sufu_tasks(sufu_cache, clear_cache, use_gurobi, timeout)
+    run_sufu_tasks(sufu_cache, clear_cache, use_gurobi, time_out)
 
     # print compare result
     if (args.experiment == "attribute" or args.experiment == "total"):
         print_attr(sufu_cache, clear_cache)
     if (args.experiment == "synduce" or args.experiment == "total"):
-        print_synduce_compare(sufu_cache, clear_cache, timeout)
+        print_synduce_compare(sufu_cache, clear_cache, time_out)
     if (args.experiment == "autolifter" or args.experiment == "total"):
-        print_autolifter_compare(sufu_cache, clear_cache, timeout)
+        print_autolifter_compare(sufu_cache, clear_cache, time_out)
     if (args.experiment == "grisette" or args.experiment == "total"):
-        print_grisette_compare(sufu_cache, clear_cache, timeout)
+        print_grisette_compare(sufu_cache, clear_cache, time_out)

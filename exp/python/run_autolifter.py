@@ -51,11 +51,11 @@ def extractResult(oup_file):
     if total_time is None: return {"status": "fail"}
     return {"status": "success", "time": total_time}
 
-def execute(problem_name, benchmark, timeout):
+def execute(problem_name, benchmark, time_out):
     solver_name = "AutoLifter"
     oup_file = get_file([src_path + "exp/oup/", "autolifter", problem_name, benchmark])
     runnable_file = get_file([autolifter_root + "run/runnable/", solver_name, problem_name, benchmark])
-    command = ["timeout " + str(timeout) + " " + autolifter_runner,
+    command = ["timeout " + str(time_out) + " " + autolifter_runner,
                "--solver=\"" + solver_name + "\"",
                "--problem=\"" + problem_name + "\"", "--name=\"" + benchmark + "\"",
                "--oup=\"" + oup_file + "\"",
@@ -66,7 +66,7 @@ def execute(problem_name, benchmark, timeout):
     res = extractResult(oup_file)
     return res
 
-def run_autolifter_tasks(autolifter_cache, clear_cache):
+def run_autolifter_tasks(autolifter_cache, clear_cache, time_out):
     if autolifter_cache is None or clear_cache: autolifter_cache = {}
     is_cover = False
 
@@ -79,7 +79,7 @@ def run_autolifter_tasks(autolifter_cache, clear_cache):
     for problem, benchmark in tqdm(benchmarks):
         if problem not in autolifter_cache: autolifter_cache[problem] = {}
         if benchmark in autolifter_cache[problem]: continue
-        autolifter_cache[problem][benchmark] = execute(problem, benchmark, timeout)
+        autolifter_cache[problem][benchmark] = execute(problem, benchmark, time_out)
         save_cache(autolifter_cache_path, autolifter_cache, is_cover)
         is_cover = True
     return autolifter_cache
@@ -88,10 +88,10 @@ def ave(total, num):
     if num == 0: return "N/A"
     return total / num
 
-def print_autolifter_compare(cache, clear_cache, timeout):
+def print_autolifter_compare(cache, clear_cache, time_out):
     print("---compare with AutoLifter (RQ2)---")
     autolifter_res = load_cache(autolifter_cache_path)
-    autolifter_res = run_autolifter_tasks(autolifter_res, clear_cache)
+    autolifter_res = run_autolifter_tasks(autolifter_res, clear_cache, time_out)
 
     num, anum, bnum, atime, btime = 0, 0, 0, 0, 0
     for autolifter_case, case_result in autolifter_res.items():
