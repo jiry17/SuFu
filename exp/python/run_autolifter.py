@@ -61,7 +61,6 @@ def execute(problem_name, benchmark, time_out):
                "--oup=\"" + oup_file + "\"",
                "--runnable=\"" + runnable_file + "\"", ">/dev/null", "2>/dev/null"]
     command = " ".join(command)
-    print(command)
     os.system(command)
     res = extractResult(oup_file)
     return res
