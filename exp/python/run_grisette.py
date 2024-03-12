@@ -23,7 +23,6 @@ def run_grisette_tasks(grisette_cache, clear_cache, time_out):
         if name in grisette_cache:
             continue
         mv_command = "cp " + task_path + " " + grisette_execute_file
-        print(mv_command)
         os.system(mv_command)
 
         commands = f":l {grisette_program_name}\nmain\n:q\n"
@@ -55,7 +54,6 @@ def run_grisette_tasks(grisette_cache, clear_cache, time_out):
         if z3_pid:
             subprocess.run(["kill", z3_pid], check=True)
 
-        print(grisette_cache[name])
         save_cache(grisette_cache_path, grisette_cache, is_cover)
         is_cover = True
 

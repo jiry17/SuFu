@@ -57,7 +57,6 @@ def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi, time_out):
             sufu_cache[name] = {"status": "success", "time": float(lines[-2][:-1])}
         save_cache(sufu_cache_path, sufu_cache, is_cover)
         is_cover = True
-    print("\n")
 
 def get_source_name(name):
     if name == "synduce": return "recursion"

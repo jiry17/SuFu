@@ -34,7 +34,6 @@ def run_synduce_tasks(synduce_cache, clear_cache, timeout):
         command = ["timeout " + str(timeout), synduce_executor, task_path]
         command += [">", synduce_res_path, "2>/dev/null"]
         command = " ".join(command)
-        print(command)
         starttime = time.time()
         os.system(command)
         endtime = time.time()
@@ -43,7 +42,6 @@ def run_synduce_tasks(synduce_cache, clear_cache, timeout):
             lines = inp.readlines()
         ti = (endtime - starttime)
         synduce_cache[name] = {"status": get_status(lines), "time": float(endtime-starttime)}
-        print(synduce_cache[name])
         save_cache(synduce_cache_path, synduce_cache, is_cover)
         is_cover = True
 
