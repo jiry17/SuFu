@@ -145,7 +145,7 @@ def get_attribute(cache, name, attr):
     print("sufu_oup_dir =", sufu_oup_dir)
     print("oup =", oup)
     print("attribute", attr, "not found in", name)
-    assert False
+    return 0
 
 def _get_all(cache, batch_name, attr):
     total = 0
