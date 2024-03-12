@@ -47,20 +47,14 @@ def run_synduce_tasks(synduce_cache, clear_cache):
         save_cache(synduce_cache_path, synduce_cache, is_cover)
         is_cover = True
 
-    # print("\nfail tasks in synduce:")
-    # for name, result in synduce_cache.items():
-    #     if result["status"] == "fail":
-    #         print(name)
-    # print("\n")
+def ave(total, num):
+    if num == 0: return "N/A"
+    return total / num
 
 def print_synduce_compare(sufu_cache, clear_cache):
     print("---compare with Synduce (RQ2)---")
     synduce_cache = load_cache(synduce_cache_path)
     run_synduce_tasks(synduce_cache, clear_cache)
-
-    # print("total task num:", len(synduce_cache))
-    # print("SuFu solved:", get_all(sufu_cache, "synduce", "num", True))
-    # print("Synduce solved:", get_all(synduce_cache, "total", "num", False))
 
     num, atime, stime = 0, 0, 0
     for name in synduce_cache.keys():
@@ -82,6 +76,6 @@ def print_synduce_compare(sufu_cache, clear_cache):
     anum = get_all(sufu_cache, "synduce", "num", True)
     snum = get_all(synduce_cache, "total", "num", False)
     # print(anum, snum)
-    print("(SuFu) #solved tasks:", anum,  "averege time:", atime / num)
-    print("(Synduce) #solved tasks:", snum,  "averege time:", stime / num)
+    print("(SuFu) #solved tasks:", anum,  "averege time:", ave(atime, num))
+    print("(Synduce) #solved tasks:", snum,  "averege time:", ave(stime, num))
     print("\n")

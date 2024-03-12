@@ -59,6 +59,9 @@ def run_grisette_tasks(grisette_cache, clear_cache):
         save_cache(grisette_cache_path, grisette_cache, is_cover)
         is_cover = True
 
+def ave(total, num):
+    if num == 0: return "N/A"
+    return total / num
 
 def print_grisette_compare(sufu_cache, clear_cache):
     print("---compare with Grisette (RQ3)---")
@@ -82,6 +85,6 @@ def print_grisette_compare(sufu_cache, clear_cache):
             stime += grisette_cache[name]["time"]
         
         if batch_name == "total":
-            print("(SuFu) #solved tasks:", anum,  "averege time:", atime / num)
-            print("(Grisette) #solved tasks:", snum,  "averege time:", stime / num)
+            print("(SuFu) #solved tasks:", anum,  "averege time:", ave(atime, num))
+            print("(Grisette) #solved tasks:", snum,  "averege time:", ave(stime, num))
             print("\n")

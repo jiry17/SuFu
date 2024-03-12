@@ -84,6 +84,10 @@ def run_autolifter_tasks(autolifter_cache, clear_cache):
         is_cover = True
     return autolifter_cache
 
+def ave(total, num):
+    if num == 0: return "N/A"
+    return total / num
+
 def print_autolifter_compare(cache, clear_cache):
     print("---compare with AutoLifter (RQ2)---")
     autolifter_res = load_cache(autolifter_cache_path)
@@ -103,6 +107,6 @@ def print_autolifter_compare(cache, clear_cache):
             atime += cache[full_name]["time"]
             btime += task_result["time"]
     print(anum, bnum)
-    print("(SuFu) #solved tasks:", anum,  "averege time:", atime / num)
-    print("(AutoLifter) #solved tasks:", bnum,  "averege time:", btime / num)
+    print("(SuFu) #solved tasks:", anum,  "averege time:", ave(atime, num))
+    print("(AutoLifter) #solved tasks:", bnum,  "averege time:", ave(btime, num))
     print("\n")

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir -p thirdparty
+
 # install z3
 pushd thirdparty
 wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.13.0.tar.gz
@@ -15,6 +17,24 @@ popd
 popd
 sz3path=${z3path//\//\\\/}
 sed -i "s/Z3PATH/${sz3path}/g" src/CMakeLists.txt
+
+
+# install cvc4
+#pushd thirdparty
+#wget https://github.com/CVC4/CVC4-archived/archive/refs/tags/1.8.tar.gz
+#tar xvfz 1.8.tar.gz
+#pushd CVC4-archived-1.8
+#./contrib/get-antlr-3.4
+#./configure.sh
+#mkdir build
+#pushd build
+#make -j 8
+#make check
+#make install
+#cvc4path=`pwd`
+#popd
+#popd
+#popd
 
 
 # install gurobi
@@ -37,6 +57,46 @@ then
 fi
 
 
+# install AutoLifter
+pushd thirdparty
+git clone https://github.com/jiry17/AutoLifter.git
+pushd AutoLifter 
+./install 
+popd
+popd
+
+
+# get Synduce
+export PATH="$HOME/.cabal/bin:$PATH"
+export PATH="${z3path}/build:$PATH"
+# echo export PATH=\"$HOME/.cabal/bin:\$PATH\" >> ~/.bashrc
+# echo export PATH=\"${z3path}/build:\$PATH\" >> ~/.bashrc
+# source ~/.bashrc
+pushd thirdparty
+git clone https://github.com/synduce/Synduce.git
+pushd Synduce
+opam pin add dune 3.10.0
+eval $(opam env)
+make -j 8
+popd
+popd
+
+
+# install ghcup
+# curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+# curl -sSL https://get.haskellstack.org/ | sh -s -- -f
+# source ~/.bashrc
+# ghcup install ghc 9.2.5
+# ghcup set ghc 9.2.5
+
+
+# build Grisette test environment
+pushd Grisette/src/run_test
+stack ghci
+
+popd
+
+
 # make surface language
 path=`pwd`
 spath=${path//\//\\\/}
@@ -56,6 +116,6 @@ popd
 
 mkdir build
 pushd build
-cmake ../src  
-make -j 8
+cmake -G Ninja ../src
+ninja
 popd
