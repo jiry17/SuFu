@@ -51,10 +51,10 @@ def ave(total, num):
     if num == 0: return "N/A"
     return total / num
 
-def print_synduce_compare(sufu_cache, clear_cache):
+def print_synduce_compare(sufu_cache, clear_cache, timeout):
     print("---compare with Synduce (RQ2)---")
     synduce_cache = load_cache(synduce_cache_path)
-    run_synduce_tasks(synduce_cache, clear_cache)
+    run_synduce_tasks(synduce_cache, clear_cache, timeout)
 
     num, atime, stime = 0, 0, 0
     for name in synduce_cache.keys():

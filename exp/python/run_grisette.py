@@ -63,11 +63,11 @@ def ave(total, num):
     if num == 0: return "N/A"
     return total / num
 
-def print_grisette_compare(sufu_cache, clear_cache):
+def print_grisette_compare(sufu_cache, clear_cache, timeout):
     print("---compare with Grisette (RQ3)---")
     grisette_cache = load_cache(grisette_cache_path)
     is_cover = False
-    run_grisette_tasks(grisette_cache, clear_cache)
+    run_grisette_tasks(grisette_cache, clear_cache, timeout)
 
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
         num, anum, snum, atime, stime = 0, 0, 0, 0, 0
