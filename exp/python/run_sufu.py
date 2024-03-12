@@ -47,7 +47,6 @@ def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi, time_out):
         command = ["timeout " + str(time_out), executor, "-benchmark=" + task_path, "-output=" + res_path, "-use_gurobi=" + use_gurobi]
         command += [">" + oup_path, "2>/dev/null"]
         command = " ".join(command)
-        print(command)
         os.system(command)
 
         with open(oup_path, "r") as inp:

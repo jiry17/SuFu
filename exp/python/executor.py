@@ -142,9 +142,7 @@ def get_attribute(cache, name, attr):
         if attr + ":" in line:
             l = line[:-1] if line[-1] == '\n' else line 
             return float(l.split(" ")[-1])
-    print("sufu_oup_dir =", sufu_oup_dir)
-    print("oup =", oup)
-    print("attribute", attr, "not found in", name)
+    print("warning: attribute", attr, "not found in", name)
     return 0
 
 def _get_all(cache, batch_name, attr):
