@@ -78,7 +78,7 @@ $ build/executor/run --benchmark=BENCHMARK --output=OUTPUT --use_gurobi={true, f
 
 1. `--benchmark`: the file of the reference program.
 2. `--output`: the output file of the optimized program.
-3. `--gurobi`: whether use *Gurobi* as the underlying constraint solver.
+3. `--gurobi`: whether to use *Gurobi* as the underlying constraint solver.
 
 For example, the following command runs *SuFu* (without *Gurobi*) to optimize a reference program in file `benchmark/autolifter/single-pass/mts.f` and stores the optimized program to file `res.f`.
 
@@ -93,13 +93,15 @@ We provide a script `exp/python/main.py` to reproduce the results in our paper. 
 ```bash
 $ cd exp/python
 $ python3 main.py [-exp {attribute,synduce,autolifter,grisette,total}]
-                  [-c {Restart,Continue,R,C}] [-g {false,true}]
+                  [-c {Restart,Continue,R,C}] [-g {false,true}] [-t TIMEOUT]
 # For example, calculate the statistices in our paper using the cached results
 $ python3 main.py -exp total -c C
 ```
 
 1. `-exp`:  the name of the experiment, where `attribute` evaluates *SuFu* and summarizes the performance, `synduce` / `autolifter` / `grisette` compares *SuFu* with each baseline, and `total` denotes all experiments.
 2. `-c`: whether to clear the cached results: `R` represents yes while `C` represents no. All cached results can be found in `exp/result_cache`.
+3. `-g`: whether to use *Gurobi* as the underlying solver of *SuFu*.
+4. `-t`: the time out of each execution (in seconds), where the default value is 600
 
 For the case of building from source, you need to install the baseline solvers (in directory `thirdparty`) before re-running the comparison with baseline solvers. In our docker image, we have installed all baseline solvers such that you can directly re-run the comparisons with *Synduce* and *Grisette*.
 
