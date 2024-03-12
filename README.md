@@ -145,12 +145,11 @@ For the case of building from source, you need to install the baseline solvers (
 
 #### Install *Grisette*
 
-1. Install dependencies. *Grisette* requires ghc $= 9.2.5$, cabal, and haskell-stack. 
+1. Install dependencies. haskell-stack is required to build *Grisette*.
 
 2. Install *Grisette* and build the execution environment.
 
    ```bash
-   $ cabal install grisette
    $ cd thirdparty/Grisette/src/run_test
    $ stack ghci
    ```
@@ -160,10 +159,10 @@ For the case of building from source, you need to install the baseline solvers (
    ```bash
    $ cd thirdparty/Grisette
    $ cp benchmark/autolifter/single-pass/sum.hs src/run_test/Main.hs
-   $ cd src; stack ghci; main
+   $ cd src; echo "main" | stack ghci
    ```
 
-   The last few lines of the command-line outputs should be `"success!"` followed by some statistics.
+   The output in ghci should be `"success!"` followed with a line showing the time cost.
 
 ### The Structure of This Repository
 

@@ -6,7 +6,6 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++17 -Ofast")
-add_definitions(-DDEBUG)
 
 INCLUDE(FindPkgConfig)
 include_directories(include)
@@ -33,32 +32,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(GUROBI_FILE libgurobi_g++5.2.a libgurobi91.so)
 
     set(THIRDPARTY_LIBS glog gflags ${Jsoncpp_LIBRARY} ${Z3_FILE} ${GUROBI_FILE} ${PROFILER_FILE} ${CMAKE_THREAD_LIBS_INIT})
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    #z3
-    set(Z3_PATH /Users/pro/Desktop/work/2023S/z3)
-    set(Z3_FILE /usr/local/lib/libz3.dylib)
-    include_directories(${Z3_PATH}/src/api/c++)
-    include_directories(${Z3_PATH}/src/api)
-
-    #jsoncpp
-    set(Jsoncpp_LIBRARY /usr/local/lib/libjsoncpp.dylib)
-    include_directories(/usr/local/include)
-
-    #glog
-    include_directories(/usr/local/opt/glog/include/)
-    set(GLOG_FILE /usr/local/opt/glog/lib/libglog.dylib)
-
-    #flag
-    include_directories(/usr/local/opt/gflags/include/)
-    set(GFLAGS_FILE /usr/local/opt/gflags/lib/libgflags.dylib)
-
-    #gurobi
-    include_directories(/Library/gurobi911/mac64/include)
-    link_directories(/Library/gurobi911/mac64/lib)
-    set(GUROBI_FILE libgurobi_c++.a libgurobi91.dylib)
-
-    # libs
-    set(THIRDPARTY_LIBS ${Jsoncpp_LIBRARY} ${Z3_FILE} ${GUROBI_FILE} ${PROFILER_FILE} ${GLOG_FILE} ${GFLAGS_FILE} ${CMAKE_THREAD_LIBS_INIT})
 else()
     message(FATAL_ERROR "Unexceptional system ${CMAKE_SYSTEM_NAME}")
 endif()
