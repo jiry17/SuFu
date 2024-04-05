@@ -59,13 +59,35 @@ def run_sufu_tasks(sufu_cache, clear_cache, use_gurobi, time_out):
         is_cover = True
 
 def get_source_name(name):
-    if name == "synduce": return "recursion"
+    if name == "fusion": return "Fusion"
+    if name == "synduce": return "Recursion"
     if name == "autolifter": return "D&C"
+    if name == "total": return "Total"
     return name
+
+def get_attr_name(name):
+    if name == "task-num": return "#Task"
+    if name == "num": return "SuFu"
+    if name == "label": return "(Sketch Generation) Time"
+    if name == "time": return "(Sketch Solving) Time"
+    if name == "align-size": return "(Sketch Solving) S_compress"
+    if name == "extract-size": return "(Sketch Solving) S_extract"
+    if name == "comb-size": return "(Sketch Solving) S_holes"
 
 def print_attr(sufu_cache, clear_cache):
     print("---The detailed performance of SuFu (RQ1)---")
+    print("Table 4")
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
-        for attr in ["num", "time", "align-size", "extract-size", "comb-size"]:
-            print("source: ", get_source_name(batch_name), ", attr: ", attr, ", value: ", get_all(sufu_cache, batch_name, attr, True), sep="")
+        for attr in ["task-num"]:
+            print("line: ", get_source_name(batch_name), ", column: ", get_attr_name(attr), ", value: ", get_all(sufu_cache, batch_name, attr, True), sep="")
+    
+    print("\nTable 5")
+    for batch_name in ["fusion", "synduce", "autolifter", "total"]:
+        for attr in ["task-num", "num"]:
+            print("line: ", get_source_name(batch_name), ", column: ", get_attr_name(attr), ", value: ", get_all(sufu_cache, batch_name, attr, True), sep="")
+    
+    print("\nTable 6")
+    for batch_name in ["fusion", "synduce", "autolifter", "total"]:
+        for attr in ["label", "time", "align-size", "extract-size", "comb-size"]:
+            print("line: ", get_source_name(batch_name), ", column: ", get_attr_name(attr), ", value: ", get_all(sufu_cache, batch_name, attr, True), sep="")
     print("\n")

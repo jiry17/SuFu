@@ -131,6 +131,7 @@ extract_info = {
 }
 
 def get_attribute(cache, name, attr):
+    if attr == "task-num": return 1
     if cache[name]["status"] != "success": return 0
     if attr == "num": return 1
     if attr == "time": return cache[name]["time"]
@@ -147,17 +148,19 @@ def get_attribute(cache, name, attr):
 
 def _get_all(cache, batch_name, attr):
     total = 0
-    ma = 0
+    # ma = 0
     for name in cache.keys():
         if batch_name != "total" and batch_name not in name: continue
         if "dp" in name: continue
         total += get_attribute(cache, name, attr)
-        ma = max(ma, get_attribute(cache, name, attr))
+        # ma = max(ma, get_attribute(cache, name, attr))
     # print(batch_name, attr, ma)
     return total 
 
 def get_all(cache, batch_name, attr, flag):
+    task_num = _get_all(cache, batch_name, "task-num")
     num = _get_all(cache, batch_name, "num")
+    if attr == "task-num": return task_num
     if attr == "num": return num
     if num == 0:
         return 0

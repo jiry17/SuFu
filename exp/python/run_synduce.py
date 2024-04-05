@@ -55,8 +55,9 @@ def print_synduce_compare(sufu_cache, clear_cache, timeout):
     run_synduce_tasks(synduce_cache, clear_cache, timeout)
     synduce_cache = load_cache(synduce_cache_path)
 
-    num, atime, stime = 0, 0, 0
+    task_num, num, atime, stime = 0, 0, 0, 0
     for name in synduce_cache.keys():
+        task_num += 1
         if synduce_cache[name]["status"] != "success": continue
         task_name = "incre-tests-synduce-" + "-".join(name.split("-")[1:])
         
@@ -76,6 +77,9 @@ def print_synduce_compare(sufu_cache, clear_cache, timeout):
     anum = get_all(sufu_cache, "synduce", "num", True)
     snum = get_all(synduce_cache, "total", "num", False)
     # print(anum, snum)
-    print("(SuFu) #solved tasks:", anum,  "averege time:", ave(atime, num))
-    print("(Synduce) #solved tasks:", snum,  "averege time:", ave(stime, num))
+    print("Table 7")
+    print("line: Synduce")
+    print("#Task: ", task_num, sep="")
+    print("(SuFu) #Solved: ", anum,  ", Time: ", ave(atime, num), sep="")
+    print("(Baseline) #Solved: ", snum,  ", Time: ", ave(stime, num), sep="")
     print("\n")

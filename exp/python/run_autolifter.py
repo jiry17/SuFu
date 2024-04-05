@@ -92,9 +92,10 @@ def print_autolifter_compare(cache, clear_cache, time_out):
     autolifter_res = load_cache(autolifter_cache_path)
     autolifter_res = run_autolifter_tasks(autolifter_res, clear_cache, time_out)
 
-    num, anum, bnum, atime, btime = 0, 0, 0, 0, 0
+    task_num, num, anum, bnum, atime, btime = 0, 0, 0, 0, 0, 0
     for autolifter_case, case_result in autolifter_res.items():
         for autolifter_task_name, task_result in case_result.items():
+            task_num += 1
             full_name = "incre-tests-autolifter-" + from_autolifter_case_name(autolifter_case) + "-" + from_autolifter_task_name(autolifter_task_name)
             full_name = full_name.replace("@", "-").replace("+", "plus")
             if full_name[-1] == "-": full_name = full_name[:-1] + "neg"
@@ -105,7 +106,10 @@ def print_autolifter_compare(cache, clear_cache, time_out):
             num += 1
             atime += cache[full_name]["time"]
             btime += task_result["time"]
-    print(anum, bnum)
-    print("(SuFu) #solved tasks:", anum,  "averege time:", ave(atime, num))
-    print("(AutoLifter) #solved tasks:", bnum,  "averege time:", ave(btime, num))
+    # print(anum, bnum)
+    print("Table 7")
+    print("line: AutoLifter")
+    print("#Task: ", task_num, sep="")
+    print("(SuFu) #Solved: ", anum,  ", Time: ", ave(atime, num), sep="")
+    print("(Baseline) #Solved: ", bnum,  ", Time: ", ave(btime, num), sep="")
     print("\n")
