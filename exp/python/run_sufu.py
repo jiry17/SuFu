@@ -67,6 +67,7 @@ def get_source_name(name):
 
 def get_attr_name(name):
     if name == "task-num": return "#Task"
+    if name == "compress-num": return "#Packed"
     if name == "num": return "SuFu"
     if name == "label": return "(Sketch Generation) Time"
     if name == "time": return "(Sketch Solving) Time"
@@ -74,11 +75,12 @@ def get_attr_name(name):
     if name == "extract-size": return "(Sketch Solving) S_extract"
     if name == "comb-size": return "(Sketch Solving) S_holes"
 
+
 def print_attr(sufu_cache, clear_cache):
     print("---The detailed performance of SuFu (RQ1)---")
     print("Table 4")
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
-        for attr in ["task-num"]:
+        for attr in ["task-num", "compress-num"]:
             print("line: ", get_source_name(batch_name), ", column: ", get_attr_name(attr), ", value: ", get_all(sufu_cache, batch_name, attr, True), sep="")
     
     print("\nTable 5")

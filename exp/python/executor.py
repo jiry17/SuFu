@@ -130,11 +130,28 @@ extract_info = {
   "total": {'time': 0.02088398275862069}
 }
 
+def count_compress(file_path):
+    count = 0
+    with open(file_path, 'r') as file:
+        for line in file:
+            count += line.count("Compress")
+    return count
+
 def get_attribute(cache, name, attr):
     if attr == "task-num": return 1
     if cache[name]["status"] != "success": return 0
     if attr == "num": return 1
     if attr == "time": return cache[name]["time"]
+    # calculate compress num
+    sufu_label_dir = run_dir + "label/"
+    label_oup = sufu_label_dir + name
+    if attr == "compress-num":
+        compress_num = 0
+        with open(label_oup, "r") as inp:
+            for line in inp:
+                compress_num += line.count("Compress")
+        return compress_num
+    # calculate other attr
     sufu_oup_dir = run_dir + "oup/sufu/"
     oup = sufu_oup_dir + name
     with open(oup, "r") as inp:
