@@ -42,15 +42,20 @@ You can either build *SuFu* from the source, use it in a docker container, or di
 
 #### Download docker image
 
-We also released a docker image where SuFu is already built at `~/SuFu`. You can download this image as follows.
+We also released a docker image of *SuFu*. You can download and run it using the following commands.
 
 ```bash
 $ docker pull takanashirikka/sufu
+$ docker run -i -t takanashirikka/sufu
 ```
 
-Note that *Gurobi* is unavailable in this docker image because the adademic license of *Gurobi* cannot be used on virtual machines. Therefore, we still recommend building this project from source.
+In this image, *SuFu* is built under directory `/root/SuFu`. Its file structure is the same as this repository (see the last section of this document) and the executable of *SuFu* is available as `/root/SuFu/build/executor/run`.
+
+**Note**: *Gurobi* is unavailable in this docker image because the adademic license of *Gurobi* cannot be used on virtual machines. Therefore, we still recommend building this project from source.
 
 #### Run tests
+
+**Note**: In the remainder of this document, all commands are assumed to be executed in the root directory of *SuFu*, which is `/root/SuFu` in our docker image and is the directory created by `git clone` if *SuFu* is built from the source.
 
 1. Test whether the project is successfully built:
 
