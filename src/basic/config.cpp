@@ -8,15 +8,15 @@
 using namespace std::literals;
 
 #ifdef LINUX
-const std::string config::KSourcePath = SOURCEPATH + "/"s;
+const std::string config::KSourcePath = "/root/SuFu/src" + "/"s;
 #else
-const std::string config::KSourcePath = SOURCEPATH + "/"s;
+const std::string config::KSourcePath = "/root/SuFu/src" + "/"s;
 #endif
 
 #ifdef LINUX
-const std::string config::KIncreParserPath = SOURCEPATH + "/surface/"s;
+const std::string config::KIncreParserPath = "/root/SuFu/src" + "/surface/"s;
 #else
-const std::string config::KIncreParserPath = SOURCEPATH + "/surface/"s;
+const std::string config::KIncreParserPath = "/root/SuFu/src" + "/surface/"s;
 #endif
 
 const bool config::KIsDefaultSelf = true;

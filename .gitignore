@@ -29,3 +29,6 @@ thirdparty/z3*
 thirdparty/gurobi*
 thirdparty/1.8.tar.gz
 thirdparty/CVC4*
+*CMakeLists.txt
+*config.cpp
+*config.py
