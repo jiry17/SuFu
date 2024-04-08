@@ -6,7 +6,7 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 
 ### Install 
 
-You can either build *SuFu* from the source or use it in a docker container. Besides, you can also try *SuFu* using our [online demo](http://8.140.207.65/).
+You can either build *SuFu* from the source, use it in a docker container, or directly try it [online](http://8.140.207.65/).
 
 #### Build from source (Tested on Ubuntu 20.04) 
 
