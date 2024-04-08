@@ -6,7 +6,7 @@ The updates of this project can be found on [GitHub](https://github.com/jiry17/S
 
 ### Install 
 
-You can either build *SuFu* from the source or use it in a docker container.
+You can either build *SuFu* from the source or use it in a docker container. Besides, you can also try *SuFu* using our [online demo](http://8.140.207.65/).
 
 #### Build from source (Tested on Ubuntu 20.04) 
 
@@ -92,13 +92,13 @@ We provide a script `exp/python/main.py` to reproduce the results in our paper. 
 
 ```bash
 $ cd exp/python
-$ python3 main.py [-exp {attribute,synduce,autolifter,grisette,total}]
+$ python3 main.py [-exp {rq1,rq2,rq3,total}]
                   [-c {Restart,Continue,R,C}] [-g {false,true}] [-t TIMEOUT]
-# For example, calculate the statistices in our paper using the cached results
+# For example, reproduce all statistics in our paper using the cached results
 $ python3 main.py -exp total -c C
 ```
 
-1. `-exp`:  the name of the experiment, where `attribute` evaluates *SuFu* and summarizes the performance, `synduce` / `autolifter` / `grisette` compares *SuFu* with each baseline, and `total` denotes all experiments.
+1. `-exp`:  the name of the experiment. `rq1`, `rq2`, and `rq3` correspond to Tables 5, 7, and 8 in our paper, respectively, and `total` denotes all of them.
 2. `-c`: whether to clear the cached results: `R` represents yes while `C` represents no. All cached results can be found in `exp/result_cache`.
 3. `-g`: whether to use *Gurobi* as the underlying solver of *SuFu*.
 4. `-t`: the time out of each execution (in seconds), where the default value is 600
