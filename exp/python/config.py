@@ -1,6 +1,6 @@
 import os
 
-src_path = SUFUPATH + "/"
+src_path = "/root/SuFu" + "/"
 benchmark_root = src_path + "benchmark"
 run_dir = src_path + "exp/"
 cache_dir = run_dir + "result_cache/"

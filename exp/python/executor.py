@@ -123,13 +123,6 @@ def get_all_benchmark_rec(root: str, valid = lambda f: ".f" in f):
                 benchmark_list.append(os.path.join(path, file))
     return benchmark_list
 
-extract_info = {
-  "autolifter": {'time': 0.026734187499999982},
-  "fusion": {'time': 0.015470187500000001},
-  "synduce": {'time': 0.018215449438202254},
-  "total": {'time': 0.02088398275862069}
-}
-
 def count_compress(file_path):
     count = 0
     with open(file_path, 'r') as file:
@@ -174,7 +167,7 @@ def _get_all(cache, batch_name, attr):
     # print(batch_name, attr, ma)
     return total 
 
-def get_all(cache, batch_name, attr, flag):
+def get_all(cache, batch_name, attr):
     task_num = _get_all(cache, batch_name, "task-num")
     num = _get_all(cache, batch_name, "num")
     if attr == "task-num": return task_num
@@ -183,5 +176,36 @@ def get_all(cache, batch_name, attr, flag):
         return 0
     else:
         v = _get_all(cache, batch_name, attr) / num
-    if attr == "time" and flag: v -= extract_info[batch_name]["time"]
     return v
+
+def print_result(title, result, size = 6):
+	def get_width(val):
+		if type(val) == float: return len("%.3f" % val)
+		return len(str(val))
+
+	size_list = [size] * 100
+	contents = []
+	col_num = 0
+	for row in result:
+		pre, new_row = 0, []
+		for content in row:
+			val, width = content if type(content) == tuple else (content, 1)
+			new_row.append((val, pre, pre + width))
+			if width == 1: size_list[pre] = max(size_list[pre], get_width(val))
+			pre += width
+		contents.append(new_row)
+		col_num = max(col_num, pre)
+	title_width = sum(size_list[:col_num]) + col_num * 3 + 1
+	print()
+	print(title.center(title_width, " "))
+	for row in contents:
+		for val, l, r in row:
+			width = sum(size_list[l: r]) + (r - l - 1) * 3
+			if type(val) == int:
+				val = str(val)
+			elif type(val) == float:
+				val = "%.3f" % val
+			val = val.center(width, " ")
+			print("| %s " % val, end = "")
+		print("|")
+	print()

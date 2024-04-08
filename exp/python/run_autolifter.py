@@ -87,8 +87,7 @@ def ave(total, num):
     if num == 0: return "N/A"
     return total / num
 
-def print_autolifter_compare(cache, clear_cache, time_out):
-    print("---compare with AutoLifter (RQ2)---")
+def build_autolifter_compare(cache, clear_cache, time_out):
     autolifter_res = load_cache(autolifter_cache_path)
     autolifter_res = run_autolifter_tasks(autolifter_res, clear_cache, time_out)
 
@@ -106,10 +105,9 @@ def print_autolifter_compare(cache, clear_cache, time_out):
             num += 1
             atime += cache[full_name]["time"]
             btime += task_result["time"]
-    # print(anum, bnum)
-    print("Table 7")
-    print("line: AutoLifter")
-    print("#Task: ", task_num, sep="")
-    print("(SuFu) #Solved: ", anum,  ", Time: ", ave(atime, num), sep="")
-    print("(Baseline) #Solved: ", bnum,  ", Time: ", ave(btime, num), sep="")
-    print("\n")
+
+    return [
+        ["Source", "Tool", "#Solved", "Time"],
+        ["D&C", "SuFu", anum, ave(atime, num)],
+        ["", "AutoLifter", bnum, ave(btime, num)]
+    ]

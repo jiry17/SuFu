@@ -4,7 +4,7 @@ from config import *
 from tqdm import tqdm
 import pprint
 import os
-from executor import get_all_benchmark_rec, get_all
+from executor import get_all_benchmark_rec, get_all, print_result
 import subprocess
 
 grisette_path = src_path + "thirdparty/Grisette/"
@@ -63,12 +63,21 @@ def ave(total, num):
     if num == 0: return "N/A"
     return total / num
 
+def get_source_name(name):
+    if name == "fusion": return "Fusion"
+    if name == "synduce": return "Recursion"
+    if name == "autolifter": return "D&C"
+    if name == "total": return "Total"
+    return name
+
 def print_grisette_compare(sufu_cache, clear_cache, time_out):
-    print("---compare with Grisette (RQ3)---")
     grisette_cache = load_cache(grisette_cache_path)
     run_grisette_tasks(grisette_cache, clear_cache, time_out)
     grisette_cache = load_cache(grisette_cache_path)
 
+    title = "Table 8. Comparison between SuFu and Grisette"
+
+    data = {}
     for batch_name in ["fusion", "synduce", "autolifter", "total"]:
         task_num, num, anum, snum, atime, stime = 0, 0, 0, 0, 0, 0
         for name in grisette_cache:
@@ -84,10 +93,18 @@ def print_grisette_compare(sufu_cache, clear_cache, time_out):
             num += 1
             atime += sufu_cache[name]["time"]
             stime += grisette_cache[name]["time"]
-        
-        if batch_name == "total":
-            print("Table in Section 7.4")
-            print("#Task: ", task_num, sep="")
-            print("(SuFu) #Solved: ", anum,  ", Time: ", ave(atime, num), sep="")
-            print("(Grisette) #Solved: ", snum,  ", Time: ", ave(stime, num), sep="")
-            print("\n")
+        data[batch_name] = [anum, ave(atime, num), snum, ave(stime, num)]
+    
+    content = [
+        ["Source", "Approach", "#Solved", "Time"] * 2
+    ]
+    for (xsource, ysource) in [("fusion", "synduce"), ("autolifter", "total")]:
+        content.append(
+            [get_source_name(xsource), "SuFu", data[xsource][0], data[xsource][1]] + 
+            [get_source_name(ysource), "SuFu", data[ysource][0], data[ysource][1]]
+        )
+        content.append(
+            ["", "Grisette", data[xsource][2], data[xsource][3]] +
+            ["", "Grisette", data[ysource][2], data[ysource][3]]
+        )
+    print_result(title, content)

@@ -49,8 +49,7 @@ def ave(total, num):
     if num == 0: return "N/A"
     return total / num
 
-def print_synduce_compare(sufu_cache, clear_cache, timeout):
-    print("---compare with Synduce (RQ2)---")
+def build_synduce_compare(sufu_cache, clear_cache, timeout):
     synduce_cache = load_cache(synduce_cache_path)
     run_synduce_tasks(synduce_cache, clear_cache, timeout)
     synduce_cache = load_cache(synduce_cache_path)
@@ -74,12 +73,12 @@ def print_synduce_compare(sufu_cache, clear_cache, timeout):
         atime += sufu_cache[full_name]["time"]
         stime += synduce_cache[name]["time"]
 
-    anum = get_all(sufu_cache, "synduce", "num", True)
-    snum = get_all(synduce_cache, "total", "num", False)
-    # print(anum, snum)
-    print("Table 7")
-    print("line: Synduce")
-    print("#Task: ", task_num, sep="")
-    print("(SuFu) #Solved: ", anum,  ", Time: ", ave(atime, num), sep="")
-    print("(Baseline) #Solved: ", snum,  ", Time: ", ave(stime, num), sep="")
-    print("\n")
+    anum = get_all(sufu_cache, "synduce", "num")
+    snum = get_all(synduce_cache, "total", "num")
+
+    return [
+        ["Source", "Tool", "#Solved", "Time"],
+        ["Recursion", "SuFu", anum, ave(atime, num)],
+        ["", "Synduce", snum, ave(stime, num)]
+    ]
+    

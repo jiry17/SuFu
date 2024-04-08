@@ -2,7 +2,7 @@ from pprint import pprint
 from cache import *
 from config import *
 from tqdm import tqdm
-from executor import get_all_benchmark_rec, get_all
+from executor import get_all_benchmark_rec, get_all, print_result
 
 executor = src_path + "build/executor/run"
 res_dir = run_dir + "res/sufu/"
@@ -65,31 +65,22 @@ def get_source_name(name):
     if name == "total": return "Total"
     return name
 
-def get_attr_name(name):
-    if name == "task-num": return "#Task"
-    if name == "compress-num": return "#Packed"
-    if name == "num": return "SuFu"
-    if name == "label": return "(Sketch Generation) Time"
-    if name == "time": return "(Sketch Solving) Time"
-    if name == "align-size": return "(Sketch Solving) S_compress"
-    if name == "extract-size": return "(Sketch Solving) S_extract"
-    if name == "comb-size": return "(Sketch Solving) S_holes"
-
-
 def print_attr(sufu_cache, clear_cache):
-    print("---The detailed performance of SuFu (RQ1)---")
-    print("Table 4")
-    for batch_name in ["fusion", "synduce", "autolifter", "total"]:
-        for attr in ["task-num", "compress-num"]:
-            print("line: ", get_source_name(batch_name), ", column: ", get_attr_name(attr), ", value: ", get_all(sufu_cache, batch_name, attr, True), sep="")
-    
-    print("\nTable 5")
-    for batch_name in ["fusion", "synduce", "autolifter", "total"]:
-        for attr in ["task-num", "num"]:
-            print("line: ", get_source_name(batch_name), ", column: ", get_attr_name(attr), ", value: ", get_all(sufu_cache, batch_name, attr, True), sep="")
-    
-    print("\nTable 6")
-    for batch_name in ["fusion", "synduce", "autolifter", "total"]:
+    title = "Table 5. Performance of SuFu on the full dataset"
+
+    content = [
+        ["Source", ("#Solved", 2), ("Time Cost", 2), ("Result Size", 3)],
+        ["", ("", 2), "Gen", "Syn", "Compress", "Extract", "Holes"]
+    ]
+
+    for source_name in ["fusion", "synduce", "autolifter", "total"]:
+        line = [get_source_name(source_name)]
+        solved = get_all(sufu_cache, source_name, "num")
+        tot = get_all(sufu_cache, source_name, "task-num")
+        line.append(str(solved) + "/" + str(tot))
+        line.append(str(int(100 * solved / tot + 0.5)) + "%")
         for attr in ["label", "time", "align-size", "extract-size", "comb-size"]:
-            print("line: ", get_source_name(batch_name), ", column: ", get_attr_name(attr), ", value: ", get_all(sufu_cache, batch_name, attr, True), sep="")
-    print("\n")
+            line.append(get_all(sufu_cache, source_name, attr))
+        content.append(line)
+    
+    print_result(title, content)
