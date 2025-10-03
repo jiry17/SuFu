@@ -9,8 +9,8 @@ cmake-build-*
 tests*
 test*
 tmp*
-Synduce
-Synduce*
+Synduce-origin
+Synduce-origin*
 build*
 *.cmi
 *.cmo
