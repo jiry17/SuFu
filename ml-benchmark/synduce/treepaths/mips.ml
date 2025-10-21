@@ -12,7 +12,7 @@ let max a b = if a < b then b else a
 let spec t =
   let rec f s t =
     match t with
-    | Empty () -> s
+    | Empty _ -> s
     | Node (a, l, r) ->
         let result = f s l in
         match result with
@@ -24,9 +24,10 @@ let spec t =
   match res with
   | (_, v) -> v
 
+val repr: zipper -> btree compress
 let rec repr z =
   match z with
-  | Top () -> Empty ()
+  | Top _ -> Empty ()
   | Left (w, tree, zz) ->
       let info = spec tree in
       Node (w, tree, repr zz)

@@ -14,11 +14,13 @@ let rec repr z =
   | Left (w, tree, zz) -> Node (w, tree, repr zz)
   | Right (w, tree, zz) -> Node (w, repr zz, tree)
 
+val tree_rec: btree -> btree compress
 let rec tree_rec t =
   match t with
   | Empty _ -> Empty ()
   | Node (a, l, r) -> Node (a, tree_rec l, tree_rec r)
 
+val zip_rec: zipper -> zipper compress
 let rec zip_rec z =
   match z with
   | Top _ -> Top ()

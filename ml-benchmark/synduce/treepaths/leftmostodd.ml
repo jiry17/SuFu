@@ -14,7 +14,7 @@ let spec t =
         match result with
         | (b, i) ->
             if b then (b, i) else
-            if 1 = mod2 a then (true, a) else f r
+            if 1 == mod2 a then (true, a) else f r
   in
   let res = f t in
   match res with (_, i) -> i
@@ -28,6 +28,7 @@ let repr z =
   in
   f z
 
+val tree_rec: btree -> btree compress
 let tree_rec t =
   let rec f t =
     match t with
@@ -36,6 +37,7 @@ let tree_rec t =
   in
   f t
 
+val zip_rec: zipper -> zipper compress
 let zip_rec z =
   let rec f z =
     match z with

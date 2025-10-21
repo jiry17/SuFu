@@ -6,6 +6,7 @@ let rec sum t =
   | Empty _ -> 0
   | Node (a, l, r) -> a + sum l + sum r
 
+val repr: zipper -> btree compress
 let rec repr z =
   match z with
   | Top _ -> Empty ()

@@ -35,6 +35,7 @@ let rec spec x =
       in
       max a (maxh_aux l)
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Telt w -> t

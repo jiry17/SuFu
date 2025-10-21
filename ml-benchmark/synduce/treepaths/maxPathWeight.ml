@@ -8,6 +8,7 @@ let rec mpath t =
   | Empty _ -> 0
   | Node (a, l, r) -> a + max (mpath l) (mpath r)
 
+val repr: zipper -> btree compress
 let rec repr z =
   match z with
   | Top _ -> Empty ()

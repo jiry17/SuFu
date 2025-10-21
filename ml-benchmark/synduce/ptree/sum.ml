@@ -1,7 +1,8 @@
 type tree = Leaf | Node of int * tree * tree
-and ptree = PLeaf | PNode of int * plist
+type ptree = PLeaf | PNode of int * plist
 and plist = PNil | PCons of ptree * plist
 
+val repr: ptree -> tree compress
 let rec repr pt =
   match pt with
   | PLeaf -> Leaf

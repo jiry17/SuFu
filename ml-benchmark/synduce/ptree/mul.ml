@@ -2,6 +2,7 @@ type tree = Leaf of unit | Node of int * tree * tree
 type ptree = Pleaf of unit | Pnode of int * plist
 and plist = Pnil of unit | Pcons of ptree * plist
 
+val repr: ptree -> tree compress
 let rec repr pt =
   match pt with
   | Pleaf () -> Leaf ()

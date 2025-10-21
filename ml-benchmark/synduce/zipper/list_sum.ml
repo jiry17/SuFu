@@ -10,11 +10,13 @@ let rec concat xs ys =
   | Nil _ -> ys
   | Cons (h, t) -> Cons (h, concat t ys)
 
+val rev: list -> list compress
 let rec rev xs =
   match xs with
   | Nil _ -> Nil ()
   | Cons (h, t) -> concat (rev t) (Cons (h, Nil ()))
 
+val list_repr: list -> list compress
 let rec list_repr xs =
   match xs with
   | Nil _ -> Nil ()

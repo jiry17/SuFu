@@ -20,6 +20,7 @@ let repr z =
   match z with
   | Zip (l, r) -> concat (rev l) r
 
+val target: zipper -> zipper compress
 let target z =
   match z with
   | Zip (l, r) ->

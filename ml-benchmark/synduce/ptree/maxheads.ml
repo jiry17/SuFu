@@ -5,6 +5,7 @@ and plist = Elt of ptree | Cons of ptree * plist
 
 let max a b = if a < b then b else a
 
+val repr: tree -> ptree compress
 let rec repr x =
   match x with
   | Telt a -> Pelt a

@@ -30,6 +30,7 @@ let rec spec x =
       let res = maxh_aux l in
       max a res
 
+val target: tree -> tree compress
 let rec target t =
   let rec aux t =
     match t with

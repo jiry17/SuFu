@@ -9,6 +9,7 @@ let rec height t =
   | Empty _ -> 0
   | Node (a, l, r) -> 1 + max (height l) (height r)
 
+val repr: zipper -> btree compress
 let rec repr z =
   match z with
   | Top _ -> Empty ()

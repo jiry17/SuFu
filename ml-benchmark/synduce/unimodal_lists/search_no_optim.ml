@@ -35,8 +35,9 @@ let w = 0
 let rec spec xs =
   match xs with
   | Nil _ -> false
-  | Cons (h, t) -> h = w || spec t
+  | Cons (h, t) -> h == w || spec t
 
+val target: ulist -> ulist compress
 let rec target xs =
   match xs with
   | Unil _ -> Unil ()
