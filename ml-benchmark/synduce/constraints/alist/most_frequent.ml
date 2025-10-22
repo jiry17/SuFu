@@ -6,8 +6,8 @@ let is_unique =
   let key_differ key =
     let rec f xs =
       match xs with
-      | AElt (h, _) -> not (h = key)
-      | ACons (h, _, t) -> (not (h = key)) && f t
+      | AElt (h, _) -> not (h == key)
+      | ACons (h, _, t) -> (not (h == key)) && f t
     in
     f
   in
@@ -23,8 +23,8 @@ let max a b = if a < b then b else a
 let count w =
   let rec f xs =
     match xs with
-    | Elt h -> if h = w then 1 else 0
-    | Cons (h, t) -> (if h = w then 1 else 0) + f t
+    | Elt h -> if h == w then 1 else 0
+    | Cons (h, t) -> (if h == w then 1 else 0) + f t
   in
   f
 
@@ -72,6 +72,7 @@ let rec p2i n =
   | One _ -> 1
   | S m -> 1 + p2i m
 
+val target: alist -> alist compress
 let rec target xs =
   match xs with
   | AElt (h, n) ->

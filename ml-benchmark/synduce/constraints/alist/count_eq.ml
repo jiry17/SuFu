@@ -6,7 +6,7 @@ let is_unique =
     let rec f xs =
       match xs with
       | Nil _ -> true
-      | Cons (h, t) -> (h <> key) && f t
+      | Cons (h, t) -> (not (h == key)) && f t 
     in
     f
   in
@@ -23,15 +23,16 @@ let spec =
   let rec f xs =
     match xs with
     | Nil _ -> 0
-    | Cons (h, t) -> if h = w then 1 + f t else f t
+    | Cons (h, t) -> if h == w then 1 + f t else f t
   in
   f
 
+val target: list -> list compress
 let target =
   let rec f xs =
     match xs with
     | Nil _ -> Nil ()
-    | Cons (h, t) -> if h = w then Cons (h, t) else Cons (h, f t)
+    | Cons (h, t) -> if h == w then Cons (h, t) else Cons (h, f t)
   in
   f
 

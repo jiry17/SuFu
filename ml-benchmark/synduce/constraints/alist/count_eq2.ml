@@ -7,7 +7,7 @@ let is_unique =
     let rec f xs =
       match xs with
       | ANil _ -> true
-      | ACons (h, _, t) -> (h <> key) && f t
+      | ACons (h, _, t) -> (not (h == key)) && f t
     in
     f
   in
@@ -22,7 +22,7 @@ let spec w =
   let rec f xs =
     match xs with
     | Nil _ -> 0
-    | Cons (h, t) -> if h = w then 1 + f t else f t
+    | Cons (h, t) -> if h == w then 1 + f t else f t
   in
   f
 
@@ -53,12 +53,13 @@ let n2i =
   in
   f
 
+val target: int -> alist -> alist compress
 let target w =
   let rec f xs =
     match xs with
     | ANil _ -> ANil ()
     | ACons (h, n, t) ->
-      if h = w then
+      if h == w then
         let num = n2i n in
         ACons (h, n, t)
       else
