@@ -1,6 +1,6 @@
 type tree = Leaf | Node of int * tree * tree
-type ptree = PLeaf | PNode of int * plist
-and plist = PNil | PCons of ptree * plist
+type 'a plist = PNil | PCons of 'a * 'a plist
+type ptree = PLeaf | PNode of int * ptree plist
 
 val repr: ptree -> tree compress
 let rec repr pt =

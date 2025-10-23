@@ -1,11 +1,11 @@
 type tree = Telt of int | Tnode of int * tree * tree
 
-type ptree = Pelt of int | Pnode of int * plist
-and plist = Elt of ptree | Cons of ptree * plist
+type 'a ptree = Pelt of int | Pnode of int * 'a
+type plist = Elt of plist ptree | Cons of plist ptree * plist
 
 let max a b = if a < b then b else a
 
-val repr: tree -> ptree compress
+val repr: tree -> (plist ptree) compress
 let rec repr x =
   match x with
   | Telt a -> Pelt a
