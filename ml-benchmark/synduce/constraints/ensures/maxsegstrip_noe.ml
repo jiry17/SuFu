@@ -1,12 +1,12 @@
-let sampleSize = 20
+config SampleSize = 20
 
 type list = Elt of int | Cons of int * list
 type nlist = Line of list | NCons of list * nlist
 type cnlist = Sglt of list | Cat of cnlist * cnlist
 
 let rec cton c =
-  let rec dec l c' =
-    match c' with
+  let rec dec l c1 =
+    match c1 with
     | Sglt x -> NCons (x, cton l)
     | Cat (x, y) -> dec (Cat (y, l)) x
   in
@@ -41,6 +41,7 @@ let spec xs =
   match res xs with
   | (a, b, c, _) -> (a, b, c)
 
+val target: cnlist -> cnlist compress
 let rec target c =
   match c with
   | Sglt x ->

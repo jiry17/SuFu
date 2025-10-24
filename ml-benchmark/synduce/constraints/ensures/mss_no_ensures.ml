@@ -1,3 +1,6 @@
+config EnableDeepCoder = true
+config SampleSize = 20
+
 type l = Nil | Cons of int * l
 type cl = CNil | Single of int | Concat of cl * cl
 
@@ -25,6 +28,7 @@ let rec cat xs ys =
   | Nil -> ys
   | Cons (a, b) -> Cons (a, cat b ys)
 
+val repr: cl -> l compress
 let rec repr xs =
   match xs with
   | CNil -> Nil

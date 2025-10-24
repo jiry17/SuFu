@@ -54,6 +54,7 @@ let spec =
   in
   f
 
+val target: cnlist -> cnlist compress
 let target =
   let rec f c =
     match c with

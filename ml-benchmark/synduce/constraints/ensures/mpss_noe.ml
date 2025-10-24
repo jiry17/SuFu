@@ -33,6 +33,7 @@ let spec xs =
   match res with
   | (r1, r2) -> r1
 
+val target: cnlist -> cnlist compress
 let rec target c =
   match c with
   | Sglt x ->

@@ -21,16 +21,24 @@ let rec repr cl =
 let min a b = if a < b then a else b
 let max a b = if a < b then b else a
 
+let fst p =
+  match p with
+  | (y, _) -> y
+let snd p =
+  match p with
+  | (_, y) -> y
+
 let spec xs =
   let rec f xs =
     match xs with
     | Nil _ -> (0, 0)
     | Cons (h, t) ->
       let res = f t in
-      (min h (fst res), min (snd res) (max (fst res) h))
+      (max h (fst res), max (snd res) (min (fst res) h))
   in
   snd (f xs)
 
+val target: clist -> clist compress
 let rec target xs =
   match xs with
   | Cnil _ -> Cnil ()

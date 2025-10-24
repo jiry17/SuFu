@@ -31,6 +31,7 @@ let spec xs =
   match f xs with
   | (a, _) -> a
 
+val target: cnlist -> cnlist compress
 let rec target c =
   let rec list_repr xs =
     match xs with

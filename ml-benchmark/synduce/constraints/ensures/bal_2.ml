@@ -1,3 +1,9 @@
+config EnableDeepCoder = true
+let SampleIntMin = -1
+let SampleIntMax = 1
+let SampleSize = 20
+let ComposeNum = 2
+
 type list_ = Nil of unit | Cons of int * list_
 type clist = Cnil of unit | Single of int | Concat of clist * clist
 
@@ -22,6 +28,7 @@ let rec cat a b =
   | Nil _ -> b
   | Cons (h, t) -> Cons (h, cat t b)
 
+val repr: clist -> list_ compress
 let rec repr xs =
   match xs with
   | Cnil _ -> Nil ()

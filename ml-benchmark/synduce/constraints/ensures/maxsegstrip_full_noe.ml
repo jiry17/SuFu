@@ -1,4 +1,4 @@
-let sampleSize = 20
+config SampleSize = 20
 
 type llist = Elt of int | Cons of int * llist
 type nlist = Line of llist | Ncons of llist * nlist
@@ -43,6 +43,7 @@ let spec xs =
   match res with
   | (r1, r2, r3, _) -> (r1, r2, r3)
 
+val target: cnlist -> cnlist compress
 let rec target c =
   let rec list_repr xs =
     match xs with

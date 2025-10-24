@@ -1,15 +1,20 @@
-type list' = Elt of int | Cons of int * list'
-type nlist = Line of list' | Ncons of list' * nlist
-type cnlist = Sglt of list' | Cat of cnlist * cnlist
+type list_ = Elt of int | Cons of int * list_
+type nlist = Line of list_ | Ncons of list_ * nlist
+type cnlist = Sglt of list_ | Cat of cnlist * cnlist
 
-let rec cton c =
+let rec dec l c =
+  match c with
+  | Sglt x -> Ncons (x,
+                       (match l with
+                        | Sglt x_ -> Line x_
+                        | Cat (x_, y_) -> dec y_ x_ 
+                       ))
+  | Cat (x, y) -> dec (Cat (y, l)) x
+
+let cton c =
   match c with
   | Sglt x -> Line x
   | Cat (x, y) -> dec y x
-and dec l c =
-  match c with
-  | Sglt x -> Ncons (x, cton l)
-  | Cat (x, y) -> dec (Cat (y, l)) x
 
 let rec sum xs =
   match xs with
@@ -32,6 +37,7 @@ let spec xs =
   match res with
   | (v1, v2) -> v1
 
+val target: cnlist -> cnlist compress
 let rec target c =
   match c with
   | Sglt x ->

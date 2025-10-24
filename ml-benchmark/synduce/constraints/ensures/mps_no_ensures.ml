@@ -1,3 +1,5 @@
+config EnableDeepCoder = true
+
 type clist = Cnil of unit | Single of int | Concat of clist * clist
 type ilist = Nil of unit | Cons of int * ilist
 
@@ -6,6 +8,7 @@ let rec cat x y =
   | Cons (h, t) -> Cons (h, cat t y)
   | Nil _ -> y
 
+val repr: clist -> ilist compress
 let rec repr cl =
   match cl with
   | Cnil _ -> Nil ()

@@ -26,6 +26,7 @@ let rec spec xs =
   | Nil _ -> 0
   | Cons (h, t) -> max ((spec t) + h) 0
 
+val target: clist -> clist compress
 let rec target xs =
   match xs with
   | Cnil _ -> Cnil ()
