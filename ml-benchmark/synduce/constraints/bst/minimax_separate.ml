@@ -1,5 +1,13 @@
 type tree = Leaf of int | Node of int * tree * tree
 
+let fst p =
+  match p with
+  | (y, _) -> y
+
+let snd p =
+  match p with
+  | (_, y) -> y
+
 let min a b = if a < b then a else b
 let max a b = if a < b then b else a
 
@@ -27,6 +35,7 @@ let rec spec t =
       let rres = spec r in
       (max a (max (fst lres) (fst rres)), min a (min (snd lres) (snd rres)))
 
+val target: tree -> tree compress
 let target t =
   match t with
   | Leaf x -> Leaf x

@@ -1,3 +1,5 @@
+@Input val key: int
+
 type lst = Elt of int * int | Cons of int * int * lst
 type map = Value of int * int | Node of int * map * map
 
@@ -29,13 +31,12 @@ let rec repr m =
   | Value (k, v) -> Elt (k, v)
   | Node (k, l, r) -> cat (repr l) (repr r)
 
-let key = 0
-
 let rec spec l =
   match l with
   | Elt (k, v) -> if k > key then v else 0
   | Cons (k, v, t) -> (if k > key then v else 0) + spec t
 
+val target: map -> map compress
 let rec target m =
   match m with
   | Value (k, v) -> Value (k, v)

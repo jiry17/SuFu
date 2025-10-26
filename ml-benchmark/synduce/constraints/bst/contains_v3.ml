@@ -1,3 +1,4 @@
+@Input val w: int
 type tree = Leaf of int | Node of int * tree * tree
 
 let min a b = if a < b then a else b
@@ -19,14 +20,16 @@ let rec is_bst t =
   | Node (w, l, r) ->
       (w >= tmax l) && (w <= tmin r) && (is_bst l) && (is_bst r)
 
-let w = read_int ()
-
 let rec spec t =
   match t with
-  | Leaf x -> if x = w then 1 else 0
+  | Leaf x -> if x == w then 1 else 0
   | Node (a, l, r) ->
-      if a = w then 1 else if spec l = 1 then 1 else if spec r = 1 then 1 else 0
+      if a == w then 1
+      else if spec l == 1 then 1
+      else if spec r == 1 then 1
+      else 0
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Leaf x -> Leaf x

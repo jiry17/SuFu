@@ -1,5 +1,4 @@
 type tree = Nil of unit | Node of int * tree * tree
-type 'a compress = 'a
 
 let max a b =
   if a < b then b else a
@@ -14,8 +13,9 @@ let rec balanced t =
   match t with
   | Nil _ -> true
   | Node (w, l, r) ->
-      (height l = height r) && balanced l && balanced r
+      (height l == height r) && balanced l && balanced r
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Nil _ -> Nil ()

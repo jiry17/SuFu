@@ -29,7 +29,7 @@ let repeat w =
   let rec f n =
     match n with
     | One _ -> Elt w
-    | S n' -> Cons (w, f n')
+    | S n_ -> Cons (w, f n_)
   in
   f
 
@@ -41,8 +41,8 @@ let rec repr m =
 let count w =
   let rec f xs =
     match xs with
-    | Elt h -> if h = w then 1 else 0
-    | Cons (h, t) -> (if h = w then 1 else 0) + f t
+    | Elt h -> if h == w then 1 else 0
+    | Cons (h, t) -> (if h == w then 1 else 0) + f t
   in
   f
 
@@ -54,17 +54,18 @@ let spec xs =
         let cnt = count h l in
         let res = f t in
         match res with
-        | a, b ->
+        | (a, b) ->
             if cnt > a then (cnt, h) else res
   in
   match f xs with
-  | a, b -> b
+  | (a, b) -> b
 
 let rec p2i n =
   match n with
   | One _ -> 1
   | S m -> 1 + p2i m
 
+val target: map -> map compress
 let rec target m =
   match m with
   | Value (k, v) ->

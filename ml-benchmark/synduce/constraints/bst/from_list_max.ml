@@ -35,6 +35,7 @@ let rec spec t =
   | Elt x -> x
   | Cons (h, t) -> max h (spec t)
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Leaf x -> Leaf x

@@ -10,13 +10,14 @@ let rec height t =
 let rec balanced t =
   match t with
   | Nil _ -> true
-  | Node (w, l, r) -> (height l = height r) && balanced l && balanced r
+  | Node (w, l, r) -> (height l == height r) && balanced l && balanced r
 
 let rec spec t =
   match t with
   | Nil _ -> 0
   | Node (w, l, r) -> 1 + (spec l + spec r)
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Nil _ -> Nil ()

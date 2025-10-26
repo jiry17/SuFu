@@ -29,12 +29,13 @@ let rec spec t =
           match rres with
           | (r1, r2) -> (max a (max l1 r1), min a (min l2 r2))
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Leaf x -> Leaf x
   | Node (a, l, r) ->
-      let _ = tmin l in
-      let _ = tmax r in
+      let lmin = tmin l in
+      let rmin = tmax r in
       Node (a, l, r)
 
 let program t = if is_bst t then spec (target t) else (0, 0)

@@ -1,4 +1,7 @@
-let composeNum = 4
+config ComposeNum = 4
+
+@Input val lo: int
+@Input val hi: int
 
 type tree = Leaf of int | Node of int * tree * tree
 
@@ -21,15 +24,13 @@ let rec is_bst t =
   | Node (w, l, r) ->
       ((w >= tmax l) && (w <= tmin r)) && ((is_bst l) && (is_bst r))
 
-let lo = read_int ()
-let hi = read_int ()
-
 let rec spec t =
   match t with
   | Leaf a -> if (hi > a) && (a > lo) then a else 0
   | Node (a, l, r) ->
       (if (hi > a) && (a > lo) then a else 0) + (spec l + spec r)
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Leaf x -> Leaf x

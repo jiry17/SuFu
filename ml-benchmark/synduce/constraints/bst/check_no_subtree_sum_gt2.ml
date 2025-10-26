@@ -1,3 +1,5 @@
+@Input val lim: int
+
 type tree =
   | Leaf of int
   | Node of int * tree * tree
@@ -36,13 +38,11 @@ let rec is_bst t =
   | MLeaf w -> w > 0
   | MNode (w, s, l, r) ->
       (w > 0)
-      && (s = (tsum l + tsum r))
+      && (s == (tsum l + tsum r))
       && (w >= tmax l)
       && (w <= tmin r)
       && is_bst l
       && is_bst r
-
-let lim = 0
 
 let spec t =
   let rec f t =
@@ -78,6 +78,7 @@ let rec add_tag t =
       let s = tsum lres + tsum rres in
       MNode (a, s, lres, rres)
 
+val target: mtree -> mtree compress
 let rec target t =
   match t with
   | MLeaf x -> MLeaf x

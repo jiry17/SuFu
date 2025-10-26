@@ -1,3 +1,5 @@
+@Input val w: int
+
 type tree = Leaf of int | Node of int * tree * tree
 type lst = Elt of int | Cons of int * lst
 
@@ -29,19 +31,20 @@ let rec repr t =
   | Leaf x -> Elt x
   | Node (x, l, r) -> cat (repr l) (Cons (x, repr r))
 
-let rec spec w t =
+let rec spec t =
   match t with
-  | Elt x -> x = w
-  | Cons (h, t2) -> h = w || spec w t2
+  | Elt x -> x == w
+  | Cons (h, t2) -> h == w || spec t2
 
-let rec target w t =
+val target: tree -> tree compress
+let rec target t =
   match t with
   | Leaf x -> Leaf x
   | Node (a, l, r) ->
     if w < a then
-      Node (a, target w l, r)
+      Node (a, target l, r)
     else
-      Node (a, target w l, target w r)
+      Node (a, target l, target r)
 
-let program w t =
-  if is_bst t then spec w (repr (target w t)) else false
+let program t =
+  if is_bst t then spec (repr (target t)) else false
