@@ -1,3 +1,4 @@
+@Input val w: int
 type tree =
   | Nil of unit
   | Leaf of int
@@ -11,18 +12,17 @@ let rec size t =
 
 let rec empty_right t =
   match t with
-  | Node (_, l, r) -> (size r = 0) && empty_right l
+  | Node (_, l, r) -> (size r == 0) && empty_right l
   | _ -> true
-
-let w = 0
 
 let rec spec t =
   match t with
   | Nil _ -> 0
-  | Leaf a -> if a = w then 1 else 0
+  | Leaf a -> if a == w then 1 else 0
   | Node (a, l, r) ->
-      if a = w then 1 else if spec l = 1 then 1 else spec r
+      if a == w then 1 else if spec l == 1 then 1 else spec r
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Nil _ -> Nil ()

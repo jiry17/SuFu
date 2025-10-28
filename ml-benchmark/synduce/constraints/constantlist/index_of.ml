@@ -1,3 +1,4 @@
+@Input val w: int
 type list = Elt of int | Cons of int * list
 
 let head xs =
@@ -8,15 +9,15 @@ let head xs =
 let rec is_const xs =
   match xs with
   | Elt x -> true
-  | Cons (h, t) -> (h = head t) && is_const t
-
-let w = read_int ()
+  | Cons (h, t) -> (h == head t) && is_const t
 
 let rec spec xs =
   match xs with
-  | Elt x -> if w = x then 1 else 0
-  | Cons (h, t) -> if w = h then 1 else if spec t = 0 then 0 else 1 + spec t
+  | Elt x -> if w == x then 1 else 0
+  | Cons (h, t) -> if w == h then 1
+    else if spec t == 0 then 0 else 1 + spec t
 
+val target: list -> list compress
 let rec target xs =
   match xs with
   | Elt a -> Elt a

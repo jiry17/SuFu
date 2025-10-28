@@ -4,8 +4,8 @@ let mod2 x = x - ((x / 2) * 2)
 
 let rec is_even t =
   match t with
-  | Elt a -> mod2 a = 0
-  | Node (a, l, r) -> mod2 a = 0 && is_even l && is_even r
+  | Elt a -> mod2 a == 0
+  | Node (a, l, r) -> mod2 a == 0 && is_even l && is_even r
 
 let max a b = if a < b then b else a
 
@@ -17,6 +17,7 @@ let spec t =
   in
   mod2 (f t)
 
+val target: tree -> tree compress
 let target t =
   match t with
   | Elt a -> Elt a

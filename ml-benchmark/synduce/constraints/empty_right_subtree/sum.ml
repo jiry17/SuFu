@@ -8,7 +8,7 @@ let rec size t =
 
 let rec empty_right t =
   match t with
-  | Node (_, l, r) -> (0 = size r) && empty_right l
+  | Node (_, l, r) -> (0 == size r) && empty_right l
   | _ -> true
 
 let rec spec t =
@@ -17,6 +17,7 @@ let rec spec t =
   | Leaf a -> a
   | Node (a, l, r) -> a + (spec l + spec r)
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Nil _ -> Nil ()

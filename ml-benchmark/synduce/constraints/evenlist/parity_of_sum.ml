@@ -1,17 +1,18 @@
-type l = Elt of int | Cons of int * l
+type list = Elt of int | Cons of int * list
 
 let mod2 x = x - ((x / 2) * 2)
 
 let rec is_even xs =
   match xs with
-  | Elt x -> x > 0 && mod2 x = 0
-  | Cons (h, t) -> (h > 0 && mod2 h = 0) && is_even t
+  | Elt x -> x > 0 && mod2 x == 0
+  | Cons (h, t) -> (h > 0 && mod2 h == 0) && is_even t
 
 let rec spec xs =
   match xs with
   | Elt x -> mod2 x
   | Cons (h, t) -> mod2 h + spec t
 
+val target: list -> list compress
 let target xs =
   match xs with
   | Elt x -> Elt x
