@@ -43,9 +43,10 @@ let rec gen e =
   match e with
   | Int a -> Nint a
   | Plus (a, b) ->
-      let res = (gen a, gen b) in
+    let res = (gen a, gen b) in (
       match res with
       | (r1, r2) -> Nplus (memo r1 + memo r2, r1, r2)
+    )
   | Minus (a, b) ->
       let res = (gen a, gen b) in
       match res with
