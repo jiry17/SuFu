@@ -19,10 +19,11 @@ let rec is_memo t =
   match t with
   | Leaf _ -> true
   | Node (lmin, lmax, rmin, rmax, _, l, r) ->
-      lmin = tmin l && lmax = tmax l && rmin = tmin r && rmax = tmax r && is_memo l && is_memo r
+      lmin == tmin l && lmax == tmax l && rmin == tmin r && rmax == tmax r && is_memo l && is_memo r
 
 let spec t = (tmin t, tmax t)
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Leaf _ -> t

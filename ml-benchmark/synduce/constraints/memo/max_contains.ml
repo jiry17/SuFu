@@ -1,3 +1,4 @@
+@Input val key: int
 type tree = Leaf of int | Node of int * tree * tree
 type treememo = MLeaf of int * int | MNode of int * int * treememo * treememo
 
@@ -25,16 +26,17 @@ let rec repr t =
   | MLeaf (n, a) -> Leaf a
   | MNode (n, a, l, r) -> Node (a, repr l, repr r)
 
-let rec spec key t =
+let rec spec t =
   match t with
-  | Leaf a -> a = key
-  | Node (a, l, r) -> (a = key) || (spec key l) || (spec key r)
+  | Leaf a -> a == key
+  | Node (a, l, r) -> (a == key) || (spec l) || (spec r)
 
-let rec target key t =
+val target: treememo -> treememo compress
+let rec target t =
   match t with
   | MLeaf (n, a) -> t
   | MNode (n, a, l, r) ->
-    if key > n then t else MNode (n, a, target key l, target key r)
+    if key > n then t else MNode (n, a, target l, target r)
 
-let program key mt =
-  if is_memo mt then spec key (repr (target key mt)) else false
+let program mt =
+  if is_memo mt then spec (repr (target mt)) else false

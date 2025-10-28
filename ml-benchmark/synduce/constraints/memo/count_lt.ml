@@ -9,10 +9,10 @@ let memo t =
 let rec is_memo t =
   match t with
   | MLeaf (n, x) ->
-      (n >= 0) && (if x < 2 then n = 1 else n = 0)
+      (n >= 0) && (if x < 2 then n == 1 else n == 0)
   | MNode (n, a, l, r) ->
       let exp = (if a < 2 then 1 else 0) + (memo l + memo r) in
-      ((n >= 0) && (n = exp)) && (is_memo l && is_memo r)
+      ((n >= 0) && (n == exp)) && (is_memo l && is_memo r)
 
 let rec repr t =
   match t with
@@ -25,6 +25,7 @@ let rec spec t =
   | Node (a, l, r) ->
       if a < 2 then 1 + spec l + spec r else spec l + spec r
 
+val target: treememo -> treememo compress
 let target t =
   match t with
   | MLeaf (_, a) -> if a < 2 then t else t

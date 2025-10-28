@@ -1,3 +1,4 @@
+@Input val key: int
 type tree = Leaf of int | Node of int * tree * tree
 
 type treememo = Mleaf of int * int | Mnode of int * int * treememo * treememo
@@ -37,8 +38,6 @@ let rec repr t =
       let rr = repr r in
       Node (a, rl, rr)
 
-let key = 0
-
 let rec spec t =
   match t with
   | Leaf a ->
@@ -49,6 +48,7 @@ let rec spec t =
       let sr = spec r in
       v + (sl + sr)
 
+val target: treememo -> treememo compress
 let rec target t =
   match t with
   | Mleaf (n, a) -> t

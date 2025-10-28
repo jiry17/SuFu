@@ -1,4 +1,4 @@
-type lst = Elt of int | Cons of int * lst
+type list = Elt of int | Cons of int * list
 
 let rec insert y xs =
   match xs with
@@ -19,6 +19,7 @@ let rec len xs =
 
 let is_length_gt2 xs = len xs >= 2
 
+val target: list -> list compress
 let rec target xs =
   match xs with
   | Elt x -> Elt x

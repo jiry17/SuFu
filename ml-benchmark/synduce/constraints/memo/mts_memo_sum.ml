@@ -22,7 +22,7 @@ let rec is_memo m =
       let eq =
         let r = repr m in
         let v = sum r in
-        s = v
+        s == v
       in
       let recres = is_memo t in
       eq && recres
@@ -37,6 +37,7 @@ let rec spec xs =
       let su = sum xs in
       max ft su
 
+val target: mlist -> mlist compress
 let rec target m =
   match m with
   | Ielt _ -> m

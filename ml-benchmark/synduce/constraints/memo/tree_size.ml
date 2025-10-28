@@ -11,13 +11,14 @@ let rec is_memo t =
   match t with
   | Mleaf x -> true
   | Mnode (n, a, l, r) ->
-      (n = 1 + memo l + memo r) && (is_memo l && is_memo r)
+      (n == 1 + memo l + memo r) && (is_memo l && is_memo r)
 
 let rec repr t =
   match t with
   | Mleaf a -> Leaf a
   | Mnode (n, a, l, r) -> Node (a, repr l, repr r)
 
+val target: treememo -> treememo compress
 let target t =
   match t with
   | Mleaf a -> Mleaf a

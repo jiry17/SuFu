@@ -23,8 +23,8 @@ let memo e =
 let rec is_memo e =
   match e with
   | Nint _ -> true
-  | Nplus (n, e1, e2) -> (n = memo e1 + memo e2) && (is_memo e1 && is_memo e2)
-  | Nminus (n, e1, e2) -> (n = memo e1 - memo e2) && (is_memo e1 && is_memo e2)
+  | Nplus (n, e1, e2) -> (n == memo e1 + memo e2) && (is_memo e1 && is_memo e2)
+  | Nminus (n, e1, e2) -> (n == memo e1 - memo e2) && (is_memo e1 && is_memo e2)
 
 let rec spec e =
   match e with
@@ -32,6 +32,7 @@ let rec spec e =
   | Plus (e1, e2) -> spec e1 + spec e2
   | Minus (e1, e2) -> spec e1 - spec e2
 
+val target: nexpr -> nexpr compress
 let rec target e =
   match e with
   | Nint a -> Nint a
@@ -44,11 +45,11 @@ let rec gen e =
   | Plus (a, b) ->
       let res = (gen a, gen b) in
       match res with
-      | r1, r2 -> Nplus (memo r1 + memo r2, r1, r2)
+      | (r1, r2) -> Nplus (memo r1 + memo r2, r1, r2)
   | Minus (a, b) ->
       let res = (gen a, gen b) in
       match res with
-      | r1, r2 -> Nminus (memo r1 - memo r2, r1, r2)
+      | (r1, r2) -> Nminus (memo r1 - memo r2, r1, r2)
 
 let program e =
   let inp = gen e in

@@ -9,7 +9,7 @@ let rec length xs =
 let rec is_indexed xs =
   match xs with
   | Inil _ -> true
-  | Icons (_, id, t) -> is_indexed t && id = length t
+  | Icons (_, id, t) -> is_indexed t && id == length t
 
 let rec repr m =
   match m with
@@ -40,6 +40,7 @@ let rec spec xs =
           let b = r2 + 1 in
           (a, b)
 
+val target: idlist -> idlist compress
 let rec target xs =
   match xs with
   | Inil _ -> xs
