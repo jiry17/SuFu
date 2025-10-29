@@ -1,10 +1,15 @@
 type tree = Leaf of int | Node of int * tree * tree
 
 let rec is_sym_pair l r =
-  match (l, r) with
-  | Leaf x1, Leaf x2 -> x1 = x2
-  | Node (x1, l1, r1), Node (x2, l2, r2) -> (x1 = x2) && (is_sym_pair r1 l2 && is_sym_pair l1 r1)
-  | _ -> false
+  match l with
+  | Leaf x1 ->
+      (match r with
+       | Leaf x2 -> x1 == x2
+       | _ -> false)
+  | Node (x1, l1, r1) ->
+      (match r with
+       | Node (x2, l2, r2) -> x1 == x2 && is_sym_pair r1 l2 && is_sym_pair l1 r1
+       | _ -> false)
 
 let rec is_sym t =
   match t with
@@ -18,6 +23,7 @@ let rec spec t =
   | Leaf w -> w
   | Node (w, l, r) -> w + (spec l + spec r)
 
+val target: tree -> tree compress
 let rec target t =
   match t with
   | Leaf w -> Leaf w

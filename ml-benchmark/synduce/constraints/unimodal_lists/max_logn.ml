@@ -15,7 +15,7 @@ let is_unimodal =
     match xs with
     | Nil _ -> pre > 0
     | Cons (h, t) -> (pre > 0) && ((pre > h) && (aux_down h t))
-  and aux_up pre xs =
+  in let rec aux_up pre xs =
     match xs with
     | Nil _ -> pre > 0
     | Cons (h, t) -> (pre > 0) && (if pre < h then aux_up h t else aux_down h t)
@@ -32,6 +32,7 @@ let rec spec xs =
   | Nil _ -> 0
   | Cons (h, t) -> max h (spec t)
 
+val target: ulist -> ulist compress
 let rec target xs =
   match xs with
   | Unil _ -> Unil ()

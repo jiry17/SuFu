@@ -1,3 +1,4 @@
+@Input val w: int
 type list_ = Elt of int | Cons of int * list_
 type idlist = IElt of int | ICons of int * int * idlist
 
@@ -25,7 +26,7 @@ let rec len_raw xs =
 let rec is_indexed xs =
   match xs with
   | IElt _ -> true
-  | ICons (_, id, t) -> (id = len xs) && is_indexed t
+  | ICons (_, id, t) -> (id == len xs) && is_indexed t
 
 let rec add_index xs =
   match xs with
@@ -37,13 +38,12 @@ let rec drop_index xs =
   | IElt a -> Elt a
   | ICons (h, _, t) -> Cons (h, drop_index t)
 
-let w = 0
-
 let rec spec xs =
   match xs with
   | Elt x -> if x < w then 1 else 0
   | Cons (h, t) -> spec t + (if h < w then 1 else -1)
 
+val target: idlist -> idlist compress
 let rec target xs =
   match xs with
   | IElt _ -> xs

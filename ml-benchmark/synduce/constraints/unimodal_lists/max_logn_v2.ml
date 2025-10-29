@@ -45,6 +45,7 @@ let rec spec xs =
       let m = spec t in
       max h m
 
+val target: ulist -> ulist compress
 let rec target xs =
   match xs with
   | Uelt x -> Uelt x

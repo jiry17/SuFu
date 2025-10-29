@@ -25,7 +25,7 @@ let rec len_raw xs =
 let rec is_indexed xs =
   match xs with
   | Ielt _ -> true
-  | Icons (_, id, t) -> id = len xs && is_indexed t
+  | Icons (_, id, t) -> id == len xs && is_indexed t
 
 let rec add_index xs =
   match xs with
@@ -42,6 +42,7 @@ let rec spec xs =
   | Elt x -> if x < 0 then 1 else 0
   | Cons (h, t) -> spec t + (if h < 0 then 1 else -1)
 
+val target: idlist -> idlist compress
 let rec target xs =
   match xs with
   | Ielt x -> xs
