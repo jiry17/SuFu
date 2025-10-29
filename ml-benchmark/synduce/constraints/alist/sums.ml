@@ -1,3 +1,5 @@
+@Input val w: int
+
 type list = Nil of unit | Cons of int * list
 type nat = Z of unit | S of nat
 
@@ -16,8 +18,6 @@ let is_unique =
     | Cons (h, t) -> (key_differ h t) && f t
   in
   f
-
-let w = 0
 
 let spec =
   let rec f xs =
