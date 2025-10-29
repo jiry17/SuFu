@@ -1,3 +1,4 @@
+@Input val key: int
 type lst = Elt of int | Cons of int * lst
 
 let is_sorted =
@@ -11,15 +12,14 @@ let is_sorted =
     | Elt x -> true
     | Cons (h, t) -> aux h t
 
-let key = 0
-
 let rec spec xs =
   match xs with
-  | Elt w -> if w = key then 1 else 0
+  | Elt w -> if w == key then 1 else 0
   | Cons (h, t) ->
       let res = spec t in
-      if key = h then 1 else if res = 0 then 0 else 1 + res
+      if key == h then 1 else if res == 0 then 0 else 1 + res
 
+val target: lst -> lst compress
 let rec target xs =
   match xs with
   | Elt w -> xs

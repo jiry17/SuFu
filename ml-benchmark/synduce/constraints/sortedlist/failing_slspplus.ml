@@ -68,6 +68,7 @@ let spec xs =
   match s with
   | (v, _) -> v
 
+val target: clist -> clist compress
 let target =
   let rec list_repr xs =
     match xs with

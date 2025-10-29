@@ -18,6 +18,7 @@ let rec maximum xs =
   | Elt w -> w
   | Cons (h, t) -> max h (maximum t)
 
+val target: t -> t compress
 let target xs =
   match xs with
   | Elt w -> xs

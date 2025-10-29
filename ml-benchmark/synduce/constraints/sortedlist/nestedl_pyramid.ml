@@ -36,23 +36,26 @@ let rec interval xs =
 let rec spec_helper xs =
   match xs with
   | Line x ->
-      let res = interval x in
+      let res = interval x in (
       match res with
       | (a, b) -> (a, b, true)
+      )
   | Ncons (h, t) ->
       let info = interval h in
-      let res = spec_helper t in
-      match info with
-      | (i1, i2) ->
+      let res = spec_helper t in (
+        match info with
+        | (i1, i2) ->
           match res with
           | (r1, r2, r3) ->
               (min i1 r1, max i2 r2, r3 && ((r1 <= i1) && (r2 >= i2)))
+      )
 
 let spec xs =
   let res = spec_helper xs in
   match res with
   | (_, _, b) -> b
 
+val target: nlist -> nlist compress
 let rec target xs =
   match xs with
   | Line x ->

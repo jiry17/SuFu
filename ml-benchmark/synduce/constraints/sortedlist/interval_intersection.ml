@@ -34,6 +34,7 @@ let spec xs =
   match r with
   | (r1, r2, r3) -> r1
 
+val target: lst -> lst compress
 let rec target xs =
   match xs with
   | Elt (_, _) -> xs

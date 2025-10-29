@@ -44,6 +44,7 @@ let spec xs =
   match res with
   | (_, s) -> s
 
+val target: clist -> clist compress
 let rec target c =
   match c with
   | Empty -> c

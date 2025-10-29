@@ -31,6 +31,7 @@ let rec spec xs =
   | Elt (a, b) -> a + b
   | Cons (a, b, t) -> max (spec t) (a + b)
 
+val target: clist -> clist compress
 let rec target xs =
   match xs with
   | Single (a, b) -> xs

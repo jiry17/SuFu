@@ -3,8 +3,8 @@ type l = Elt of int | Cons of int * l
 let is_sorted =
   let rec aux pre xs =
     match xs with
-    | Elt x -> pre <= x
-    | Cons (h, t) -> pre <= h && aux h t
+    | Elt x -> pre >= x
+    | Cons (h, t) -> pre >= h && aux h t
   in
   fun xs ->
     match xs with
@@ -30,6 +30,7 @@ let rec spec xs =
       match spec t with
       | (a, b) -> (min (min_diff h t) a, h)
 
+val target: l -> l compress
 let rec target xs =
   match xs with
   | Elt w -> xs

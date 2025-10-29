@@ -1,6 +1,4 @@
 type list_ = Elt of int | Cons of int * list_
-type twolist = list_ * list_
-type search_unit = int * list_
 
 let is_sorted xs =
   let rec aux pre xs =
@@ -18,8 +16,8 @@ let is_sorted_pair p =
 
 let rec find w xs =
   match xs with
-  | Elt x -> x = w
-  | Cons (h, t) -> h = w || find w t
+  | Elt x -> x == w
+  | Cons (h, t) -> h == w || find w t
 
 let spec p =
   match p with
@@ -31,6 +29,7 @@ let spec p =
       in
       f l2
 
+val target: (list_ * list_) -> (list_ * list_) compress
 let target p =
   let rec aux w xs =
     match xs with
@@ -47,14 +46,16 @@ let target p =
     | (l1, l2) ->
         match l1 with
         | Elt a ->
-            let res = aux a l2 in
-            match res with
-            | (_, l2p) -> (Elt a, l2p)
+            let res = aux a l2 in (
+              match res with
+              | (_, l2p) -> (Elt a, l2p)
+            )
         | Cons (h, t) ->
             let res1 = f (t, l2) in
-            let _ = aux h l2 in
-            match res1 with
-            | (l1p, l2p) -> (Cons (h, l1p), l2p)
+            let tmp = aux h l2 in (
+              match res1 with
+              | (l1p, l2p) -> (Cons (h, l1p), l2p)
+            )
   in
   f p
 

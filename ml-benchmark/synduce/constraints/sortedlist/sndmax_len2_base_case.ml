@@ -1,3 +1,5 @@
+config EnableDeepCoder = true
+
 type list_t = Nil of unit | Cons of int * int * list_t
 type slist = Snil of unit | Scons of int * slist
 
@@ -27,12 +29,13 @@ let spec xs =
     | Scons (h, t) ->
         let res = f t in
         match res with
-        | r1, r2 -> (max h r1, max r2 (min h r1))
+        | (r1, r2) -> (max h r1, max r2 (min h r1))
   in
   let pair = f xs in
   match pair with
   | (_, r2) -> r2
 
+val target: list_t -> list_t compress
 let rec target c =
   match c with
   | Nil _ -> c

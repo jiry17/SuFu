@@ -16,12 +16,13 @@ let mod2 x = x - 2 * (x / 2)
 
 let rec spec xs =
   match xs with
-  | Elt x -> if mod2 x = 0 then x else 0
-  | Cons (h, t) -> if mod2 h = 0 && h > 0 then max h (spec t) else spec t
+  | Elt x -> if mod2 x == 0 then x else 0
+  | Cons (h, t) -> if mod2 h == 0 && h > 0 then max h (spec t) else spec t
 
+val target: l -> l compress
 let rec target xs =
   match xs with
   | Elt w -> xs
-  | Cons (h, t) -> if mod2 h = 0 && h > 0 then xs else Cons (h, target t)
+  | Cons (h, t) -> if mod2 h == 0 && h > 0 then xs else Cons (h, target t)
 
 let program xs = if is_sorted xs then spec (target xs) else 0

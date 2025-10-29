@@ -41,6 +41,7 @@ let is_sorted =
     | Two (x, y) -> x > y
     | Cons (h, t) -> aux h t
 
+val target: clist -> clist compress
 let rec target c =
   match c with
   | Ctwo (a, b) -> c

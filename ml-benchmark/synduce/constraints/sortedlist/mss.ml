@@ -50,6 +50,7 @@ let rec sum c =
   | Single a -> a
   | Concat (_, l, r) -> sum l + sum r
 
+val target: clist -> clist compress
 let rec target xs =
   match xs with
   | Single _ -> xs
@@ -80,19 +81,22 @@ let access x =
 let rec fill c xs =
   match c with
   | Single _ ->
-      let info = access xs in
+      let info = access xs in (
       match info with
       | (i1, i2) -> (Single i1, i2)
+      )
   | Concat (_, l, r) ->
       let lres = fill l xs in
       match lres with
       | (lcl, lxs_tail) ->
-          let info = access lxs_tail in
+          let info = access lxs_tail in (
           match info with
           | (i1, i2) ->
-              let rres = fill r i2 in
+            let rres = fill r i2 in (
               match rres with
               | (rcl, rxs_tail) -> (Concat (i1, lcl, rcl), rxs_tail)
+            )
+          )
 
 let rec flatten c =
   match c with

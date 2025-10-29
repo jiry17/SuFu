@@ -1,3 +1,4 @@
+@Input val winp: int
 type list = Elt of int | Cons of int * list
 
 let rec aux pre xs =
@@ -10,8 +11,6 @@ let is_sorted xs =
   | Elt x -> true
   | Cons (h, t) -> aux h t
 
-let winp = 0
-
 let rec spec xs =
   match xs with
   | Elt a -> if a < winp then 1 else 0
@@ -19,6 +18,7 @@ let rec spec xs =
       let c = if h < winp then 1 else 0 in
       c + spec t
 
+val target: list -> list compress
 let rec target xs =
   match xs with
   | Elt w -> xs

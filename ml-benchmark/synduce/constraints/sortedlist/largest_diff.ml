@@ -1,5 +1,13 @@
 type l = Elt of int | Cons of int * l
 
+let fst p =
+  match p with
+  | (y, _) -> y
+
+let snd p =
+  match p with
+  | (_, y) -> y
+
 let is_sorted xs =
   let rec aux pre xs =
     match xs with
@@ -26,6 +34,7 @@ let spec xs =
   in
   fst (f xs)
 
+val target: l -> l compress
 let rec target xs =
   match xs with
   | Elt w -> xs

@@ -39,6 +39,7 @@ let rec last xs =
   | Elt a -> a
   | Cons (h, t) -> last t
 
+val target: l -> l compress
 let rec target xs =
   match xs with
   | Elt w -> xs

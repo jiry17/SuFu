@@ -18,12 +18,13 @@ let rec spec xs =
   match xs with
   | Elt x -> x
   | Cons (h, t) ->
-      if mod2 h = 0 then max h (spec t) else spec t
+      if mod2 h == 0 then max h (spec t) else spec t
 
+val target: l -> l compress
 let rec target xs =
   match xs with
   | Elt w -> xs
   | Cons (h, t) ->
-      if mod2 h = 0 then xs else Cons (h, target t)
+      if mod2 h == 0 then xs else Cons (h, target t)
 
 let program xs = if is_sorted xs then spec (target xs) else 0

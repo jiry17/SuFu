@@ -18,6 +18,7 @@ let rec spec xs =
   | Elt w -> w
   | Cons (h, t) -> min h (spec t)
 
+val target: l -> l compress
 let rec target xs =
   match xs with
   | Elt _ -> xs
