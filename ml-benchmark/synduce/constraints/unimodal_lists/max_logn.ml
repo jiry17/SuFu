@@ -1,29 +1,29 @@
 type ulist = Unil of unit | Uelt of int | Usplit of ulist * int * int * ulist
 type ilist = Nil of unit | Cons of int * ilist
 
-let repr =
+let repr xs =
   let rec f res xs =
     match xs with
     | Unil _ -> res
     | Uelt x -> Cons (x, res)
     | Usplit (x, a, b, y) -> f (Cons (a, Cons (b, f res y))) x
-  in
-  fun xs -> f (Nil ()) xs
+  in f (Nil ()) xs
 
-let is_unimodal =
-  let rec aux_down pre xs =
-    match xs with
-    | Nil _ -> pre > 0
-    | Cons (h, t) -> (pre > 0) && ((pre > h) && (aux_down h t))
-  in let rec aux_up pre xs =
-    match xs with
-    | Nil _ -> pre > 0
-    | Cons (h, t) -> (pre > 0) && (if pre < h then aux_up h t else aux_down h t)
-  in
-  fun xs ->
-    match xs with
-    | Nil _ -> true
-    | Cons (h, t) -> aux_up h t
+let rec aux_down pre xs =
+  match xs with
+  | Nil _ -> pre > 0
+  | Cons (h, t) -> pre > 0 && pre > h && aux_down h t
+
+let rec aux_up pre xs =
+  match xs with
+  | Nil _ -> pre > 0
+  | Cons (h, t) ->
+      pre > 0 && (if pre <= h then aux_up h t else aux_down h t)
+
+let is_unimodal xs =
+  match xs with
+  | Nil _ -> true
+  | Cons (h, t) -> aux_up h t
 
 let max a b = if a < b then b else a
 

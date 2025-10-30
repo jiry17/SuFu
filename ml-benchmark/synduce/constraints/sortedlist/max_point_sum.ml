@@ -11,14 +11,12 @@ let rec repr xs =
   | Single (a, b) -> Elt (a, b)
   | Concat (a, b) -> cat (repr a) (repr b)
 
-let is_sorted =
+let is_sorted xs =
   let rec aux pre xs =
     match xs with
     | Elt (a, b) -> pre <= a + b
     | Cons (a, b, t) -> (pre <= a + b) && aux (a + b) t
-  in
-  fun xs ->
-    match xs with
+  in match xs with
     | Elt _ -> true
     | Cons (a, b, t) -> aux (a + b) t
 

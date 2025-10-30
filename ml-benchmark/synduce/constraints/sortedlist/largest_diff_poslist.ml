@@ -1,13 +1,11 @@
 type l = Elt of int | Cons of int * l
 
-let is_sorted =
+let is_sorted xs =
   let rec aux pre xs =
     match xs with
     | Elt x -> pre <= x
     | Cons (h, t) -> pre <= h && aux h t
-  in
-  fun xs ->
-    match xs with
+  in match xs with
     | Elt x -> true
     | Cons (h, t) -> aux h t
 

@@ -30,14 +30,12 @@ let spec xs =
   match f xs with
   | (_, b) -> b
 
-let is_sorted =
+let is_sorted xs =
   let rec aux pre xs =
     match xs with
     | Two (x, y) -> (pre > x) && (x > y)
     | Cons (h, t) -> (pre > h) && (aux h t)
-  in
-  fun xs ->
-    match xs with
+  in match xs with
     | Two (x, y) -> x > y
     | Cons (h, t) -> aux h t
 

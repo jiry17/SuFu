@@ -1,7 +1,7 @@
 type ulist = Unil of unit | Uelt of int | Usplit of ulist * int * int * ulist
 type list_ = Nil of unit | Cons of int * list_
 
-let repr =
+let repr xs =
   let rec repr_f res xs =
     match xs with
     | Unil _ -> res
@@ -11,24 +11,23 @@ let repr =
         let cb = Cons (b, fy) in
         let ca = Cons (a, cb) in
         repr_f ca x
-  in
-  fun xs -> repr_f (Nil ()) xs
+    in repr_f (Nil ()) xs
 
-let is_unimodal =
-  let rec aux_down pre xs =
-    match xs with
-    | Nil _ -> true
-    | Cons (h, t) -> (pre >= h) && aux_down h t
-  in let rec aux_up pre xs =
-    match xs with
-    | Nil _ -> true
-    | Cons (h, t) ->
-        if pre <= h then aux_up h t else aux_down h t
-  in
-  fun xs ->
-    match xs with
-    | Nil _ -> true
-    | Cons (h, t) -> aux_up h t
+let rec aux_down pre xs =
+  match xs with
+  | Nil _ -> true
+  | Cons (h, t) -> pre >= h && aux_down h t
+
+let rec aux_up pre xs =
+  match xs with
+  | Nil _ -> true
+  | Cons (h, t) ->
+      if pre <= h then aux_up h t else aux_down h t
+
+let is_unimodal xs =
+  match xs with
+  | Nil _ -> true
+  | Cons (h, t) -> aux_up h t
 
 let rec spec xs =
   match xs with
